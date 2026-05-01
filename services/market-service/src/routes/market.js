@@ -86,7 +86,8 @@ router.get('/prices', async (req, res) => {
 
     const cacheKey = `market:prices:${state || 'all'}:${district || 'all'}:${commodity || 'all'}`;
 
-    const cached = await redis.get(cacheKey);
+    const isRedisReady = redis.status === 'ready';
+    const cached = isRedisReady ? await redis.get(cacheKey) : null;
     if (cached) return res.json({ success: true, data: JSON.parse(cached), cached: true });
 
     // Try Real Data First
@@ -101,7 +102,9 @@ router.get('/prices', async (req, res) => {
     }
 
     const result = { prices, lastUpdated: new Date().toISOString(), totalRecords: prices.length };
-    await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(result));
+    if (isRedisReady) {
+      await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(result)).catch(() => {});
+    }
     res.json({ success: true, data: result });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

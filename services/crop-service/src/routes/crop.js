@@ -84,7 +84,8 @@ router.post('/recommend', async (req, res) => {
     } = req.body;
 
     const cacheKey = `crop:rec:${soilType}:${season}:${state}:${Math.round(temperature)}`;
-    const cached = await redis.get(cacheKey);
+    const isRedisReady = redis.status === 'ready';
+    const cached = isRedisReady ? await redis.get(cacheKey) : null;
     if (cached) return res.json({ success: true, data: JSON.parse(cached), cached: true });
 
     let recommendation;
@@ -135,13 +136,15 @@ Respond with a valid JSON object with these exact fields:
       recommendation = getRuleBasedRecommendation(req.body);
     }
 
-    await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(recommendation));
+    if (isRedisReady) {
+      await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(recommendation)).catch(() => {});
+    }
 
     if (producer) {
       await producer.send({
         topic: 'crop.recommended',
         messages: [{ value: JSON.stringify({ userId: req.headers['x-user-id'], recommendation, timestamp: new Date() }) }],
-      });
+      }).catch(() => {});
     }
 
     res.json({ success: true, data: recommendation });
