@@ -5,7 +5,15 @@ const Redis = process.env.MOCK_REDIS_KAFKA ? require('../../../../utils/mockRedi
 const { generatePriceData, BASE_PRICES } = require('../data/prices');
 const MarketHistory = require('../models/MarketHistory');
 
-const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
+const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {
+  maxRetriesPerRequest: 1,
+  retryStrategy: () => null // Disable auto-retry to prevent log spamming on Render
+});
+
+redis.on('error', (err) => {
+  console.warn('⚠️  Redis not available, caching disabled:', err.message);
+});
+
 const CACHE_TTL = 60 * 60; // 1 hour
 
 const DATA_GOV_API_KEY = '579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b';
