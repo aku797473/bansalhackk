@@ -5,7 +5,11 @@ const Redis = process.env.MOCK_REDIS_KAFKA ? require('../../../../utils/mockRedi
 const { Kafka } = process.env.MOCK_REDIS_KAFKA ? require('../../../../utils/mockKafka') : require('kafkajs');
 const WeatherHistory = require('../models/WeatherHistory');
 
-const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
+const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {
+  maxRetriesPerRequest: 1,
+  retryStrategy: () => null
+});
+redis.on('error', (err) => console.warn('⚠️  Redis not available:', err.message));
 
 // Kafka producer (lazy init)
 let producer = null;
@@ -69,7 +73,8 @@ router.get('/current', async (req, res) => {
     const userId = req.headers['x-user-id'] || 'anonymous';
 
     const cacheKey = `weather:current:${parseFloat(lat).toFixed(2)}:${parseFloat(lon).toFixed(2)}`;
-    const cached = await redis.get(cacheKey);
+    const isRedisReady = redis.status === 'ready';
+    const cached = isRedisReady ? await redis.get(cacheKey) : null;
     if (cached) {
       const data = JSON.parse(cached);
       WeatherHistory.create({ userId, lat, lon, city: data.city, temperature: data.temperature, description: data.description, searchType: 'current' }).catch(console.error);
@@ -78,7 +83,7 @@ router.get('/current', async (req, res) => {
 
     if (!OWM_KEY || OWM_KEY === 'demo' || OWM_KEY.includes('your_')) {
       const mock = getMockWeather(lat, lon);
-      await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(mock));
+      if (isRedisReady) await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(mock)).catch(() => {});
       WeatherHistory.create({ userId, lat, lon, city: mock.city, temperature: mock.temperature, description: mock.description, searchType: 'current' }).catch(console.error);
       return res.json({ success: true, data: mock });
     }
@@ -134,7 +139,7 @@ router.get('/current', async (req, res) => {
       }
     }
 
-    await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(weatherData));
+    if (isRedisReady) await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(weatherData)).catch(() => {});
     WeatherHistory.create({ userId, lat, lon, city: weatherData.city, temperature: weatherData.temperature, description: weatherData.description, searchType: 'current' }).catch(console.error);
     res.json({ success: true, data: weatherData });
   } catch (err) {
