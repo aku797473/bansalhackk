@@ -157,7 +157,8 @@ router.get('/by-city', async (req, res) => {
     const userId = req.headers['x-user-id'] || 'anonymous';
 
     const cacheKey = `weather:city:${city.toLowerCase()}`;
-    const cached = await redis.get(cacheKey);
+    const isRedisReady = redis.status === 'ready';
+    const cached = isRedisReady ? await redis.get(cacheKey) : null;
     if (cached) {
        const data = JSON.parse(cached);
        WeatherHistory.create({ userId, lat: data.lat, lon: data.lon, city: data.city, temperature: data.temperature, description: data.description, searchType: 'by-city' }).catch(console.error);
@@ -166,7 +167,7 @@ router.get('/by-city', async (req, res) => {
 
     if (!OWM_KEY || OWM_KEY === 'demo' || OWM_KEY.includes('your_')) {
       const mock = { ...getMockWeather(28.6, 77.2), city };
-      await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(mock));
+      if (isRedisReady) await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(mock)).catch(() => {});
       WeatherHistory.create({ userId, lat: mock.lat, lon: mock.lon, city: mock.city, temperature: mock.temperature, description: mock.description, searchType: 'by-city' }).catch(console.error);
       return res.json({ success: true, data: mock });
     }
@@ -182,7 +183,7 @@ router.get('/by-city', async (req, res) => {
       description: data.weather[0].description, icon: data.weather[0].icon,
       alerts: [],
     };
-    await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(result));
+    if (isRedisReady) await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(result)).catch(() => {});
     WeatherHistory.create({ userId, lat: result.lat, lon: result.lon, city: result.city, temperature: result.temperature, description: result.description, searchType: 'by-city' }).catch(console.error);
     res.json({ success: true, data: result });
   } catch (err) {
@@ -198,7 +199,8 @@ router.get('/map-markers', async (req, res) => {
       try {
         const cacheKey = `weather:city:${city.toLowerCase()}`;
         let data;
-        const cached = await redis.get(cacheKey);
+        const isRedisReady = redis.status === 'ready';
+        const cached = isRedisReady ? await redis.get(cacheKey) : null;
         
         if (cached) {
           data = JSON.parse(cached);
@@ -215,7 +217,7 @@ router.get('/map-markers', async (req, res) => {
             temperature: response.data.main.temp,
             description: response.data.weather[0].description,
           };
-          await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(data));
+          if (isRedisReady) await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(data)).catch(() => {});
         }
 
         return {
