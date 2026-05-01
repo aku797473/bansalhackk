@@ -1,0 +1,219 @@
+version: '3.9'
+
+networks:
+  smart-kisan-net:
+    driver: bridge
+
+volumes:
+  mongo-data:
+  redis-data:
+  kafka-data:
+  zookeeper-data:
+
+services:
+  # ─── Infrastructure ───────────────────────────────
+  mongodb:
+    image: mongo:7
+    container_name: sk-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - smart-kisan-net
+    environment:
+      MONGO_INITDB_DATABASE: smart-kisan
+
+  redis:
+    image: redis:7-alpine
+    container_name: sk-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - smart-kisan-net
+    command: redis-server --appendonly yes
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: sk-zookeeper
+    restart: unless-stopped
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    volumes:
+      - zookeeper-data:/var/lib/zookeeper/data
+    networks:
+      - smart-kisan-net
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: sk-kafka
+    restart: unless-stopped
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    networks:
+      - smart-kisan-net
+
+  # ─── API Gateway ──────────────────────────────────
+  gateway:
+    build: ./gateway
+    container_name: sk-gateway
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - JWT_SECRET=${JWT_SECRET}
+      - AUTH_SERVICE_URL=http://auth-service:5001
+      - USER_SERVICE_URL=http://user-service:5002
+      - WEATHER_SERVICE_URL=http://weather-service:5003
+      - CROP_SERVICE_URL=http://crop-service:5004
+      - FERTILIZER_SERVICE_URL=http://fertilizer-service:5005
+      - MARKET_SERVICE_URL=http://market-service:5006
+      - LABOUR_SERVICE_URL=http://labour-service:5007
+      - CHATBOT_SERVICE_URL=http://chatbot-service:5008
+    depends_on:
+      - auth-service
+      - user-service
+    networks:
+      - smart-kisan-net
+
+  # ─── Microservices ────────────────────────────────
+  auth-service:
+    build: ./services/auth-service
+    container_name: sk-auth
+    restart: unless-stopped
+    environment:
+      - PORT=5001
+      - MONGODB_URI=mongodb://mongodb:27017/smart-kisan
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
+      - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}
+      - FIREBASE_PRIVATE_KEY=${FIREBASE_PRIVATE_KEY}
+      - FIREBASE_CLIENT_EMAIL=${FIREBASE_CLIENT_EMAIL}
+    depends_on:
+      - mongodb
+    networks:
+      - smart-kisan-net
+
+  user-service:
+    build: ./services/user-service
+    container_name: sk-user
+    restart: unless-stopped
+    environment:
+      - PORT=5002
+      - MONGODB_URI=mongodb://mongodb:27017/smart-kisan
+      - JWT_SECRET=${JWT_SECRET}
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - smart-kisan-net
+
+  weather-service:
+    build: ./services/weather-service
+    container_name: sk-weather
+    restart: unless-stopped
+    environment:
+      - PORT=5003
+      - OPENWEATHER_API_KEY=${OPENWEATHER_API_KEY}
+      - REDIS_URL=redis://redis:6379
+      - KAFKA_BROKER=kafka:29092
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - redis
+      - kafka
+    networks:
+      - smart-kisan-net
+
+  crop-service:
+    build: ./services/crop-service
+    container_name: sk-crop
+    restart: unless-stopped
+    environment:
+      - PORT=5004
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - MONGODB_URI=mongodb://mongodb:27017/smart-kisan
+      - REDIS_URL=redis://redis:6379
+      - KAFKA_BROKER=kafka:29092
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - mongodb
+      - redis
+      - kafka
+    networks:
+      - smart-kisan-net
+
+  fertilizer-service:
+    build: ./services/fertilizer-service
+    container_name: sk-fertilizer
+    restart: unless-stopped
+    environment:
+      - PORT=5005
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - JWT_SECRET=${JWT_SECRET}
+    networks:
+      - smart-kisan-net
+
+  market-service:
+    build: ./services/market-service
+    container_name: sk-market
+    restart: unless-stopped
+    environment:
+      - PORT=5006
+      - MONGODB_URI=mongodb://mongodb:27017/smart-kisan
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - smart-kisan-net
+
+  labour-service:
+    build: ./services/labour-service
+    container_name: sk-labour
+    restart: unless-stopped
+    environment:
+      - PORT=5007
+      - MONGODB_URI=mongodb://mongodb:27017/smart-kisan
+      - REDIS_URL=redis://redis:6379
+      - KAFKA_BROKER=kafka:29092
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - mongodb
+      - redis
+      - kafka
+    networks:
+      - smart-kisan-net
+
+  chatbot-service:
+    build: ./services/chatbot-service
+    container_name: sk-chatbot
+    restart: unless-stopped
+    environment:
+      - PORT=5008
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - redis
+    networks:
+      - smart-kisan-net

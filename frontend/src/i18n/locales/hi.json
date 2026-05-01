@@ -1,0 +1,137 @@
+{
+  "nav": {
+    "home": "होम", "weather": "मौसम", "crop": "फसल सलाह",
+    "fertilizer": "उर्वरक", "market": "बाजार भाव",
+    "labour": "मजदूर", "map": "नक्शा", "profile": "प्रोफाइल", "logout": "लॉगआउट"
+  },
+  "landing": {
+    "hero_title": "आपका डिजिटल खेती साथी",
+    "hero_sub": "AI-आधारित फसल सलाह, रियल-टाइम मौसम अलर्ट, और बाजार भाव — सब एक जगह।",
+    "get_started": "शुरू करें", "learn_more": "और जानें",
+    "features_title": "किसान को चाहिए सब कुछ",
+    "feat_weather": "मौसम अलर्ट", "feat_weather_desc": "आपके क्षेत्र के लिए रियल-टाइम अलर्ट",
+    "feat_crop": "फसल AI", "feat_crop_desc": "मिट्टी और मौसम के आधार पर स्मार्ट सलाह",
+    "feat_fertilizer": "उर्वरक विश्लेषण", "feat_fertilizer_desc": "फोटो अपलोड करें और कमियां जानें",
+    "feat_market": "बाजार भाव", "feat_market_desc": "500+ मंडियों से लाइव भाव",
+    "feat_labour": "मजदूर बाजार", "feat_labour_desc": "कृषि मजदूर खोजें या काम पोस्ट करें",
+    "feat_chat": "AI चैटबॉट", "feat_chat_desc": "हिंदी में खेती का कोई भी सवाल पूछें"
+  },
+  "auth": {
+    "login_title": "स्मार्ट किसान में आपका स्वागत है",
+    "login_subtitle": "अपने अकाउंट में लॉगिन करें",
+    "register_title": "स्मार्ट किसान से जुड़ें",
+    "register_subtitle": "अपना खेती अकाउंट बनाएं",
+    "email_label": "ईमेल एड्रेस",
+    "email_placeholder": "email@example.com",
+    "password_label": "पासवर्ड",
+    "password_placeholder": "••••••••",
+    "name_label": "पूरा नाम",
+    "name_placeholder": "आपका नाम",
+    "login_btn": "लॉगिन",
+    "register_btn": "अकाउंट बनाएं",
+    "switch_register": "अकाउंट नहीं है? रजिस्टर करें",
+    "switch_login": "पहले से अकाउंट है? लॉगिन करें",
+    "select_role": "मैं हूँ एक",
+    "farmer": "किसान", "buyer": "खरीदार", "labour": "मजदूर", "admin": "एडमिन",
+    "farmer_desc": "मैं फसल उगाता हूँ", "buyer_desc": "मैं उपज खरीदता हूँ", "labour_desc": "मैं काम प्रदान करता हूँ"
+  },
+  "dashboard": {
+    "greeting_morning": "सुप्रभात",
+    "greeting_afternoon": "नमस्ते",
+    "greeting_evening": "शुभ संध्या",
+    "welcome": "वापसी पर स्वागत है",
+    "weather_title": "आज का मौसम",
+    "quick_actions": "त्वरित क्रियाएं",
+    "recent_alerts": "हाल के अलर्ट",
+    "tips": "खेती के टिप्स",
+    "stats": {
+      "crop_health": "फसल स्वास्थ्य",
+      "market_price": "बाजार भाव",
+      "moisture": "नमी",
+      "labour": "मजदूर"
+    },
+    "labels": {
+      "live_forecast": "लाइव पूर्वानुमान",
+      "ai_powered": "AI संचालित",
+      "mandi_rates": "मंडी दरें",
+      "soil_analysis": "मिट्टी विश्लेषण",
+      "hire_workers": "मजदूर काम पर रखें",
+      "smart_map": "स्मार्ट मैप",
+      "details": "विवरण",
+      "vs_last_week": "पिछले हफ्ते की तुलना में",
+      "available_now": "अभी उपलब्ध"
+    }
+  },
+  "weather": {
+    "title": "मौसम पूर्वानुमान",
+    "current": "वर्तमान मौसम",
+    "forecast": "5 दिन का पूर्वानुमान",
+    "humidity": "आर्द्रता",
+    "wind": "हवा की गति",
+    "feels_like": "महसूस होता है",
+    "alerts": "मौसम अलर्ट",
+    "no_alerts": "कोई गंभीर अलर्ट नहीं"
+  },
+  "crop": {
+    "title": "फसल सलाहकार",
+    "subtitle": "AI-आधारित फसल अनुशंसाएं प्राप्त करें",
+    "soil_type": "मिट्टी का प्रकार", "season": "मौसम", "state": "राज्य",
+    "rainfall": "वार्षिक वर्षा (मिमी)", "temperature": "तापमान (°C)",
+    "nitrogen": "नाइट्रोजन स्तर", "phosphorus": "फास्फोरस स्तर", "potassium": "पोटेशियम स्तर",
+    "recommend_btn": "अनुशंसा प्राप्त करें",
+    "primary_crop": "अनुशंसित फसल",
+    "alternatives": "वैकल्पिक फसलें",
+    "sowing_time": "बुवाई का समय",
+    "harvest_time": "कटाई का समय",
+    "water_req": "पानी की आवश्यकता",
+    "fertilizers": "सुझाए गए उर्वरक",
+    "tips": "खेती के टिप्स"
+  },
+  "fertilizer": {
+    "title": "उर्वरक और रोग पहचान",
+    "subtitle": "अपनी फसल की पत्तियों की फोटो अपलोड करें",
+    "upload_label": "यहाँ फोटो डालें या क्लिक करें",
+    "analyze_btn": "विश्लेषण करें",
+    "analyzing": "विश्लेषण हो रहा है...",
+    "result_title": "विश्लेषण परिणाम",
+    "severity": "गंभीरता", "treatment": "उपचार",
+    "prevention": "रोकथाम", "confidence": "विश्वास"
+  },
+  "market": {
+    "title": "बाजार भाव",
+    "subtitle": "मंडियों से लाइव कमोडिटी भाव",
+    "search": "कमोडिटी खोजें...",
+    "filter_state": "राज्य से फ़िल्टर करें",
+    "commodity": "फसल", "variety": "किस्म",
+    "min": "न्यूनतम (₹)", "max": "अधिकतम (₹)", "modal": "मोडल (₹)",
+    "market_name": "मंडी", "date": "तारीख", "trend": "रुझान",
+    "msp": "MSP मूल्य"
+  },
+  "labour": {
+    "title": "मजदूर बाजार",
+    "post_job": "काम पोस्ट करें",
+    "find_work": "काम ढूंढें",
+    "job_title": "काम का नाम", "description": "विवरण",
+    "wage": "दैनिक मजदूरी (₹)", "workers": "मजदूरों की संख्या",
+    "district": "जिला", "state": "राज्य",
+    "category": "श्रेणी", "skills": "आवश्यक कौशल",
+    "apply": "अभी आवेदन करें", "applied": "आवेदन किया",
+    "start_date": "शुरू होने की तारीख"
+  },
+  "chat": {
+    "title": "किसान मित्र",
+    "subtitle": "आपका AI खेती सहायक",
+    "placeholder": "खेती के बारे में कुछ भी पूछें...",
+    "send": "भेजें",
+    "clear": "चैट साफ़ करें",
+    "typing": "टाइप हो रहा है..."
+  },
+  "common": {
+    "loading": "लोड हो रहा है...", "error": "कुछ गलत हो गया",
+    "retry": "फिर कोशिश करें", "save": "सहेजें", "cancel": "रद्द करें",
+    "back": "वापस", "submit": "जमा करें", "view_all": "सब देखें",
+    "no_data": "कोई डेटा उपलब्ध नहीं",
+    "today": "आज", "locale": "hi-IN", "success": "सफल",
+    "error_required": "आवश्यक जानकारी गायब है"
+  }
+}

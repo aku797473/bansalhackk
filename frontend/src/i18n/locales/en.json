@@ -1,0 +1,137 @@
+{
+  "nav": {
+    "home": "Home", "weather": "Weather", "crop": "Crop Advisor",
+    "fertilizer": "Fertilizer", "market": "Market Prices",
+    "labour": "Labour", "map": "Map", "profile": "Profile", "logout": "Logout"
+  },
+  "landing": {
+    "hero_title": "Your Digital Farming Companion",
+    "hero_sub": "AI-powered crop advice, real-time weather alerts, and market prices — all in one place.",
+    "get_started": "Get Started", "learn_more": "Learn More",
+    "features_title": "Everything a Farmer Needs",
+    "feat_weather": "Weather Alerts", "feat_weather_desc": "Real-time alerts for your location",
+    "feat_crop": "Crop AI", "feat_crop_desc": "Smart recommendations based on soil & weather",
+    "feat_fertilizer": "Fertilizer Analysis", "feat_fertilizer_desc": "Upload a photo to detect deficiencies",
+    "feat_market": "Market Prices", "feat_market_desc": "Live prices from 500+ mandis",
+    "feat_labour": "Labour Marketplace", "feat_labour_desc": "Find or post agricultural labour",
+    "feat_chat": "AI Chatbot", "feat_chat_desc": "Ask any farming question in Hindi"
+  },
+  "auth": {
+    "login_title": "Welcome to Smart Kisan",
+    "login_subtitle": "Login to your account",
+    "register_title": "Join Smart Kisan",
+    "register_subtitle": "Create your farming account",
+    "email_label": "Email Address",
+    "email_placeholder": "email@example.com",
+    "password_label": "Password",
+    "password_placeholder": "••••••••",
+    "name_label": "Full Name",
+    "name_placeholder": "Your name",
+    "login_btn": "Login",
+    "register_btn": "Create Account",
+    "switch_register": "Don't have an account? Register",
+    "switch_login": "Already have an account? Login",
+    "select_role": "I am a",
+    "farmer": "Farmer", "buyer": "Buyer", "labour": "Labour Worker", "admin": "Admin",
+    "farmer_desc": "I grow crops", "buyer_desc": "I buy produce", "labour_desc": "I provide work"
+  },
+  "dashboard": {
+    "greeting_morning": "Good Morning",
+    "greeting_afternoon": "Good Afternoon",
+    "greeting_evening": "Good Evening",
+    "welcome": "Welcome back",
+    "weather_title": "Today's Weather",
+    "quick_actions": "Quick Actions",
+    "recent_alerts": "Recent Alerts",
+    "tips": "Farming Tips",
+    "stats": {
+      "crop_health": "Crop Health",
+      "market_price": "Market Price",
+      "moisture": "Moisture",
+      "labour": "Workers"
+    },
+    "labels": {
+      "live_forecast": "Live forecast",
+      "ai_powered": "AI powered",
+      "mandi_rates": "Mandi rates",
+      "soil_analysis": "Soil analysis",
+      "hire_workers": "Hire workers",
+      "smart_map": "Smart map",
+      "details": "Details",
+      "vs_last_week": "vs last week",
+      "available_now": "Available now"
+    }
+  },
+  "weather": {
+    "title": "Weather Forecast",
+    "current": "Current Weather",
+    "forecast": "5-Day Forecast",
+    "humidity": "Humidity",
+    "wind": "Wind Speed",
+    "feels_like": "Feels Like",
+    "alerts": "Weather Alerts",
+    "no_alerts": "No severe alerts"
+  },
+  "crop": {
+    "title": "Crop Advisor",
+    "subtitle": "Get AI-powered crop recommendations",
+    "soil_type": "Soil Type", "season": "Season", "state": "State",
+    "rainfall": "Annual Rainfall (mm)", "temperature": "Temperature (°C)",
+    "nitrogen": "Nitrogen Level", "phosphorus": "Phosphorus Level", "potassium": "Potassium Level",
+    "recommend_btn": "Get Recommendation",
+    "primary_crop": "Recommended Crop",
+    "alternatives": "Alternative Crops",
+    "sowing_time": "Sowing Time",
+    "harvest_time": "Harvest Time",
+    "water_req": "Water Requirement",
+    "fertilizers": "Suggested Fertilizers",
+    "tips": "Farming Tips"
+  },
+  "fertilizer": {
+    "title": "Fertilizer & Disease Detection",
+    "subtitle": "Upload a photo of your crop leaves",
+    "upload_label": "Drop image here or click to upload",
+    "analyze_btn": "Analyze Image",
+    "analyzing": "Analyzing...",
+    "result_title": "Analysis Result",
+    "severity": "Severity", "treatment": "Treatment",
+    "prevention": "Prevention", "confidence": "Confidence"
+  },
+  "market": {
+    "title": "Market Prices",
+    "subtitle": "Live commodity prices from mandis",
+    "search": "Search commodity...",
+    "filter_state": "Filter by state",
+    "commodity": "Commodity", "variety": "Variety",
+    "min": "Min (₹)", "max": "Max (₹)", "modal": "Modal (₹)",
+    "market_name": "Mandi", "date": "Date", "trend": "Trend",
+    "msp": "MSP Price"
+  },
+  "labour": {
+    "title": "Labour Marketplace",
+    "post_job": "Post a Job",
+    "find_work": "Find Work",
+    "job_title": "Job Title", "description": "Description",
+    "wage": "Daily Wage (₹)", "workers": "Workers Needed",
+    "district": "District", "state": "State",
+    "category": "Category", "skills": "Required Skills",
+    "apply": "Apply Now", "applied": "Applied",
+    "start_date": "Start Date"
+  },
+  "chat": {
+    "title": "Kisan Mitra",
+    "subtitle": "Your AI farming assistant",
+    "placeholder": "Ask me anything about farming...",
+    "send": "Send",
+    "clear": "Clear Chat",
+    "typing": "Typing..."
+  },
+  "common": {
+    "loading": "Loading...", "error": "Something went wrong",
+    "retry": "Try Again", "save": "Save", "cancel": "Cancel",
+    "back": "Back", "submit": "Submit", "view_all": "View All",
+    "no_data": "No data available",
+    "today": "Today", "locale": "en-US", "success": "Success",
+    "error_required": "Required field missing"
+  }
+}

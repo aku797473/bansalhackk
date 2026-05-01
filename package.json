@@ -1,0 +1,16 @@
+{
+  "name": "smart-kisan-root",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node prod-server.js",
+    "dev": "node start-lite.js",
+    "install:all": "npm install --prefix gateway && npm install --prefix services/auth-service && npm install --prefix services/user-service && npm install --prefix services/weather-service && npm install --prefix services/crop-service && npm install --prefix services/fertilizer-service && npm install --prefix services/market-service && npm install --prefix services/labour-service && npm install --prefix services/chatbot-service && npm install --prefix frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "mongodb-memory-server": "^11.1.0"
+  }
+}
