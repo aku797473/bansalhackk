@@ -4,17 +4,29 @@ const Redis = process.env.MOCK_REDIS_KAFKA ? require('../../../../utils/mockRedi
 const { Kafka } = process.env.MOCK_REDIS_KAFKA ? require('../../../../utils/mockKafka') : require('kafkajs');
 const { OpenAI } = require('openai');
 
-const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
+const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {
+  maxRetriesPerRequest: 1,
+  retryStrategy: () => null
+});
+
+redis.on('error', (err) => {
+  console.warn('⚠️  Redis not available, caching disabled:', err.message);
+});
+
 const CACHE_TTL = 60 * 60 * 6; // 6 hours
 
 // Kafka producer
 let producer = null;
 (async () => {
   try {
-    const kafka = new Kafka({ brokers: [process.env.KAFKA_BROKER || 'localhost:9092'] });
+    const kafka = new Kafka({ 
+      brokers: [process.env.KAFKA_BROKER || 'localhost:9092'],
+      retry: { retries: 0 }
+    });
     producer = kafka.producer();
     await producer.connect();
-  } catch (e) { console.warn('Kafka unavailable:', e.message); }
+    console.log('✅ Kafka connected');
+  } catch (e) { console.warn('⚠️  Kafka unavailable, events disabled:', e.message); }
 })();
 
 // Gemini AI
