@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const sharp = require('sharp');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const axios = require('axios'); // We'll use axios for direct API calls
 const FertilizerHistory = require('../models/FertilizerHistory');
 
 const storage = multer.memoryStorage();
@@ -14,47 +14,6 @@ const upload = multer({
     else cb(new Error('Only image and PDF files allowed'), false);
   },
 });
-
-// Gemini Setup
-console.log('--- Fertilizer AI Check ---');
-console.log('GEMINI_API_KEY present:', !!process.env.GEMINI_API_KEY);
-const genAI = process.env.GEMINI_API_KEY ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY) : null;
-
-if (genAI) {
-    (async () => {
-        try {
-            console.log('Detective: Listing available models...');
-            const listModels = await genAI.getGenerativeModel({ model: "gemini-pro" }).listModels();
-            // Wait, the SDK doesn't have listModels on a model instance. 
-            // We'll just try to print them using the default API fetch if possible, 
-            // or just try a different model name.
-        } catch (e) {}
-    })();
-}
-
-// Mock analysis for demo
-const getMockAnalysis = () => {
-  return {
-    primaryIssue: {
-      deficiency: 'Nitrogen (N) Deficiency',
-      severity: 'Moderate',
-      symptoms: 'Yellowing of older/lower leaves starting from leaf tip, stunted growth',
-      treatment: 'Apply Urea @ 30-40 kg/acre or top-dress with 25 kg Urea/acre',
-      prevention: 'Split nitrogen applications, use slow-release fertilizers',
-      confidence: 78,
-    },
-    additionalIssues: [],
-    overallHealth: 'Fair',
-    urgency: 'Act within 7-10 days',
-    generalRecommendations: [
-      'Ensure adequate drainage to prevent waterlogging',
-      'Test soil pH and adjust if needed (target 6.0–6.5)',
-      'Apply organic matter to improve nutrient availability',
-      'Irrigate appropriately — avoid both over and under watering',
-    ],
-    isMock: true,
-  };
-};
 
 // GET /fertilizer/history
 router.get('/history', async (req, res) => {
@@ -75,6 +34,7 @@ router.post('/analyze', upload.single('image'), async (req, res) => {
     }
 
     const userId = req.headers['x-user-id'] || 'anonymous';
+    const apiKey = process.env.GEMINI_API_KEY;
 
     let optimizedBuffer;
     try {
@@ -88,44 +48,61 @@ router.post('/analyze', upload.single('image'), async (req, res) => {
 
     let analysisResult = null;
 
-    if (!genAI) {
+    if (!apiKey) {
+      console.warn('No GEMINI_API_KEY found, using mock data.');
       analysisResult = getMockAnalysis();
     } else {
-        const modelsToTry = [
-            "gemini-1.5-flash", 
-            "gemini-1.5-flash-latest", 
-            "gemini-1.5-pro",
-            "gemini-1.0-pro-vision-latest",
-            "gemini-pro-vision"
-        ];
         const prompt = `You are an expert agricultural plant pathologist. Analyze this plant/crop image. Return ONLY valid JSON: { "primaryIssue": { "deficiency": "name", "severity": "Mild|Moderate|Severe", "symptoms": "desc", "treatment": "steps", "prevention": "tips", "confidence": 0-100 }, "additionalIssues": [], "overallHealth": "Good|Fair|Poor", "urgency": "time", "generalRecommendations": ["tip1", "tip2"] }`;
 
-        for (const modelName of modelsToTry) {
-            try {
-                console.log(`Trying Gemini model: ${modelName}...`);
-                const model = genAI.getGenerativeModel({ model: modelName });
-                const result = await model.generateContent([
-                    prompt,
-                    { inlineData: { data: optimizedBuffer.toString('base64'), mimeType: 'image/webp' } }
-                ]);
-                const response = await result.response;
-                const text = response.text();
+        // Direct API Call to Google (v1 endpoint)
+        const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        
+        try {
+            console.log('Direct Detective: Calling Google v1 API...');
+            const response = await axios.post(url, {
+                contents: [{
+                    parts: [
+                        { text: prompt },
+                        { inline_data: { mime_type: "image/webp", data: optimizedBuffer.toString('base64') } }
+                    ]
+                }]
+            });
+
+            if (response.data && response.data.candidates && response.data.candidates[0].content) {
+                const text = response.data.candidates[0].content.parts[0].text;
                 const cleanJson = text.replace(/```json|```/g, '').trim();
                 analysisResult = JSON.parse(cleanJson);
                 analysisResult.isMock = false;
-                console.log(`Success with model: ${modelName}`);
-                break; // Exit loop on success
-            } catch (err) {
-                console.error(`Model ${modelName} failed:`, err.message);
-                continue; // Try next model
+                console.log('Success with Direct v1 API!');
+            }
+        } catch (err) {
+            console.error('Direct v1 API failed:', err.response?.data || err.message);
+            
+            // Try one more: gemini-pro-vision on v1
+            try {
+                console.log('Direct Detective: Trying gemini-pro-vision v1...');
+                const url2 = `https://generativelanguage.googleapis.com/v1/models/gemini-pro-vision:generateContent?key=${apiKey}`;
+                const resp2 = await axios.post(url2, {
+                    contents: [{
+                        parts: [
+                            { text: prompt },
+                            { inline_data: { mime_type: "image/webp", data: optimizedBuffer.toString('base64') } }
+                        ]
+                    }]
+                });
+                const text2 = resp2.data.candidates[0].content.parts[0].text;
+                const cleanJson2 = text2.replace(/```json|```/g, '').trim();
+                analysisResult = JSON.parse(cleanJson2);
+                analysisResult.isMock = false;
+                console.log('Success with gemini-pro-vision v1!');
+            } catch (err2) {
+                console.error('All Direct attempts failed.');
+                analysisResult = getMockAnalysis();
             }
         }
     }
 
-    if (!analysisResult) {
-        console.warn('All Gemini models failed, using mock data.');
-        analysisResult = getMockAnalysis();
-    }
+    if (!analysisResult) analysisResult = getMockAnalysis();
 
     // Save history asynchronously
     FertilizerHistory.create({
@@ -142,16 +119,29 @@ router.post('/analyze', upload.single('image'), async (req, res) => {
   }
 });
 
+// Mock analysis for fallback
+const getMockAnalysis = () => ({
+  primaryIssue: {
+    deficiency: 'Nitrogen (N) Deficiency',
+    severity: 'Moderate',
+    symptoms: 'Yellowing of older leaves starting from tip',
+    treatment: 'Apply Urea @ 30kg/acre',
+    prevention: 'Balanced fertilization',
+    confidence: 78,
+  },
+  additionalIssues: [],
+  overallHealth: 'Fair',
+  urgency: 'Within 7 days',
+  generalRecommendations: ['Check soil moisture', 'Test pH'],
+  isMock: true
+});
+
 // GET /fertilizer/soil/map-markers
 router.get('/soil/map-markers', async (req, res) => {
   try {
     const regionalSoil = [
-      { lat: 21.1458, lng: 79.0882, title: 'Nagpur Region', info: 'Black Cotton Soil · High Clay', detail: 'pH: 7.8 · Organic Carbon: 0.6% · Suitable: Cotton, Oranges' },
-      { lat: 15.3173, lng: 75.7139, title: 'Gadag Belt', info: 'Red Loamy Soil · Moderate Drainage', detail: 'pH: 6.5 · Organic Carbon: 0.4% · Suitable: Groundnut, Chillies' },
-      { lat: 27.1767, lng: 77.4126, title: 'Bharatpur Area', info: 'Alluvial Soil · Highly Fertile', detail: 'pH: 7.0 · Organic Carbon: 0.8% · Suitable: Wheat, Mustard' },
-      { lat: 20.9374, lng: 85.0985, title: 'Odisha Plains', info: 'Laterite Soil · Acidic', detail: 'pH: 5.8 · Organic Carbon: 0.3% · Suitable: Cashew, Tea' },
-      { lat: 24.5333, lng: 81.3000, title: 'Rewa District', info: 'Mixed Red and Black Soil', detail: 'pH: 7.2 · Organic Carbon: 0.5% · Suitable: Wheat, Gram' },
-      { lat: 31.1471, lng: 75.3412, title: 'Jalandhar Basin', info: 'Sandy Loam · Alluvial', detail: 'pH: 7.4 · Organic Carbon: 0.7% · Suitable: Wheat, Rice, Potato' },
+      { lat: 21.1458, lng: 79.0882, title: 'Nagpur Region', info: 'Black Cotton Soil' },
+      { lat: 24.5333, lng: 81.3000, title: 'Rewa District', info: 'Mixed Red and Black Soil' }
     ];
     res.json({ success: true, data: regionalSoil.map(s => ({ ...s, type: 'soil' })) });
   } catch (err) {
