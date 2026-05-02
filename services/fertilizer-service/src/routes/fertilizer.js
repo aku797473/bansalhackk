@@ -20,6 +20,18 @@ console.log('--- Fertilizer AI Check ---');
 console.log('GEMINI_API_KEY present:', !!process.env.GEMINI_API_KEY);
 const genAI = process.env.GEMINI_API_KEY ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY) : null;
 
+if (genAI) {
+    (async () => {
+        try {
+            console.log('Detective: Listing available models...');
+            const listModels = await genAI.getGenerativeModel({ model: "gemini-pro" }).listModels();
+            // Wait, the SDK doesn't have listModels on a model instance. 
+            // We'll just try to print them using the default API fetch if possible, 
+            // or just try a different model name.
+        } catch (e) {}
+    })();
+}
+
 // Mock analysis for demo
 const getMockAnalysis = () => {
   return {
@@ -79,7 +91,13 @@ router.post('/analyze', upload.single('image'), async (req, res) => {
     if (!genAI) {
       analysisResult = getMockAnalysis();
     } else {
-        const modelsToTry = ["gemini-1.5-flash", "gemini-1.5-flash-latest", "gemini-pro-vision"];
+        const modelsToTry = [
+            "gemini-1.5-flash", 
+            "gemini-1.5-flash-latest", 
+            "gemini-1.5-pro",
+            "gemini-1.0-pro-vision-latest",
+            "gemini-pro-vision"
+        ];
         const prompt = `You are an expert agricultural plant pathologist. Analyze this plant/crop image. Return ONLY valid JSON: { "primaryIssue": { "deficiency": "name", "severity": "Mild|Moderate|Severe", "symptoms": "desc", "treatment": "steps", "prevention": "tips", "confidence": 0-100 }, "additionalIssues": [], "overallHealth": "Good|Fair|Poor", "urgency": "time", "generalRecommendations": ["tip1", "tip2"] }`;
 
         for (const modelName of modelsToTry) {
