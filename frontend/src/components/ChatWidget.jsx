@@ -146,7 +146,7 @@ export default function ChatWidget() {
         <div className="fixed bottom-24 right-6 z-50 w-80 sm:w-96 rounded-2xl shadow-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden animate-slide-up flex flex-col transition-colors"
           style={{ maxHeight: '70vh' }}>
           {/* Header */}
-          <div className="flex items-center gap-3 px-4 py-3 bg-primary text-white shrink-0">
+          <div className="flex items-center gap-3 px-4 py-3 bg-purple-600 text-white shrink-0">
             <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
               <Bot size={18} />
             </div>
