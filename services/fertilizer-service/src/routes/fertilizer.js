@@ -75,7 +75,7 @@ Return ONLY valid JSON in this format:
 }`;
 
         try {
-            console.log('Attempting Groq Vision Analysis (llama-3.2-11b-vision-preview)...');
+            console.log('Attempting Groq Vision Analysis (Llama 4 Scout)...');
             const completion = await groq.chat.completions.create({
                 messages: [
                     {
@@ -91,7 +91,7 @@ Return ONLY valid JSON in this format:
                         ],
                     },
                 ],
-                model: "llama-3.2-11b-vision-preview",
+                model: "meta-llama/llama-4-scout-17b-16e-instruct",
                 response_format: { type: "json_object" },
             });
 
