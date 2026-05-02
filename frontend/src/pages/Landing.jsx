@@ -4,6 +4,7 @@ import {
   Cloud, Leaf, FlaskConical, TrendingUp, Users, MessageCircle,
   ArrowRight, Sprout, MapPin, ShieldCheck, Zap, ChevronRight
 } from 'lucide-react';
+import logo from '../assets/logo.png';
 
 const features = [
   {
@@ -76,8 +77,8 @@ export default function Landing() {
       <header className="sticky top-0 z-50 glass border-b border-gray-200/50 dark:border-white/5" style={{ boxShadow: '0 2px 20px rgba(0,0,0,0.06)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
-              <span className="text-2xl leading-none">🌾</span>
+            <div className="w-11 h-11 rounded-2xl bg-white flex items-center justify-center shadow-lg shadow-primary/20 overflow-hidden">
+              <img src={logo} alt="Smart Kisan Logo" className="w-full h-full object-cover" />
             </div>
             <span className="font-black text-gray-900 dark:text-white text-xl tracking-tighter">Smart Kisan</span>
             <span className="hidden sm:block px-2 py-0.5 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-lg text-[10px] font-black uppercase tracking-widest border border-green-100 dark:border-green-900/20 ml-2">Beta</span>
@@ -262,8 +263,8 @@ export default function Landing() {
           backgroundSize: '48px 48px'
         }} />
         <div className="relative max-w-3xl mx-auto text-center text-white">
-          <div className="w-20 h-20 rounded-[1.75rem] bg-white/20 flex items-center justify-center text-4xl mx-auto mb-10 border border-white/30 backdrop-blur-md shadow-2xl">
-            🌾
+          <div className="w-20 h-20 rounded-[1.75rem] bg-white flex items-center justify-center text-4xl mx-auto mb-10 border border-white/30 shadow-2xl overflow-hidden">
+            <img src={logo} alt="Smart Kisan Logo" className="w-full h-full object-cover" />
           </div>
           <h2 className="text-fluid-lg font-black mb-8 tracking-tighter leading-[0.9]">Start Today — For Free</h2>
           <p className="text-lg sm:text-xl text-green-100 mb-14 font-medium opacity-90 text-balance">
@@ -288,7 +289,9 @@ export default function Landing() {
       <footer className="bg-white dark:bg-slate-950 border-t border-gray-100 dark:border-white/5 py-12 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-8">
           <div className="flex items-center gap-3">
-            <span className="text-2xl">🌾</span>
+            <div className="w-8 h-8 rounded-xl bg-white overflow-hidden shadow-sm shrink-0">
+              <img src={logo} alt="Smart Kisan Logo" className="w-full h-full object-cover" />
+            </div>
             <span className="font-black text-gray-900 dark:text-white uppercase tracking-tighter text-lg">Smart Kisan</span>
           </div>
           <p className="text-[10px] text-gray-400 font-black uppercase tracking-[0.2em] text-center">

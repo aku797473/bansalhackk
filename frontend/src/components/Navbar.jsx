@@ -9,6 +9,7 @@ import {
   Users, Map, User, LogOut, Menu, X, Sun, Moon,
 } from 'lucide-react';
 import clsx from 'clsx';
+import logo from '../assets/logo.png';
 
 export default function Navbar() {
   const { t } = useTranslation();
@@ -40,8 +41,8 @@ export default function Navbar() {
 
           {/* ── Logo ── */}
           <NavLink to="/dashboard" className="flex items-center gap-2.5 shrink-0 group">
-            <div className="w-8 h-8 rounded-xl bg-primary-gradient flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
-              <span className="text-base leading-none">🌾</span>
+            <div className="w-8 h-8 rounded-xl bg-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform overflow-hidden border border-gray-100 dark:border-slate-700">
+              <img src={logo} alt="Smart Kisan Logo" className="w-full h-full object-cover" />
             </div>
             <span className="font-bold text-gray-900 dark:text-white text-sm hidden xs:block tracking-tight">Smart Kisan</span>
           </NavLink>
