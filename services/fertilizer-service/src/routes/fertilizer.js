@@ -17,6 +17,8 @@ const upload = multer({
 });
 
 // Gemini Setup
+console.log('--- Fertilizer AI Check ---');
+console.log('GEMINI_API_KEY present:', !!process.env.GEMINI_API_KEY);
 const genAI = process.env.GEMINI_API_KEY ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY) : null;
 
 // Mock analysis for demo
