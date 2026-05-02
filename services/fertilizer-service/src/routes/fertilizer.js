@@ -10,7 +10,6 @@ const upload = multer({
   storage,
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
   fileFilter: (req, file, cb) => {
-    // Accept images and PDF (though Gemini handles image better, we'll convert PDF if needed)
     if (file.mimetype.startsWith('image/') || file.mimetype === 'application/pdf') cb(null, true);
     else cb(new Error('Only image and PDF files allowed'), false);
   },
@@ -23,8 +22,8 @@ const genAI = process.env.GEMINI_API_KEY ? new GoogleGenerativeAI(process.env.GE
 
 // Mock analysis for demo
 const getMockAnalysis = () => {
-  const issues = [
-    {
+  return {
+    primaryIssue: {
       deficiency: 'Nitrogen (N) Deficiency',
       severity: 'Moderate',
       symptoms: 'Yellowing of older/lower leaves starting from leaf tip, stunted growth',
@@ -32,19 +31,7 @@ const getMockAnalysis = () => {
       prevention: 'Split nitrogen applications, use slow-release fertilizers',
       confidence: 78,
     },
-    {
-      deficiency: 'Iron (Fe) Deficiency',
-      severity: 'Mild',
-      symptoms: 'Interveinal chlorosis on young leaves (yellow with green veins)',
-      treatment: 'Foliar spray with 0.5% FeSO4 solution, apply chelated iron to soil',
-      prevention: 'Maintain soil pH 6-6.5, avoid waterlogging',
-      confidence: 65,
-    },
-  ];
-
-  return {
-    primaryIssue: issues[0],
-    additionalIssues: [issues[1]],
+    additionalIssues: [],
     overallHealth: 'Fair',
     urgency: 'Act within 7-10 days',
     generalRecommendations: [
@@ -77,9 +64,6 @@ router.post('/analyze', upload.single('image'), async (req, res) => {
 
     const userId = req.headers['x-user-id'] || 'anonymous';
 
-    // Compress & convert to WebP for Gemini
-    // Note: If it's a PDF, sharp might fail depending on environment. 
-    // For now, we'll focus on images.
     let optimizedBuffer;
     try {
       optimizedBuffer = await sharp(req.file.buffer)
@@ -87,75 +71,42 @@ router.post('/analyze', upload.single('image'), async (req, res) => {
         .webp({ quality: 85 })
         .toBuffer();
     } catch (e) {
-      console.warn('Sharp failed, using original buffer');
       optimizedBuffer = req.file.buffer;
     }
 
-    let analysisResult;
+    let analysisResult = null;
 
     if (!genAI) {
       analysisResult = getMockAnalysis();
     } else {
-      try {
-        // Try multiple model names in case one is not available in the region/key
-        const modelsToTry = ["gemini-1.5-flash", "gemini-1.5-flash-latest", "gemini-1.5-pro"];
-        let model;
-        let lastErr;
+        const modelsToTry = ["gemini-1.5-flash", "gemini-1.5-flash-latest", "gemini-pro-vision"];
+        const prompt = `You are an expert agricultural plant pathologist. Analyze this plant/crop image. Return ONLY valid JSON: { "primaryIssue": { "deficiency": "name", "severity": "Mild|Moderate|Severe", "symptoms": "desc", "treatment": "steps", "prevention": "tips", "confidence": 0-100 }, "additionalIssues": [], "overallHealth": "Good|Fair|Poor", "urgency": "time", "generalRecommendations": ["tip1", "tip2"] }`;
 
         for (const modelName of modelsToTry) {
             try {
-                model = genAI.getGenerativeModel({ model: modelName });
-                // Simple test to see if model exists (optional, but let's just try to use it)
-                break; 
-            } catch (e) {
-                lastErr = e;
+                console.log(`Trying Gemini model: ${modelName}...`);
+                const model = genAI.getGenerativeModel({ model: modelName });
+                const result = await model.generateContent([
+                    prompt,
+                    { inlineData: { data: optimizedBuffer.toString('base64'), mimeType: 'image/webp' } }
+                ]);
+                const response = await result.response;
+                const text = response.text();
+                const cleanJson = text.replace(/```json|```/g, '').trim();
+                analysisResult = JSON.parse(cleanJson);
+                analysisResult.isMock = false;
+                console.log(`Success with model: ${modelName}`);
+                break; // Exit loop on success
+            } catch (err) {
+                console.error(`Model ${modelName} failed:`, err.message);
+                continue; // Try next model
             }
         }
-        
-        const prompt = `You are an expert agricultural plant pathologist.
-Analyze this crop/plant image or soil report and identify:
-1. Nutrient deficiencies (N, P, K, Fe, Mg, Ca, Zn, etc.)
-2. Disease symptoms (fungal, bacterial, viral)
-3. Pest damage
-4. Overall plant health status
+    }
 
-IMPORTANT: Respond ONLY with a valid JSON object in this format:
-{
-  "primaryIssue": {
-    "deficiency": "Common Name of Deficiency/Disease",
-    "severity": "Mild|Moderate|Severe",
-    "symptoms": "Brief description of seen symptoms",
-    "treatment": "Specific actionable treatment (e.g., Apply Urea 25kg/acre)",
-    "prevention": "How to prevent this in future",
-    "confidence": 0-100
-  },
-  "additionalIssues": [],
-  "overallHealth": "Good|Fair|Poor",
-  "urgency": "Immediate|Within 7 days|Monitor",
-  "generalRecommendations": ["Recommendation 1", "Recommendation 2"]
-}`;
-
-        const result = await model.generateContent([
-          prompt,
-          {
-            inlineData: {
-              data: optimizedBuffer.toString('base64'),
-              mimeType: 'image/webp'
-            }
-          }
-        ]);
-
-        const response = await result.response;
-        const text = response.text();
-        
-        // Clean up the response in case Gemini adds markdown backticks
-        const cleanJson = text.replace(/```json|```/g, '').trim();
-        analysisResult = JSON.parse(cleanJson);
-        analysisResult.isMock = false;
-      } catch (err) {
-        console.error('Gemini vision failed:', err.message);
+    if (!analysisResult) {
+        console.warn('All Gemini models failed, using mock data.');
         analysisResult = getMockAnalysis();
-      }
     }
 
     // Save history asynchronously
@@ -184,13 +135,7 @@ router.get('/soil/map-markers', async (req, res) => {
       { lat: 24.5333, lng: 81.3000, title: 'Rewa District', info: 'Mixed Red and Black Soil', detail: 'pH: 7.2 · Organic Carbon: 0.5% · Suitable: Wheat, Gram' },
       { lat: 31.1471, lng: 75.3412, title: 'Jalandhar Basin', info: 'Sandy Loam · Alluvial', detail: 'pH: 7.4 · Organic Carbon: 0.7% · Suitable: Wheat, Rice, Potato' },
     ];
-
-    const markers = regionalSoil.map(s => ({
-      ...s,
-      type: 'soil'
-    }));
-
-    res.json({ success: true, data: markers });
+    res.json({ success: true, data: regionalSoil.map(s => ({ ...s, type: 'soil' })) });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
