@@ -143,8 +143,10 @@ router.get('/current', async (req, res) => {
     WeatherHistory.create({ userId, lat, lon, city: weatherData.city, temperature: weatherData.temperature, description: weatherData.description, searchType: 'current' }).catch(console.error);
     res.json({ success: true, data: weatherData });
   } catch (err) {
-    console.error('Weather API error:', err.message);
-    res.status(500).json({ success: false, message: 'Weather data unavailable' });
+    console.error('Weather API error (falling back to mock):', err.message);
+    const { lat, lon } = req.query;
+    const mock = getMockWeather(lat || 28.6, lon || 77.2);
+    res.json({ success: true, data: mock, note: 'Using fallback data due to API error' });
   }
 });
 
@@ -187,7 +189,10 @@ router.get('/by-city', async (req, res) => {
     WeatherHistory.create({ userId, lat: result.lat, lon: result.lon, city: result.city, temperature: result.temperature, description: result.description, searchType: 'by-city' }).catch(console.error);
     res.json({ success: true, data: result });
   } catch (err) {
-    res.status(500).json({ success: false, message: 'Weather data unavailable' });
+    console.error('Weather API error (city fallback):', err.message);
+    const { city } = req.query;
+    const mock = { ...getMockWeather(28.6, 77.2), city: city || 'Unknown' };
+    res.json({ success: true, data: mock, note: 'Using fallback data due to API error' });
   }
 });
 
