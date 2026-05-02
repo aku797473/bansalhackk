@@ -97,7 +97,20 @@ router.post('/analyze', upload.single('image'), async (req, res) => {
       analysisResult = getMockAnalysis();
     } else {
       try {
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        // Try multiple model names in case one is not available in the region/key
+        const modelsToTry = ["gemini-1.5-flash", "gemini-1.5-flash-latest", "gemini-1.5-pro"];
+        let model;
+        let lastErr;
+
+        for (const modelName of modelsToTry) {
+            try {
+                model = genAI.getGenerativeModel({ model: modelName });
+                // Simple test to see if model exists (optional, but let's just try to use it)
+                break; 
+            } catch (e) {
+                lastErr = e;
+            }
+        }
         
         const prompt = `You are an expert agricultural plant pathologist.
 Analyze this crop/plant image or soil report and identify:
