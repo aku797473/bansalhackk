@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const sharp = require('sharp');
-const axios = require('axios'); // We'll use axios for direct API calls
+const Groq = require('groq-sdk');
 const FertilizerHistory = require('../models/FertilizerHistory');
 
 const storage = multer.memoryStorage();
@@ -14,6 +14,9 @@ const upload = multer({
     else cb(new Error('Only image and PDF files allowed'), false);
   },
 });
+
+// Groq Setup
+const groq = process.env.GROQ_API_KEY ? new Groq({ apiKey: process.env.GROQ_API_KEY }) : null;
 
 // GET /fertilizer/history
 router.get('/history', async (req, res) => {
@@ -34,13 +37,13 @@ router.post('/analyze', upload.single('image'), async (req, res) => {
     }
 
     const userId = req.headers['x-user-id'] || 'anonymous';
-    const apiKey = process.env.GEMINI_API_KEY;
 
+    // Optimize image for Vision
     let optimizedBuffer;
     try {
       optimizedBuffer = await sharp(req.file.buffer)
-        .resize(1000, 1000, { fit: 'inside', withoutEnlargement: true })
-        .webp({ quality: 85 })
+        .resize(800, 800, { fit: 'inside' })
+        .jpeg({ quality: 80 })
         .toBuffer();
     } catch (e) {
       optimizedBuffer = req.file.buffer;
@@ -48,63 +51,63 @@ router.post('/analyze', upload.single('image'), async (req, res) => {
 
     let analysisResult = null;
 
-    if (!apiKey) {
-      console.warn('No GEMINI_API_KEY found, using mock data.');
+    if (!groq) {
+      console.warn('No GROQ_API_KEY found, using mock.');
       analysisResult = getMockAnalysis();
     } else {
-        const prompt = `You are an expert agricultural plant pathologist. Analyze this plant/crop image. Return ONLY valid JSON: { "primaryIssue": { "deficiency": "name", "severity": "Mild|Moderate|Severe", "symptoms": "desc", "treatment": "steps", "prevention": "tips", "confidence": 0-100 }, "additionalIssues": [], "overallHealth": "Good|Fair|Poor", "urgency": "time", "generalRecommendations": ["tip1", "tip2"] }`;
+        const prompt = `You are an expert agricultural plant pathologist. 
+Analyze this plant/crop image.
+Identify deficiencies, diseases, or pests.
+Return ONLY valid JSON in this format:
+{
+  "primaryIssue": {
+    "deficiency": "Common Name",
+    "severity": "Mild|Moderate|Severe",
+    "symptoms": "Brief desc",
+    "treatment": "Steps to fix",
+    "prevention": "Tips",
+    "confidence": 0-100
+  },
+  "additionalIssues": [],
+  "overallHealth": "Good|Fair|Poor",
+  "urgency": "Immediate|Monitor",
+  "generalRecommendations": ["tip1", "tip2"]
+}`;
 
-        // Direct API Call to Google (v1 endpoint)
-        const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-        
         try {
-            console.log('Direct Detective: Calling Google v1 API...');
-            const response = await axios.post(url, {
-                contents: [{
-                    parts: [
-                        { text: prompt },
-                        { inline_data: { mime_type: "image/webp", data: optimizedBuffer.toString('base64') } }
-                    ]
-                }]
+            console.log('Attempting Groq Vision Analysis (llama-3.2-11b-vision-preview)...');
+            const completion = await groq.chat.completions.create({
+                messages: [
+                    {
+                        role: "user",
+                        content: [
+                            { type: "text", text: prompt },
+                            {
+                                type: "image_url",
+                                image_url: {
+                                    url: `data:image/jpeg;base64,${optimizedBuffer.toString('base64')}`,
+                                },
+                            },
+                        ],
+                    },
+                ],
+                model: "llama-3.2-11b-vision-preview",
+                response_format: { type: "json_object" },
             });
 
-            if (response.data && response.data.candidates && response.data.candidates[0].content) {
-                const text = response.data.candidates[0].content.parts[0].text;
-                const cleanJson = text.replace(/```json|```/g, '').trim();
-                analysisResult = JSON.parse(cleanJson);
-                analysisResult.isMock = false;
-                console.log('Success with Direct v1 API!');
-            }
+            const content = completion.choices[0].message.content;
+            analysisResult = JSON.parse(content);
+            analysisResult.isMock = false;
+            console.log('Groq Vision Success!');
         } catch (err) {
-            console.error('Direct v1 API failed:', err.response?.data || err.message);
-            
-            // Try one more: gemini-pro-vision on v1
-            try {
-                console.log('Direct Detective: Trying gemini-pro-vision v1...');
-                const url2 = `https://generativelanguage.googleapis.com/v1/models/gemini-pro-vision:generateContent?key=${apiKey}`;
-                const resp2 = await axios.post(url2, {
-                    contents: [{
-                        parts: [
-                            { text: prompt },
-                            { inline_data: { mime_type: "image/webp", data: optimizedBuffer.toString('base64') } }
-                        ]
-                    }]
-                });
-                const text2 = resp2.data.candidates[0].content.parts[0].text;
-                const cleanJson2 = text2.replace(/```json|```/g, '').trim();
-                analysisResult = JSON.parse(cleanJson2);
-                analysisResult.isMock = false;
-                console.log('Success with gemini-pro-vision v1!');
-            } catch (err2) {
-                console.error('All Direct attempts failed.');
-                analysisResult = getMockAnalysis();
-            }
+            console.error('Groq Vision failed:', err.message);
+            analysisResult = getMockAnalysis();
         }
     }
 
     if (!analysisResult) analysisResult = getMockAnalysis();
 
-    // Save history asynchronously
+    // Save history
     FertilizerHistory.create({
       userId,
       primaryIssue: analysisResult.primaryIssue,
@@ -119,20 +122,19 @@ router.post('/analyze', upload.single('image'), async (req, res) => {
   }
 });
 
-// Mock analysis for fallback
 const getMockAnalysis = () => ({
   primaryIssue: {
     deficiency: 'Nitrogen (N) Deficiency',
     severity: 'Moderate',
-    symptoms: 'Yellowing of older leaves starting from tip',
-    treatment: 'Apply Urea @ 30kg/acre',
-    prevention: 'Balanced fertilization',
+    symptoms: 'Yellowing of older leaves',
+    treatment: 'Apply Urea',
+    prevention: 'Soil testing',
     confidence: 78,
   },
   additionalIssues: [],
   overallHealth: 'Fair',
   urgency: 'Within 7 days',
-  generalRecommendations: ['Check soil moisture', 'Test pH'],
+  generalRecommendations: ['Monitor growth', 'Check water'],
   isMock: true
 });
 
