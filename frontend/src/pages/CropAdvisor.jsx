@@ -10,7 +10,28 @@ const STATES     = ['Punjab','Haryana','Uttar Pradesh','Bihar','Madhya Pradesh',
 const LEVELS     = ['Low', 'Medium', 'High'];
 
 export default function CropAdvisor() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isHi = i18n.language === 'hi';
+
+  const translateOption = (opt) => {
+    if (!isHi) return opt;
+    const hiMap = {
+      'loamy': 'दोमट (Loamy)',
+      'clay': 'चिकनी (Clay)',
+      'sandy': 'बलुई (Sandy)',
+      'silty': 'गाद (Silty)',
+      'peaty': 'दलदली (Peaty)',
+      'chalky': 'चूनेदार (Chalky)',
+      'Kharif': 'खरीफ',
+      'Rabi': 'रबी',
+      'Zaid': 'जायद',
+      'Low': 'कम',
+      'Medium': 'मध्यम',
+      'High': 'उच्च'
+    };
+    return hiMap[opt] || opt;
+  };
+
   const [form, setForm] = useState({
     soilType: 'loamy', soilPH: 6.5, nitrogen: 'Medium', phosphorus: 'Medium', potassium: 'Medium',
     temperature: 28, humidity: 65, rainfall: 800, season: 'Kharif', state: 'Punjab', district: '',
@@ -78,7 +99,7 @@ export default function CropAdvisor() {
     <div>
       <label className="label">{label}</label>
       <select className="input dark:bg-slate-900 border-2" value={value} onChange={e => onChange(e.target.value)}>
-        {options.map(o => <option key={o} value={o}>{o}</option>)}
+        {options.map(o => <option key={o} value={o}>{translateOption(o)}</option>)}
       </select>
     </div>
   );
@@ -141,9 +162,9 @@ export default function CropAdvisor() {
                     <div className="flex gap-1 bg-gray-50 dark:bg-slate-800 p-1 rounded-xl">
                       {LEVELS.map(l => (
                         <button key={l} onClick={() => set(k, l)}
-                          title={l}
+                          title={translateOption(l)}
                           className={`flex-1 py-2 rounded-lg text-[10px] font-black transition-all ${form[k] === l ? 'bg-primary text-white shadow-md' : 'text-gray-400 hover:text-gray-600 dark:hover:text-slate-300'}`}>
-                          {l[0]}
+                          {translateOption(l)[0]}
                         </button>
                       ))}
                     </div>
