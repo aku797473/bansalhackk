@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDropzone } from 'react-dropzone';
 import { fertilizerAPI } from '../services/api';
-import { FlaskConical, Upload, AlertTriangle, CheckCircle, Loader, History, Trash2, ChevronRight } from 'lucide-react';
+import { FlaskConical, Upload, AlertTriangle, CheckCircle, Loader, History, Trash2, ChevronRight, RefreshCw } from 'lucide-react';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 
@@ -105,9 +105,9 @@ export default function Fertilizer() {
         <div>
           <h1 className="page-title flex items-center gap-2">
             <FlaskConical className="text-amber-500" size={22} />
-            <span>{t('fertilizer.title')}</span>
+            <span>{t('fertilizer.title')} & <span className="text-green-600">Seed IQ</span></span>
           </h1>
-          <p className="page-subtitle text-gray-500 font-medium">{t('fertilizer.subtitle')}</p>
+          <p className="page-subtitle text-gray-500 font-medium">AI analysis for plants, seeds, and reports</p>
         </div>
         <div className="flex items-center gap-2">
           {result && (
@@ -139,7 +139,7 @@ export default function Fertilizer() {
                     <Upload size={24} className="text-amber-500" />
                     </div>
                     <div>
-                    <p className="text-sm font-medium text-gray-700 dark:text-slate-300">{t('fertilizer.upload_label')}</p>
+                    <p className="text-sm font-medium text-gray-700 dark:text-slate-300">Upload plant, seed, or report photo</p>
                     <p className="text-[10px] text-gray-400 mt-1">JPG, PNG, WEBP, PDF — max 10MB</p>
                     </div>
                 </div>
@@ -154,8 +154,8 @@ export default function Fertilizer() {
                     </button>
                 )}
                 <button onClick={analyze} disabled={!file || loading} className="btn-primary flex-[2] justify-center text-xs py-2">
-                    {loading ? <Loader size={14} className="animate-spin" /> : <FlaskConical size={14} />}
-                    {loading ? t('fertilizer.analyzing') : t('fertilizer.analyze_btn')}
+                    {loading ? <RefreshCw size={14} className="animate-spin" /> : <FlaskConical size={14} />}
+                    {loading ? 'Analyzing...' : 'Analyze Health / Variety'}
                 </button>
             </div>
           </div>
