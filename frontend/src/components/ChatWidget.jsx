@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { chatAPI } from '../services/api';
-import { MessageCircle, X, Send, Trash2, ChevronDown, Bot } from 'lucide-react';
+import { MessageCircle, X, Send, Trash2, ChevronDown, Bot, Mic, MicOff } from 'lucide-react';
 import { v4 as uuid } from 'uuid';
 import clsx from 'clsx';
 
@@ -15,6 +15,7 @@ export default function ChatWidget() {
   ]);
   const [input, setInput]     = useState('');
   const [loading, setLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false);
   const [sessionId, setSessionId] = useState(() => {
     const saved = localStorage.getItem('kisan_chat_session_id');
     if (saved) return saved;
@@ -24,6 +25,51 @@ export default function ChatWidget() {
   });
   const bottomRef = useRef(null);
   const inputRef  = useRef(null);
+
+  // Speech Recognition Setup
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const recognition = useRef(null);
+
+  useEffect(() => {
+    if (SpeechRecognition) {
+      recognition.current = new SpeechRecognition();
+      recognition.current.continuous = false;
+      recognition.current.interimResults = false;
+      recognition.current.lang = i18n.language === 'hi' ? 'hi-IN' : 'en-IN';
+
+      recognition.current.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        setInput(transcript);
+        setIsListening(false);
+      };
+
+      recognition.current.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        setIsListening(false);
+      };
+
+      recognition.current.onend = () => setIsListening(false);
+    }
+  }, [i18n.language]);
+
+  const toggleListening = () => {
+    if (!recognition.current) return alert('Speech recognition not supported in this browser.');
+    if (isListening) {
+      recognition.current.stop();
+    } else {
+      setIsListening(true);
+      recognition.current.start();
+    }
+  };
+
+  const speak = (text) => {
+    if (!window.speechSynthesis) return;
+    window.speechSynthesis.cancel(); // Stop any current speech
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = i18n.language === 'hi' ? 'hi-IN' : 'en-IN';
+    utterance.rate = 1.0;
+    window.speechSynthesis.speak(utterance);
+  };
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -46,15 +92,17 @@ export default function ChatWidget() {
     }
   }, [open, messages]);
 
-  const send = async () => {
-    const text = input.trim();
+  const send = async (overrideText) => {
+    const text = typeof overrideText === 'string' ? overrideText : input.trim();
     if (!text || loading) return;
     setInput('');
     setMessages(m => [...m, { role: 'user', content: text }]);
     setLoading(true);
     try {
       const { data } = await chatAPI.sendMessage(text, sessionId, i18n.language || 'en');
-      setMessages(m => [...m, { role: 'assistant', content: data.data.reply }]);
+      const reply = data.data.reply;
+      setMessages(m => [...m, { role: 'assistant', content: reply }]);
+      speak(reply); // Voice reply
     } catch {
       setMessages(m => [...m, { role: 'assistant', content: t('chat.error', "⚠️ Sorry, I'm having trouble right now. Please try again.") }]);
     } finally { setLoading(false); }
@@ -169,8 +217,15 @@ export default function ChatWidget() {
 
           {/* Input */}
           <div className="flex gap-2 p-3 border-t border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 transition-colors shrink-0">
+            <button onClick={toggleListening}
+              className={clsx(
+                "p-2.5 rounded-xl transition-all duration-300",
+                isListening ? "bg-red-500 text-white animate-pulse" : "bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400 hover:bg-gray-200"
+              )}>
+              {isListening ? <MicOff size={18} /> : <Mic size={18} />}
+            </button>
             <input ref={inputRef} className="input flex-1 text-sm py-2"
-              placeholder={t('chat.placeholder', 'Ask about farming...')}
+              placeholder={isListening ? t('chat.listening', 'Listening...') : t('chat.placeholder', 'Ask about farming...')}
               value={input} onChange={e => setInput(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && !e.shiftKey && send()}
               disabled={loading} />
