@@ -13,7 +13,7 @@ import logo from '../assets/logo.png';
 import { newsAPI } from '../services/api';
 
 export default function Navbar() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
