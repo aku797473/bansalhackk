@@ -6,10 +6,11 @@ import { useTheme } from '../contexts/ThemeContext';
 import LanguageSelector from './LanguageSelector';
 import {
   Home, Cloud, Leaf, FlaskConical, TrendingUp,
-  Users, Map, User, LogOut, Menu, X, Sun, Moon, Newspaper,
+  Users, Map, User, LogOut, Menu, X, Sun, Moon, Newspaper, Bell
 } from 'lucide-react';
 import clsx from 'clsx';
 import logo from '../assets/logo.png';
+import { newsAPI } from '../services/api';
 
 export default function Navbar() {
   const { t } = useTranslation();
@@ -18,6 +19,37 @@ export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const [open, setOpen] = useState(false);
+  const [hasNewNews, setHasNewNews] = useState(false);
+  const [latestDate, setLatestDate] = useState(null);
+  
+  // Check for new news
+  useEffect(() => {
+    const checkNews = async () => {
+      try {
+        const lang = i18n.language === 'hi' ? 'hi' : 'en';
+        const { data } = await newsAPI.getLatest(lang);
+        if (data.success && data.data.length > 0) {
+          const latestPubDate = new Date(data.data[0].pubDate).getTime();
+          setLatestDate(latestPubDate);
+          const lastSeen = localStorage.getItem('sk_last_seen_news');
+          if (!lastSeen || latestPubDate > Number(lastSeen)) {
+            setHasNewNews(true);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to check news for notifications');
+      }
+    };
+    if (user) checkNews();
+  }, [i18n.language, user]);
+
+  const handleNotificationClick = () => {
+    if (latestDate) {
+      localStorage.setItem('sk_last_seen_news', latestDate.toString());
+      setHasNewNews(false);
+    }
+    navigate('/news');
+  };
 
   const links = [
     { to: '/dashboard',  icon: Home,         label: t('nav.home') },
@@ -67,6 +99,17 @@ export default function Navbar() {
           {/* ── Right Actions ── */}
           <div className="flex items-center gap-1 sm:gap-2">
             
+            {/* Notifications */}
+            <button
+              onClick={handleNotificationClick}
+              className="relative p-2 text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
+              title="Notifications">
+              <Bell size={18} />
+              {hasNewNews && (
+                <span className="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-slate-900 animate-pulse" />
+              )}
+            </button>
+
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
