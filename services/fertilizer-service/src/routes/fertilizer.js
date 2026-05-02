@@ -55,17 +55,21 @@ router.post('/analyze', upload.single('image'), async (req, res) => {
       console.warn('No GROQ_API_KEY found, using mock.');
       analysisResult = getMockAnalysis();
     } else {
-        const prompt = `You are an expert agricultural plant pathologist. 
-Analyze this plant/crop image.
-Identify deficiencies, diseases, or pests.
+        const prompt = `You are an expert agricultural scientist and plant pathologist. 
+Analyze this image which could be a plant, crop, or seeds.
+Identify:
+1. Seed variety and quality (if seeds are shown)
+2. Nutrient deficiencies or diseases (if a plant is shown)
+3. Soil report details (if a document is shown)
+
 Return ONLY valid JSON in this format:
 {
   "primaryIssue": {
-    "deficiency": "Common Name",
-    "severity": "Mild|Moderate|Severe",
-    "symptoms": "Brief desc",
-    "treatment": "Steps to fix",
-    "prevention": "Tips",
+    "deficiency": "Name of Seed/Disease/Deficiency",
+    "severity": "High|Moderate|Low Quality/Severity",
+    "symptoms": "Description of what is seen",
+    "treatment": "Actionable steps (e.g., Use this fertilizer or This seed is good for planting)",
+    "prevention": "Tips for future",
     "confidence": 0-100
   },
   "additionalIssues": [],
