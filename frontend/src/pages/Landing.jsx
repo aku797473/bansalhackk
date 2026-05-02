@@ -71,9 +71,6 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 overflow-x-hidden animate-fade-in">
-      <div className="bg-red-600 text-white text-center py-4 font-black text-2xl animate-pulse uppercase tracking-[0.5em] z-[100] relative">
-        🚀 VOICE TEST ACTIVE - VERCEL UPDATE CHECK 🚀
-      </div>
 
       {/* ── Navbar ──────────────────────────────────────── */}
       <header className="sticky top-0 z-50 glass border-b border-gray-200/50 dark:border-white/5" style={{ boxShadow: '0 2px 20px rgba(0,0,0,0.06)' }}>

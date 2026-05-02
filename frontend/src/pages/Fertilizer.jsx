@@ -55,15 +55,19 @@ export default function Fertilizer() {
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop, accept: { 'image/*': ['.jpg', '.jpeg', '.png', '.webp'] }, maxFiles: 1,
+    onDrop, accept: { 
+      'image/*': ['.jpg', '.jpeg', '.png', '.webp'],
+      'application/pdf': ['.pdf']
+    }, maxFiles: 1,
   });
 
   const analyze = async () => {
-    if (!file) { toast.error('Please upload an image'); return; }
+    if (!file) { toast.error('Please upload an image or PDF'); return; }
     setLoading(true);
     try {
       const fd = new FormData();
       fd.append('image', file);
+// ... (rest of analyze remains same)
       const { data } = await fertilizerAPI.analyze(fd);
       const analysisResult = data.data;
       
@@ -136,7 +140,7 @@ export default function Fertilizer() {
                     </div>
                     <div>
                     <p className="text-sm font-medium text-gray-700 dark:text-slate-300">{t('fertilizer.upload_label')}</p>
-                    <p className="text-[10px] text-gray-400 mt-1">JPG, PNG, WEBP — max 10MB</p>
+                    <p className="text-[10px] text-gray-400 mt-1">JPG, PNG, WEBP, PDF — max 10MB</p>
                     </div>
                 </div>
                 )}

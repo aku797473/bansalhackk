@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const sharp = require('sharp');
-const { OpenAI } = require('openai');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 const FertilizerHistory = require('../models/FertilizerHistory');
 
 const storage = multer.memoryStorage();
@@ -10,14 +10,14 @@ const upload = multer({
   storage,
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
   fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) cb(null, true);
-    else cb(new Error('Only image files allowed'), false);
+    // Accept images and PDF (though Gemini handles image better, we'll convert PDF if needed)
+    if (file.mimetype.startsWith('image/') || file.mimetype === 'application/pdf') cb(null, true);
+    else cb(new Error('Only image and PDF files allowed'), false);
   },
 });
 
-const openai = (process.env.OPENAI_API_KEY && !process.env.OPENAI_API_KEY.includes('your_'))
-  ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
-  : null;
+// Gemini Setup
+const genAI = process.env.GEMINI_API_KEY ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY) : null;
 
 // Mock analysis for demo
 const getMockAnalysis = () => {
@@ -70,68 +70,75 @@ router.get('/history', async (req, res) => {
 router.post('/analyze', upload.single('image'), async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ success: false, message: 'Image file required' });
+      return res.status(400).json({ success: false, message: 'File required' });
     }
 
     const userId = req.headers['x-user-id'] || 'anonymous';
 
-    // Compress & convert to WebP
-    const optimizedBuffer = await sharp(req.file.buffer)
-      .resize(800, 800, { fit: 'inside', withoutEnlargement: true })
-      .webp({ quality: 80 })
-      .toBuffer();
+    // Compress & convert to WebP for Gemini
+    // Note: If it's a PDF, sharp might fail depending on environment. 
+    // For now, we'll focus on images.
+    let optimizedBuffer;
+    try {
+      optimizedBuffer = await sharp(req.file.buffer)
+        .resize(1000, 1000, { fit: 'inside', withoutEnlargement: true })
+        .webp({ quality: 85 })
+        .toBuffer();
+    } catch (e) {
+      console.warn('Sharp failed, using original buffer');
+      optimizedBuffer = req.file.buffer;
+    }
 
     let analysisResult;
 
-    if (!openai) {
+    if (!genAI) {
       analysisResult = getMockAnalysis();
     } else {
-      const prompt = `You are an expert agricultural plant pathologist.
-Analyze this crop/plant image and identify:
+      try {
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        
+        const prompt = `You are an expert agricultural plant pathologist.
+Analyze this crop/plant image or soil report and identify:
 1. Nutrient deficiencies (N, P, K, Fe, Mg, Ca, Zn, etc.)
 2. Disease symptoms (fungal, bacterial, viral)
 3. Pest damage
 4. Overall plant health status
 
-Respond with valid JSON:
+IMPORTANT: Respond ONLY with a valid JSON object in this format:
 {
   "primaryIssue": {
-    "deficiency": "name",
+    "deficiency": "Common Name of Deficiency/Disease",
     "severity": "Mild|Moderate|Severe",
-    "symptoms": "description",
-    "treatment": "specific treatment",
-    "prevention": "prevention tips",
+    "symptoms": "Brief description of seen symptoms",
+    "treatment": "Specific actionable treatment (e.g., Apply Urea 25kg/acre)",
+    "prevention": "How to prevent this in future",
     "confidence": 0-100
   },
   "additionalIssues": [],
   "overallHealth": "Good|Fair|Poor",
-  "urgency": "timeframe to act",
-  "generalRecommendations": ["tip1", "tip2", "tip3"]
+  "urgency": "Immediate|Within 7 days|Monitor",
+  "generalRecommendations": ["Recommendation 1", "Recommendation 2"]
 }`;
 
-      try {
-        const completion = await openai.chat.completions.create({
-          model: "gpt-4o",
-          messages: [
-            {
-              role: "user",
-              content: [
-                { type: "text", text: prompt },
-                {
-                  type: "image_url",
-                  image_url: {
-                    url: `data:image/webp;base64,${optimizedBuffer.toString('base64')}`,
-                  },
-                },
-              ],
-            },
-          ],
-          response_format: { type: "json_object" },
-        });
+        const result = await model.generateContent([
+          prompt,
+          {
+            inlineData: {
+              data: optimizedBuffer.toString('base64'),
+              mimeType: 'image/webp'
+            }
+          }
+        ]);
 
-        analysisResult = JSON.parse(completion.choices[0].message.content);
+        const response = await result.response;
+        const text = response.text();
+        
+        // Clean up the response in case Gemini adds markdown backticks
+        const cleanJson = text.replace(/```json|```/g, '').trim();
+        analysisResult = JSON.parse(cleanJson);
+        analysisResult.isMock = false;
       } catch (err) {
-        console.warn('OpenAI vision failed:', err.message);
+        console.error('Gemini vision failed:', err.message);
         analysisResult = getMockAnalysis();
       }
     }
