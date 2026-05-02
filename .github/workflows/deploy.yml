@@ -109,3 +109,14 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/sk-auth-service:latest
           cache-from: type=gha
           cache-to:   type=gha,mode=max
+
+      - name: Build & Push Weather Service
+        uses: docker/build-push-action@v5
+        with:
+          context: ./services/weather-service
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/sk-weather-service:latest
+          build-args: |
+            OPENWEATHER_API_KEY=${{ secrets.OPENWEATHER_API_KEY }}
+          cache-from: type=gha
+          cache-to:   type=gha,mode=max
