@@ -19,6 +19,7 @@ const Market      = lazy(() => import('./pages/Market'));
 const Labour      = lazy(() => import('./pages/Labour'));
 const MapView     = lazy(() => import('./pages/MapView'));
 const Profile     = lazy(() => import('./pages/Profile'));
+const News        = lazy(() => import('./pages/News'));
 
 function ProtectedRoute({ children }) {
   const { isAuth, loading } = useAuth();
@@ -77,6 +78,7 @@ export default function App() {
               <Route path="/market"     element={<ProtectedRoute><Market /></ProtectedRoute>} />
               <Route path="/labour"     element={<ProtectedRoute><Labour /></ProtectedRoute>} />
               <Route path="/map"        element={<ProtectedRoute><MapView /></ProtectedRoute>} />
+              <Route path="/news"       element={<ProtectedRoute><News /></ProtectedRoute>} />
               <Route path="/profile"    element={<ProtectedRoute><Profile /></ProtectedRoute>} />
               <Route path="*"           element={<Navigate to="/" replace />} />
             </Routes>

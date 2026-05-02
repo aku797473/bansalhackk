@@ -49,6 +49,7 @@ const services = {
   market:     process.env.MARKET_SERVICE_URL     || 'http://localhost:5006',
   labour:     process.env.LABOUR_SERVICE_URL     || 'http://localhost:5007',
   chatbot:    process.env.CHATBOT_SERVICE_URL    || 'http://localhost:5008',
+  news:       process.env.NEWS_SERVICE_URL       || 'http://localhost:5009',
 };
 
 const proxyOptions = (target) => ({
@@ -82,6 +83,7 @@ app.use('/api/fertilizer',  verifyToken, createProxyMiddleware(proxyOptions(serv
 app.use('/api/market',      verifyToken, createProxyMiddleware(proxyOptions(services.market)));
 app.use('/api/labour',      verifyToken, createProxyMiddleware(proxyOptions(services.labour)));
 app.use('/api/chatbot',     verifyToken, createProxyMiddleware(proxyOptions(services.chatbot)));
+app.use('/api/news',        verifyToken, createProxyMiddleware(proxyOptions(services.news)));
 
 app.get('/', (req, res) => {
   res.json({ message: 'Smart Kisan API Gateway is running. Use /health for status.' });

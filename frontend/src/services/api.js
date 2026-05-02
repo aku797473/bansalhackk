@@ -111,4 +111,9 @@ export const chatAPI = {
   clearHistory:(sessionId) => api.delete(`/chatbot/history/${sessionId}`),
 };
 
+// ─── News ──────────────────────────────────────────
+export const newsAPI = {
+  getLatest: (lang) => api.get(`/news/latest?lang=${lang}`),
+};
+
 export default api;
