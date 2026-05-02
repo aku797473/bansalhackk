@@ -190,9 +190,6 @@ export default function Dashboard() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <button className="btn-icon bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-sm" title="Notifications">
-            <Bell size={16} className="text-gray-600 dark:text-slate-400" />
-          </button>
           <button onClick={() => window.location.reload()} className="btn-icon bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-sm" title="Refresh">
             <RefreshCw size={16} className="text-gray-600 dark:text-slate-400" />
           </button>
