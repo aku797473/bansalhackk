@@ -1,6 +1,8 @@
 # 🌾 Smart Kisan — किसान का डिजिटल साथी
 
-> AI-powered agricultural platform for Indian farmers — crop recommendations, weather alerts, market prices, fertilizer analysis, labour marketplace, and multilingual chatbot.
+># Smart Kisan - Integrated Agricultural Platform
+*Last Deployment Update: 2026-05-03*
+ for Indian farmers — crop recommendations, weather alerts, market prices, fertilizer analysis, labour marketplace, and multilingual chatbot.
 
 [![CI/CD](https://img.shields.io/github/actions/workflow/status/your-org/smart-kisan/deploy.yml?label=CI%2FCD)](https://github.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
