@@ -18,10 +18,12 @@ router.get('/latest', async (req, res) => {
 
     if (lang === 'hi') {
       // Hindi Agriculture News
-      url = 'https://news.google.com/rss/search?q=खेती+OR+किसानी+OR+कृषि&hl=hi&gl=IN&ceid=IN:hi';
+      const query = encodeURIComponent('खेती OR किसानी OR कृषि');
+      url = `https://news.google.com/rss/search?q=${query}&hl=hi&gl=IN&ceid=IN:hi`;
     } else {
       // English Agriculture News
-      url = 'https://news.google.com/rss/search?q=agriculture+OR+farming+India&hl=en-IN&gl=IN&ceid=IN:en';
+      const query = encodeURIComponent('agriculture OR farming India');
+      url = `https://news.google.com/rss/search?q=${query}&hl=en-IN&gl=IN&ceid=IN:en`;
     }
 
     const feed = await parser.parseURL(url);
