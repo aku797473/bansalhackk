@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useMap } from '../contexts/MapContext';
+
 import {
   MapPin, Navigation, Map, Ruler, Trash2, StopCircle, PlayCircle, Focus
 } from 'lucide-react';
@@ -11,6 +13,17 @@ import * as turf from '@turf/turf';
 export default function MapView() {
   const { t } = useTranslation();
   
+  const { 
+    trackPoints, setTrackPoints,
+    fieldPoints, setFieldPoints,
+    distance, setDistance,
+    area, setArea,
+    tileMode, setTileMode,
+    isTracking, setIsTracking,
+    clearTracking: contextClearTracking,
+    clearField: contextClearField
+  } = useMap();
+
   // Leaflet refs
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
@@ -23,23 +36,16 @@ export default function MapView() {
   // Geolocation tracking
   const watchIdRef = useRef(null);
 
-  // States
-  const [currentLoc, setCurrentLoc] = useState(null);
-  const [isTracking, setIsTracking] = useState(false);
-  const [trackPoints, setTrackPoints] = useState([]);
-  const [fieldPoints, setFieldPoints] = useState([]);
-  
-  // Stats
+  // Local UI states only
   const [speed, setSpeed] = useState(0); // km/h
-  const [distance, setDistance] = useState(0); // meters
-  const [area, setArea] = useState({ sqm: 0, acres: 0, hectares: 0 }); // area
 
-  // Map Tile Mode
-  const [tileMode, setTileMode] = useState('satellite');
   const MAP_TILES = {
     street: { label: 'Street', url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', attr: '© OpenStreetMap' },
     satellite: { label: 'Satellite', url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', attr: 'Esri, Maxar, Earthstar Geographics' }
   };
+
+  const [currentLoc, setCurrentLoc] = useState(null);
+
 
   /* ─── Initialize Map ──────────────────────────────────── */
   useEffect(() => {
@@ -180,6 +186,13 @@ export default function MapView() {
     };
   }, [isTracking]);
 
+  /* ─── Sync Track Polyline ─────────────────────────────── */
+  useEffect(() => {
+    if (trackPolylineRef.current && trackPoints.length > 0) {
+      trackPolylineRef.current.setLatLngs(trackPoints);
+    }
+  }, [trackPoints]);
+
   /* ─── Field Measurement Logic ─────────────────────────── */
   useEffect(() => {
     if (!fieldPolygonRef.current || !fieldMarkersRef.current) return;
@@ -224,14 +237,14 @@ export default function MapView() {
   const toggleTracking = () => setIsTracking(!isTracking);
   
   const clearTracking = () => {
-    setTrackPoints([]);
-    setDistance(0);
+    contextClearTracking();
     if (trackPolylineRef.current) trackPolylineRef.current.setLatLngs([]);
   };
 
   const clearField = () => {
-    setFieldPoints([]);
+    contextClearField();
   };
+
 
   const centerOnUser = () => {
     if (currentLoc && mapRef.current) {
