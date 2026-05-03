@@ -43,23 +43,32 @@ export default function MapView() {
 
   /* ─── Initialize Map ──────────────────────────────────── */
   useEffect(() => {
-    if (!mapContainerRef.current || mapRef.current) return;
+    const container = mapContainerRef.current;
+    if (!container || mapRef.current) return;
+
+    // Clear any stale Leaflet _leaflet_id left from React StrictMode's double-invoke
+    if (container._leaflet_id) {
+      delete container._leaflet_id;
+    }
+
+    // Snapshot tileMode to avoid stale closure
+    const initialTile = MAP_TILES['satellite'];
 
     // Initialize Map
-    mapRef.current = L.map(mapContainerRef.current, {
+    mapRef.current = L.map(container, {
       center: [22.5, 79.5],
       zoom: 5,
       zoomControl: false,
       attributionControl: true,
-      doubleClickZoom: false // disable to prevent accidental zooms while clicking fast
+      doubleClickZoom: false,
     });
 
     L.control.zoom({ position: 'bottomright' }).addTo(mapRef.current);
 
     // Initial Tile
-    tileLayerRef.current = L.tileLayer(MAP_TILES[tileMode].url, {
-      attribution: MAP_TILES[tileMode].attr,
-      maxZoom: 20, // max zoom high for farm level
+    tileLayerRef.current = L.tileLayer(initialTile.url, {
+      attribution: initialTile.attr,
+      maxZoom: 20,
     }).addTo(mapRef.current);
 
     // Initialize Layers
@@ -83,7 +92,6 @@ export default function MapView() {
     // Request initial position
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(({ coords }) => {
-        // Guard: map may have unmounted before callback fires (React StrictMode)
         if (!mapRef.current) return;
         const initialLoc = [coords.latitude, coords.longitude];
         setCurrentLoc(initialLoc);
@@ -94,8 +102,14 @@ export default function MapView() {
 
     return () => {
       if (watchIdRef.current) navigator.geolocation.clearWatch(watchIdRef.current);
-      mapRef.current?.remove();
-      mapRef.current = null;
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
+      // Clean up _leaflet_id so Leaflet can re-initialize on the same DOM node
+      if (container) {
+        delete container._leaflet_id;
+      }
     };
   }, []);
 
