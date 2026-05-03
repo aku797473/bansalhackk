@@ -224,6 +224,7 @@ export default function MapView() {
       mapRef.current.flyTo(currentLoc, 17, { duration: 1.5 });
     } else if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(({ coords }) => {
+        if (!mapRef.current) return;
         const newLoc = [coords.latitude, coords.longitude];
         setCurrentLoc(newLoc);
         if (userMarkerRef.current) userMarkerRef.current.setLatLng(newLoc).addTo(mapRef.current);
@@ -254,10 +255,10 @@ export default function MapView() {
       </div>
 
       {/* ── Main Layout ──────────────────────────────── */}
-      <div className="flex flex-col xl:flex-row gap-6 h-[70vh] min-h-[500px]">
+      <div className="flex flex-col xl:flex-row gap-6">
 
         {/* ── Interactive Map ── */}
-        <div className="flex-1 relative rounded-[2.5rem] overflow-hidden shadow-2xl border border-gray-100 dark:border-white/5 bg-gray-50 dark:bg-slate-950">
+        <div className="flex-1 relative rounded-[2.5rem] overflow-hidden shadow-2xl border border-gray-100 dark:border-white/5 bg-gray-50 dark:bg-slate-950" style={{ height: 'clamp(350px, 60vh, 700px)' }}>
           <div ref={mapContainerRef} style={{ height: '100%', width: '100%', zIndex: 1 }} />
           
           {/* Map Overlay Controls */}
@@ -266,7 +267,7 @@ export default function MapView() {
           </button>
           
           <div className="absolute top-6 left-6 z-[1000] bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-4 py-2 rounded-xl shadow-lg border border-gray-100 dark:border-white/10 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-slate-400">
-            Click on the map to draw boundaries
+            Tap map to add boundary points
           </div>
         </div>
 
