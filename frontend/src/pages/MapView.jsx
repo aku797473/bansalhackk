@@ -272,7 +272,7 @@ export default function MapView() {
       <div className="flex flex-col xl:flex-row gap-6">
 
         {/* ── Interactive Map ── */}
-        <div className="flex-1 relative rounded-[2.5rem] overflow-hidden shadow-2xl border border-gray-100 dark:border-white/5 bg-gray-50 dark:bg-slate-950" style={{ height: 'clamp(350px, 60vh, 700px)' }}>
+        <div className="xl:flex-1 relative rounded-[2.5rem] overflow-hidden shadow-2xl border border-gray-100 dark:border-white/5 bg-gray-50 dark:bg-slate-950" style={{ height: 'clamp(320px, 58vh, 700px)' }}>
           <div ref={mapContainerRef} style={{ height: '100%', width: '100%', zIndex: 1 }} />
           
           {/* Map Overlay Controls */}
