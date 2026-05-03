@@ -16,7 +16,8 @@ app.use(express.json());
 app.use(cors());
 
 // Routes
-app.use('/api/payment', paymentRoutes);
+app.use('/payment', paymentRoutes);
+
 
 // Health Check
 app.get('/health', (req, res) => res.json({ status: 'Payment Service is healthy' }));
