@@ -129,7 +129,8 @@ export default function Labour() {
 
       // 3. Configure Razorpay Options
       const options = {
-        key: 'rzp_test_placeholder', // Should match backend key_id
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_placeholder', 
+
         amount: order.amount,
         currency: order.currency,
         name: 'Smart Kisan',
