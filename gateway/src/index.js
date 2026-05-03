@@ -14,12 +14,6 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // ─── Security & Middleware ────────────────────────
-app.use(helmet());
-app.use(compression());
-app.use(morgan('combined'));
-app.use(clerkMiddleware());
-
-
 app.use(cors({
   origin: (origin, callback) => {
     // Allow any origin for the demo to avoid CORS blocks
@@ -29,6 +23,14 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
+
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" }
+}));
+app.use(compression());
+app.use(morgan('combined'));
+app.use(clerkMiddleware());
+
 
 
 // ─── Rate Limiting ────────────────────────────────
