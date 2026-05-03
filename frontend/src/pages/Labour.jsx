@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
-import { labourAPI } from '../services/api';
+import { labourAPI, paymentAPI } from '../services/api';
+
 import { Users, Plus, MapPin, Calendar, Banknote, X, ChevronRight, Briefcase, Phone, User, Camera } from 'lucide-react';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
@@ -21,6 +22,8 @@ export default function Labour() {
   const [showModal, setShowModal] = useState(null);
   const [applying, setApplying]   = useState(false);
   const [applyMsg, setApplyMsg]   = useState('');
+  const [processingPayment, setProcessingPayment] = useState(false);
+
   
   const [form, setForm] = useState({
     title:'', description:'', category:'harvesting', wage: 500, wageUnit:'per day',
@@ -99,6 +102,77 @@ export default function Labour() {
       toast.error(err.response?.data?.message || t('common.error', 'Apply failed'));
     } finally { setApplying(false); }
   };
+
+  // ─── Razorpay Logic ─────────────────────────────────
+  const loadRazorpay = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  const handlePayment = async (job) => {
+    setProcessingPayment(true);
+    try {
+      // 1. Load Razorpay Script
+      const res = await loadRazorpay();
+      if (!res) {
+        toast.error('Razorpay SDK failed to load. Are you online?');
+        return;
+      }
+
+      // 2. Create Order in Backend
+      const { data: order } = await paymentAPI.createOrder(job.wage);
+
+      // 3. Configure Razorpay Options
+      const options = {
+        key: 'rzp_test_placeholder', // Should match backend key_id
+        amount: order.amount,
+        currency: order.currency,
+        name: 'Smart Kisan',
+        description: `Booking for ${job.title}`,
+        image: '/logo.png',
+        order_id: order.id,
+        handler: async (response) => {
+          // 4. Verify Payment in Backend
+          try {
+            const { data: verifyRes } = await paymentAPI.verifyPayment({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            });
+
+            if (verifyRes.status === 'success') {
+              toast.success('Payment Successful! Worker Booked.');
+              setShowModal(null);
+              fetchJobs();
+            }
+          } catch (err) {
+            toast.error('Payment verification failed.');
+          }
+        },
+        prefill: {
+          name: user?.name,
+          email: user?.email,
+          contact: user?.phone || job.contactNumber,
+        },
+        theme: { color: '#6366f1' },
+      };
+
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
+
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to initiate payment.');
+    } finally {
+      setProcessingPayment(false);
+    }
+  };
+
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-6 page-enter animate-fade-in">
@@ -350,11 +424,20 @@ export default function Labour() {
                   <p className="text-gray-700 dark:text-slate-300 leading-relaxed bg-gray-50 dark:bg-black/20 p-5 rounded-2xl border border-gray-100 dark:border-white/5 font-medium italic">"{showModal.description}"</p>
                </div>
 
-               <div className="flex gap-4">
-                  <a href={`tel:${showModal.contactNumber}`} className="btn-primary flex-1 justify-center h-16 rounded-2xl text-lg font-black shadow-xl shadow-primary/30 group active:scale-95 transition-all">
-                     <Phone size={20} className="mr-2 group-hover:rotate-12 transition-transform" /> <span>Call Now</span>
+               <div className="flex flex-col gap-4">
+                  <button 
+                    onClick={() => handlePayment(showModal)}
+                    disabled={processingPayment}
+                    className="btn-primary w-full justify-center h-16 rounded-2xl text-lg font-black shadow-xl shadow-primary/30 group active:scale-95 transition-all bg-indigo-600 hover:bg-indigo-700"
+                  >
+                    <Banknote size={20} className="mr-2" /> 
+                    <span>{processingPayment ? 'Processing...' : `Pay ₹${showModal.wage} & Book Now`}</span>
+                  </button>
+                  <a href={`tel:${showModal.contactNumber}`} className="flex items-center justify-center h-12 rounded-xl text-gray-500 font-bold hover:bg-gray-50 dark:hover:bg-slate-800 transition-all">
+                     <Phone size={16} className="mr-2" /> <span>Call for details</span>
                   </a>
                </div>
+
             </div>
           </div>
         </div>

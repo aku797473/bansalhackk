@@ -12,7 +12,9 @@ const services = [
   { name: 'labour',     port: 5007, path: 'services/labour-service' },
   { name: 'chatbot',    port: 5008, path: 'services/chatbot-service' },
   { name: 'news',       port: 5009, path: 'services/news-service' },
+  { name: 'payment',    port: 5010, path: 'services/payment-service' },
   { name: 'frontend',   port: 5173, path: 'frontend', command: 'npm', args: ['run', 'dev'] }
+
 ];
 
 console.log('🚀 Starting Smart Kisan Stack...');

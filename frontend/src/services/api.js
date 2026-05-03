@@ -116,4 +116,11 @@ export const newsAPI = {
   getLatest: (lang) => api.get(`/news/latest?lang=${lang}`),
 };
 
+// ─── Payment ───────────────────────────────────────
+export const paymentAPI = {
+  createOrder: (amount) => api.post('/payment/order', { amount }),
+  verifyPayment: (data) => api.post('/payment/verify', data),
+};
+
 export default api;
+
