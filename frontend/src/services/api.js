@@ -8,40 +8,24 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-// Attach JWT from localStorage
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('sk_access_token');
-  if (token) config.headers.Authorization = `Bearer ${token}`;
+let tokenProvider = null;
+export const setTokenProvider = (fn) => { tokenProvider = fn; };
+
+// Attach JWT from Clerk
+api.interceptors.request.use(async (config) => {
+  if (tokenProvider) {
+    try {
+      const token = await tokenProvider();
+      if (token) config.headers.Authorization = `Bearer ${token}`;
+    } catch (err) {
+      console.error('Failed to get auth token', err);
+    }
+  }
   return config;
 });
 
-// Auto refresh on 401
-api.interceptors.response.use(
-  (res) => res,
-  async (err) => {
-    const original = err.config;
-    // Don't try to refresh on login/register failures or if we already tried
-    const isAuthRequest = original.url.includes('/auth/login') || original.url.includes('/auth/register');
-    
-    if (err.response?.status === 401 && !original._retry && !isAuthRequest) {
-      original._retry = true;
-      try {
-        const refresh = localStorage.getItem('sk_refresh_token');
-        if (!refresh) throw new Error('No refresh token');
+// Auto refresh logic is handled by Clerk SDK automatically
 
-        const { data } = await axios.post(`${BASE_URL}/auth/refresh`, { refreshToken: refresh });
-        localStorage.setItem('sk_access_token', data.accessToken);
-        localStorage.setItem('sk_refresh_token', data.refreshToken);
-        original.headers.Authorization = `Bearer ${data.accessToken}`;
-        return api(original);
-      } catch {
-        localStorage.clear();
-        window.location.href = '/login';
-      }
-    }
-    return Promise.reject(err);
-  }
-);
 
 // ─── Auth ─────────────────────────────────────────
 export const authAPI = {

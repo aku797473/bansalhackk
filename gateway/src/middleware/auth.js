@@ -1,25 +1,19 @@
-const jwt = require('jsonwebtoken');
+const { getAuth } = require('@clerk/express');
 
 const verifyToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+  const { userId, sessionClaims } = getAuth(req);
 
-  if (!token) {
-    return res.status(401).json({ success: false, message: 'Access token required' });
+  if (!userId) {
+    return res.status(401).json({ success: false, message: 'Unauthorized' });
   }
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.headers['x-user-id']    = decoded.userId || '';
-    req.headers['x-user-role']  = decoded.role   || '';
-    req.headers['x-user-email'] = decoded.email  || '';
-    next();
-  } catch (err) {
-    if (err.name === 'TokenExpiredError') {
-      return res.status(401).json({ success: false, message: 'Token expired' });
-    }
-    return res.status(403).json({ success: false, message: 'Invalid token' });
-  }
+  // Inject into headers for downstream microservices compatibility
+  req.headers['x-user-id']    = userId;
+  req.headers['x-user-role']  = sessionClaims?.metadata?.role || 'farmer';
+  req.headers['x-user-email'] = sessionClaims?.email || '';
+  
+  next();
 };
 
 module.exports = { verifyToken };
+

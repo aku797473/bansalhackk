@@ -6,7 +6,9 @@ const helmet = require('helmet');
 const cors = require('cors');
 const morgan = require('morgan');
 const compression = require('compression');
+const { clerkMiddleware } = require('@clerk/express');
 const { verifyToken } = require('./middleware/auth');
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -15,6 +17,8 @@ const PORT = process.env.PORT || 5000;
 app.use(helmet());
 app.use(compression());
 app.use(morgan('combined'));
+app.use(clerkMiddleware());
+
 
 app.use(cors({
   origin: (origin, callback) => {

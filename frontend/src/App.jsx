@@ -8,6 +8,13 @@ import ChatWidget from './components/ChatWidget';
 import LoadingScreen from './components/LoadingScreen';
 
 import { ThemeProvider } from './contexts/ThemeContext';
+import { ClerkProvider } from '@clerk/clerk-react';
+
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+if (!PUBLISHABLE_KEY) {
+  throw new Error("Missing Publishable Key");
+}
+
 
 // Lazy loaded pages
 const Landing     = lazy(() => import('./pages/Landing'));
@@ -52,7 +59,9 @@ function AppLayout({ children }) {
 export default function App() {
   return (
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-      <ThemeProvider>
+      <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
+        <ThemeProvider>
+
         <MapProvider>
           <AuthProvider>
             <Toaster
@@ -87,7 +96,8 @@ export default function App() {
             </AppLayout>
           </AuthProvider>
         </MapProvider>
-      </ThemeProvider>
+        </ThemeProvider>
+      </ClerkProvider>
     </BrowserRouter>
   );
 }

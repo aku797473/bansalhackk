@@ -8,7 +8,9 @@ import {
   Home, Cloud, Leaf, FlaskConical, TrendingUp,
   Users, Map, User, LogOut, Menu, X, Sun, Moon, Newspaper, Bell
 } from 'lucide-react';
+import { UserButton } from '@clerk/clerk-react';
 import clsx from 'clsx';
+
 import logo from '../assets/logo.png';
 import { newsAPI } from '../services/api';
 
@@ -121,28 +123,19 @@ export default function Navbar() {
             {/* Language */}
             <LanguageSelector />
 
-            {/* Profile */}
-            <NavLink to="/profile"
-              className={({ isActive }) => clsx(
-                'w-8 h-8 rounded-xl flex items-center justify-center transition-all text-sm font-bold overflow-hidden shrink-0',
-                isActive ? 'bg-primary text-white shadow-sm' : 'bg-primary/10 text-primary hover:bg-primary/15'
-              )}
-              title="Profile">
-              <div className="w-full h-full flex items-center justify-center">
-                {user?.profilePic ? (
-                  <img src={user.profilePic} alt="Profile" className="w-full h-full object-cover" />
-                ) : (
-                  <span className="uppercase">{user?.name?.[0] || 'U'}</span>
-                )}
-              </div>
-            </NavLink>
+            {/* Profile & Logout */}
+            <div className="flex items-center gap-2 ml-1">
+              <UserButton 
+                afterSignOutUrl="/"
+                appearance={{
+                  elements: {
+                    userButtonAvatarBox: "w-8 h-8 rounded-xl",
+                    userButtonTrigger: "rounded-xl focus:ring-0 focus:ring-offset-0",
+                  }
+                }}
+              />
+            </div>
 
-            {/* Logout */}
-            <button onClick={handleLogout}
-              className="hidden sm:flex btn-ghost p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl"
-              title="Logout">
-              <LogOut size={15} />
-            </button>
 
             {/* Mobile menu toggle */}
             <button
