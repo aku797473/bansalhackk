@@ -29,7 +29,11 @@ app.use(helmet({
 }));
 app.use(compression());
 app.use(morgan('combined'));
-app.use(clerkMiddleware());
+app.use(clerkMiddleware({
+  publishableKey: process.env.CLERK_PUBLISHABLE_KEY || process.env.VITE_CLERK_PUBLISHABLE_KEY,
+  secretKey: process.env.CLERK_SECRET_KEY
+}));
+
 
 
 
