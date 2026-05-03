@@ -17,10 +17,15 @@ app.use(compression());
 app.use(morgan('combined'));
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL || '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  origin: (origin, callback) => {
+    // Allow any origin for the demo to avoid CORS blocks
+    callback(null, true);
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 }));
+
 
 // ─── Rate Limiting ────────────────────────────────
 const globalLimiter = rateLimit({
