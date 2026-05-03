@@ -83,6 +83,8 @@ export default function MapView() {
     // Request initial position
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(({ coords }) => {
+        // Guard: map may have unmounted before callback fires (React StrictMode)
+        if (!mapRef.current) return;
         const initialLoc = [coords.latitude, coords.longitude];
         setCurrentLoc(initialLoc);
         userMarkerRef.current.setLatLng(initialLoc).addTo(mapRef.current);
@@ -114,6 +116,7 @@ export default function MapView() {
     if (isTracking) {
       watchIdRef.current = navigator.geolocation.watchPosition(
         ({ coords }) => {
+          if (!mapRef.current) return; // Guard: map may have unmounted
           const newLoc = [coords.latitude, coords.longitude];
           setCurrentLoc(newLoc);
           setSpeed(coords.speed ? (coords.speed * 3.6).toFixed(1) : 0); // m/s to km/h
@@ -121,14 +124,14 @@ export default function MapView() {
           // Update user marker
           if (userMarkerRef.current) {
             userMarkerRef.current.setLatLng(newLoc);
-            if (!userMarkerRef.current._map) userMarkerRef.current.addTo(mapRef.current);
+            if (!userMarkerRef.current._map && mapRef.current) userMarkerRef.current.addTo(mapRef.current);
           }
 
           // Add to track points and calculate distance
           setTrackPoints(prev => {
             const newPoints = [...prev, newLoc];
             
-            if (prev.length > 0) {
+            if (prev.length > 0 && mapRef.current) {
               const lastPoint = prev[prev.length - 1];
               const dist = mapRef.current.distance(lastPoint, newLoc);
               setDistance(d => d + dist);
