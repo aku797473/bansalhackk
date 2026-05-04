@@ -1,24 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const Job = require('../models/Job');
-const { Kafka } = process.env.MOCK_REDIS_KAFKA ? require('../../../../utils/mockKafka') : require('kafkajs');
-
-let producer = null;
-(async () => {
-  try {
-    const kafka = new Kafka({ brokers: [process.env.KAFKA_BROKER || 'localhost:9092'] });
-    producer = kafka.producer();
-    await producer.connect();
-  } catch (e) { console.warn('Kafka unavailable:', e.message); }
-})();
-
-const emit = async (topic, data) => {
-  if (producer) {
-    try {
-      await producer.send({ topic, messages: [{ value: JSON.stringify(data) }] });
-    } catch (e) { console.warn('Kafka emit failed:', e.message); }
-  }
-};
 
 // GET /labour/jobs
 router.get('/jobs', async (req, res) => {
@@ -62,7 +44,6 @@ router.post('/jobs', async (req, res) => {
     
     const job = new Job(jobData);
     await job.save();
-    await emit('labour.posted', { jobId: job._id, userId, title: job.title });
     res.status(201).json({ success: true, data: job });
   } catch (err) {
     console.error('Job post error:', err);
@@ -94,7 +75,6 @@ router.post('/jobs/:id/apply', async (req, res) => {
 
     job.applications.push({ userId, name, phone, message });
     await job.save();
-    await emit('labour.applied', { jobId: job._id, userId, jobTitle: job.title });
     res.json({ success: true, message: 'Application submitted' });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 const Redis = process.env.MOCK_REDIS_KAFKA ? require('../../../../utils/mockRedis') : require('ioredis');
-const { Kafka } = process.env.MOCK_REDIS_KAFKA ? require('../../../../utils/mockKafka') : require('kafkajs');
 const WeatherHistory = require('../models/WeatherHistory');
 
 const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {
@@ -10,20 +9,6 @@ const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {
   retryStrategy: () => null
 });
 redis.on('error', (err) => console.warn('⚠️  Redis not available:', err.message));
-
-// Kafka producer (lazy init)
-let producer = null;
-const initKafka = async () => {
-  try {
-    const kafka = new Kafka({ brokers: [process.env.KAFKA_BROKER || 'localhost:9092'] });
-    producer = kafka.producer();
-    await producer.connect();
-    console.log('✅ Kafka producer connected (weather)');
-  } catch (err) {
-    console.warn('⚠️  Kafka not available:', err.message);
-  }
-};
-initKafka();
 
 const OWM_KEY = process.env.OPENWEATHER_API_KEY || 'demo';
 const CACHE_TTL = 30 * 60; // 30 minutes
@@ -131,12 +116,6 @@ router.get('/current', async (req, res) => {
     const severe = ['thunderstorm', 'tornado', 'storm', 'heavy rain', 'flood', 'hail'];
     if (severe.some(w => c.weather[0].description.toLowerCase().includes(w))) {
       weatherData.alerts = [{ type: 'severe', message: `Severe weather: ${c.weather[0].description}` }];
-      if (producer) {
-        await producer.send({
-          topic: 'weather.alert',
-          messages: [{ value: JSON.stringify({ lat, lon, alert: weatherData.alerts[0] }) }],
-        });
-      }
     }
 
     if (isRedisReady) await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(weatherData)).catch(() => {});
