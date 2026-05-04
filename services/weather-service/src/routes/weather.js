@@ -199,16 +199,22 @@ router.get('/by-city', async (req, res) => {
 // GET /weather/map-markers
 router.get('/map-markers', async (req, res) => {
   try {
+    const cacheKey = 'weather:all:map-markers';
+    const isRedisReady = redis.status === 'ready';
+    if (isRedisReady) {
+      const cached = await redis.get(cacheKey);
+      if (cached) return res.json({ success: true, data: JSON.parse(cached), cached: true });
+    }
+
     const cities = ['Indore', 'Ludhiana', 'Amritsar', 'Pune', 'Nagpur', 'Nashik', 'Rajkot', 'Kanpur', 'Patna', 'Bhopal'];
     const markers = await Promise.all(cities.map(async (city) => {
       try {
-        const cacheKey = `weather:city:${city.toLowerCase()}`;
+        const cityCacheKey = `weather:city:${city.toLowerCase()}`;
         let data;
-        const isRedisReady = redis.status === 'ready';
-        const cached = isRedisReady ? await redis.get(cacheKey) : null;
+        const cityCached = isRedisReady ? await redis.get(cityCacheKey) : null;
         
-        if (cached) {
-          data = JSON.parse(cached);
+        if (cityCached) {
+          data = JSON.parse(cityCached);
         } else if (!OWM_KEY || OWM_KEY === 'demo' || OWM_KEY.includes('your_')) {
           data = { ...getMockWeather(28.6, 77.2), city };
         } else {
@@ -222,7 +228,7 @@ router.get('/map-markers', async (req, res) => {
             temperature: response.data.main.temp,
             description: response.data.weather[0].description,
           };
-          if (isRedisReady) await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(data)).catch(() => {});
+          if (isRedisReady) await redis.setex(cityCacheKey, CACHE_TTL, JSON.stringify(data)).catch(() => {});
         }
 
         return {
@@ -238,7 +244,12 @@ router.get('/map-markers', async (req, res) => {
       }
     }));
 
-    res.json({ success: true, data: markers.filter(m => m !== null) });
+    const result = markers.filter(m => m !== null);
+    if (isRedisReady) {
+      await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(result)).catch(() => {});
+    }
+
+    res.json({ success: true, data: result });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

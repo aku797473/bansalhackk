@@ -157,11 +157,18 @@ Respond with a valid JSON object with these exact fields:
 // GET /crop/calendar?crop=Wheat&state=Punjab
 router.get('/calendar', async (req, res) => {
   try {
-    const { crop, state } = req.query;
+    const { crop, state = 'Punjab' } = req.query;
     if (!crop) return res.status(400).json({ success: false, message: 'crop is required' });
 
+    const cacheKey = `crop:calendar:${crop.toLowerCase()}:${state.toLowerCase()}`;
+    const isRedisReady = redis.status === 'ready';
+    if (isRedisReady) {
+      const cached = await redis.get(cacheKey);
+      if (cached) return res.json({ success: true, data: JSON.parse(cached), cached: true });
+    }
+
     const calendar = {
-      crop, state: state || 'Punjab',
+      crop, state,
       activities: [
         { month: 'October',  activity: 'Land Preparation & Sowing',     notes: 'Use certified seeds, row spacing 22.5cm' },
         { month: 'November', activity: 'Irrigation #1 + Weed Control',  notes: 'Apply pre-emergence herbicide' },
@@ -171,6 +178,11 @@ router.get('/calendar', async (req, res) => {
         { month: 'March',    activity: 'Harvest',                        notes: 'Harvest when moisture < 12%' },
       ],
     };
+
+    if (isRedisReady) {
+      await redis.setex(cacheKey, 86400, JSON.stringify(calendar)).catch(() => {});
+    }
+
     res.json({ success: true, data: calendar });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

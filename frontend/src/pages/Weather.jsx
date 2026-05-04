@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { weatherAPI } from '../services/api';
+import { useQuery } from '@tanstack/react-query';
 import { MapPin, Droplets, Wind, Thermometer, AlertTriangle, RefreshCw } from 'lucide-react';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
@@ -10,53 +11,42 @@ const getEmoji = (icon) => WEATHER_EMOJIS[icon?.slice(0, 2)] || '🌡️';
 
 export default function Weather() {
   const { t } = useTranslation();
-  const [data, setData]       = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [city, setCity]       = useState('');
-  const [searching, setSearching] = useState(false);
+  const [citySearch, setCitySearch] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const fetchByLocation = async () => {
-    setLoading(true);
-    try {
-      navigator.geolocation?.getCurrentPosition(
-        async ({ coords: { latitude: lat, longitude: lon } }) => {
-          const res = await weatherAPI.getCurrent(lat, lon);
-          setData(res.data.data);
-          setLoading(false);
-        },
-        async () => {
-          const res = await weatherAPI.getCurrent(24.6005, 80.8322); // Satna, MP
-          setData(res.data.data);
-          setLoading(false);
-        }
-      );
-    } catch { setLoading(false); toast.error('Weather unavailable'); }
+  // Weather Query
+  const { data, isLoading: loading, refetch, isFetching: searching } = useQuery({
+    queryKey: ['weather', searchQuery],
+    queryFn: async () => {
+      if (searchQuery) {
+        const res = await weatherAPI.getByCity(searchQuery);
+        return res.data.data;
+      }
+      return new Promise((resolve) => {
+        navigator.geolocation?.getCurrentPosition(
+          async ({ coords: { latitude: lat, longitude: lon } }) => {
+            const res = await weatherAPI.getCurrent(lat, lon);
+            resolve(res.data.data);
+          },
+          async () => {
+            const res = await weatherAPI.getCurrent(24.6005, 80.8322); // Satna, MP
+            resolve(res.data.data);
+          }
+        );
+      });
+    },
+    staleTime: 30 * 60 * 1000, // 30 mins
+    onError: () => toast.error(searchQuery ? 'City not found' : 'Weather unavailable')
+  });
+
+  const fetchByLocation = () => {
+    setSearchQuery('');
+    refetch();
   };
 
-  // Load from localStorage
-  useEffect(() => {
-    const d = localStorage.getItem('sk_weather_data');
-    if (d) {
-      setData(JSON.parse(d));
-      setLoading(false);
-    } else {
-      fetchByLocation();
-    }
-  }, []);
-
-  // Save to localStorage
-  useEffect(() => {
-    if (data) localStorage.setItem('sk_weather_data', JSON.stringify(data));
-  }, [data]);
-
-  const searchCity = async () => {
-    if (!city.trim()) return;
-    setSearching(true);
-    try {
-      const res = await weatherAPI.getByCity(city.trim());
-      setData(res.data.data);
-    } catch { toast.error('City not found'); }
-    finally { setSearching(false); }
+  const searchCity = () => {
+    if (!citySearch.trim()) return;
+    setSearchQuery(citySearch.trim());
   };
 
   if (loading) return (
@@ -79,7 +69,7 @@ export default function Weather() {
       {/* Search */}
       <div className="flex gap-2 mb-6">
         <input className="input flex-1" placeholder={t('market.search', 'Search city...')}
-          value={city} onChange={e => setCity(e.target.value)}
+          value={citySearch} onChange={e => setCitySearch(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && searchCity()} />
         <button onClick={searchCity} disabled={searching} className="btn-primary">
           {searching ? '...' : t('common.submit', 'Search')}

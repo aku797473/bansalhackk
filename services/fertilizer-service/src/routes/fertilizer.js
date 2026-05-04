@@ -4,8 +4,17 @@ const multer = require('multer');
 const sharp = require('sharp');
 const Groq = require('groq-sdk');
 const FertilizerHistory = require('../models/FertilizerHistory');
+const Redis = require('ioredis');
+
+const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {
+  maxRetriesPerRequest: 1,
+  retryStrategy: () => null
+});
+
+redis.on('error', (err) => console.warn('⚠️  Redis not available in Fertilizer Service:', err.message));
 
 const storage = multer.memoryStorage();
+// ... (rest of multer setup)
 const upload = multer({
   storage,
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
@@ -145,11 +154,24 @@ const getMockAnalysis = () => ({
 // GET /fertilizer/soil/map-markers
 router.get('/soil/map-markers', async (req, res) => {
   try {
+    const cacheKey = 'fertilizer:soil:map-markers';
+    const isRedisReady = redis.status === 'ready';
+    if (isRedisReady) {
+      const cached = await redis.get(cacheKey);
+      if (cached) return res.json({ success: true, data: JSON.parse(cached), cached: true });
+    }
+
     const regionalSoil = [
       { lat: 21.1458, lng: 79.0882, title: 'Nagpur Region', info: 'Black Cotton Soil' },
       { lat: 24.5333, lng: 81.3000, title: 'Rewa District', info: 'Mixed Red and Black Soil' }
     ];
-    res.json({ success: true, data: regionalSoil.map(s => ({ ...s, type: 'soil' })) });
+    const result = regionalSoil.map(s => ({ ...s, type: 'soil' }));
+
+    if (isRedisReady) {
+      await redis.setex(cacheKey, 86400, JSON.stringify(result)).catch(() => {});
+    }
+
+    res.json({ success: true, data: result });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

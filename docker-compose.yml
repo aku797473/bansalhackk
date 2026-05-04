@@ -214,6 +214,10 @@ services:
       - PORT=5005
       - GEMINI_API_KEY=${GEMINI_API_KEY}
       - JWT_SECRET=${JWT_SECRET}
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      redis:
+        condition: service_healthy
     networks:
       - smart-kisan-net
 
