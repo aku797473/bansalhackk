@@ -10,7 +10,10 @@ const redis = new Redis(redisUrl, {
   tls: redisUrl.startsWith('rediss://') ? {} : undefined
 });
 
-redis.on('error', (err) => console.warn('⚠️  Redis not available in News Service:', err.message));
+redis.on('error', (err) => {
+  const safeUrl = redisUrl.replace(/:[^:@]+@/, ':***@');
+  console.warn(`⚠️  Redis (${safeUrl}) not available in News Service:`, err.message);
+});
 
 const CACHE_TTL = 3600; // 1 hour
 

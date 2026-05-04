@@ -11,7 +11,8 @@ const redis = new Redis(redisUrl, {
 });
 
 redis.on('error', (err) => {
-  console.warn('⚠️  Redis not available, caching disabled:', err.message);
+  const safeUrl = redisUrl.replace(/:[^:@]+@/, ':***@');
+  console.warn(`⚠️  Redis (${safeUrl}) not available, caching disabled:`, err.message);
 });
 
 const CACHE_TTL = 60 * 60 * 6; // 6 hours
