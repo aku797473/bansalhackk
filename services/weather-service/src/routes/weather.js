@@ -4,7 +4,7 @@ const axios = require('axios');
 const Redis = process.env.MOCK_REDIS_KAFKA ? require('../../../../utils/mockRedis') : require('ioredis');
 const WeatherHistory = require('../models/WeatherHistory');
 
-const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
+const redisUrl = process.env.REDIS_URL || 'rediss://default:gQAAAAAAAcH_AAIgcDFmZGVmNjgzOTMyNDM0YWFkOWU2NTE0ZDE5MGQ0MTE4Mg@superb-caiman-115199.upstash.io:6379';
 const redis = new Redis(redisUrl, {
   maxRetriesPerRequest: 1,
   retryStrategy: () => null,
