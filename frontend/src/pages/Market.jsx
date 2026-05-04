@@ -138,25 +138,25 @@ export default function Market() {
       </div>
 
       {/* ── Filters Strip ─────────────────────────────────────── */}
-      <div className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-white/5 rounded-[2rem] p-4 sm:p-6 mb-8 shadow-sm">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1 flex items-center gap-1.5"><MapPin size={12}/> State</label>
-            <select className="input rounded-2xl bg-gray-50 dark:bg-slate-800 border-none font-semibold text-sm" value={selState} onChange={e => setSelState(e.target.value)}>
+      <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border border-white/20 dark:border-white/5 rounded-[2.5rem] p-5 sm:p-7 mb-8 shadow-premium animate-slide-down">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+          <div className="flex flex-col gap-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2 flex items-center gap-1.5"><MapPin size={12} className="text-primary"/> State</label>
+            <select className="input rounded-2xl bg-white/50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-700/50 font-bold text-sm shadow-sm" value={selState} onChange={e => setSelState(e.target.value)}>
               <option value="">All States</option>
               {states.map(s => <option key={s} value={s}>{s}</option>)}
             </select>
           </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1 flex items-center gap-1.5"><MapPin size={12}/> District</label>
-            <select className="input rounded-2xl bg-gray-50 dark:bg-slate-800 border-none font-semibold text-sm" value={selDistrict} onChange={e => setSelDistrict(e.target.value)} disabled={!selState}>
+          <div className="flex flex-col gap-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2 flex items-center gap-1.5"><MapPin size={12} className="text-primary"/> District</label>
+            <select className="input rounded-2xl bg-white/50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-700/50 font-bold text-sm shadow-sm" value={selDistrict} onChange={e => setSelDistrict(e.target.value)} disabled={!selState}>
               <option value="">All Districts</option>
               {districts.map(d => <option key={d} value={d}>{d}</option>)}
             </select>
           </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1 flex items-center gap-1.5"><Package size={12}/> Commodity / Ingredient</label>
-            <select className="input rounded-2xl bg-gray-50 dark:bg-slate-800 border-none font-semibold text-sm" value={selCommodity} onChange={e => setSelCommodity(e.target.value)}>
+          <div className="flex flex-col gap-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2 flex items-center gap-1.5"><Package size={12} className="text-primary"/> Commodity / Ingredient</label>
+            <select className="input rounded-2xl bg-white/50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-700/50 font-bold text-sm shadow-sm" value={selCommodity} onChange={e => setSelCommodity(e.target.value)}>
               <option value="">Select Commodity</option>
               {commodities.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
@@ -165,11 +165,11 @@ export default function Market() {
       </div>
 
       {/* ── Main Dashboard Area ───────────────────────────────── */}
-      <div className="grid lg:grid-cols-3 gap-8 mb-8">
+      <div className="grid lg:grid-cols-3 gap-8 mb-8 animate-slide-up">
         
         {/* Chart Column (Spans 2) */}
         <div className="lg:col-span-2 flex flex-col gap-6">
-          <div className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-white/5 rounded-[2rem] p-6 shadow-xl relative overflow-hidden">
+          <div className="bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/20 dark:border-white/5 rounded-[2.5rem] p-7 shadow-premium relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
             
             <div className="flex items-start justify-between mb-8 relative z-10">
@@ -257,12 +257,12 @@ export default function Market() {
         <div className="flex flex-col gap-4">
           {analytics ? (
             <>
-              <div className="bg-gradient-to-br from-primary to-emerald-600 rounded-[2rem] p-6 text-white shadow-xl relative overflow-hidden">
-                <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl" />
-                <p className="text-xs font-black uppercase tracking-widest text-emerald-100 mb-1">Current Modal Price</p>
-                <div className="flex items-end gap-2">
-                  <h2 className="text-5xl font-black tracking-tighter">₹{analytics.currentPrice.toLocaleString()}</h2>
-                  <span className="text-sm font-bold text-emerald-100 mb-2">/ Quintal</span>
+              <div className="bg-harvest-sunset rounded-[2.5rem] p-7 text-white shadow-xl relative overflow-hidden group">
+                <div className="absolute -top-10 -right-10 w-48 h-48 bg-white/20 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-1000" />
+                <p className="text-xs font-black uppercase tracking-widest text-white/80 mb-1">Current Modal Price</p>
+                <div className="flex items-end gap-2 relative z-10">
+                  <h2 className="text-5xl font-black tracking-tighter drop-shadow-sm">₹{analytics.currentPrice.toLocaleString()}</h2>
+                  <span className="text-sm font-bold text-white/70 mb-2">/ Quintal</span>
                 </div>
               </div>
 

@@ -90,31 +90,39 @@ export default function Weather() {
           )}
 
           {/* Current */}
-          <div className="card bg-gradient-to-br from-sky-50 to-blue-100 border-sky-200 mb-5">
-            <div className="flex items-start justify-between">
-              <div>
-                <div className="flex items-center gap-2 mb-1 text-sm text-sky-700">
-                  <MapPin size={14} />{data.city}, {data.country}
-                  {data.isMock && <span className="badge badge-yellow">Demo</span>}
+          <div className="bg-gradient-to-br from-sky-400 to-blue-600 rounded-[2.5rem] p-8 text-white shadow-premium mb-8 relative overflow-hidden group">
+            <div className="absolute -top-20 -right-20 w-80 h-80 bg-white/20 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-1000" />
+            
+            <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-8 relative z-10">
+              <div className="text-center md:text-left">
+                <div className="flex items-center justify-center md:justify-start gap-2 mb-4 text-sky-50 font-bold tracking-wide">
+                  <MapPin size={18} />
+                  <span className="text-lg">{data.city}, {data.country}</span>
+                  {data.isMock && <span className="bg-yellow-400 text-yellow-900 text-[10px] px-2 py-0.5 rounded-full font-black uppercase">Demo</span>}
                 </div>
-                <div className="flex items-end gap-3">
-                  <span className="text-6xl">{getEmoji(data.icon)}</span>
+                <div className="flex flex-col md:flex-row items-center gap-6">
+                  <span className="text-8xl drop-shadow-lg animate-bounce-sm">{getEmoji(data.icon)}</span>
                   <div>
-                    <p className="text-5xl font-bold text-gray-900">{Math.round(data.temperature)}°</p>
-                    <p className="text-sm text-gray-500 capitalize">{data.description}</p>
+                    <h2 className="text-8xl font-black tracking-tighter drop-shadow-md leading-none">{Math.round(data.temperature)}°</h2>
+                    <p className="text-xl font-bold text-sky-100 capitalize mt-2">{data.description}</p>
                   </div>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
+              
+              <div className="grid grid-cols-1 sm:grid-cols-3 md:flex md:flex-col gap-6 bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/20 w-full md:w-auto">
                 {[
                   { icon: Thermometer, label: t('weather.feels_like'), val: `${Math.round(data.feelsLike)}°C` },
                   { icon: Droplets,    label: t('weather.humidity'),   val: `${data.humidity}%` },
                   { icon: Wind,        label: t('weather.wind'),       val: `${data.windSpeed} km/h` },
                 ].map(({ icon: Icon, label, val }) => (
-                  <div key={label} className="flex items-center gap-2">
-                    <Icon size={14} className="text-sky-500" />
-                    <span className="text-gray-500">{label}:</span>
-                    <span className="font-semibold text-gray-800">{val}</span>
+                  <div key={label} className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-white/20 rounded-2xl flex items-center justify-center">
+                      <Icon size={20} className="text-white" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-sky-100/70">{label}</p>
+                      <p className="text-lg font-black">{val}</p>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -123,26 +131,29 @@ export default function Weather() {
 
           {/* 5-day forecast */}
           {data.forecast?.length > 0 && (
-            <>
-              <h2 className="font-semibold text-gray-800 mb-3">{t('weather.forecast')}</h2>
-              <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+            <div className="mb-8">
+              <h2 className="text-xl font-black text-gray-900 dark:text-white mb-5 flex items-center gap-2">
+                7-Day Outlook <Calendar className="text-primary" />
+              </h2>
+              <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-none snap-x">
                 {data.forecast.map((day, i) => (
                   <div key={i} className={clsx(
-                    'card text-center p-4',
-                    i === 0 && 'border-sky-200 bg-sky-50'
+                    'min-w-[140px] snap-start bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border rounded-3xl p-5 text-center transition-all hover:-translate-y-2 hover:shadow-xl',
+                    i === 0 ? 'border-primary shadow-lg bg-emerald-50/50 dark:bg-emerald-900/10' : 'border-gray-100 dark:border-white/5'
                   )}>
-                    <p className="text-xs font-medium text-gray-500 mb-2">
-                      {i === 0 ? t('common.today', 'Today') : new Date(day.date).toLocaleDateString(t('common.locale', 'en-US'), { weekday: 'short' })}
+                    <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">
+                      {i === 0 ? t('common.today', 'Today') : new Date(day.date).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric' })}
                     </p>
-                    <span className="text-2xl block mb-2">{getEmoji(day.icon)}</span>
-                    <p className="font-bold text-gray-900">{day.tempMax}°</p>
-                    <p className="text-xs text-gray-400">{day.tempMin}°</p>
-                    <p className="text-xs text-gray-500 mt-1 capitalize leading-tight">{day.description}</p>
-                    <p className="text-xs text-sky-500 mt-1">💧{day.humidity}%</p>
+                    <span className="text-4xl block mb-4 drop-shadow-sm">{getEmoji(day.icon)}</span>
+                    <p className="text-2xl font-black text-gray-900 dark:text-white leading-none mb-1">{day.tempMax}°</p>
+                    <p className="text-xs font-bold text-gray-400 mb-4">{day.tempMin}°</p>
+                    <div className="bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 text-[10px] font-black py-1 rounded-full uppercase tracking-tighter">
+                      💧 {day.humidity}%
+                    </div>
                   </div>
                 ))}
               </div>
-            </>
+            </div>
           )}
 
           {/* Farm advice */}
