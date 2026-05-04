@@ -7,7 +7,7 @@ const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
 const redis = new Redis(redisUrl, {
   maxRetriesPerRequest: 1,
   retryStrategy: () => null,
-  tls: redisUrl.startsWith('rediss://') ? {} : undefined
+  tls: redisUrl.startsWith('rediss://') ? { rejectUnauthorized: false } : undefined
 });
 
 redis.on('error', (err) => console.warn('⚠️  Redis not available in User Service:', err.message));

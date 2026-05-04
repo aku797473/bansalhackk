@@ -4,7 +4,7 @@
   "scripts": {
     "start": "node prod-server.js",
     "dev": "node start-lite.js",
-    "install:all": "npm install --prefix gateway && npm install --prefix services/auth-service && npm install --prefix services/user-service && npm install --prefix services/weather-service && npm install --prefix services/crop-service && npm install --prefix services/fertilizer-service && npm install --prefix services/market-service && npm install --prefix services/labour-service && npm install --prefix services/chatbot-service && npm install --prefix frontend"
+    "install:all": "npm install --prefix gateway && npm install --prefix services/auth-service && npm install --prefix services/user-service && npm install --prefix services/weather-service && npm install --prefix services/crop-service && npm install --prefix services/fertilizer-service && npm install --prefix services/market-service && npm install --prefix services/labour-service && npm install --prefix services/chatbot-service && npm install --prefix services/news-service && npm install --prefix services/payment-service && npm install --prefix frontend"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
