@@ -44,7 +44,8 @@ async function start() {
 
   // 2. Set env vars on current process AND write .env.runtime for child processes
   process.env.MONGODB_URI       = uri;
-  process.env.MOCK_REDIS_KAFKA  = 'true';
+  process.env.MOCK_REDIS_KAFKA  = 'false';
+  process.env.REDIS_URL         = 'rediss://default:gQAAAAAAAcH_AAIgcDFmZGVmNjgzOTMyNDM0YWFkOWU2NTE0ZDE5MGQ0MTE4Mg@superb-caiman-115199.upstash.io:6379';
   process.env.JWT_SECRET        = process.env.JWT_SECRET        || 'smart_kisan_secret_123';
   process.env.JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'smart_kisan_refresh_secret_456';
   process.env.JWT_EXPIRES_IN    = process.env.JWT_EXPIRES_IN    || '15d';
