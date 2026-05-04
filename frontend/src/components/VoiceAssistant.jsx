@@ -4,52 +4,61 @@ import { Mic, MicOff, X, Volume2, Languages } from 'lucide-react';
 import clsx from 'clsx';
 
 // ─── Command Maps ─────────────────────────────────────────────────────────────
+// NOTE: hi arrays include BOTH romanized AND Devanagari script because
+// the browser returns Devanagari when lang=hi-IN
 const COMMANDS = {
   weather: {
     en: ['weather', 'forecast', 'climate'],
-    hi: ['mausam', 'mosam', 'barish', 'dhoop', 'aaj ka mausam'],
+    hi: ['mausam', 'mosam', 'barish', 'dhoop',
+         'मौसम', 'बारिश', 'धूप', 'आज का मौसम', 'तापमान'],
     route: '/weather',
     responseEn: 'Opening weather forecast',
     responseHi: 'मौसम जानकारी खोल रहे हैं',
   },
   market: {
     en: ['market', 'mandi', 'price', 'rate', 'crop rate', 'crop price'],
-    hi: ['mandi', 'bhav', 'rate', 'dam', 'keemat', 'bazar', 'anaj ka bhav'],
+    hi: ['mandi', 'bhav', 'rate', 'dam', 'keemat', 'bazar',
+         'मंडी', 'भाव', 'दाम', 'कीमत', 'बाजार', 'अनाज'],
     route: '/market',
     responseEn: 'Checking market prices',
     responseHi: 'मंडी भाव देख रहे हैं',
   },
   crop: {
     en: ['crop', 'farming advice', 'fasal', 'agriculture'],
-    hi: ['fasal', 'kheti', 'bona', 'faslon', 'kisan', 'kheti badi'],
+    hi: ['fasal', 'kheti', 'bona', 'kisan',
+         'फसल', 'खेती', 'बोना', 'किसान', 'खेती-बाड़ी', 'फसलें'],
     route: '/crop',
     responseEn: 'Opening crop advisor',
     responseHi: 'फसल सलाह खोल रहे हैं',
   },
   fertilizer: {
     en: ['fertilizer', 'manure', 'khad'],
-    hi: ['khad', 'urvarak', 'khaad', 'dawaai'],
+    hi: ['khad', 'urvarak', 'khaad',
+         'खाद', 'उर्वरक', 'दवाई', 'कीटनाशक'],
     route: '/fertilizer',
     responseEn: 'Opening fertilizer guide',
     responseHi: 'खाद की जानकारी खोल रहे हैं',
   },
   labour: {
     en: ['labour', 'worker', 'mazdoor', 'help'],
-    hi: ['mazdoor', 'majdoor', 'kaamgaar', 'help', 'kaam'],
+    hi: ['mazdoor', 'majdoor', 'kaamgaar',
+         'मजदूर', 'मज़दूर', 'काम', 'कामगार', 'मदद'],
     route: '/labour',
     responseEn: 'Finding nearby workers',
     responseHi: 'पास के मज़दूर ढूंढ रहे हैं',
   },
   news: {
     en: ['news', 'khabar', 'update'],
-    hi: ['khabar', 'samachar', 'taza khabar', 'news'],
+    hi: ['khabar', 'samachar',
+         'खबर', 'समाचार', 'ताज़ा', 'न्यूज़', 'ख़बर'],
     route: '/news',
     responseEn: 'Fetching latest farming news',
     responseHi: 'ताजा खबरें देख रहे हैं',
   },
   home: {
     en: ['home', 'dashboard', 'back', 'main'],
-    hi: ['ghar', 'wapas', 'home', 'mukhya'],
+    hi: ['ghar', 'wapas',
+         'घर', 'वापस', 'होम', 'मुख्य', 'डैशबोर्ड'],
     route: '/',
     responseEn: 'Going back to dashboard',
     responseHi: 'डैशबोर्ड पर वापस जा रहे हैं',
