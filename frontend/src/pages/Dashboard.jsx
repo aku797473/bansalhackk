@@ -229,13 +229,14 @@ export default function Dashboard() {
             <button
               key={to}
               onClick={() => navigate(to)}
-              className="group relative overflow-hidden rounded-2xl p-5 text-left bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 hover:shadow-xl hover:-translate-y-1 active:scale-95 transition-all duration-300">
-              <div className={clsx('absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r', color)} />
-              <div className={clsx('w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-sm group-hover:rotate-6 transition-transform', bg)}>
-                <Icon size={22} className={text} />
+              className="group relative overflow-hidden rounded-3xl p-6 text-left bg-white/70 dark:bg-slate-800/70 backdrop-blur-md border border-white/20 dark:border-slate-700/50 hover:shadow-2xl hover:-translate-y-2 active:scale-95 transition-all duration-500 animate-slide-up"
+            >
+              <div className={clsx('absolute top-0 inset-x-0 h-1 bg-gradient-to-r opacity-50', color)} />
+              <div className={clsx('w-14 h-14 rounded-2xl flex items-center justify-center mb-5 shadow-inner transition-transform group-hover:scale-110 group-hover:rotate-3', bg)}>
+                <Icon size={26} className={text} />
               </div>
-              <p className="font-bold text-gray-900 dark:text-white text-sm leading-tight">{t(labelKey)}</p>
-              <p className="text-[10px] text-gray-400 dark:text-slate-500 mt-1 uppercase font-bold tracking-wider">{t(sublabelKey)}</p>
+              <p className="font-bold text-gray-900 dark:text-white text-base leading-tight tracking-tight">{t(labelKey)}</p>
+              <p className="text-[10px] text-gray-400 dark:text-slate-500 mt-1.5 uppercase font-black tracking-widest opacity-80">{t(sublabelKey)}</p>
             </button>
           ))}
         </div>
@@ -246,20 +247,22 @@ export default function Dashboard() {
         {statsLoading ? (
           [1, 2, 3, 4].map(i => <div key={i} className="skeleton h-32 rounded-3xl" />)
         ) : stats.map(s => (
-          <div key={s.label} className="card p-5 bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700 flex flex-col gap-1 transition-all hover:shadow-md">
+          <div key={s.label} className="group p-5 bg-white/60 dark:bg-slate-800/60 backdrop-blur-md rounded-3xl border border-white/20 dark:border-slate-700/50 flex flex-col gap-1 transition-all hover:shadow-xl hover:-translate-y-1">
             <div className="flex items-center justify-between">
-              <span className="text-3xl">{s.icon}</span>
+              <span className="text-4xl group-hover:scale-110 transition-transform">{s.icon}</span>
               <span className={clsx(
-                'text-xs font-bold px-2 py-1 rounded-lg flex items-center gap-1',
-                s.up ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400' : 'bg-red-50 dark:bg-red-900/20 text-red-500 dark:text-red-400'
+                'text-[10px] font-black px-2.5 py-1 rounded-full flex items-center gap-1 uppercase tracking-tighter',
+                s.up ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' : 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'
               )}>
-                {s.up ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
+                {s.up ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
                 {s.trend}
               </span>
             </div>
-            <p className="text-2xl font-black text-gray-900 dark:text-white mt-2 tracking-tight">{s.value}</p>
-            <p className="text-sm font-bold text-gray-500 dark:text-slate-400">{s.label}</p>
-            <p className="text-[10px] text-gray-400 dark:text-slate-500 font-medium uppercase tracking-widest mt-1">{s.sub}</p>
+            <p className="text-3xl font-black text-gray-900 dark:text-white mt-3 tracking-tighter tabular-nums">{s.value}</p>
+            <p className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide opacity-80">{s.label}</p>
+            <div className="mt-2 h-1 w-full bg-gray-100 dark:bg-slate-700/50 rounded-full overflow-hidden">
+                <div className={clsx('h-full rounded-full transition-all duration-1000', s.up ? 'bg-green-500 w-2/3' : 'bg-red-500 w-1/3')} />
+            </div>
           </div>
         ))}
       </div>
