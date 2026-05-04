@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { weatherAPI } from '../services/api';
 import { useQuery } from '@tanstack/react-query';
-import { MapPin, Droplets, Wind, Thermometer, AlertTriangle, RefreshCw } from 'lucide-react';
+import { MapPin, Droplets, Wind, Thermometer, AlertTriangle, RefreshCw, Calendar } from 'lucide-react';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 
