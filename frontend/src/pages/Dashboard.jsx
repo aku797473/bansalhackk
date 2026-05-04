@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
+import { useQuery } from '@tanstack/react-query';
 import {
   Cloud, Leaf, TrendingUp, Users, FlaskConical, Map,
   ArrowRight, AlertTriangle, RefreshCw, Droplets, Wind,
@@ -30,147 +31,96 @@ export default function Dashboard() {
   const { user }  = useAuth();
   const navigate  = useNavigate();
   const { t, i18n } = useTranslation();
-  const [weather, setWeather] = useState(null);
-  const [weatherLoading, setWeatherLoading] = useState(true);
   
   const greetingKey = getGreetingKey();
   const locale = i18n.language === 'hi' ? 'hi-IN' : 'en-US';
 
-  useEffect(() => {
-    const cached = localStorage.getItem('sk_weather_data');
-    let shouldFetch = true;
+  // Weather Query
+  const { data: weather, isLoading: weatherLoading } = useQuery({
+    queryKey: ['weather-current'],
+    queryFn: async () => {
+      return new Promise((resolve) => {
+        navigator.geolocation?.getCurrentPosition(
+          async ({ coords }) => {
+            const { data } = await weatherAPI.getCurrent(coords.latitude, coords.longitude);
+            resolve(data.data);
+          },
+          async () => {
+            const { data } = await weatherAPI.getCurrent(24.6005, 80.8322); // Satna fallback
+            resolve(data.data);
+          }
+        );
+      });
+    },
+    staleTime: 15 * 60 * 1000, // 15 mins
+  });
 
-    if (cached) {
-      try {
-        const parsed = JSON.parse(cached);
-        setWeather(parsed);
-        setWeatherLoading(false);
+  // Stats Query
+  const { data: stats = [], isLoading: statsLoading } = useQuery({
+    queryKey: ['dashboard-stats', weather?.city],
+    queryFn: async () => {
+      const city = weather?.city || '';
+      const [marketRes, labourRes] = await Promise.all([
+        marketAPI.getTrends('Wheat', '', city),
+        labourAPI.getJobs({ district: city, limit: 1 })
+      ]);
+
+      const newStats = [];
+
+      // 1. Market Price
+      if (marketRes.data?.success) {
+        const trends = marketRes.data.data.trends;
+        const latest = trends[trends.length - 1];
+        const previous = trends[trends.length - 2];
+        const trendVal = previous ? (((latest.price - previous.price) / previous.price) * 100).toFixed(1) : '0';
         
-        // If we already have a city that isn't the default 'Satna' or 'Demo Location', 
-        // don't overwrite it with auto-location on every dashboard visit.
-        if (parsed.city && parsed.city !== 'Satna' && parsed.city !== 'Demo Location') {
-          shouldFetch = false;
-        }
-      } catch (e) {
-        shouldFetch = true;
+        newStats.push({
+          label: t('dashboard.stats.market_price'),
+          value: `₹${latest.price.toLocaleString()}/Q`,
+          icon: '💰',
+          trend: `${trendVal > 0 ? '+' : ''}${trendVal}%`,
+          up: trendVal >= 0,
+          sub: 'Wheat today'
+        });
       }
-    }
 
-    const fetchWeather = async (lat, lon) => {
-      try {
-        const { data } = await weatherAPI.getCurrent(lat, lon);
-        setWeather(data.data);
-        localStorage.setItem('sk_weather_data', JSON.stringify(data.data));
-      } catch { /* silent */ } finally { setWeatherLoading(false); }
-    };
-
-    if (shouldFetch) {
-      navigator.geolocation?.getCurrentPosition(
-        ({ coords }) => fetchWeather(coords.latitude, coords.longitude),
-        ()           => fetchWeather(24.6005, 80.8322) // Satna, MP
-      );
-    }
-  }, []);
-
-  const getWeatherEmoji = (icon) => {
-    if (!icon) return '🌡️';
-    if (icon.includes('01')) return '☀️';
-    if (icon.includes('02') || icon.includes('03')) return '🌤️';
-    if (icon.includes('09') || icon.includes('10')) return '🌧️';
-    if (icon.includes('11')) return '⛈️';
-    if (icon.includes('13')) return '❄️';
-    return '⛅';
-  };
-
-  const recentAlerts = [
-    { type: 'warning', icon: '🌧️', text: t('weather.alerts', 'Heavy rain expected') },
-    { type: 'info',    icon: '📈', text: t('market.trend', 'Wheat price up 3%') },
-    { type: 'success', icon: '✅', text: t('common.success', 'Report Ready') },
-  ];
-
-  const tips = [
-    { icon: '📋', title: t('dashboard.tips'), body: t('crop.tips', 'Check soil pH before sowing.'), color: 'from-green-50 to-emerald-50 dark:from-green-900/10 dark:to-emerald-900/10', border: 'border-green-100 dark:border-green-900/30' },
-    { icon: '💰', title: 'PM-KISAN', body: t('dashboard.labels.details', 'Complete your eKYC for the next installment.'), color: 'from-amber-50 to-yellow-50 dark:from-amber-900/10 dark:to-yellow-900/10', border: 'border-amber-100 dark:border-amber-900/30' },
-  ];
-
-  const [stats, setStats] = useState([]);
-  const [statsLoading, setStatsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const city = weather?.city || '';
-        // Map common cities to states if needed, or just search by market
-        const [marketRes, labourRes] = await Promise.all([
-          marketAPI.getTrends('Wheat', '', city),
-          labourAPI.getJobs({ district: city, limit: 1 })
-        ]);
-
-        const newStats = [];
-
-        // 1. Market Price
-        if (marketRes.data?.success) {
-          const trends = marketRes.data.data.trends;
-          const latest = trends[trends.length - 1];
-          const previous = trends[trends.length - 2];
-          const trendVal = previous ? (((latest.price - previous.price) / previous.price) * 100).toFixed(1) : '0';
-          
-          newStats.push({
-            label: t('dashboard.stats.market_price'),
-            value: `₹${latest.price.toLocaleString()}/Q`,
-            icon: '💰',
-            trend: `${trendVal > 0 ? '+' : ''}${trendVal}%`,
-            up: trendVal >= 0,
-            sub: 'Wheat today'
-          });
-        }
-
-        // 2. Labour
-        if (labourRes.data?.success) {
-          const total = labourRes.data.pagination.total;
-          newStats.push({
-            label: t('dashboard.stats.labour'),
-            value: total.toString(),
-            icon: '👷',
-            trend: '+1', // Mock trend for now
-            up: true,
-            sub: t('dashboard.labels.available_now')
-          });
-        }
-
-        // 3. Temperature (from weather)
-        if (weather) {
-          newStats.push({
-            label: t('weather.temp', 'Temperature'),
-            value: `${Math.round(weather.temperature)}°C`,
-            icon: '🌡️',
-            trend: weather.temperature > 30 ? 'High' : 'Normal',
-            up: weather.temperature < 35,
-            sub: weather.city
-          });
-          
-          newStats.push({
-            label: t('weather.humidity', 'Humidity'),
-            value: `${weather.humidity}%`,
-            icon: '💧',
-            trend: '-2%',
-            up: false,
-            sub: 'Air Humidity'
-          });
-        }
-
-        setStats(newStats);
-      } catch (err) {
-        console.error('Stats fetch error:', err);
-      } finally {
-        setStatsLoading(false);
+      // 2. Labour
+      if (labourRes.data?.success) {
+        const total = labourRes.data.pagination.total;
+        newStats.push({
+          label: t('dashboard.stats.labour'),
+          value: total.toString(),
+          icon: '👷',
+          trend: '+1',
+          up: true,
+          sub: t('dashboard.labels.available_now')
+        });
       }
-    };
 
-    if (!weatherLoading) {
-      fetchStats();
-    }
-  }, [weather, weatherLoading, t]);
+      // 3. Weather Stats
+      if (weather) {
+        newStats.push({
+          label: t('weather.temp', 'Temperature'),
+          value: `${Math.round(weather.temperature)}°C`,
+          icon: '🌡️',
+          trend: weather.temperature > 30 ? 'High' : 'Normal',
+          up: weather.temperature < 35,
+          sub: weather.city
+        });
+        
+        newStats.push({
+          label: t('weather.humidity', 'Humidity'),
+          value: `${weather.humidity}%`,
+          icon: '💧',
+          trend: '-2%',
+          up: false,
+          sub: 'Air Humidity'
+        });
+      }
+      return newStats;
+    },
+    enabled: !weatherLoading,
+  });
 
   return (
     <div className="page-wrapper animate-fade-in">

@@ -1,33 +1,32 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { newsAPI } from '../services/api';
+import { useQuery } from '@tanstack/react-query';
 import { Newspaper, ExternalLink, Calendar, RefreshCw } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function News() {
   const { t, i18n } = useTranslation();
-  const [news, setNews] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const lang = i18n.language === 'hi' ? 'hi' : 'en';
 
-  const fetchNews = async () => {
-    setLoading(true);
-    try {
-      const lang = i18n.language === 'hi' ? 'hi' : 'en';
+  const { 
+    data: news = [], 
+    isLoading: loading, 
+    refetch 
+  } = useQuery({
+    queryKey: ['news', lang],
+    queryFn: async () => {
       const { data } = await newsAPI.getLatest(lang);
-      if (data.success) {
-        setNews(data.data);
-      }
-    } catch (err) {
+      if (!data.success) throw new Error('Failed to fetch news');
+      return data.data;
+    },
+    onError: (err) => {
       toast.error('Failed to fetch latest news');
       console.error(err);
-    } finally {
-      setLoading(false);
     }
-  };
+  });
 
-  useEffect(() => {
-    fetchNews();
-  }, [i18n.language]); // Refetch when language changes
+  const fetchNews = () => refetch();
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6 page-enter animate-fade-in">

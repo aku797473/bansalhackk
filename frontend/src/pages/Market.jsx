@@ -1,6 +1,7 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { marketAPI } from '../services/api';
+import { useQuery } from '@tanstack/react-query';
 import { 
   ComposedChart, Area, Line, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, CartesianGrid, ReferenceDot
 } from 'recharts';
@@ -17,60 +18,55 @@ const TrendIcon = ({ trend, size = 14 }) => {
 export default function Market() {
   const { t } = useTranslation();
   
-  // Data State
-  const [prices, setPrices]           = useState([]);
-  const [states, setStates]           = useState([]);
-  const [districts, setDistricts]     = useState([]);
-  const [commodities, setCommodities] = useState([]);
-  const [trends, setTrends]           = useState(null);
-  const [trendsLoading, setTrendsLoading] = useState(false);
-  
-  // UI State
-  const [loading, setLoading]         = useState(true);
-  const [search, setSearch]           = useState('');
-  
   // Selection State
   const [selState, setSelState]       = useState('Madhya Pradesh');
   const [selDistrict, setSelDistrict] = useState('Rewa');
   const [selCommodity, setSelCommodity] = useState('Wheat');
+  const [search, setSearch]           = useState('');
 
-  // Initial Load
-  useEffect(() => {
-    Promise.all([marketAPI.getPrices(), marketAPI.getStates(), marketAPI.getCommodities()])
-      .then(([p, s, c]) => {
-        setPrices(p.data.data.prices || []);
-        setStates(s.data.data);
-        setCommodities(c.data.data);
-      })
-      .catch(() => toast.error('Market data unavailable'))
-      .finally(() => setLoading(false));
-  }, []);
+  // Queries
+  const { data: initData, isLoading: initLoading } = useQuery({
+    queryKey: ['market-init'],
+    queryFn: async () => {
+      const [p, s, c] = await Promise.all([marketAPI.getPrices(), marketAPI.getStates(), marketAPI.getCommodities()]);
+      return {
+        prices: p.data.data.prices || [],
+        states: s.data.data || [],
+        commodities: c.data.data || []
+      };
+    },
+    onError: () => toast.error('Market data unavailable')
+  });
 
-  // When State changes, load its districts
-  useEffect(() => {
-    if (selState) {
-      marketAPI.getDistricts(selState).then(res => {
-        setDistricts(res.data.data);
-        if (!res.data.data.includes(selDistrict)) {
-          setSelDistrict(res.data.data[0] || '');
-        }
-      });
-    } else {
-      setDistricts([]);
-      setSelDistrict('');
+  const { data: districts = [] } = useQuery({
+    queryKey: ['districts', selState],
+    queryFn: async () => {
+      if (!selState) return [];
+      const res = await marketAPI.getDistricts(selState);
+      return res.data.data || [];
+    },
+    enabled: !!selState,
+    onSuccess: (data) => {
+      if (data.length > 0 && !data.includes(selDistrict)) {
+        setSelDistrict(data[0]);
+      }
     }
-  }, [selState]); // eslint-disable-line react-hooks/exhaustive-deps
+  });
 
-  // When State, District, or Commodity changes, load the specific trend chart
-  useEffect(() => {
-    if (selCommodity) {
-      setTrendsLoading(true);
-      marketAPI.getTrends(selCommodity, selState, selDistrict)
-        .then(res => setTrends(res.data.data))
-        .catch(() => setTrends(null))
-        .finally(() => setTrendsLoading(false));
-    }
-  }, [selState, selDistrict, selCommodity]);
+  const { data: trends, isLoading: trendsLoading } = useQuery({
+    queryKey: ['trends', selCommodity, selState, selDistrict],
+    queryFn: async () => {
+      if (!selCommodity) return null;
+      const res = await marketAPI.getTrends(selCommodity, selState, selDistrict);
+      return res.data.data;
+    },
+    enabled: !!selCommodity,
+  });
+
+  const prices = initData?.prices || [];
+  const states = initData?.states || [];
+  const commodities = initData?.commodities || [];
+  const loading = initLoading;
 
   const filteredPrices = useMemo(() => prices.filter(p => {
     const matchSearch = !search || p.commodity.toLowerCase().includes(search.toLowerCase());

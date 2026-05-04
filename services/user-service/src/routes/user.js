@@ -1,11 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const UserProfile = require('../models/UserProfile');
+const Redis = require('ioredis');
+
+const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {
+  maxRetriesPerRequest: 1,
+  retryStrategy: () => null
+});
+
+redis.on('error', (err) => console.warn('⚠️  Redis not available in User Service:', err.message));
+
+const CACHE_TTL = 3600; // 1 hour
 
 // Helpers: extract user info from gateway-injected headers
 const getUserInfo = (req) => ({
   userId: req.headers['x-user-id'],
-  email:  req.headers['x-user-email'] || req.headers['x-user-phone'], // Fallback for old clients
+  email:  req.headers['x-user-email'] || req.headers['x-user-phone'],
   role:   req.headers['x-user-role'],
 });
 
@@ -13,9 +23,16 @@ const getUserInfo = (req) => ({
 router.get('/profile', async (req, res) => {
   try {
     const { userId, email, role } = getUserInfo(req);
+    const cacheKey = `user:profile:${userId}`;
+
+    // Try Cache
+    if (redis.status === 'ready') {
+      const cached = await redis.get(cacheKey);
+      if (cached) return res.json({ success: true, data: JSON.parse(cached), cached: true });
+    }
+
     let profile = await UserProfile.findOne({ userId });
     
-    // If no profile (e.g. after restart), create a default one instead of 404
     if (!profile) {
       profile = new UserProfile({ 
         userId, 
@@ -27,6 +44,11 @@ router.get('/profile', async (req, res) => {
       await profile.save();
     }
     
+    // Set Cache
+    if (redis.status === 'ready') {
+      await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(profile)).catch(() => {});
+    }
+
     res.json({ success: true, data: profile });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -55,6 +77,12 @@ router.post('/profile', async (req, res) => {
       },
       { new: true, upsert: true, runValidators: true }
     );
+
+    // Invalidate Cache
+    if (redis.status === 'ready') {
+      await redis.del(`user:profile:${userId}`).catch(() => {});
+    }
+
     res.json({ success: true, data: profile });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

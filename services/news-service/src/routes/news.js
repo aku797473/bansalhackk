@@ -1,6 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const Parser = require('rss-parser');
+const Redis = require('ioredis');
+
+const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {
+  maxRetriesPerRequest: 1,
+  retryStrategy: () => null
+});
+
+redis.on('error', (err) => console.warn('⚠️  Redis not available in News Service:', err.message));
+
+const CACHE_TTL = 3600; // 1 hour
 
 const parser = new Parser({
   customFields: {
@@ -14,23 +24,26 @@ const parser = new Parser({
 router.get('/latest', async (req, res) => {
   try {
     const lang = req.query.lang || 'en';
-    let url = '';
+    const cacheKey = `news:latest:${lang}`;
 
+    // Try Cache
+    if (redis.status === 'ready') {
+      const cached = await redis.get(cacheKey);
+      if (cached) return res.json({ success: true, data: JSON.parse(cached), cached: true });
+    }
+
+    let url = '';
     if (lang === 'hi') {
-      // Hindi Agriculture News
       const query = encodeURIComponent('खेती OR किसानी OR कृषि');
       url = `https://news.google.com/rss/search?q=${query}&hl=hi&gl=IN&ceid=IN:hi`;
     } else {
-      // English Agriculture News
       const query = encodeURIComponent('agriculture OR farming India');
       url = `https://news.google.com/rss/search?q=${query}&hl=en-IN&gl=IN&ceid=IN:en`;
     }
 
     const feed = await parser.parseURL(url);
 
-    // Clean up and format the items
     const articles = feed.items.map(item => {
-      // Extract image from description HTML or media:content if available
       let imageUrl = null;
       if (item['media:content'] && item['media:content'].$) {
         imageUrl = item['media:content'].$.url;
@@ -39,15 +52,8 @@ router.get('/latest', async (req, res) => {
         if (imgMatch) imageUrl = imgMatch[1];
       }
 
-      // Clean HTML from description
-      let cleanDesc = item.description 
-        ? item.description.replace(/<[^>]+>/g, '').trim() 
-        : '';
-      
-      // Limit description length
-      if (cleanDesc.length > 150) {
-        cleanDesc = cleanDesc.substring(0, 150) + '...';
-      }
+      let cleanDesc = item.description ? item.description.replace(/<[^>]+>/g, '').trim() : '';
+      if (cleanDesc.length > 150) cleanDesc = cleanDesc.substring(0, 150) + '...';
 
       return {
         title: item.title,
@@ -55,9 +61,14 @@ router.get('/latest', async (req, res) => {
         pubDate: item.pubDate,
         source: item.source || 'Google News',
         description: cleanDesc,
-        imageUrl: imageUrl || 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=1000&auto=format&fit=crop' // Fallback farming image
+        imageUrl: imageUrl || 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=1000&auto=format&fit=crop'
       };
-    }).slice(0, 12); // Get top 12 articles
+    }).slice(0, 12);
+
+    // Set Cache
+    if (redis.status === 'ready') {
+      await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(articles)).catch(() => {});
+    }
 
     res.json({ success: true, data: articles });
   } catch (err) {

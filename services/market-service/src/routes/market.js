@@ -143,8 +143,16 @@ router.get('/trends', async (req, res) => {
     const { commodity = 'Wheat', state, market } = req.query;
     const userId = req.headers['x-user-id'] || 'anonymous';
     
-    // Record history
+    // Record history (Fire and forget)
     MarketHistory.create({ userId, state, district: market, commodity, searchType: 'trends' }).catch(console.error);
+
+    const cacheKey = `market:trends:${commodity}:${state || 'all'}:${market || 'all'}`;
+    const isRedisReady = redis.status === 'ready';
+    
+    if (isRedisReady) {
+      const cached = await redis.get(cacheKey);
+      if (cached) return res.json({ success: true, data: JSON.parse(cached), cached: true });
+    }
 
     const historicalDays = 30;
     const forecastDays = 15;
@@ -209,7 +217,13 @@ router.get('/trends', async (req, res) => {
       });
     }
 
-    res.json({ success: true, data: { commodity, state: state || 'India', market: market || 'All Markets', trends: allTrends, isRealData } });
+    const result = { commodity, state: state || 'India', market: market || 'All Markets', trends: allTrends, isRealData };
+    
+    if (isRedisReady) {
+      await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(result)).catch(() => {});
+    }
+
+    res.json({ success: true, data: result });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -218,6 +232,13 @@ router.get('/trends', async (req, res) => {
 // GET /market/map-markers
 router.get('/map-markers', async (req, res) => {
   try {
+    const cacheKey = 'market:map-markers';
+    const isRedisReady = redis.status === 'ready';
+    if (isRedisReady) {
+      const cached = await redis.get(cacheKey);
+      if (cached) return res.json({ success: true, data: JSON.parse(cached), cached: true });
+    }
+
     const coords = {
       'Rewa': { lat: 24.5333, lng: 81.3000 },
       'Indore': { lat: 22.7196, lng: 75.8577 },
@@ -242,6 +263,10 @@ router.get('/map-markers', async (req, res) => {
         info: `${p.commodity}: ₹${p.modalPrice}/Q`,
         detail: `State: ${p.state} · Trend: ${p.trend.toUpperCase()} (${p.changePercent}%)`
       }));
+
+    if (isRedisReady) {
+      await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(markers)).catch(() => {});
+    }
 
     res.json({ success: true, data: markers });
   } catch (err) {

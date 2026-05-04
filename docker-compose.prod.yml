@@ -5,31 +5,12 @@ networks:
     driver: bridge
 
 volumes:
-  mongo-data:
   redis-data:
   kafka-data:
   zookeeper-data:
 
 services:
   # ─── Infrastructure ───────────────────────────────
-  mongodb:
-    image: mongo:7
-    container_name: sk-mongodb
-    restart: unless-stopped
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
-    networks:
-      - smart-kisan-net
-    environment:
-      MONGO_INITDB_DATABASE: smart-kisan
-    healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   redis:
     image: redis:7-alpine
     container_name: sk-redis
@@ -54,8 +35,6 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-    volumes:
-      - zookeeper-data:/var/lib/zookeeper/data
     networks:
       - smart-kisan-net
 
@@ -67,8 +46,6 @@ services:
       - zookeeper
     ports:
       - "9092:9092"
-    volumes:
-      - kafka-data:/var/lib/kafka/data
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -76,13 +53,12 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     networks:
       - smart-kisan-net
 
   # ─── API Gateway ──────────────────────────────────
   gateway:
-    build: ./gateway
+    image: amit8959/sk-gateway:latest
     container_name: sk-gateway
     restart: unless-stopped
     ports:
@@ -90,6 +66,7 @@ services:
     environment:
       - PORT=5000
       - JWT_SECRET=${JWT_SECRET}
+      - MONGODB_URI=${MONGODB_URI}
       - AUTH_SERVICE_URL=http://auth-service:5001
       - USER_SERVICE_URL=http://user-service:5002
       - WEATHER_SERVICE_URL=http://weather-service:5003
@@ -103,25 +80,14 @@ services:
       - CLERK_PUBLISHABLE_KEY=${CLERK_PUBLISHABLE_KEY}
       - CLERK_SECRET_KEY=${CLERK_SECRET_KEY}
     depends_on:
-      mongodb:
-        condition: service_healthy
       redis:
         condition: service_healthy
-      auth-service:
-        condition: service_started
-      user-service:
-        condition: service_started
     networks:
       - smart-kisan-net
 
   # ─── Frontend ─────────────────────────────────────
   frontend:
-    build:
-      context: ./frontend
-      args:
-        - VITE_API_BASE_URL=http://localhost:5000/api
-        - VITE_CLERK_PUBLISHABLE_KEY=${CLERK_PUBLISHABLE_KEY}
-        - VITE_GOOGLE_MAPS_API_KEY=${VITE_GOOGLE_MAPS_API_KEY}
+    image: amit8959/sk-frontend:latest
     container_name: sk-frontend
     restart: unless-stopped
     ports:
@@ -133,42 +99,37 @@ services:
 
   # ─── Microservices ────────────────────────────────
   auth-service:
-    build: ./services/auth-service
+    image: amit8959/sk-auth:latest
     container_name: sk-auth
     restart: unless-stopped
     environment:
       - PORT=5001
-      - MONGODB_URI=mongodb://mongodb:27017/smart-kisan
+      - MONGODB_URI=${MONGODB_URI}
       - JWT_SECRET=${JWT_SECRET}
       - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
       - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}
       - FIREBASE_PRIVATE_KEY=${FIREBASE_PRIVATE_KEY}
       - FIREBASE_CLIENT_EMAIL=${FIREBASE_CLIENT_EMAIL}
-    depends_on:
-      mongodb:
-        condition: service_healthy
     networks:
       - smart-kisan-net
 
   user-service:
-    build: ./services/user-service
+    image: amit8959/sk-user:latest
     container_name: sk-user
     restart: unless-stopped
     environment:
       - PORT=5002
-      - MONGODB_URI=mongodb://mongodb:27017/smart-kisan
+      - MONGODB_URI=${MONGODB_URI}
       - JWT_SECRET=${JWT_SECRET}
       - REDIS_URL=redis://redis:6379
     depends_on:
-      mongodb:
-        condition: service_healthy
       redis:
         condition: service_healthy
     networks:
       - smart-kisan-net
 
   weather-service:
-    build: ./services/weather-service
+    image: amit8959/sk-weather:latest
     container_name: sk-weather
     restart: unless-stopped
     environment:
@@ -180,34 +141,25 @@ services:
     depends_on:
       redis:
         condition: service_healthy
-      kafka:
-        condition: service_started
     networks:
       - smart-kisan-net
 
   crop-service:
-    build: ./services/crop-service
+    image: amit8959/sk-crop:latest
     container_name: sk-crop
     restart: unless-stopped
     environment:
       - PORT=5004
       - GEMINI_API_KEY=${GEMINI_API_KEY}
-      - MONGODB_URI=mongodb://mongodb:27017/smart-kisan
+      - MONGODB_URI=${MONGODB_URI}
       - REDIS_URL=redis://redis:6379
       - KAFKA_BROKER=kafka:29092
       - JWT_SECRET=${JWT_SECRET}
-    depends_on:
-      mongodb:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      kafka:
-        condition: service_started
     networks:
       - smart-kisan-net
 
   fertilizer-service:
-    build: ./services/fertilizer-service
+    image: amit8959/sk-fertilizer:latest
     container_name: sk-fertilizer
     restart: unless-stopped
     environment:
@@ -218,44 +170,32 @@ services:
       - smart-kisan-net
 
   market-service:
-    build: ./services/market-service
+    image: amit8959/sk-market:latest
     container_name: sk-market
     restart: unless-stopped
     environment:
       - PORT=5006
-      - MONGODB_URI=mongodb://mongodb:27017/smart-kisan
+      - MONGODB_URI=${MONGODB_URI}
       - REDIS_URL=redis://redis:6379
       - JWT_SECRET=${JWT_SECRET}
-    depends_on:
-      mongodb:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
     networks:
       - smart-kisan-net
 
   labour-service:
-    build: ./services/labour-service
+    image: amit8959/sk-labour:latest
     container_name: sk-labour
     restart: unless-stopped
     environment:
       - PORT=5007
-      - MONGODB_URI=mongodb://mongodb:27017/smart-kisan
+      - MONGODB_URI=${MONGODB_URI}
       - REDIS_URL=redis://redis:6379
       - KAFKA_BROKER=kafka:29092
       - JWT_SECRET=${JWT_SECRET}
-    depends_on:
-      mongodb:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      kafka:
-        condition: service_started
     networks:
       - smart-kisan-net
 
   chatbot-service:
-    build: ./services/chatbot-service
+    image: amit8959/sk-chatbot:latest
     container_name: sk-chatbot
     restart: unless-stopped
     environment:
@@ -263,28 +203,21 @@ services:
       - GEMINI_API_KEY=${GEMINI_API_KEY}
       - REDIS_URL=redis://redis:6379
       - JWT_SECRET=${JWT_SECRET}
-    depends_on:
-      redis:
-        condition: service_healthy
     networks:
       - smart-kisan-net
 
   news-service:
-    build: ./services/news-service
+    image: amit8959/sk-news:latest
     container_name: sk-news
     restart: unless-stopped
     environment:
       - PORT=5009
       - JWT_SECRET=${JWT_SECRET}
-      - REDIS_URL=redis://redis:6379
-    depends_on:
-      redis:
-        condition: service_healthy
     networks:
       - smart-kisan-net
 
   payment-service:
-    build: ./services/payment-service
+    image: amit8959/sk-payment:latest
     container_name: sk-payment
     restart: unless-stopped
     environment:
