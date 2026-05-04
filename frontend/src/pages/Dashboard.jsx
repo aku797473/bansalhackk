@@ -9,6 +9,7 @@ import {
   Bell, TrendingDown, Calendar
 } from 'lucide-react';
 import { weatherAPI, marketAPI, labourAPI } from '../services/api';
+import VoiceAssistant from '../components/VoiceAssistant';
 import clsx from 'clsx';
 
 const quickActions = [
@@ -279,6 +280,9 @@ export default function Dashboard() {
           </div>
         ))}
       </div>
+      
+      {/* ── Voice Assistant ────────────────────────────────── */}
+      <VoiceAssistant />
     </div>
   );
 }
