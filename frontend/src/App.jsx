@@ -6,6 +6,7 @@ import { MapProvider } from './contexts/MapContext';
 import Navbar from './components/Navbar';
 import ChatWidget from './components/ChatWidget';
 import LoadingScreen from './components/LoadingScreen';
+import VoiceAssistant from './components/VoiceAssistant';
 
 import { ThemeProvider } from './contexts/ThemeContext';
 import { ClerkProvider } from '@clerk/clerk-react';
@@ -65,6 +66,7 @@ function AppLayout({ children }) {
         </Suspense>
       </main>
       {isAuth && <ChatWidget />}
+      {isAuth && <VoiceAssistant />}
     </div>
   );
 }

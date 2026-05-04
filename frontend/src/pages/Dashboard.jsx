@@ -9,7 +9,6 @@ import {
   Bell, TrendingDown, Calendar
 } from 'lucide-react';
 import { weatherAPI, marketAPI, labourAPI } from '../services/api';
-import VoiceAssistant from '../components/VoiceAssistant';
 import clsx from 'clsx';
 
 const quickActions = [
@@ -42,9 +41,9 @@ const tips = [
 ];
 
 const recentAlerts = [
-  { type: 'info', icon: '📢', text: 'New PM-Kisan installment credited' },
-  { type: 'warning', icon: '🦗', text: 'Locust warning in neighboring district' },
-  { type: 'success', icon: '📉', text: 'Wheat prices up by 5% today' }
+  { type: 'info',    icon: '📢', text: 'New PM-Kisan installment credited',    action: 'View Details',  color: 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800/30 text-blue-800 dark:text-blue-300',   btn: 'bg-blue-600 hover:bg-blue-700 text-white' },
+  { type: 'warning', icon: '🦗', text: 'Locust warning in neighboring district', action: 'See Alert',    color: 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800/30 text-amber-800 dark:text-amber-300', btn: 'bg-amber-500 hover:bg-amber-600 text-white' },
+  { type: 'success', icon: '📈', text: 'Wheat prices up by 5% today',           action: 'Check Mandi',  color: 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800/30 text-green-800 dark:text-green-300',  btn: 'bg-green-600 hover:bg-green-700 text-white' },
 ];
 
 function getGreetingKey() {
@@ -173,17 +172,20 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* ── Alerts strip ──────────────────────────────────── */}
-      <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-none mb-7">
+      {/* ── Alerts strip ──────────────────────────────── */}
+      <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-none mb-8">
         {recentAlerts.map((a, i) => (
           <div key={i} className={clsx(
-            'flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-xs font-semibold whitespace-nowrap shrink-0 border shadow-sm transition-colors',
-            a.type === 'warning' && 'bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-400 border-amber-100 dark:border-amber-900/30',
-            a.type === 'info'    && 'bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-400 border-blue-100 dark:border-blue-900/30',
-            a.type === 'success' && 'bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-400 border-green-100 dark:border-green-900/30',
+            'flex items-center justify-between gap-4 pl-4 pr-2 py-2 rounded-2xl text-sm font-semibold whitespace-nowrap shrink-0 border shadow-sm min-w-[260px]',
+            a.color
           )}>
-            <span>{a.icon}</span>
-            {a.text}
+            <div className="flex items-center gap-2.5">
+              <span className="text-xl">{a.icon}</span>
+              <span className="text-xs font-bold leading-tight max-w-[150px] whitespace-normal">{a.text}</span>
+            </div>
+            <button className={clsx('text-[10px] font-black uppercase tracking-wider px-3 py-2 rounded-xl shrink-0 transition-all active:scale-95', a.btn)}>
+              {a.action}
+            </button>
           </div>
         ))}
       </div>
@@ -284,8 +286,8 @@ export default function Dashboard() {
         ))}
       </div>
       
-      {/* ── Voice Assistant ────────────────────────────────── */}
-      <VoiceAssistant />
+      {/* ── Voice Assistant ──────────────────────────── */}
+      {/* Moved to App.jsx — now global across all pages */}
     </div>
   );
 }
