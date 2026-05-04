@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
-const Redis = process.env.MOCK_REDIS_KAFKA ? require('../../../../utils/mockRedis') : require('ioredis');
+const Redis = process.env.MOCK_REDIS_KAFKA === 'true' ? require('../../../../utils/mockRedis') : require('ioredis');
 const { generatePriceData, BASE_PRICES } = require('../data/prices');
 const MarketHistory = require('../models/MarketHistory');
 

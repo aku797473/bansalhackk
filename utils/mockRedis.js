@@ -19,6 +19,13 @@ class MockRedis {
     this.store.delete(key);
     return 1;
   }
+  on(event, callback) {
+    // Dummy event listener
+    return this;
+  }
+  get status() {
+    return 'ready';
+  }
 }
 
 module.exports = MockRedis;
