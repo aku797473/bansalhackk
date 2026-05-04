@@ -20,6 +20,32 @@ const quickActions = [
   { to: '/map',        icon: Map,          labelKey: 'nav.map',        sublabelKey: 'dashboard.labels.smart_map',     color: 'from-teal-400 to-teal-600',   bg: 'bg-teal-50 dark:bg-teal-900/20',   text: 'text-teal-600 dark:text-teal-400' },
 ];
 
+const WEATHER_EMOJIS = { '01': '☀️', '02': '🌤️', '03': '⛅', '04': '☁️', '09': '🌧️', '10': '🌦️', '11': '⛈️', '13': '❄️', '50': '🌫️' };
+const getWeatherEmoji = (icon) => WEATHER_EMOJIS[icon?.slice(0, 2)] || '🌡️';
+
+const tips = [
+  { 
+    title: 'Soil Health', 
+    body: 'Test your soil every 2 years to optimize fertilizer usage and save costs.', 
+    icon: '🧪', 
+    color: 'bg-indigo-50 dark:bg-indigo-900/10', 
+    border: 'border-indigo-100 dark:border-indigo-900/30' 
+  },
+  { 
+    title: 'Watering Tip', 
+    body: 'Early morning irrigation reduces evaporation and prevents fungal growth.', 
+    icon: '💧', 
+    color: 'bg-emerald-50 dark:bg-emerald-900/10', 
+    border: 'border-emerald-100 dark:border-emerald-900/30' 
+  }
+];
+
+const recentAlerts = [
+  { type: 'info', icon: '📢', text: 'New PM-Kisan installment credited' },
+  { type: 'warning', icon: '🦗', text: 'Locust warning in neighboring district' },
+  { type: 'success', icon: '📉', text: 'Wheat prices up by 5% today' }
+];
+
 function getGreetingKey() {
   const h = new Date().getHours();
   if (h < 12) return 'dashboard.greeting_morning';
