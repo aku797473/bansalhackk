@@ -1,0 +1,72 @@
+services:
+  # 1. API Gateway
+  - type: web
+    name: sk-gateway
+    env: node
+    plan: free
+    buildCommand: npm install --prefix gateway
+    startCommand: node gateway/src/index.js
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: NODE_ENV
+        value: production
+
+  # 2. Auth Service
+  - type: web
+    name: sk-auth-service
+    env: node
+    plan: free
+    buildCommand: npm install --prefix services/auth-service
+    startCommand: node services/auth-service/src/index.js
+    envVars:
+      - key: REDIS_URL
+        value: rediss://default:gQAAAAAAAcH_AAIgcDFmZGVmNjgzOTMyNDM0YWFkOWU2NTE0ZDE5MGQ0MTE4Mg@superb-caiman-115199.upstash.io:6379
+      - key: MOCK_REDIS_KAFKA
+        value: "false"
+
+  # 3. Weather Service
+  - type: web
+    name: sk-weather-service
+    env: node
+    plan: free
+    buildCommand: npm install --prefix services/weather-service
+    startCommand: node services/weather-service/src/index.js
+    envVars:
+      - key: REDIS_URL
+        value: rediss://default:gQAAAAAAAcH_AAIgcDFmZGVmNjgzOTMyNDM0YWFkOWU2NTE0ZDE5MGQ0MTE4Mg@superb-caiman-115199.upstash.io:6379
+      - key: MOCK_REDIS_KAFKA
+        value: "false"
+
+  # 4. News Service
+  - type: web
+    name: sk-news-service
+    env: node
+    plan: free
+    buildCommand: npm install --prefix services/news-service
+    startCommand: node services/news-service/src/index.js
+    envVars:
+      - key: REDIS_URL
+        value: rediss://default:gQAAAAAAAcH_AAIgcDFmZGVmNjgzOTMyNDM0YWFkOWU2NTE0ZDE5MGQ0MTE4Mg@superb-caiman-115199.upstash.io:6379
+
+  # 5. Crop Service
+  - type: web
+    name: sk-crop-service
+    env: node
+    plan: free
+    buildCommand: npm install --prefix services/crop-service
+    startCommand: node services/crop-service/src/index.js
+    envVars:
+      - key: REDIS_URL
+        value: rediss://default:gQAAAAAAAcH_AAIgcDFmZGVmNjgzOTMyNDM0YWFkOWU2NTE0ZDE5MGQ0MTE4Mg@superb-caiman-115199.upstash.io:6379
+
+  # 6. Market Service
+  - type: web
+    name: sk-market-service
+    env: node
+    plan: free
+    buildCommand: npm install --prefix services/market-service
+    startCommand: node services/market-service/src/index.js
+    envVars:
+      - key: REDIS_URL
+        value: rediss://default:gQAAAAAAAcH_AAIgcDFmZGVmNjgzOTMyNDM0YWFkOWU2NTE0ZDE5MGQ0MTE4Mg@superb-caiman-115199.upstash.io:6379
