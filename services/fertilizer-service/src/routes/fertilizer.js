@@ -13,6 +13,10 @@ const redis = new Redis(redisUrl, {
   tls: redisUrl.startsWith('rediss://') ? { rejectUnauthorized: false } : undefined
 });
 
+redis.on('connect', () => {
+  console.log('✅ Redis Connected to Upstash (Fertilizer Service)');
+});
+
 redis.on('error', (err) => console.warn('⚠️  Redis not available in Fertilizer Service:', err.message));
 
 const storage = multer.memoryStorage();

@@ -10,6 +10,10 @@ const redis = new Redis(redisUrl, {
   retryStrategy: () => null,
   tls: redisUrl.startsWith('rediss://') ? { rejectUnauthorized: false } : undefined
 });
+redis.on('connect', () => {
+  console.log('✅ Redis Connected to Upstash (Weather Service)');
+});
+
 redis.on('error', (err) => console.warn('⚠️  Redis not available:', err.message));
 
 const OWM_KEY = process.env.OPENWEATHER_API_KEY || 'demo';

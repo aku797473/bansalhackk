@@ -12,6 +12,10 @@ const redis = new Redis(redisUrl, {
   tls: redisUrl.startsWith('rediss://') ? { rejectUnauthorized: false } : undefined
 });
 
+redis.on('connect', () => {
+  console.log('✅ Redis Connected to Upstash (Market Service)');
+});
+
 redis.on('error', (err) => {
   console.warn('⚠️  Redis not available, caching disabled:', err.message);
 });

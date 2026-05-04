@@ -10,6 +10,10 @@ const redis = new Redis(redisUrl, {
   tls: redisUrl.startsWith('rediss://') ? { rejectUnauthorized: false } : undefined
 });
 
+redis.on('connect', () => {
+  console.log('✅ Redis Connected to Upstash (Crop Service)');
+});
+
 redis.on('error', (err) => {
   const safeUrl = redisUrl.replace(/:[^:@]+@/, ':***@');
   console.warn(`⚠️  Redis (${safeUrl}) not available, caching disabled:`, err.message);
