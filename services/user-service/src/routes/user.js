@@ -3,9 +3,11 @@ const router = express.Router();
 const UserProfile = require('../models/UserProfile');
 const Redis = require('ioredis');
 
-const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {
+const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
+const redis = new Redis(redisUrl, {
   maxRetriesPerRequest: 1,
-  retryStrategy: () => null
+  retryStrategy: () => null,
+  tls: redisUrl.startsWith('rediss://') ? {} : undefined
 });
 
 redis.on('error', (err) => console.warn('⚠️  Redis not available in User Service:', err.message));

@@ -5,9 +5,11 @@ const Redis = process.env.MOCK_REDIS_KAFKA ? require('../../../../utils/mockRedi
 const { generatePriceData, BASE_PRICES } = require('../data/prices');
 const MarketHistory = require('../models/MarketHistory');
 
-const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {
+const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
+const redis = new Redis(redisUrl, {
   maxRetriesPerRequest: 1,
-  retryStrategy: () => null // Disable auto-retry to prevent log spamming on Render
+  retryStrategy: () => null,
+  tls: redisUrl.startsWith('rediss://') ? {} : undefined
 });
 
 redis.on('error', (err) => {

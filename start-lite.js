@@ -12,7 +12,8 @@ async function writeEnvFile(uri) {
     `JWT_SECRET=${process.env.JWT_SECRET || 'smart_kisan_secret_123'}`,
     `JWT_EXPIRES_IN=${process.env.JWT_EXPIRES_IN || '7d'}`,
     `JWT_REFRESH_SECRET=${process.env.JWT_REFRESH_SECRET || 'smart_kisan_refresh_secret_456'}`,
-    `MOCK_REDIS_KAFKA=true`,
+    `MOCK_REDIS_KAFKA=false`,
+    `REDIS_URL=rediss://default:gQAAAAAAAcH_AAIgcDFmZGVmNjgzOTMyNDM0YWFkOWU2NTE0ZDE5MGQ0MTE4Mg@superb-caiman-115199.upstash.io:6379`,
     `OPENWEATHER_API_KEY=${process.env.OPENWEATHER_API_KEY || ''}`,
     `GEMINI_API_KEY=${process.env.GEMINI_API_KEY || ''}`,
   ];
@@ -57,7 +58,8 @@ async function start() {
     env: {
       ...process.env,
       MONGODB_URI:        uri,
-      MOCK_REDIS_KAFKA:   'true',
+      MOCK_REDIS_KAFKA:   'false',
+      REDIS_URL:          'rediss://default:gQAAAAAAAcH_AAIgcDFmZGVmNjgzOTMyNDM0YWFkOWU2NTE0ZDE5MGQ0MTE4Mg@superb-caiman-115199.upstash.io:6379',
       JWT_SECRET:         process.env.JWT_SECRET,
       JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
       JWT_EXPIRES_IN:     process.env.JWT_EXPIRES_IN,
