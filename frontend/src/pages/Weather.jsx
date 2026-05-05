@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { weatherAPI } from '../services/api';
 import { useQuery } from '@tanstack/react-query';
