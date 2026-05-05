@@ -10,7 +10,7 @@ const WEATHER_EMOJIS = { '01': '☀️', '02': '🌤️', '03': '⛅', '04': '�
 const getEmoji = (icon) => WEATHER_EMOJIS[icon?.slice(0, 2)] || '🌡️';
 
 export default function Weather() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [citySearch, setCitySearch] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
 
