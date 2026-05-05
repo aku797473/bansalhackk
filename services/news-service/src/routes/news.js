@@ -42,7 +42,7 @@ router.get('/latest', async (req, res) => {
     }
 
     let url = '';
-    if (lang === 'hi') {
+    if (lang.startsWith('hi')) {
       const query = encodeURIComponent('खेती OR किसानी OR कृषि');
       url = `https://news.google.com/rss/search?q=${query}&hl=hi&gl=IN&ceid=IN:hi`;
     } else {

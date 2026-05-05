@@ -79,7 +79,7 @@ Identify:
 2. Nutrient deficiencies or diseases (if a plant is shown)
 3. Soil report details (if a document is shown)
 
-IMPORTANT: Provide all descriptive text (deficiency, symptoms, treatment, prevention, generalRecommendations) in ${language === 'hi' ? 'Hindi' : 'English'}.
+IMPORTANT: Provide all descriptive text (deficiency, symptoms, treatment, prevention, generalRecommendations) in ${language?.startsWith('hi') ? 'Hindi' : 'English'}.
 
 Return ONLY valid JSON in this format:
 {
@@ -146,7 +146,7 @@ Return ONLY valid JSON in this format:
 });
 
 const getMockAnalysis = (lang = 'en') => {
-  const isHi = lang === 'hi';
+  const isHi = lang?.startsWith('hi');
   return {
     primaryIssue: {
       deficiency: isHi ? 'नाइट्रोजन (N) की कमी' : 'Nitrogen (N) Deficiency',

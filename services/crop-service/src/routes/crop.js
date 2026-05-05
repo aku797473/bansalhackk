@@ -28,7 +28,7 @@ const openai = (process.env.OPENAI_API_KEY && !process.env.OPENAI_API_KEY.includ
 
 // Rule-based fallback crop recommendation
 const getRuleBasedRecommendation = ({ soilType, rainfall, temperature, season, state, language = 'en' }) => {
-  const isHi = language === 'hi';
+  const isHi = language.startsWith('hi');
   const crops = {
     kharif: {
       loamy: ['Rice', 'Maize', 'Cotton', 'Soybean'],
@@ -124,7 +124,7 @@ District: ${district || ''}
   "marketDemand": "Low|Medium|High"
 }
 
-IMPORTANT: Provide all text content (primaryCrop, alternativeCrops, sowingTime, harvestTime, fertilizers, tips, expectedYield) in ${req.body.language === 'hi' ? 'Hindi' : 'English'}.
+IMPORTANT: Provide all text content (primaryCrop, alternativeCrops, sowingTime, harvestTime, fertilizers, tips, expectedYield) in ${req.body.language?.startsWith('hi') ? 'Hindi' : 'English'}.
 `;
 
       try {
@@ -167,7 +167,7 @@ router.get('/calendar', async (req, res) => {
       if (cached) return res.json({ success: true, data: JSON.parse(cached), cached: true });
     }
 
-    const isHi = lang === 'hi';
+    const isHi = lang?.startsWith('hi');
     const calendar = {
       crop, state,
       activities: [
