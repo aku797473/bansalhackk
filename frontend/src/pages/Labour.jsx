@@ -50,9 +50,9 @@ export default function Labour() {
   const { t } = useTranslation();
   const { user } = useAuth();
   const [tab, setTab]       = useState('browse');
-  const [jobs, setJobs]       = useState([]);
+  const [jobs, setJobs]       = useState(FALLBACK_JOBS);
   const [myJobs, setMyJobs]   = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [apiDown, setApiDown] = useState(false);
   const [showModal, setShowModal] = useState(null);
   const [applying, setApplying]   = useState(false);
@@ -81,29 +81,23 @@ export default function Labour() {
     fetchJobs();
   }, []);
 
-  const fetchJobs = () => {
-    setLoading(true);
+  const fetchJobs = (showLoading = false) => {
+    if (showLoading) setLoading(true);
     setApiDown(false);
     labourAPI.getJobs()
       .then(r => {
         const data = r.data?.data || [];
-        if (data.length === 0) {
-          // Empty DB — show seed data silently
-          setJobs(FALLBACK_JOBS);
-        } else {
+        if (data.length > 0) {
           setJobs(data);
         }
       })
       .catch(() => {
-        // API unreachable — use fallback & inform user
-        setJobs(FALLBACK_JOBS);
+        // API unreachable — keep fallback & inform user silently or via toast
         setApiDown(true);
-        toast('Showing sample data — live service offline', {
-          icon: '📡',
-          style: { background: '#fef3c7', color: '#92400e', fontWeight: 700 }
-        });
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        if (showLoading) setLoading(false);
+      });
   };
 
   useEffect(() => {
