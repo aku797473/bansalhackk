@@ -54,7 +54,7 @@ export const weatherAPI = {
 // ─── Crop ──────────────────────────────────────────
 export const cropAPI = {
   recommend: (data) => api.post('/crop/recommend', data),
-  calendar:  (crop, state) => api.get(`/crop/calendar?crop=${crop}&state=${state}`),
+  calendar:  (crop, state, lang) => api.get(`/crop/calendar?crop=${crop}&state=${state}&lang=${lang}`),
 };
 
 // ─── Fertilizer ────────────────────────────────────

@@ -83,7 +83,7 @@ export default function CropAdvisor() {
     setLoading(true);
     setResult(null);
     try {
-      const { data } = await cropAPI.recommend(form);
+      const { data } = await cropAPI.recommend({ ...form, language: i18n.language || 'en' });
       setResult(data.data);
       toast.success(t('common.success', 'Recommendation ready!'));
     } catch { toast.error(t('common.error', 'Try again')); }
@@ -92,7 +92,7 @@ export default function CropAdvisor() {
 
   const fetchCalendar = async (crop) => {
     try {
-      const { data } = await cropAPI.calendar(crop, form.state);
+      const { data } = await cropAPI.calendar(crop, form.state, i18n.language || 'en');
       setCalendar(data.data);
     } catch {}
   };

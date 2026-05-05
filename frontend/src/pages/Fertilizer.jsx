@@ -67,7 +67,7 @@ export default function Fertilizer() {
     try {
       const fd = new FormData();
       fd.append('image', file);
-// ... (rest of analyze remains same)
+      fd.append('language', i18n.language || 'en');
       const { data } = await fertilizerAPI.analyze(fd);
       const analysisResult = data.data;
       

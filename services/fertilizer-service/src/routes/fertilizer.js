@@ -64,6 +64,8 @@ router.post('/analyze', upload.single('image'), async (req, res) => {
       optimizedBuffer = req.file.buffer;
     }
 
+    const { language = 'en' } = req.body;
+
     let analysisResult = null;
 
     if (!groq) {
@@ -77,13 +79,15 @@ Identify:
 2. Nutrient deficiencies or diseases (if a plant is shown)
 3. Soil report details (if a document is shown)
 
+IMPORTANT: Provide all descriptive text (deficiency, symptoms, treatment, prevention, generalRecommendations) in ${language === 'hi' ? 'Hindi' : 'English'}.
+
 Return ONLY valid JSON in this format:
 {
   "primaryIssue": {
     "deficiency": "Name of Seed/Disease/Deficiency",
     "severity": "High|Moderate|Low Quality/Severity",
     "symptoms": "Description of what is seen",
-    "treatment": "Actionable steps (e.g., Use this fertilizer or This seed is good for planting)",
+    "treatment": "Actionable steps",
     "prevention": "Tips for future",
     "confidence": 0-100
   },
