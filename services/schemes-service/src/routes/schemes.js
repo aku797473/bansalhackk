@@ -66,6 +66,71 @@ const SCHEMES = [
     iconName: 'ArrowRight',
     color: 'from-purple-400 to-purple-600',
     bg: 'bg-purple-50 dark:bg-purple-900/20'
+  },
+  {
+    id: 'shc',
+    title: 'Soil Health Card Scheme',
+    titleHi: 'मृदा स्वास्थ्य कार्ड योजना',
+    description: 'Provides information to farmers on nutrient status of their soil along with recommendation on appropriate dosage of nutrients.',
+    descriptionHi: 'किसानों को उनकी मिट्टी की पोषक स्थिति की जानकारी और पोषक तत्वों की उचित मात्रा की सिफारिश प्रदान करता है।',
+    benefit: 'Soil Testing',
+    tags: ['Soil Health', 'Testing'],
+    link: 'https://soilhealth.dac.gov.in/',
+    iconName: 'Activity',
+    color: 'from-amber-400 to-amber-600',
+    bg: 'bg-amber-50 dark:bg-amber-900/20'
+  },
+  {
+    id: 'pkvy',
+    title: 'Paramparagat Krishi Vikas Yojana',
+    titleHi: 'परम्परागत कृषि विकास योजना (PKVY)',
+    description: 'Promotes commercial organic production through certified organic farming to improve soil health and increase yields.',
+    descriptionHi: 'मिट्टी के स्वास्थ्य में सुधार और पैदावार बढ़ाने के लिए प्रमाणित जैविक खेती के माध्यम से जैविक उत्पादन को बढ़ावा देता है।',
+    benefit: 'Organic Farming',
+    tags: ['Organic', 'Sustainability'],
+    link: 'https://pgsindia-ncof.gov.in/',
+    iconName: 'Leaf',
+    color: 'from-lime-400 to-lime-600',
+    bg: 'bg-lime-50 dark:bg-lime-900/20'
+  },
+  {
+    id: 'nmsa',
+    title: 'National Mission for Sustainable Agriculture',
+    titleHi: 'सतत कृषि के लिए राष्ट्रीय मिशन (NMSA)',
+    description: 'Aims at making agriculture more productive, sustainable, and climate-resilient by promoting location-specific integrated farming systems.',
+    descriptionHi: 'स्थान-विशिष्ट एकीकृत कृषि प्रणालियों को बढ़ावा देकर कृषि को अधिक उत्पादक, टिकाऊ और जलवायु-लचीला बनाने का लक्ष्य है।',
+    benefit: 'Climate Resilience',
+    tags: ['Sustainability', 'Climate'],
+    link: 'https://nmsa.dac.gov.in/',
+    iconName: 'Sun',
+    color: 'from-yellow-400 to-yellow-600',
+    bg: 'bg-yellow-50 dark:bg-yellow-900/20'
+  },
+  {
+    id: 'rkvy',
+    title: 'Rashtriya Krishi Vikas Yojana',
+    titleHi: 'राष्ट्रीय कृषि विकास योजना (RKVY)',
+    description: 'Incentivizes states to draw up comprehensive agriculture development plans taking into account agro-climatic conditions, natural issues, and technology.',
+    descriptionHi: 'कृषि-जलवायु परिस्थितियों, प्राकृतिक मुद्दों और प्रौद्योगिकी को ध्यान में रखते हुए व्यापक कृषि विकास योजनाएं बनाने के लिए राज्यों को प्रोत्साहित करता है।',
+    benefit: 'Development Funds',
+    tags: ['State Funding', 'Infrastructure'],
+    link: 'https://rkvy.nic.in/',
+    iconName: 'TrendingUp',
+    color: 'from-teal-400 to-teal-600',
+    bg: 'bg-teal-50 dark:bg-teal-900/20'
+  },
+  {
+    id: 'pmaasha',
+    title: 'Pradhan Mantri Annadata Aay SanraksHan Abhiyan',
+    titleHi: 'प्रधानमंत्री अन्नदाता आय संरक्षण अभियान',
+    description: 'An umbrella scheme to ensure minimum support price (MSP) to farmers, comprising Price Support Scheme (PSS) and Price Deficiency Payment Scheme (PDPS).',
+    descriptionHi: 'किसानों को न्यूनतम समर्थन मूल्य (MSP) सुनिश्चित करने के लिए एक अम्ब्रेला योजना, जिसमें मूल्य समर्थन योजना और मूल्य कमी भुगतान योजना शामिल है।',
+    benefit: 'MSP Guarantee',
+    tags: ['MSP', 'Income Protection'],
+    link: 'https://agricoop.nic.in/',
+    iconName: 'ShieldCheck',
+    color: 'from-rose-400 to-rose-600',
+    bg: 'bg-rose-50 dark:bg-rose-900/20'
   }
 ];
 
