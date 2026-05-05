@@ -5,6 +5,8 @@ import {
   ArrowRight, Sprout, MapPin, ShieldCheck, Zap, ChevronRight
 } from 'lucide-react';
 import logo from '../assets/logo.png';
+import heroImg from '../assets/hero-farmer.png';
+import cropsImg from '../assets/crops-closeup.png';
 
 const features = [
   {
@@ -95,26 +97,27 @@ export default function Landing() {
       </header>
 
       {/* ── Hero ──────────────────────────────────────────── */}
-      <section className="relative overflow-hidden py-24 sm:py-32 lg:py-40 px-4 sm:px-6">
-        {/* Decorative blobs */}
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-sky-400/10 rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute top-1/2 right-0 w-96 h-96 bg-amber-400/10 rounded-full blur-[100px] pointer-events-none" />
+      <section className="relative overflow-hidden pt-20 pb-32 sm:pt-32 sm:pb-48 px-4 sm:px-6">
+        {/* Real Hero Background */}
+        <div className="absolute inset-0 z-0">
+           <img src={heroImg} alt="Farmer in field" className="w-full h-full object-cover opacity-10 dark:opacity-20" />
+           <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/40 to-white dark:from-slate-950/90 dark:via-slate-950/40 dark:to-slate-950" />
+        </div>
 
-        <div className="relative max-w-5xl mx-auto text-center">
+        <div className="relative z-10 max-w-5xl mx-auto text-center">
           {/* Pill badge */}
           <div className="inline-flex items-center gap-2.5 bg-white dark:bg-slate-900 border border-green-200 dark:border-green-900/30 text-primary text-[10px] font-black uppercase tracking-[0.2em] px-6 py-3 rounded-full mb-12 shadow-2xl float-up">
             <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse inline-block" />
-            <Sprout size={14} className="text-green-500" />
-            <span>Digital Companion for Farmers — AI Powered</span>
+            <ShieldCheck size={14} className="text-green-500" />
+            <span>Official Data Partner: Agmarknet & IMD</span>
           </div>
 
           <h1 className="text-fluid-xl font-black text-gray-900 dark:text-white text-balance mb-10 float-up-2 tracking-tighter leading-[0.95]">
-            {t('landing.hero_title')}
+            Empowering Farmers with <span className="text-primary">Real-Time</span> Data & AI
           </h1>
 
-          <p className="text-lg sm:text-xl text-gray-500 dark:text-slate-400 max-w-2xl mx-auto mb-14 text-balance float-up-3 font-medium leading-relaxed italic">
-            {t('landing.hero_sub')}
+          <p className="text-lg sm:text-xl text-gray-500 dark:text-slate-400 max-w-2xl mx-auto mb-14 text-balance float-up-3 font-medium leading-relaxed">
+            Get accurate Mandi rates, weather advisories, and crop analysis — verified data directly from official sources to your smartphone.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center float-up-4 px-4 sm:px-0">
@@ -174,8 +177,13 @@ export default function Landing() {
             {features.map(({ icon: Icon, color, accent, key, emoji }) => (
               <div
                 key={key}
-                className="bg-gray-50/50 dark:bg-slate-900/50 rounded-[2.5rem] border border-gray-100 dark:border-white/5 p-10 hover:shadow-3xl hover:-translate-y-2 transition-all duration-500 group cursor-default"
+                className="bg-gray-50/50 dark:bg-slate-900/50 rounded-[2.5rem] border border-gray-100 dark:border-white/5 p-10 hover:shadow-3xl hover:-translate-y-2 transition-all duration-500 group cursor-default relative overflow-hidden"
               >
+                {key === 'crop' && (
+                  <div className="absolute top-0 right-0 w-32 h-32 opacity-10 pointer-events-none">
+                    <img src={cropsImg} alt="Crops" className="w-full h-full object-cover grayscale" />
+                  </div>
+                )}
                 <div className={`w-16 h-16 rounded-2xl ${color} dark:bg-opacity-20 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg`}>
                   <Icon size={28} />
                 </div>
@@ -185,8 +193,13 @@ export default function Landing() {
                 <p className="text-sm text-gray-500 dark:text-slate-400 leading-relaxed font-medium">
                   {t(`landing.feat_${key}_desc`)}
                 </p>
-                <div className="mt-8 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all group-hover:gap-3" style={{ color: accent }}>
-                  <span>Explore Module</span> <ChevronRight size={14} />
+                <div className="mt-8 flex items-center gap-3">
+                  <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest" style={{ color: accent }}>
+                    <span>Explore Module</span> <ChevronRight size={14} />
+                  </div>
+                  <div className="badge-verified ml-auto">
+                    <ShieldCheck size={10} /> Verified
+                  </div>
                 </div>
               </div>
             ))}

@@ -8,6 +8,7 @@ import {
 import { TrendingUp, TrendingDown, Minus, Search, RefreshCw, MapPin, Package, Calendar } from 'lucide-react';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
+import mandiImg from '../assets/mandi-scene.png';
 
 const TrendIcon = ({ trend, size = 14 }) => {
   if (trend === 'up')     return <TrendingUp size={size} className="text-green-500" />;
@@ -135,6 +136,17 @@ export default function Market() {
         <button onClick={() => window.location.reload()} className="btn-secondary h-12 px-6 self-start sm:self-end text-xs font-black uppercase tracking-widest rounded-2xl shadow-sm hover:shadow-md transition-all active:scale-95">
           <RefreshCw size={14} /> Refresh Data
         </button>
+      </div>
+
+      {/* ── Imagery & Header ─────────────────────────────────────── */}
+      <div className="relative h-64 rounded-[2.5rem] overflow-hidden mb-8 shadow-premium">
+         <img src={mandiImg} alt="Mandi scene" className="w-full h-full object-cover" />
+         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+         <div className="absolute bottom-8 left-8 text-white">
+            <div className="badge-verified mb-3 bg-white/20 text-white border-white/30 backdrop-blur-md">Official Data Source: Agmarknet</div>
+            <h2 className="text-3xl sm:text-5xl font-black tracking-tighter">Real-Time Mandi Board</h2>
+            <p className="text-white/70 font-medium mt-1">Live rates from over 500+ markets across India</p>
+         </div>
       </div>
 
       {/* ── Filters Strip ─────────────────────────────────────── */}

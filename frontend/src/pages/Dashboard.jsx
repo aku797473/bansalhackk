@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import {
   Cloud, Leaf, TrendingUp, Users, FlaskConical, Map,
   ArrowRight, AlertTriangle, RefreshCw, Droplets, Wind,
-  Bell, TrendingDown, Calendar
+  Bell, TrendingDown, Calendar, FileDown, CheckCircle2
 } from 'lucide-react';
 import { weatherAPI, marketAPI, labourAPI } from '../services/api';
 import clsx from 'clsx';
@@ -165,7 +165,10 @@ export default function Dashboard() {
             </span>
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
+          <div className="badge-verified">
+             <CheckCircle2 size={10} /> Verified Data
+          </div>
           <button onClick={() => window.location.reload()} className="btn-icon bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-sm" title="Refresh">
             <RefreshCw size={16} className="text-gray-600 dark:text-slate-400" />
           </button>
@@ -214,11 +217,14 @@ export default function Dashboard() {
               <span className="flex items-center gap-2 text-sm font-semibold"><Wind size={16} className="text-emerald-300" /> {weather.windSpeed} km/h</span>
             </div>
 
-            <button
-              onClick={() => navigate('/weather')}
-              className="self-start sm:self-center flex items-center gap-2 bg-white text-primary hover:bg-emerald-50 font-bold px-6 py-3 rounded-2xl transition-all shadow-md active:scale-95">
-              {t('dashboard.labels.details')} <ArrowRight size={18} />
-            </button>
+            <div className="flex flex-col items-end gap-3">
+              <button
+                onClick={() => navigate('/weather')}
+                className="flex items-center gap-2 bg-white text-primary hover:bg-emerald-50 font-bold px-6 py-3 rounded-2xl transition-all shadow-md active:scale-95">
+                {t('dashboard.labels.details')} <ArrowRight size={18} />
+              </button>
+              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-emerald-100/60">Source: OpenWeather • Live via IMD</p>
+            </div>
           </div>
         </div>
       ) : null}
@@ -252,17 +258,25 @@ export default function Dashboard() {
           <div key={s.label} className="group p-5 bg-white/60 dark:bg-slate-800/60 backdrop-blur-md rounded-3xl border border-white/20 dark:border-slate-700/50 flex flex-col gap-1 transition-all hover:shadow-xl hover:-translate-y-1">
             <div className="flex items-center justify-between">
               <span className="text-4xl group-hover:scale-110 transition-transform">{s.icon}</span>
-              <span className={clsx(
-                'text-[10px] font-black px-2.5 py-1 rounded-full flex items-center gap-1 uppercase tracking-tighter',
-                s.up ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' : 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'
-              )}>
-                {s.up ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
-                {s.trend}
-              </span>
+              <div className="flex flex-col items-end gap-1">
+                <span className={clsx(
+                  'text-[10px] font-black px-2.5 py-1 rounded-full flex items-center gap-1 uppercase tracking-tighter',
+                  s.up ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' : 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'
+                )}>
+                  {s.up ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
+                  {s.trend}
+                </span>
+                {s.label === t('dashboard.stats.market_price') && (
+                  <span className="text-[8px] font-black uppercase text-gray-400 tracking-widest">Source: Agmarknet</span>
+                )}
+              </div>
             </div>
             <p className="text-3xl font-black text-gray-900 dark:text-white mt-3 tracking-tighter tabular-nums">{s.value}</p>
-            <p className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide opacity-80">{s.label}</p>
-            <div className="mt-2 h-1 w-full bg-gray-100 dark:bg-slate-700/50 rounded-full overflow-hidden">
+            <div className="flex items-center justify-between mt-1">
+               <p className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide opacity-80">{s.label}</p>
+               <FileDown size={12} className="text-gray-300 hover:text-primary cursor-pointer" />
+            </div>
+            <div className="mt-3 h-1 w-full bg-gray-100 dark:bg-slate-700/50 rounded-full overflow-hidden">
                 <div className={clsx('h-full rounded-full transition-all duration-1000', s.up ? 'bg-green-500 w-2/3' : 'bg-red-500 w-1/3')} />
             </div>
           </div>

@@ -5,10 +5,10 @@
 
 /* ─── Root Design Tokens ───────────────────────────────────────── */
 :root {
-  --primary:       #16a34a;
-  --primary-light: #22c55e;
-  --primary-dark:  #15803d;
-  --primary-faint: rgba(22, 163, 74, 0.08);
+  --primary:       #15803d; /* Deeper, more stable green */
+  --primary-light: #16a34a;
+  --primary-dark:  #14532d;
+  --primary-faint: rgba(21, 128, 61, 0.08);
   --radius-sm: 10px;
   --radius:    14px;
   --radius-lg: 20px;
@@ -143,6 +143,13 @@
   .badge-blue   { @apply badge bg-blue-100 text-blue-800 dark:bg-blue-950/30 dark:text-blue-400; }
   .badge-purple { @apply badge bg-purple-100 text-purple-800 dark:bg-purple-950/30 dark:text-purple-400; }
   .badge-gray   { @apply badge bg-gray-100 text-gray-600 dark:bg-slate-800 dark:text-slate-400; }
+  
+  .badge-verified {
+    @apply badge bg-emerald-50 text-emerald-700 border border-emerald-100 px-2 py-1 gap-1.5 font-black uppercase tracking-widest text-[9px];
+  }
+  .dark .badge-verified {
+    @apply bg-emerald-950/20 text-emerald-400 border-emerald-900/30;
+  }
 
   /* Page structure */
   .page-wrapper {
