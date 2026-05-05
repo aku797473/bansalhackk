@@ -61,8 +61,8 @@ export default function Navbar() {
     { to: '/market',     icon: TrendingUp,    label: t('nav.market') },
     { to: '/labour',     icon: Users,         label: t('nav.labour') },
     { to: '/map',        icon: Map,           label: t('nav.map') },
-    { to: '/news',       icon: Newspaper,     label: t('nav.news', 'News') },
-    { to: '/schemes',    icon: Landmark,      label: t('nav.schemes', 'Schemes') },
+    { to: '/news',       icon: Newspaper,     label: t('nav.news') },
+    { to: '/schemes',    icon: Landmark,      label: t('nav.schemes') },
   ];
 
   // Close mobile menu on route change

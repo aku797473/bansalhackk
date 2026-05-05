@@ -2,7 +2,8 @@
   "nav": {
     "home": "Home", "weather": "Weather", "crop": "Crop Advisor",
     "fertilizer": "Fertilizer", "market": "Market Prices",
-    "labour": "Labour", "map": "Map", "profile": "Profile", "logout": "Logout"
+    "labour": "Labour", "map": "Map", "profile": "Profile", "logout": "Logout",
+    "news": "News", "schemes": "Schemes"
   },
   "landing": {
     "hero_title": "Your Digital Farming Companion",
@@ -60,6 +61,20 @@
       "details": "Details",
       "vs_last_week": "vs last week",
       "available_now": "Available now"
+    },
+    "alerts": {
+      "pm_kisan": "New PM-Kisan installment credited",
+      "locust": "Locust warning in neighboring district",
+      "wheat_price": "Wheat prices up by 5% today",
+      "view_details": "View Details",
+      "see_alert": "See Alert",
+      "check_mandi": "Check Mandi"
+    },
+    "farming_tips": {
+      "soil_health_title": "Soil Health",
+      "soil_health_body": "Test your soil every 2 years to optimize fertilizer usage and save costs.",
+      "watering_title": "Watering Tip",
+      "watering_body": "Early morning irrigation reduces evaporation and prevents fungal growth."
     }
   },
   "weather": {
@@ -85,7 +100,12 @@
     "harvest_time": "Harvest Time",
     "water_req": "Water Requirement",
     "fertilizers": "Suggested Fertilizers",
-    "tips": "Farming Tips"
+    "tips": "Farming Tips",
+    "district_label": "District",
+    "district_placeholder": "Enter district name",
+    "expected_yield": "Expected Yield",
+    "clear_result": "Clear Result",
+    "view_calendar": "View Crop Calendar"
   },
   "fertilizer": {
     "title": "Fertilizer & Disease Detection",
@@ -125,6 +145,19 @@
     "send": "Send",
     "clear": "Clear Chat",
     "typing": "Typing..."
+  },
+  "news": {
+    "title": "Agriculture News",
+    "subtitle": "Latest updates and information for farmers",
+    "read_more": "Read Article",
+    "no_news": "No news found at the moment."
+  },
+  "schemes": {
+    "title": "Government Schemes",
+    "subtitle": "Key government schemes and subsidies available for farmers.",
+    "loading": "Loading schemes...",
+    "error": "Failed to load government schemes. Please try again later.",
+    "apply": "View Details & Apply"
   },
   "common": {
     "loading": "Loading...", "error": "Something went wrong",

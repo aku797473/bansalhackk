@@ -26,23 +26,23 @@ export default function Schemes() {
       <div className="mb-10 text-center sm:text-left">
         <h1 className="text-3xl font-black tracking-tight text-gray-900 dark:text-white flex items-center justify-center sm:justify-start gap-3 mb-2">
           <Landmark className="text-emerald-500" size={32} />
-          {lang === 'hi' ? 'सरकारी योजनाएं (Government Schemes)' : 'Government Schemes'}
+          {t('schemes.title')}
         </h1>
         <p className="text-gray-500 dark:text-slate-400 text-sm font-medium">
-          {lang === 'hi' ? 'किसानों के लिए प्रमुख सरकारी योजनाएं और सब्सिडी' : 'Key government schemes and subsidies available for farmers.'}
+          {t('schemes.subtitle')}
         </p>
       </div>
 
       {isLoading && (
         <div className="flex flex-col items-center justify-center py-20 gap-4">
           <div className="w-12 h-12 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
-          <p className="text-gray-500 dark:text-slate-400 animate-pulse">Loading schemes...</p>
+          <p className="text-gray-500 dark:text-slate-400 animate-pulse">{t('schemes.loading')}</p>
         </div>
       )}
 
       {isError && (
         <div className="text-center py-20 bg-red-50 dark:bg-red-900/20 rounded-2xl border border-red-100 dark:border-red-900">
-          <p className="text-red-500 font-medium">Failed to load government schemes. Please try again later.</p>
+          <p className="text-red-500 font-medium">{t('schemes.error')}</p>
         </div>
       )}
 
@@ -83,7 +83,7 @@ export default function Schemes() {
 
             <a href={scheme.link} target="_blank" rel="noopener noreferrer" 
                className="mt-auto inline-flex items-center justify-between w-full p-4 rounded-xl bg-gray-50 dark:bg-slate-800/50 hover:bg-primary hover:text-white text-gray-700 dark:text-slate-300 transition-colors font-bold group/btn relative z-10">
-              <span>{lang === 'hi' ? 'अधिक जानकारी देखें' : 'View Details & Apply'}</span>
+              <span>{t('schemes.apply')}</span>
               <ExternalLink size={18} className="group-hover/btn:scale-110 group-hover/btn:translate-x-1 transition-transform" />
             </a>
           </div>

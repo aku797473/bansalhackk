@@ -34,10 +34,10 @@ export default function News() {
         <div>
           <h1 className="page-title flex items-center gap-2 tracking-tighter text-3xl font-black text-gray-900 dark:text-white">
             <Newspaper className="text-primary" size={28} />
-            <span>{i18n.language === 'hi' ? 'कृषि समाचार' : 'Agriculture News'}</span>
+            <span>{t('news.title')}</span>
           </h1>
           <p className="page-subtitle text-gray-500 font-medium mt-1">
-            {i18n.language === 'hi' ? 'किसानों के लिए नवीनतम जानकारी' : 'Latest updates and information for farmers'}
+            {t('news.subtitle')}
           </p>
         </div>
         <button onClick={fetchNews} className="btn-icon bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-sm" title="Refresh News">
@@ -89,7 +89,7 @@ export default function News() {
                   {item.description}
                 </p>
                 <div className="flex items-center gap-1.5 text-xs font-bold text-primary uppercase tracking-wider mt-auto pt-4 border-t border-gray-50 dark:border-slate-800/50">
-                  <span>Read Article</span>
+                  <span>{t('news.read_more')}</span>
                   <ExternalLink size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </div>
               </div>
@@ -99,7 +99,7 @@ export default function News() {
       ) : (
         <div className="text-center py-20 bg-gray-50 dark:bg-slate-900/50 rounded-[2rem] border-2 border-dashed border-gray-200 dark:border-slate-800">
           <Newspaper className="mx-auto text-gray-300 dark:text-slate-700 mb-4" size={48} />
-          <p className="text-gray-500 dark:text-slate-400 font-medium">No news found at the moment.</p>
+          <p className="text-gray-500 dark:text-slate-400 font-medium">{t('news.no_news')}</p>
         </div>
       )}
     </div>

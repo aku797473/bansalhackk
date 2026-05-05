@@ -28,7 +28,22 @@ export default function CropAdvisor() {
       'Zaid': 'जायद',
       'Low': 'कम',
       'Medium': 'मध्यम',
-      'High': 'उच्च'
+      'High': 'उच्च',
+      'Punjab': 'पंजाब',
+      'Haryana': 'हरियाणा',
+      'Uttar Pradesh': 'उत्तर प्रदेश',
+      'Bihar': 'बिहार',
+      'Madhya Pradesh': 'मध्य प्रदेश',
+      'Maharashtra': 'महाराष्ट्र',
+      'Gujarat': 'गुजरात',
+      'Rajasthan': 'राजस्थान',
+      'Karnataka': 'कर्नाटक',
+      'Andhra Pradesh': 'आंध्र प्रदेश',
+      'Telangana': 'तेलंगाना',
+      'West Bengal': 'पश्चिम बंगाल',
+      'Odisha': 'ओडिशा',
+      'Assam': 'असम',
+      'Tamil Nadu': 'तमिलनाडु'
     };
     return hiMap[opt] || opt;
   };
@@ -126,7 +141,7 @@ export default function CropAdvisor() {
         <div className="flex items-center gap-2">
           {result && (
             <button onClick={clear} className="btn-ghost text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-2">
-              <Trash2 size={16} /> <span className="hidden sm:inline">Clear Result</span>
+              <Trash2 size={16} /> <span className="hidden sm:inline">{t('crop.clear_result')}</span>
             </button>
           )}
           <button onClick={() => window.location.reload()} className="btn-icon bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-sm" title="Refresh">
@@ -146,8 +161,8 @@ export default function CropAdvisor() {
             </div>
             <Select label={t('crop.state')} value={form.state} onChange={v => set('state', v)} options={STATES} />
             <div>
-              <label className="label">District</label>
-              <input className="input dark:bg-slate-900 border-2" placeholder="Enter district name" value={form.district} onChange={e => set('district', e.target.value)} />
+              <label className="label">{t('crop.district_label')}</label>
+              <input className="input dark:bg-slate-900 border-2" placeholder={t('crop.district_placeholder')} value={form.district} onChange={e => set('district', e.target.value)} />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <NumberInput label={t('crop.temperature')} value={form.temperature} onChange={v => set('temperature', v)} min={5} max={50} unit="°C" />
@@ -214,7 +229,7 @@ export default function CropAdvisor() {
                       { icon: '🌱', label: t('crop.sowing_time'), val: result.sowingTime },
                       { icon: '🌾', label: t('crop.harvest_time'), val: result.harvestTime },
                       { icon: '💧', label: t('crop.water_req'), val: result.waterRequirement },
-                      { icon: '📦', label: 'Expected Yield', val: result.expectedYield || 'High' }
+                      { icon: '📦', label: t('crop.expected_yield'), val: result.expectedYield || 'High' }
                     ].map((item, idx) => (
                       <div key={idx} className="bg-gray-50 dark:bg-black/20 p-4 rounded-2xl border border-gray-100 dark:border-white/5">
                         <p className="text-gray-400 text-[9px] font-black uppercase mb-1 tracking-widest whitespace-nowrap">{item.icon} {item.label}</p>
@@ -251,7 +266,7 @@ export default function CropAdvisor() {
               {/* Calendar button */}
               <button onClick={() => fetchCalendar(result.primaryCrop)}
                 className="btn-secondary w-full h-14 rounded-2xl justify-center gap-2 font-bold hover:bg-primary/5 hover:text-primary hover:border-primary/20 transition-all">
-                <Calendar size={18} /> <span>{t('nav.map', 'View Crop Calendar')}</span>
+                <Calendar size={18} /> <span>{t('crop.view_calendar')}</span>
               </button>
             </>
           ) : (

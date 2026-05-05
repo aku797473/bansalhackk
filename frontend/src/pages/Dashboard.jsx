@@ -23,27 +23,27 @@ const quickActions = [
 const WEATHER_EMOJIS = { '01': '☀️', '02': '🌤️', '03': '⛅', '04': '☁️', '09': '🌧️', '10': '🌦️', '11': '⛈️', '13': '❄️', '50': '🌫️' };
 const getWeatherEmoji = (icon) => WEATHER_EMOJIS[icon?.slice(0, 2)] || '🌡️';
 
-const tips = [
+const getTips = (t) => [
   { 
-    title: 'Soil Health', 
-    body: 'Test your soil every 2 years to optimize fertilizer usage and save costs.', 
+    title: t('dashboard.farming_tips.soil_health_title'), 
+    body: t('dashboard.farming_tips.soil_health_body'), 
     icon: '🧪', 
     color: 'bg-indigo-50 dark:bg-indigo-900/10', 
     border: 'border-indigo-100 dark:border-indigo-900/30' 
   },
   { 
-    title: 'Watering Tip', 
-    body: 'Early morning irrigation reduces evaporation and prevents fungal growth.', 
+    title: t('dashboard.farming_tips.watering_title'), 
+    body: t('dashboard.farming_tips.watering_body'), 
     icon: '💧', 
     color: 'bg-emerald-50 dark:bg-emerald-900/10', 
     border: 'border-emerald-100 dark:border-emerald-900/30' 
   }
 ];
 
-const recentAlerts = [
-  { type: 'info',    icon: '📢', text: 'New PM-Kisan installment credited',    action: 'View Details',  color: 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800/30 text-blue-800 dark:text-blue-300',   btn: 'bg-blue-600 hover:bg-blue-700 text-white' },
-  { type: 'warning', icon: '🦗', text: 'Locust warning in neighboring district', action: 'See Alert',    color: 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800/30 text-amber-800 dark:text-amber-300', btn: 'bg-amber-500 hover:bg-amber-600 text-white' },
-  { type: 'success', icon: '📈', text: 'Wheat prices up by 5% today',           action: 'Check Mandi',  color: 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800/30 text-green-800 dark:text-green-300',  btn: 'bg-green-600 hover:bg-green-700 text-white' },
+const getRecentAlerts = (t) => [
+  { type: 'info',    icon: '📢', text: t('dashboard.alerts.pm_kisan'),    action: t('dashboard.alerts.view_details'),  color: 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800/30 text-blue-800 dark:text-blue-300',   btn: 'bg-blue-600 hover:bg-blue-700 text-white' },
+  { type: 'warning', icon: '🦗', text: t('dashboard.alerts.locust'), action: t('dashboard.alerts.see_alert'),    color: 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800/30 text-amber-800 dark:text-amber-300', btn: 'bg-amber-500 hover:bg-amber-600 text-white' },
+  { type: 'success', icon: '📈', text: t('dashboard.alerts.wheat_price'),           action: t('dashboard.alerts.check_mandi'),  color: 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800/30 text-green-800 dark:text-green-300',  btn: 'bg-green-600 hover:bg-green-700 text-white' },
 ];
 
 function getGreetingKey() {
@@ -60,6 +60,8 @@ export default function Dashboard() {
   
   const greetingKey = getGreetingKey();
   const locale = i18n.language === 'hi' ? 'hi-IN' : 'en-US';
+  const alerts = getRecentAlerts(t);
+  const farmingTips = getTips(t);
 
   // Weather Query
   const { data: weather, isLoading: weatherLoading, refetch: refetchWeather } = useQuery({
@@ -189,7 +191,7 @@ export default function Dashboard() {
 
       {/* ── Alerts strip ──────────────────────────────── */}
       <div className="flex gap-4 overflow-x-auto pb-4 px-1 scrollbar-none mb-8 -mx-4 sm:mx-0 sm:px-0">
-        {recentAlerts.map((a, i) => (
+        {alerts.map((a, i) => (
           <div key={i} className={clsx(
             'flex items-center justify-between gap-4 pl-4 pr-2 py-2.5 rounded-2xl text-sm font-semibold whitespace-nowrap shrink-0 border shadow-sm min-w-[280px] first:ml-4 sm:first:ml-0 last:mr-4 sm:last:mr-0',
             a.color
@@ -297,7 +299,7 @@ export default function Dashboard() {
 
       {/* ── Tips Row ──────────────────────────────────────── */}
       <div className="grid sm:grid-cols-2 gap-4">
-        {tips.map(tip => (
+        {farmingTips.map(tip => (
           <div key={tip.title} className={clsx('card p-6 border transition-all hover:shadow-lg', tip.color, tip.border)}>
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-2xl bg-white/50 dark:bg-black/20 flex items-center justify-center text-2xl shrink-0 shadow-sm">
