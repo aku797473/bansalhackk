@@ -183,6 +183,35 @@
       "Kharif": "Kharif",
       "Rabi": "Rabi",
       "Zaid": "Zaid"
+    },
+    "states": {
+      "Punjab": "Punjab",
+      "Haryana": "Haryana",
+      "Uttar Pradesh": "Uttar Pradesh",
+      "Bihar": "Bihar",
+      "Madhya Pradesh": "Madhya Pradesh",
+      "Maharashtra": "Maharashtra",
+      "Gujarat": "Gujarat",
+      "Rajasthan": "Rajasthan",
+      "Karnataka": "Karnataka",
+      "Andhra Pradesh": "Andhra Pradesh",
+      "Telangana": "Telangana",
+      "West Bengal": "West Bengal",
+      "Odisha": "Odisha",
+      "Assam": "Assam",
+      "Tamil Nadu": "Tamil Nadu"
+    },
+    "items": {
+      "Wheat": "Wheat",
+      "Rice": "Rice",
+      "Maize": "Maize",
+      "Cotton": "Cotton",
+      "Sugarcane": "Sugarcane",
+      "Soybean": "Soybean",
+      "Mustard": "Mustard",
+      "Potato": "Potato",
+      "Tomato": "Tomato",
+      "Onion": "Onion"
     }
   },
   "fertilizer": {
@@ -437,6 +466,11 @@
     "back": "Back", "submit": "Submit", "view_all": "View All",
     "no_data": "No data available",
     "today": "Today", "locale": "en-US", "success": "Success",
-    "error_required": "Required field missing"
+    "error_required": "Required field missing",
+    "months": {
+      "January": "January", "February": "February", "March": "March", "April": "April",
+      "May": "May", "June": "June", "July": "July", "August": "August",
+      "September": "September", "October": "October", "November": "November", "December": "December"
+    }
   }
 }

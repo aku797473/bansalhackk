@@ -183,6 +183,35 @@
       "Kharif": "खरीफ",
       "Rabi": "रबी",
       "Zaid": "जायद"
+    },
+    "states": {
+      "Punjab": "पंजाब",
+      "Haryana": "हरियाणा",
+      "Uttar Pradesh": "उत्तर प्रदेश",
+      "Bihar": "बिहार",
+      "Madhya Pradesh": "मध्य प्रदेश",
+      "Maharashtra": "महाराष्ट्र",
+      "Gujarat": "गुजरात",
+      "Rajasthan": "राजस्थान",
+      "Karnataka": "कर्नाटक",
+      "Andhra Pradesh": "आंध्र प्रदेश",
+      "Telangana": "तेलंगाना",
+      "West Bengal": "पश्चिम बंगाल",
+      "Odisha": "ओडिशा",
+      "Assam": "असम",
+      "Tamil Nadu": "तमिलनाडु"
+    },
+    "items": {
+      "Wheat": "गेहूं",
+      "Rice": "चावल",
+      "Maize": "मक्का",
+      "Cotton": "कपास",
+      "Sugarcane": "गन्ना",
+      "Soybean": "सोयाबीन",
+      "Mustard": "सरसों",
+      "Potato": "आलू",
+      "Tomato": "टमाटर",
+      "Onion": "प्याज"
     }
   },
   "fertilizer": {
@@ -411,6 +440,11 @@
     "back": "वापस", "submit": "जमा करें", "view_all": "सब देखें",
     "no_data": "कोई डेटा उपलब्ध नहीं",
     "today": "आज", "locale": "hi-IN", "success": "सफल",
-    "error_required": "आवश्यक जानकारी गायब है"
+    "error_required": "आवश्यक जानकारी गायब है",
+    "months": {
+      "January": "जनवरी", "February": "फरवरी", "March": "मार्च", "April": "अप्रैल",
+      "May": "मई", "June": "जून", "July": "जुलाई", "August": "अगस्त",
+      "September": "सितंबर", "October": "अक्टूबर", "November": "नवंबर", "December": "दिसंबर"
+    }
   }
 }

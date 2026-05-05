@@ -17,9 +17,12 @@ export default function CropAdvisor() {
   const translateOption = (opt, ns = 'crop') => {
     // Attempt to find in specific namespaces
     const keys = [
+      `${ns}.states.${opt}`,
+      `${ns}.items.${opt}`,
       `${ns}.soil_types.${opt}`,
       `${ns}.seasons.${opt}`,
       `${ns}.levels.${opt.toLowerCase()}`,
+      `common.months.${opt}`,
       `auth.${opt.toLowerCase()}`,
       `common.${opt.toLowerCase()}`
     ];
@@ -28,7 +31,7 @@ export default function CropAdvisor() {
       const val = t(key);
       if (val !== key) return val;
     }
-    return t(opt, opt); // Fallback to literal
+    return t(opt, opt);
   };
 
   const [form, setForm] = useState({
@@ -194,16 +197,16 @@ export default function CropAdvisor() {
                 <div className="p-8 pt-0 relative z-10">
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">{t('crop.primary_crop_title', 'Recommended Primary Crop')}</p>
-                      <h3 className="text-5xl font-black text-primary tracking-tighter leading-none">{result.primaryCrop}</h3>
+                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">{t('crop.primary_crop_title')}</p>
+                      <h3 className="text-5xl font-black text-primary tracking-tighter leading-none">{translateOption(result.primaryCrop)}</h3>
                     </div>
                     {result.isFallback && <span className="badge badge-yellow">{t('crop.historical_model', 'Historical Model')}</span>}
                   </div>
                   
                   <div className="flex flex-wrap gap-2 mb-8">
-                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest mr-2 py-1">{t('crop.alternatives_label', 'Alternatives:')}</span>
+                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest mr-2 py-1">{t('crop.alternatives_label')}</span>
                     {result.alternativeCrops?.map(c => (
-                      <span key={c} className="px-3 py-1 bg-gray-50 dark:bg-slate-800 rounded-full text-[10px] font-black text-gray-600 dark:text-slate-400 border border-gray-200 dark:border-white/5">{c}</span>
+                      <span key={c} className="px-3 py-1 bg-gray-50 dark:bg-slate-800 rounded-full text-[10px] font-black text-gray-600 dark:text-slate-400 border border-gray-200 dark:border-white/5">{translateOption(c)}</span>
                     ))}
                   </div>
 
@@ -271,7 +274,7 @@ export default function CropAdvisor() {
                 {calendar.activities?.map((a, i) => (
                   <div key={i} className="flex gap-6 text-sm relative z-10 group">
                     <div className="w-24 shrink-0 font-black text-primary uppercase tracking-tighter text-right pt-0.5">
-                      {a.month}
+                      {translateOption(a.month)}
                     </div>
                     <div className="relative">
                       <div className="absolute -left-[21px] top-2 w-2.5 h-2.5 rounded-full bg-white dark:bg-slate-900 border-2 border-primary group-hover:scale-125 transition-transform" />
