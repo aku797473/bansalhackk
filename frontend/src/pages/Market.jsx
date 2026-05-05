@@ -122,17 +122,17 @@ export default function Market() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-6 page-enter">
       {/* ── Header ────────────────────────────────────────────── */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10">
         <div>
-          <span className="px-3 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-[10px] font-black uppercase tracking-widest border border-blue-100 dark:border-blue-900/20 mb-3 inline-block">Mandi Analytics</span>
-          <h1 className="text-3xl sm:text-4xl font-black text-gray-900 dark:text-white tracking-tight flex items-center gap-3">
-            Market Insights <TrendingUp className="text-blue-500" />
+          <span className="px-3 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-[10px] font-black uppercase tracking-widest border border-blue-100 dark:border-blue-900/20 mb-4 inline-block">Mandi Analytics</span>
+          <h1 className="text-3xl sm:text-5xl font-black text-gray-900 dark:text-white tracking-tighter flex items-center gap-3 leading-none">
+            Market Insights <TrendingUp className="text-blue-500" size={32} />
           </h1>
-          <p className="text-gray-500 dark:text-slate-400 font-medium mt-2 text-sm max-w-xl">
+          <p className="text-gray-500 dark:text-slate-400 font-medium mt-3 text-sm sm:text-base max-w-xl">
             Track historical prices and view AI-driven forecasts across districts in India.
           </p>
         </div>
-        <button onClick={() => window.location.reload()} className="btn-secondary h-10 px-4 self-start md:self-end text-xs rounded-xl hidden sm:flex">
+        <button onClick={() => window.location.reload()} className="btn-secondary h-12 px-6 self-start sm:self-end text-xs font-black uppercase tracking-widest rounded-2xl shadow-sm hover:shadow-md transition-all active:scale-95">
           <RefreshCw size={14} /> Refresh Data
         </button>
       </div>

@@ -146,10 +146,10 @@
 
   /* Page structure */
   .page-wrapper {
-    @apply max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 page-enter;
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10 page-enter;
   }
   .page-wrapper-sm {
-    @apply max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 page-enter;
+    @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 page-enter;
   }
   .page-header {
     @apply mb-6 sm:mb-8;
@@ -247,11 +247,12 @@
 
   /* Clamp font */
   .text-fluid-xl {
-    font-size: clamp(1.75rem, 4vw, 3.5rem);
-    line-height: 1.1;
+    font-size: clamp(2.25rem, 6vw, 4.5rem);
+    line-height: 1.05;
   }
   .text-fluid-lg {
-    font-size: clamp(1.25rem, 3vw, 2.25rem);
+    font-size: clamp(1.5rem, 4vw, 2.75rem);
+    line-height: 1.1;
   }
 
   /* Responsive padding */

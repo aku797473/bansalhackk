@@ -249,14 +249,14 @@ export default function Labour() {
       )}
 
       {/* Tabs */}
-      <div className="flex gap-2 mb-8 border-b border-gray-100 dark:border-slate-800">
+      <div className="flex gap-2 mb-10 border-b border-gray-100 dark:border-slate-800 overflow-x-auto scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0">
         {[
           {id:'browse', label: t('labour.tabs.browse', 'Find Work')},
           {id:'post', label: t('labour.tabs.post', 'Post Work')},
           {id:'my-jobs', label: t('labour.tabs.my_posts', 'My Posts')}
         ].map(tb => (
           <button key={tb.id} onClick={() => setTab(tb.id)}
-            className={clsx('px-6 py-4 text-sm font-black border-b-4 -mb-px transition-all uppercase tracking-widest',
+            className={clsx('px-6 py-4 text-sm font-black border-b-4 -mb-px transition-all uppercase tracking-widest whitespace-nowrap',
               tab === tb.id ? 'border-primary text-primary' : 'border-transparent text-gray-400 hover:text-gray-600 dark:hover:text-slate-300'
             )}>
             {tb.label}
@@ -274,13 +274,13 @@ export default function Labour() {
             <p className="text-gray-500 dark:text-slate-400 font-bold">{t('common.no_data', 'No work available at the moment.')}</p>
           </div>
         ) : (
-          <div className="grid sm:grid-cols-2 gap-6">
+          <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
             {jobs.map(job => (
-              <div key={job._id} className="card hover:shadow-2xl transition-all cursor-pointer group relative overflow-hidden bg-white dark:bg-slate-900 border-none shadow-lg"
+              <div key={job._id} className="card hover:shadow-2xl transition-all cursor-pointer group relative overflow-hidden bg-white dark:bg-slate-900 border-none shadow-lg p-6 sm:p-7"
                 onClick={() => setShowModal(job)}>
                 
                 {job.image && (
-                  <div className="absolute top-4 right-4 w-12 h-12 rounded-2xl border-2 border-white dark:border-slate-800 shadow-md overflow-hidden z-10">
+                  <div className="absolute top-4 right-4 w-12 h-12 rounded-2xl border-2 border-white dark:border-slate-800 shadow-md overflow-hidden z-10 hidden xs:block">
                      <img src={job.image} alt="Poster" className="w-full h-full object-cover" />
                   </div>
                 )}
@@ -289,8 +289,8 @@ export default function Labour() {
                   <div className="w-14 h-14 rounded-2xl bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center text-3xl shrink-0 shadow-sm border border-purple-100 dark:border-purple-900/30">
                     {CATEGORY_EMOJI[job.category] || '💼'}
                   </div>
-                  <div>
-                    <h3 className="font-black text-gray-900 dark:text-white leading-tight text-lg group-hover:text-primary transition-colors">{job.title}</h3>
+                  <div className="pr-12 xs:pr-0">
+                    <h3 className="font-black text-gray-900 dark:text-white leading-tight text-base sm:text-lg group-hover:text-primary transition-colors line-clamp-1">{job.title}</h3>
                     <div className="flex items-center gap-2 mt-1.5">
                        <span className="px-2 py-0.5 bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-lg text-[10px] font-black uppercase tracking-widest border border-purple-100 dark:border-purple-900/30">{job.category}</span>
                        <span className="text-[10px] text-gray-400 font-bold">{new Date(job.createdAt).toLocaleDateString()}</span>

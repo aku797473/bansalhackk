@@ -173,10 +173,10 @@ export default function Dashboard() {
       </div>
 
       {/* ── Alerts strip ──────────────────────────────── */}
-      <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-none mb-8">
+      <div className="flex gap-4 overflow-x-auto pb-4 px-1 scrollbar-none mb-8 -mx-4 sm:mx-0 sm:px-0">
         {recentAlerts.map((a, i) => (
           <div key={i} className={clsx(
-            'flex items-center justify-between gap-4 pl-4 pr-2 py-2 rounded-2xl text-sm font-semibold whitespace-nowrap shrink-0 border shadow-sm min-w-[260px]',
+            'flex items-center justify-between gap-4 pl-4 pr-2 py-2.5 rounded-2xl text-sm font-semibold whitespace-nowrap shrink-0 border shadow-sm min-w-[280px] first:ml-4 sm:first:ml-0 last:mr-4 sm:last:mr-0',
             a.color
           )}>
             <div className="flex items-center gap-2.5">
@@ -197,14 +197,14 @@ export default function Dashboard() {
         <div className="mb-7 rounded-3xl bg-gradient-to-br from-primary to-emerald-600 dark:from-primary/80 dark:to-emerald-800/80 p-6 sm:p-8 text-white relative overflow-hidden shadow-lg group">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/4 pointer-events-none group-hover:scale-110 transition-transform duration-700" />
           
-          <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-            <div className="flex items-center gap-6">
-              <span className="text-6xl drop-shadow-md">{getWeatherEmoji(weather.icon)}</span>
+          <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div className="flex items-center gap-5 sm:gap-8">
+              <span className="text-5xl sm:text-7xl drop-shadow-md">{getWeatherEmoji(weather.icon)}</span>
               <div>
-                <p className="text-emerald-100 text-sm font-bold tracking-wide uppercase opacity-80">{weather.city}, {weather.country}</p>
-                <div className="flex items-end gap-2">
-                  <p className="text-5xl font-bold tracking-tighter">{Math.round(weather.temperature)}°</p>
-                  <p className="text-emerald-100 text-lg font-medium mb-1.5 capitalize">{weather.description}</p>
+                <p className="text-emerald-50 text-[10px] font-black tracking-[0.2em] uppercase opacity-80 mb-1">{weather.city}, {weather.country}</p>
+                <div className="flex items-end gap-3">
+                  <p className="text-5xl sm:text-6xl font-black tracking-tighter">{Math.round(weather.temperature)}°</p>
+                  <p className="text-emerald-100 text-base sm:text-xl font-bold mb-1.5 capitalize opacity-90">{weather.description}</p>
                 </div>
               </div>
             </div>
@@ -224,14 +224,14 @@ export default function Dashboard() {
       ) : null}
 
       {/* ── Quick Actions ─────────────────────────────────── */}
-      <div className="mb-8">
-        <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-5 tracking-tight">{t('dashboard.quick_actions')}</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div className="mb-10">
+        <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-6 tracking-tight">{t('dashboard.quick_actions')}</h2>
+        <div className="grid grid-cols-2 xs:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
           {quickActions.map(({ to, icon: Icon, labelKey, sublabelKey, color, bg, text }) => (
             <button
               key={to}
               onClick={() => navigate(to)}
-              className="group relative overflow-hidden rounded-3xl p-6 text-left bg-white/70 dark:bg-slate-800/70 backdrop-blur-md border border-white/20 dark:border-slate-700/50 hover:shadow-2xl hover:-translate-y-2 active:scale-95 transition-all duration-500 animate-slide-up"
+              className="group relative overflow-hidden rounded-[2rem] p-5 sm:p-6 text-left bg-white/70 dark:bg-slate-800/70 backdrop-blur-md border border-white/20 dark:border-slate-700/50 hover:shadow-2xl hover:-translate-y-2 active:scale-95 transition-all duration-500 animate-slide-up"
             >
               <div className={clsx('absolute top-0 inset-x-0 h-1 bg-gradient-to-r opacity-50', color)} />
               <div className={clsx('w-14 h-14 rounded-2xl flex items-center justify-center mb-5 shadow-inner transition-transform group-hover:scale-110 group-hover:rotate-3', bg)}>

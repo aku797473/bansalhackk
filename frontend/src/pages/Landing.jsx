@@ -117,13 +117,13 @@ export default function Landing() {
             {t('landing.hero_sub')}
           </p>
 
-          <div className="flex flex-col xs:flex-row gap-5 justify-center float-up-4">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center float-up-4 px-4 sm:px-0">
             <button
               onClick={() => navigate('/login')}
-              className="btn-primary h-16 px-10 text-base font-black uppercase tracking-widest rounded-2xl shadow-2xl shadow-primary/30 hover:scale-105 active:scale-95">
+              className="btn-primary h-16 sm:h-18 px-10 text-base font-black uppercase tracking-widest rounded-2xl shadow-2xl shadow-primary/30 hover:scale-105 active:scale-95 w-full sm:w-auto">
               <span>{t('landing.get_started')}</span> <ArrowRight size={20} />
             </button>
-            <button className="btn-secondary h-16 px-10 text-base font-black uppercase tracking-widest rounded-2xl border-2 dark:bg-slate-900 dark:border-slate-800 hover:scale-105 active:scale-95">
+            <button className="btn-secondary h-16 sm:h-18 px-10 text-base font-black uppercase tracking-widest rounded-2xl border-2 dark:bg-slate-900 dark:border-slate-800 hover:scale-105 active:scale-95 w-full sm:w-auto">
               <span>{t('landing.learn_more')}</span>
             </button>
           </div>
@@ -144,11 +144,11 @@ export default function Landing() {
 
       {/* ── Stats Strip ───────────────────────────────────── */}
       <section className="py-20 sm:py-24 bg-gray-50/50 dark:bg-black/20 border-y border-gray-100 dark:border-white/5">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-12 sm:gap-8">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-4 gap-10 sm:gap-8">
             {stats.map(s => (
               <div key={s.label} className="text-center group">
-                <p className="text-4xl sm:text-5xl font-black text-primary tracking-tighter mb-2 group-hover:scale-110 transition-transform">{s.value}</p>
+                <p className="text-4xl sm:text-5xl font-black text-primary tracking-tighter mb-1 group-hover:scale-110 transition-transform">{s.value}</p>
                 <p className="text-xs font-black text-gray-900 dark:text-white uppercase tracking-widest">{s.label}</p>
                 <p className="text-[10px] text-gray-400 font-bold mt-1 uppercase tracking-wider">{s.desc}</p>
               </div>
