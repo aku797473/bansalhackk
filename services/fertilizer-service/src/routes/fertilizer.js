@@ -70,7 +70,7 @@ router.post('/analyze', upload.single('image'), async (req, res) => {
 
     if (!groq) {
       console.warn('No GROQ_API_KEY found, using mock.');
-      analysisResult = getMockAnalysis();
+      analysisResult = getMockAnalysis(language);
     } else {
         const prompt = `You are an expert agricultural scientist and plant pathologist. 
 Analyze this image which could be a plant, crop, or seeds.
@@ -124,11 +124,11 @@ Return ONLY valid JSON in this format:
             console.log('Groq Vision Success!');
         } catch (err) {
             console.error('Groq Vision failed:', err.message);
-            analysisResult = getMockAnalysis();
+            analysisResult = getMockAnalysis(language);
         }
     }
 
-    if (!analysisResult) analysisResult = getMockAnalysis();
+    if (!analysisResult) analysisResult = getMockAnalysis(language);
 
     // Save history
     FertilizerHistory.create({
@@ -145,21 +145,26 @@ Return ONLY valid JSON in this format:
   }
 });
 
-const getMockAnalysis = () => ({
-  primaryIssue: {
-    deficiency: 'Nitrogen (N) Deficiency',
-    severity: 'Moderate',
-    symptoms: 'Yellowing of older leaves',
-    treatment: 'Apply Urea',
-    prevention: 'Soil testing',
-    confidence: 78,
-  },
-  additionalIssues: [],
-  overallHealth: 'Fair',
-  urgency: 'Within 7 days',
-  generalRecommendations: ['Monitor growth', 'Check water'],
-  isMock: true
-});
+const getMockAnalysis = (lang = 'en') => {
+  const isHi = lang === 'hi';
+  return {
+    primaryIssue: {
+      deficiency: isHi ? 'नाइट्रोजन (N) की कमी' : 'Nitrogen (N) Deficiency',
+      severity: isHi ? 'Moderate' : 'Moderate', // Keep keys as is for SEVERITY_COLOR mapping, translate in UI
+      symptoms: isHi ? 'पुरानी पत्तियों का पीला पड़ना' : 'Yellowing of older leaves',
+      treatment: isHi ? 'यूरिया (Urea) का प्रयोग करें' : 'Apply Urea',
+      prevention: isHi ? 'मिट्टी का परीक्षण (Soil testing) करवाएं' : 'Soil testing',
+      confidence: 78,
+    },
+    additionalIssues: [],
+    overallHealth: isHi ? 'Fair' : 'Fair', // Key for translation
+    urgency: isHi ? 'Within 7 days' : 'Within 7 days', // Key for translation
+    generalRecommendations: isHi 
+      ? ['विकास की निगरानी करें', 'पानी की जाँच करें'] 
+      : ['Monitor growth', 'Check water'],
+    isMock: true
+  };
+};
 
 // GET /fertilizer/soil/map-markers
 router.get('/soil/map-markers', async (req, res) => {

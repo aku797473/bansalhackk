@@ -258,10 +258,17 @@
       "Moderate": "मध्यम",
       "Severe": "गंभीर",
       "Good": "अच्छा",
+      "Fair": "ठीक",
+      "Poor": "खराब",
       "Critical": "गंभीर",
       "Average": "औसत",
       "Urgent": "तत्काल",
-      "Normal": "सामान्य"
+      "Immediate": "तुरंत",
+      "Monitor": "निगरानी करें",
+      "Normal": "सामान्य",
+      "Within 7 days": "7 दिनों के भीतर",
+      "Low Priority": "कम प्राथमिकता",
+      "Unknown Analysis": "अज्ञात विश्लेषण"
     }
   },
   "market": {

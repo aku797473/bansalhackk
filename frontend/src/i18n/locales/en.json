@@ -258,10 +258,17 @@
       "Moderate": "Moderate",
       "Severe": "Severe",
       "Good": "Good",
+      "Fair": "Fair",
+      "Poor": "Poor",
       "Critical": "Critical",
       "Average": "Average",
       "Urgent": "Urgent",
-      "Normal": "Normal"
+      "Immediate": "Immediate",
+      "Monitor": "Monitor",
+      "Normal": "Normal",
+      "Within 7 days": "Within 7 days",
+      "Low Priority": "Low Priority",
+      "Unknown Analysis": "Unknown Analysis"
     }
   },
   "market": {
