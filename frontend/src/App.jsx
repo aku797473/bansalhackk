@@ -7,6 +7,7 @@ import Navbar from './components/Navbar';
 import ChatWidget from './components/ChatWidget';
 import LoadingScreen from './components/LoadingScreen';
 import VoiceAssistant from './components/VoiceAssistant';
+import TourGuide from './components/TourGuide';
 
 import { ThemeProvider } from './contexts/ThemeContext';
 import { ClerkProvider } from '@clerk/clerk-react';
@@ -42,6 +43,7 @@ const Labour      = lazy(() => import('./pages/Labour'));
 const MapView     = lazy(() => import('./pages/MapView'));
 const Profile     = lazy(() => import('./pages/Profile'));
 const News        = lazy(() => import('./pages/News'));
+const Schemes     = lazy(() => import('./pages/Schemes'));
 
 function ProtectedRoute({ children }) {
   const { isAuth, loading } = useAuth();
@@ -65,6 +67,7 @@ function AppLayout({ children }) {
           {children}
         </Suspense>
       </main>
+      {isAuth && <TourGuide />}
       {isAuth && <ChatWidget />}
       {isAuth && <VoiceAssistant />}
     </div>
@@ -106,6 +109,7 @@ export default function App() {
                 <Route path="/labour"     element={<ProtectedRoute><Labour /></ProtectedRoute>} />
                 <Route path="/map"        element={<ProtectedRoute><MapView /></ProtectedRoute>} />
                 <Route path="/news"       element={<ProtectedRoute><News /></ProtectedRoute>} />
+                <Route path="/schemes"    element={<ProtectedRoute><Schemes /></ProtectedRoute>} />
                 <Route path="/profile"    element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                 <Route path="*"           element={<Navigate to="/" replace />} />
               </Routes>

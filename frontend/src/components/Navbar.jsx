@@ -6,7 +6,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import LanguageSelector from './LanguageSelector';
 import {
   Home, Cloud, Leaf, FlaskConical, TrendingUp,
-  Users, Map, User, LogOut, Menu, X, Sun, Moon, Newspaper, Bell
+  Users, Map, User, LogOut, Menu, X, Sun, Moon, Newspaper, Bell, Landmark
 } from 'lucide-react';
 import { UserButton } from '@clerk/clerk-react';
 import clsx from 'clsx';
@@ -62,6 +62,7 @@ export default function Navbar() {
     { to: '/labour',     icon: Users,         label: t('nav.labour') },
     { to: '/map',        icon: Map,           label: t('nav.map') },
     { to: '/news',       icon: Newspaper,     label: t('nav.news', 'News') },
+    { to: '/schemes',    icon: Landmark,      label: t('nav.schemes', 'Schemes') },
   ];
 
   // Close mobile menu on route change
