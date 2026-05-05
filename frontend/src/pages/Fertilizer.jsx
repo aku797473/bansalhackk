@@ -260,6 +260,8 @@ export default function Fertilizer() {
                        </div>
                     </div>
                   </div>
+                </div>
+              </div>
 
               <div className="grid sm:grid-cols-2 gap-4">
                 {/* Treatment Card */}
