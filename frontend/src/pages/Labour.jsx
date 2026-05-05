@@ -61,7 +61,7 @@ export default function Labour() {
 
   
   const [form, setForm] = useState({
-    title:'', description:'', category:'harvesting', wage: 500, wageUnit:'per day',
+    title:'', description:'', category:'harvesting', wage: 500, wageUnit:'per_day',
     workersNeeded:1, district:'', state:'Punjab', startDate:'', duration:'', skills:'',
     contactNumber: '', image: null
   });
@@ -119,7 +119,7 @@ export default function Labour() {
 
   const postJob = async () => {
     if (!form.title || !form.district || !form.contactNumber) { 
-      toast.error('Title, District and Mobile Number are required'); 
+      toast.error(t('common.error_required', 'Title, District and Mobile Number are required')); 
       return; 
     }
     try {
@@ -129,7 +129,7 @@ export default function Labour() {
       });
       toast.success(t('common.success', 'Work Posted Successfully!'));
       setTab('browse');
-      setForm({ title:'', description:'', category:'harvesting', wage:500, wageUnit:'per day', workersNeeded:1, district:'', state:'Punjab', startDate:'', duration:'', skills:'', contactNumber: '', image: null });
+      setForm({ title:'', description:'', category:'harvesting', wage:500, wageUnit:'per_day', workersNeeded:1, district:'', state:'Punjab', startDate:'', duration:'', skills:'', contactNumber: '', image: null });
       fetchJobs();
     } catch (err) { 
       toast.error(t('common.error', 'Failed to post. Check all fields.')); 
@@ -193,12 +193,12 @@ export default function Labour() {
             });
 
             if (verifyRes.status === 'success') {
-              toast.success('Payment Successful! Worker Booked.');
+              toast.success(t('common.success', 'Payment Successful! Worker Booked.'));
               setShowModal(null);
               fetchJobs();
             }
           } catch (err) {
-            toast.error('Payment verification failed.');
+            toast.error(t('common.error', 'Payment verification failed.'));
           }
         },
         prefill: {
@@ -214,7 +214,7 @@ export default function Labour() {
 
     } catch (err) {
       console.error(err);
-      toast.error('Failed to initiate payment.');
+      toast.error(t('common.error', 'Failed to initiate payment.'));
     } finally {
       setProcessingPayment(false);
     }
@@ -229,7 +229,7 @@ export default function Labour() {
             <Users className="text-purple-500" size={24} />
             <span>{t('labour.title')}</span>
           </h1>
-          <p className="page-subtitle text-gray-500 font-medium">{t('labour.subtitle', 'Find agricultural workers or post your requirements')}</p>
+          <p className="page-subtitle text-gray-500 font-medium">{t('labour.subtitle')}</p>
         </div>
       </div>
 
@@ -237,7 +237,7 @@ export default function Labour() {
         <div className="mb-6 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl p-4 flex items-center gap-3 text-amber-800 dark:text-amber-300">
           <WifiOff size={20} className="shrink-0" />
           <div className="text-sm">
-            <span className="font-bold">Live Service Unavailable.</span> Showing fallback sample data. Please check your connection or try again later.
+            <span className="font-bold">{t('labour.service_unavailable')}</span>
           </div>
         </div>
       )}
@@ -245,9 +245,9 @@ export default function Labour() {
       {/* Tabs */}
       <div className="flex gap-2 mb-10 border-b border-gray-100 dark:border-slate-800 overflow-x-auto scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0">
         {[
-          {id:'browse', label: t('labour.tabs.browse', 'Find Work')},
-          {id:'post', label: t('labour.tabs.post', 'Post Work')},
-          {id:'my-jobs', label: t('labour.tabs.my_posts', 'My Posts')}
+          {id:'browse', label: t('labour.tabs.browse')},
+          {id:'post', label: t('labour.tabs.post')},
+          {id:'my-jobs', label: t('labour.tabs.my_posts')}
         ].map(tb => (
           <button key={tb.id} onClick={() => setTab(tb.id)}
             className={clsx('px-6 py-4 text-sm font-black border-b-4 -mb-px transition-all uppercase tracking-widest whitespace-nowrap',
@@ -265,7 +265,7 @@ export default function Labour() {
         ) : jobs.length === 0 ? (
           <div className="card text-center py-24 bg-gray-50 dark:bg-slate-900/50 border-dashed border-2">
             <Briefcase size={48} className="mx-auto text-gray-200 dark:text-slate-800 mb-4" />
-            <p className="text-gray-500 dark:text-slate-400 font-bold">{t('common.no_data', 'No work available at the moment.')}</p>
+            <p className="text-gray-500 dark:text-slate-400 font-bold">{t('common.no_data')}</p>
           </div>
         ) : (
           <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
@@ -287,9 +287,9 @@ export default function Labour() {
                     <h3 className="font-black text-gray-900 dark:text-white leading-tight text-base sm:text-lg group-hover:text-primary transition-colors line-clamp-1">{job.title}</h3>
                     <div className="flex items-center gap-2 mt-1.5">
                        <div className="badge-verified py-0.5 px-2 bg-blue-50 text-blue-600 border-blue-100 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-900/30">
-                          <ShieldCheck size={10} /> Verified Post
+                          <ShieldCheck size={10} /> {t('labour.verified_post')}
                        </div>
-                       <span className="text-[10px] text-gray-400 font-bold flex items-center gap-1"><Clock size={10} /> {new Date(job.createdAt).toLocaleDateString()}</span>
+                       <span className="text-[10px] text-gray-400 font-bold flex items-center gap-1"><Clock size={10} /> {new Date(job.createdAt).toLocaleDateString(t('common.locale'))}</span>
                     </div>
                   </div>
                 </div>
@@ -305,7 +305,7 @@ export default function Labour() {
                   </div>
                   <div className="flex items-center gap-2.5 text-green-600 dark:text-green-400 font-black bg-green-50 dark:bg-green-900/10 p-2.5 rounded-xl border border-green-100 dark:border-green-900/20">
                     <Banknote size={16} />
-                    <span>₹{job.wage} / {job.wageUnit}</span>
+                    <span>₹{job.wage} / {t(`labour.wage_units.${job.wageUnit}`)}</span>
                   </div>
                 </div>
                 
@@ -314,7 +314,7 @@ export default function Labour() {
                     <Phone size={14} /> <span>{job.contactNumber}</span>
                   </div>
                   <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-1.5">
-                    <Users size={12} /> <span>{job.workersNeeded} Needed</span>
+                    <Users size={12} /> <span>{job.workersNeeded} {t('labour.needed')}</span>
                   </div>
                 </div>
               </div>
@@ -329,74 +329,74 @@ export default function Labour() {
           <div className="lg:col-span-8 card shadow-2xl border-none bg-white dark:bg-slate-900">
             <h2 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-8 flex items-center gap-3">
               <Plus className="bg-primary text-white rounded-xl p-1.5 shadow-lg shadow-primary/30" size={28} /> 
-              <span>{t('labour.tabs.post', 'Post New Work')}</span>
+              <span>{t('labour.tabs.post')}</span>
             </h2>
             <div className="space-y-6">
               <div className="grid sm:grid-cols-2 gap-5">
                  <div>
-                    <label className="label">{t('common.title', 'Work Title')} *</label>
-                    <input className="input dark:bg-slate-800 border-2" placeholder="e.g. Need team for harvesting"
+                    <label className="label">{t('labour.job_title')} *</label>
+                    <input className="input dark:bg-slate-800 border-2" placeholder={t('labour.placeholders.title')}
                       value={form.title} onChange={e => setForm(f => ({...f, title: e.target.value}))} />
                  </div>
                  <div>
-                    <label className="label">{t('auth.phone', 'Contact Number')} *</label>
+                    <label className="label">{t('auth.phone')} *</label>
                     <div className="relative">
                        <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                       <input className="input pl-10 dark:bg-slate-800 border-2" placeholder="10-digit mobile number"
+                       <input className="input pl-10 dark:bg-slate-800 border-2" placeholder={t('labour.placeholders.phone')}
                         value={form.contactNumber} onChange={e => setForm(f => ({...f, contactNumber: e.target.value}))} />
                     </div>
                  </div>
               </div>
 
               <div>
-                <label className="label">{t('common.description', 'Work Description')}</label>
-                <textarea className="input min-h-[120px] dark:bg-slate-800 border-2" placeholder="Describe the work in detail..."
+                <label className="label">{t('labour.description')}</label>
+                <textarea className="input min-h-[120px] dark:bg-slate-800 border-2" placeholder={t('labour.placeholders.description')}
                   value={form.description} onChange={e => setForm(f => ({...f, description: e.target.value}))} />
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-5">
                 <div className="sm:col-span-2">
-                  <label className="label">Category</label>
+                  <label className="label">{t('labour.category')}</label>
                   <select className="input dark:bg-slate-800 border-2" value={form.category} onChange={e => setForm(f => ({...f, category: e.target.value}))}>
-                    {CATEGORIES.map(c => <option key={c} value={c}>{CATEGORY_EMOJI[c]} {c}</option>)}
+                    {CATEGORIES.map(c => <option key={c} value={c}>{CATEGORY_EMOJI[c]} {t(`labour.categories.${c}`)}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="label">Wage (₹)</label>
+                  <label className="label">{t('labour.wage')} (₹)</label>
                   <input type="number" className="input dark:bg-slate-800 border-2" value={form.wage}
                     onChange={e => setForm(f => ({...f, wage: Number(e.target.value)}))} />
                 </div>
                 <div>
                   <label className="label">Unit</label>
                   <select className="input dark:bg-slate-800 border-2" value={form.wageUnit} onChange={e => setForm(f => ({...f, wageUnit: e.target.value}))}>
-                    {['per day','fixed'].map(u => <option key={u} value={u}>{u}</option>)}
+                    {['per_day','fixed'].map(u => <option key={u} value={u}>{t(`labour.wage_units.${u}`)}</option>)}
                   </select>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-5">
                 <div>
-                  <label className="label">District *</label>
-                  <input className="input dark:bg-slate-800 border-2" placeholder="Enter district" value={form.district}
+                  <label className="label">{t('labour.district')} *</label>
+                  <input className="input dark:bg-slate-800 border-2" placeholder={t('labour.placeholders.district')} value={form.district}
                     onChange={e => setForm(f => ({...f, district: e.target.value}))} />
                 </div>
                 <div>
-                  <label className="label">State</label>
+                  <label className="label">{t('labour.state')}</label>
                   <select className="input dark:bg-slate-800 border-2" value={form.state} onChange={e => setForm(f => ({...f, state: e.target.value}))}>
-                    {STATES.map(s => <option key={s} value={s}>{s}</option>)}
+                    {STATES.map(s => <option key={s} value={s}>{t(`crop.states.${s}`, s)}</option>)}
                   </select>
                 </div>
               </div>
             </div>
             
             <button onClick={postJob} className="btn-primary w-full h-16 rounded-2xl justify-center mt-10 text-lg font-black shadow-xl shadow-primary/20 active:scale-[0.98]">
-              {t('common.submit', 'Submit Post')}
+              {t('common.submit')}
             </button>
           </div>
 
           <div className="lg:col-span-4 space-y-8">
              <div className="card text-center bg-gray-50 dark:bg-slate-900/50 border-dashed border-2 border-gray-200 dark:border-slate-800 p-8">
-                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-6 block">Identity Photo</label>
+                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-6 block">{t('labour.identity_photo')}</label>
                 <div className="relative w-36 h-36 mx-auto mb-6 group">
                    <div className="w-full h-full rounded-[2.5rem] bg-gray-200 dark:bg-slate-800 flex items-center justify-center overflow-hidden border-4 border-white dark:border-slate-700 shadow-2xl transition-transform group-hover:scale-105">
                       {form.image ? <img src={form.image} alt="Profile" className="w-full h-full object-cover" /> : <User size={48} className="text-gray-400" />}
@@ -406,18 +406,18 @@ export default function Labour() {
                       <input type="file" className="hidden" accept="image/*" onChange={handleImage} />
                    </label>
                 </div>
-                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider leading-relaxed px-4">Upload a photo to build trust with workers</p>
+                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider leading-relaxed px-4">{t('labour.upload_trust')}</p>
              </div>
 
              <div className="card bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/10 dark:to-orange-900/10 border-amber-100 dark:border-amber-900/30">
                 <h3 className="font-black text-amber-800 dark:text-amber-400 text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-                  <span>Important Tips</span>
+                  <span>{t('labour.important_tips')}</span>
                 </h3>
                 <ul className="text-xs text-amber-700 dark:text-slate-400 space-y-3 leading-relaxed font-medium">
-                   <li className="flex gap-2"><span>•</span> <span>Provide correct mobile number for direct calls.</span></li>
-                   <li className="flex gap-2"><span>•</span> <span>Keep description clear for better understanding.</span></li>
-                   <li className="flex gap-2"><span>•</span> <span>Adding a photo increases response rate by 2x.</span></li>
+                   <li className="flex gap-2"><span>•</span> <span>{t('labour.tips_list.phone')}</span></li>
+                   <li className="flex gap-2"><span>•</span> <span>{t('labour.tips_list.description')}</span></li>
+                   <li className="flex gap-2"><span>•</span> <span>{t('labour.tips_list.photo')}</span></li>
                 </ul>
              </div>
           </div>
@@ -428,7 +428,7 @@ export default function Labour() {
       {tab === 'my-jobs' && (
         <div className="max-w-2xl mx-auto space-y-5">
           {myJobs.length === 0
-            ? <div className="card text-center py-24 text-gray-400 dark:text-slate-600 italic font-bold border-dashed border-2">No posts yet. Start by posting a new work requirement.</div>
+            ? <div className="card text-center py-24 text-gray-400 dark:text-slate-600 italic font-bold border-dashed border-2">{t('common.no_data')}</div>
             : myJobs.map(job => (
               <div key={job._id} className="card flex items-center justify-between hover:border-primary transition-all bg-white dark:bg-slate-900 border-none shadow-lg py-5 px-6 group">
                 <div className="flex items-center gap-5">
@@ -462,7 +462,7 @@ export default function Labour() {
                   </div>
                   <div>
                      <h3 className="text-2xl font-black text-white tracking-tight leading-none mb-2">{showModal.title}</h3>
-                     <p className="text-white/70 font-bold uppercase tracking-widest text-[10px]">{showModal.location?.district}, {showModal.location?.state}</p>
+                     <p className="text-white/70 font-bold uppercase tracking-widest text-[10px]">{showModal.location?.district}, {t(`crop.states.${showModal.location?.state}`, showModal.location?.state)}</p>
                   </div>
                </div>
             </div>
@@ -473,17 +473,17 @@ export default function Labour() {
                      <div className="absolute top-0 right-0 p-1.5 bg-emerald-500 text-white rounded-bl-xl shadow-md">
                         <CheckCircle2 size={12} />
                      </div>
-                     <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-black uppercase tracking-widest mb-1">Guaranteed Wage</p>
+                     <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-black uppercase tracking-widest mb-1">{t('labour.guaranteed_wage')}</p>
                      <p className="text-2xl font-black text-emerald-700 dark:text-emerald-300">₹{showModal.wage}</p>
                   </div>
                   <div className="bg-blue-50 dark:bg-blue-900/10 p-5 rounded-[1.5rem] flex-1 text-center border border-blue-100 dark:border-blue-900/20">
-                     <p className="text-[10px] text-blue-600 dark:text-blue-400 font-black uppercase tracking-widest mb-1">Open Positions</p>
+                     <p className="text-[10px] text-blue-600 dark:text-blue-400 font-black uppercase tracking-widest mb-1">{t('labour.open_positions')}</p>
                      <p className="text-2xl font-black text-blue-700 dark:text-blue-300">{showModal.workersNeeded}</p>
                   </div>
                </div>
 
                <div className="mb-8">
-                  <p className="text-[10px] text-gray-400 font-black uppercase mb-3 tracking-widest">Job Description</p>
+                  <p className="text-[10px] text-gray-400 font-black uppercase mb-3 tracking-widest">{t('labour.job_description')}</p>
                   <p className="text-gray-700 dark:text-slate-300 leading-relaxed bg-gray-50 dark:bg-black/20 p-5 rounded-2xl border border-gray-100 dark:border-white/5 font-medium italic">"{showModal.description}"</p>
                </div>
 
@@ -494,10 +494,10 @@ export default function Labour() {
                     className="btn-primary w-full justify-center h-16 rounded-2xl text-lg font-black shadow-xl shadow-primary/30 group active:scale-95 transition-all bg-indigo-600 hover:bg-indigo-700"
                   >
                     <Banknote size={20} className="mr-2" /> 
-                    <span>{processingPayment ? 'Processing...' : `Pay ₹${showModal.wage} & Book Now`}</span>
+                    <span>{processingPayment ? t('labour.processing') : t('labour.pay_book', { amount: showModal.wage })}</span>
                   </button>
                   <a href={`tel:${showModal.contactNumber}`} className="flex items-center justify-center h-12 rounded-xl text-gray-500 font-bold hover:bg-gray-50 dark:hover:bg-slate-800 transition-all">
-                     <Phone size={16} className="mr-2" /> <span>Call for details</span>
+                     <Phone size={16} className="mr-2" /> <span>{t('labour.call_details')}</span>
                   </a>
                </div>
 

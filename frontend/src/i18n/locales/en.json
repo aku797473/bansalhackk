@@ -129,14 +129,49 @@
   },
   "labour": {
     "title": "Labour Marketplace",
-    "post_job": "Post a Job",
-    "find_work": "Find Work",
-    "job_title": "Job Title", "description": "Description",
-    "wage": "Daily Wage (₹)", "workers": "Workers Needed",
-    "district": "District", "state": "State",
-    "category": "Category", "skills": "Required Skills",
-    "apply": "Apply Now", "applied": "Applied",
-    "start_date": "Start Date"
+    "subtitle": "Find agricultural workers or post your requirements",
+    "tabs": {
+      "browse": "Find Work",
+      "post": "Post Work",
+      "my_posts": "My Posts"
+    },
+    "service_unavailable": "Live Service Unavailable. Showing fallback sample data.",
+    "verified_post": "Verified Post",
+    "needed": "Needed",
+    "workers_needed": "Workers Needed",
+    "job_description": "Job Description",
+    "identity_photo": "Identity Photo",
+    "upload_trust": "Upload a photo to build trust with workers",
+    "important_tips": "Important Tips",
+    "tips_list": {
+      "phone": "Provide correct mobile number for direct calls.",
+      "description": "Keep description clear for better understanding.",
+      "photo": "Adding a photo increases response rate by 2x."
+    },
+    "guaranteed_wage": "Guaranteed Wage",
+    "open_positions": "Open Positions",
+    "call_details": "Call for details",
+    "pay_book": "Pay ₹{{amount}} & Book Now",
+    "processing": "Processing...",
+    "categories": {
+      "harvesting": "Harvesting",
+      "sowing": "Sowing",
+      "irrigation": "Irrigation",
+      "pesticide": "Pesticide",
+      "transport": "Transport",
+      "storage": "Storage",
+      "other": "Other"
+    },
+    "wage_units": {
+      "per_day": "per day",
+      "fixed": "fixed"
+    },
+    "placeholders": {
+      "title": "e.g. Need team for harvesting",
+      "phone": "10-digit mobile number",
+      "description": "Describe the work in detail...",
+      "district": "Enter district"
+    }
   },
   "chat": {
     "title": "Kisan Mitra",
