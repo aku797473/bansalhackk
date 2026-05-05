@@ -9,7 +9,7 @@ import clsx from 'clsx';
 const SEVERITY_COLOR = { Mild: 'badge-yellow', Moderate: 'badge-yellow', Severe: 'badge-red' };
 
 export default function Fertilizer() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [preview, setPreview] = useState(null);
   const [file, setFile]       = useState(null);
   const [result, setResult]   = useState(null);
