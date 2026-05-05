@@ -125,12 +125,12 @@ export default function ChatWidget() {
 
   return (
     <>
-      {/* Floating button */}
+      {/* Floating button — bottom LEFT */}
       <button
         onClick={() => setOpen(!open)}
         className={clsx(
-          'fixed bottom-6 right-6 z-50 w-14 h-14 rounded-2xl shadow-xl transition-all duration-300 flex items-center justify-center',
-          open ? 'bg-gray-700 dark:bg-slate-700 rotate-0' : 'bg-primary hover:bg-primary-dark hover:scale-110'
+          'fixed bottom-6 left-6 z-50 w-14 h-14 rounded-2xl shadow-xl transition-all duration-300 flex items-center justify-center',
+          open ? 'bg-gray-700 dark:bg-slate-700 rotate-0' : 'bg-indigo-600 hover:bg-indigo-700 hover:scale-110'
         )}
         aria-label="Open Kisan Mitra chat">
         {open ? <X size={22} className="text-white" /> : (
@@ -141,9 +141,9 @@ export default function ChatWidget() {
         )}
       </button>
 
-      {/* Chat window */}
+      {/* Chat window — anchored to bottom LEFT */}
       {open && (
-        <div className="fixed bottom-24 right-6 z-50 w-80 sm:w-96 rounded-2xl shadow-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden animate-slide-up flex flex-col transition-colors"
+        <div className="fixed bottom-24 left-6 z-50 w-80 sm:w-96 rounded-2xl shadow-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden animate-slide-up flex flex-col transition-colors"
           style={{ maxHeight: '70vh' }}>
           {/* Header */}
           <div className="flex items-center gap-3 px-4 py-3 bg-primary text-white shrink-0">

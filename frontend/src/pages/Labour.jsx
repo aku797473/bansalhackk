@@ -3,9 +3,43 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { labourAPI, paymentAPI } from '../services/api';
 
-import { Users, Plus, MapPin, Calendar, Banknote, X, ChevronRight, Briefcase, Phone, User, Camera } from 'lucide-react';
+import { Users, Plus, MapPin, Banknote, X, Briefcase, Phone, User, Camera, WifiOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
+
+// ─── Fallback seed data shown when API is unreachable ─────────────────────────
+const FALLBACK_JOBS = [
+  {
+    _id: 'seed-1', title: 'Wheat Harvesting Workers Needed', description: 'Looking for 10 workers for wheat harvesting. 5 days work.',
+    category: 'harvesting', wage: 500, wageUnit: 'per day', workersNeeded: 10, contactNumber: '9876543210', status: 'open',
+    location: { district: 'Rewa', state: 'Madhya Pradesh' }, createdAt: new Date().toISOString()
+  },
+  {
+    _id: 'seed-2', title: 'Sowing Help for Soybean', description: 'Expert sowing workers needed for 20 acres land.',
+    category: 'sowing', wage: 450, wageUnit: 'per day', workersNeeded: 5, contactNumber: '9988776655', status: 'open',
+    location: { district: 'Indore', state: 'Madhya Pradesh' }, createdAt: new Date().toISOString()
+  },
+  {
+    _id: 'seed-3', title: 'Sugarcane Cutting Team', description: 'Need a team for sugarcane cutting and transport.',
+    category: 'harvesting', wage: 600, wageUnit: 'per day', workersNeeded: 20, contactNumber: '8877665544', status: 'open',
+    location: { district: 'Pune', state: 'Maharashtra' }, createdAt: new Date().toISOString()
+  },
+  {
+    _id: 'seed-4', title: 'Irrigation Setup Workers', description: 'Workers needed to install drip irrigation systems.',
+    category: 'irrigation', wage: 550, wageUnit: 'per day', workersNeeded: 3, contactNumber: '7766554433', status: 'open',
+    location: { district: 'Ambala', state: 'Haryana' }, createdAt: new Date().toISOString()
+  },
+  {
+    _id: 'seed-5', title: 'Potato Sorting & Packing', description: 'Workers for sorting and packing potatoes in cold storage.',
+    category: 'storage', wage: 400, wageUnit: 'per day', workersNeeded: 15, contactNumber: '6655443322', status: 'open',
+    location: { district: 'Jalandhar', state: 'Punjab' }, createdAt: new Date().toISOString()
+  },
+  {
+    _id: 'seed-6', title: 'Pesticide Spraying Workers', description: 'Need workers for pesticide spraying on 50 acres cotton field.',
+    category: 'pesticide', wage: 480, wageUnit: 'per day', workersNeeded: 8, contactNumber: '9911223344', status: 'open',
+    location: { district: 'Nagpur', state: 'Maharashtra' }, createdAt: new Date().toISOString()
+  },
+];
 
 const CATEGORIES = ['harvesting','sowing','irrigation','pesticide','transport','storage','other'];
 const STATES = ['Punjab','Haryana','Uttar Pradesh','Bihar','Madhya Pradesh','Maharashtra','Gujarat','Rajasthan','Karnataka'];
@@ -16,9 +50,10 @@ export default function Labour() {
   const { t } = useTranslation();
   const { user } = useAuth();
   const [tab, setTab]       = useState('browse');
-  const [jobs, setJobs]     = useState([]);
-  const [myJobs, setMyJobs] = useState([]);
+  const [jobs, setJobs]       = useState([]);
+  const [myJobs, setMyJobs]   = useState([]);
   const [loading, setLoading] = useState(true);
+  const [apiDown, setApiDown] = useState(false);
   const [showModal, setShowModal] = useState(null);
   const [applying, setApplying]   = useState(false);
   const [applyMsg, setApplyMsg]   = useState('');
@@ -48,9 +83,26 @@ export default function Labour() {
 
   const fetchJobs = () => {
     setLoading(true);
+    setApiDown(false);
     labourAPI.getJobs()
-      .then(r => setJobs(r.data.data || []))
-      .catch(() => {})
+      .then(r => {
+        const data = r.data?.data || [];
+        if (data.length === 0) {
+          // Empty DB — show seed data silently
+          setJobs(FALLBACK_JOBS);
+        } else {
+          setJobs(data);
+        }
+      })
+      .catch(() => {
+        // API unreachable — use fallback & inform user
+        setJobs(FALLBACK_JOBS);
+        setApiDown(true);
+        toast('Showing sample data — live service offline', {
+          icon: '📡',
+          style: { background: '#fef3c7', color: '#92400e', fontWeight: 700 }
+        });
+      })
       .finally(() => setLoading(false));
   };
 
@@ -186,6 +238,15 @@ export default function Labour() {
           <p className="page-subtitle text-gray-500 font-medium">{t('labour.subtitle', 'Find agricultural workers or post your requirements')}</p>
         </div>
       </div>
+
+      {apiDown && (
+        <div className="mb-6 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl p-4 flex items-center gap-3 text-amber-800 dark:text-amber-300">
+          <WifiOff size={20} className="shrink-0" />
+          <div className="text-sm">
+            <span className="font-bold">Live Service Unavailable.</span> Showing fallback sample data. Please check your connection or try again later.
+          </div>
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="flex gap-2 mb-8 border-b border-gray-100 dark:border-slate-800">
