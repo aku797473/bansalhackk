@@ -106,5 +106,10 @@ export const paymentAPI = {
   verifyPayment: (data) => api.post('/payment/verify', data),
 };
 
+// ─── Schemes ───────────────────────────────────────
+export const schemesAPI = {
+  getSchemes: () => api.get('/schemes'),
+};
+
 export default api;
 
