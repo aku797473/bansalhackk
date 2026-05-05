@@ -124,14 +124,14 @@ export default function Login() {
           </div>
 
           {/* Premium Tab Switcher */}
-          <div className="flex p-1.5 rounded-[1.5rem] bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/50 mb-10">
+          <div className="flex p-1.5 rounded-[1.5rem] bg-slate-50 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 mb-10 shadow-sm">
             <button
               onClick={() => setIsLogin(true)}
               className={clsx(
                 'flex-1 py-3.5 rounded-2xl text-sm font-black transition-all duration-500 tracking-wide flex items-center justify-center gap-2',
                 isLogin 
-                  ? 'bg-white dark:bg-slate-800 text-primary shadow-xl shadow-black/5 scale-[1.02]' 
-                  : 'text-slate-500 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-300'
+                  ? 'bg-white dark:bg-slate-800 text-primary shadow-xl shadow-black/5 scale-[1.02] border border-slate-100 dark:border-slate-700' 
+                  : 'text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300'
               )}>
               {t('auth.login_btn')}
             </button>
@@ -140,8 +140,8 @@ export default function Login() {
               className={clsx(
                 'flex-1 py-3.5 rounded-2xl text-sm font-black transition-all duration-500 tracking-wide flex items-center justify-center gap-2',
                 !isLogin 
-                  ? 'bg-white dark:bg-slate-800 text-primary shadow-xl shadow-black/5 scale-[1.02]' 
-                  : 'text-slate-500 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-300'
+                  ? 'bg-white dark:bg-slate-800 text-primary shadow-xl shadow-black/5 scale-[1.02] border border-slate-100 dark:border-slate-700' 
+                  : 'text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300'
               )}>
               {t('auth.register_btn')}
             </button>
@@ -159,12 +159,12 @@ export default function Login() {
                     rootBox: "w-full",
                     card: "shadow-none border-none bg-transparent p-0",
                     header: "hidden",
-                    socialButtonsBlockButton: "h-14 rounded-2xl border-2 border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all font-bold text-slate-700 dark:text-slate-200",
+                    socialButtonsBlockButton: "h-14 rounded-2xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all font-bold text-slate-700 dark:text-slate-200 shadow-sm",
                     socialButtonsBlockButtonText: "font-black tracking-tight",
-                    dividerLine: "bg-slate-100 dark:bg-slate-800 h-[2px]",
-                    dividerText: "text-slate-400 font-black uppercase text-[10px] tracking-widest",
-                    formButtonPrimary: "btn-primary h-14 rounded-2xl text-lg font-black shadow-2xl shadow-primary/30 active:scale-95 transition-all mt-4",
-                    formFieldInput: "h-14 rounded-2xl border-2 border-slate-100 focus:border-primary dark:bg-slate-900 dark:border-slate-800 transition-all font-bold text-base",
+                    dividerLine: "bg-slate-100 dark:bg-slate-800 h-[1.5px]",
+                    dividerText: "text-slate-300 font-black uppercase text-[9px] tracking-widest",
+                    formButtonPrimary: "btn-primary h-14 rounded-2xl text-lg font-black shadow-2xl shadow-primary/30 active:scale-95 transition-all mt-4 border-none",
+                    formFieldInput: "h-14 rounded-2xl border border-slate-200 focus:border-primary dark:bg-slate-900 dark:border-slate-800 transition-all font-bold text-base shadow-inner bg-slate-50/30",
                     formFieldLabel: "text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 ml-1",
                     footer: "hidden",
                     formFieldAction: "text-xs font-black text-primary hover:text-emerald-600 transition-colors",
@@ -183,12 +183,12 @@ export default function Login() {
                     rootBox: "w-full",
                     card: "shadow-none border-none bg-transparent p-0",
                     header: "hidden",
-                    socialButtonsBlockButton: "h-14 rounded-2xl border-2 border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all font-bold text-slate-700 dark:text-slate-200",
+                    socialButtonsBlockButton: "h-14 rounded-2xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all font-bold text-slate-700 dark:text-slate-200 shadow-sm",
                     socialButtonsBlockButtonText: "font-black tracking-tight",
-                    dividerLine: "bg-slate-100 dark:bg-slate-800 h-[2px]",
-                    dividerText: "text-slate-400 font-black uppercase text-[10px] tracking-widest",
-                    formButtonPrimary: "btn-primary h-14 rounded-2xl text-lg font-black shadow-2xl shadow-primary/30 active:scale-95 transition-all mt-4",
-                    formFieldInput: "h-14 rounded-2xl border-2 border-slate-100 focus:border-primary dark:bg-slate-900 dark:border-slate-800 transition-all font-bold text-base",
+                    dividerLine: "bg-slate-100 dark:bg-slate-800 h-[1.5px]",
+                    dividerText: "text-slate-300 font-black uppercase text-[9px] tracking-widest",
+                    formButtonPrimary: "btn-primary h-14 rounded-2xl text-lg font-black shadow-2xl shadow-primary/30 active:scale-95 transition-all mt-4 border-none",
+                    formFieldInput: "h-14 rounded-2xl border border-slate-200 focus:border-primary dark:bg-slate-900 dark:border-slate-800 transition-all font-bold text-base shadow-inner bg-slate-50/30",
                     formFieldLabel: "text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 ml-1",
                     footer: "hidden",
                     formFieldAction: "text-xs font-black text-primary hover:text-emerald-600 transition-colors"
