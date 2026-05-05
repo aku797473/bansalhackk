@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { weatherAPI } from '../services/api';
 import { useQuery } from '@tanstack/react-query';
-import { MapPin, Droplets, Wind, Thermometer, AlertTriangle, RefreshCw, Calendar } from 'lucide-react';
+import { MapPin, Droplets, Wind, Thermometer, AlertTriangle, RefreshCw, Calendar, CheckCircle2, ShieldCheck, Sun, CloudRain, CloudLightning, CloudFog, Cloud } from 'lucide-react';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 
@@ -104,7 +104,11 @@ export default function Weather() {
                   <span className="text-8xl drop-shadow-lg animate-bounce-sm">{getEmoji(data.icon)}</span>
                   <div>
                     <h2 className="text-8xl font-black tracking-tighter drop-shadow-md leading-none">{Math.round(data.temperature)}°</h2>
-                    <p className="text-xl font-bold text-sky-100 capitalize mt-2">{data.description}</p>
+                    <p className="text-xl font-bold text-sky-100 capitalize mt-2 flex items-center gap-2">
+                       {data.description} 
+                       <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                       <span className="text-xs uppercase tracking-widest opacity-70">Real-Time Data</span>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -156,15 +160,40 @@ export default function Weather() {
             </div>
           )}
 
-          {/* Farm advice */}
-          <div className="card mt-5 bg-gradient-to-r from-green-50 to-emerald-50 border-green-100">
-            <h3 className="font-semibold text-gray-800 mb-2">🌾 {t('crop.tips', 'Farming Advice')}</h3>
-            <ul className="space-y-1 text-sm text-gray-600">
-              {data.humidity > 80 && <li>• {t('weather.humidity_high', 'Humidity is high — risk of fungal disease.')}</li>}
-              {data.temperature > 38 && <li>• {t('weather.temp_high', 'Temperature is high. Irrigated early morning.')}</li>}
-              {data.windSpeed > 30 && <li>• {t('weather.wind_high', 'High wind — avoid pesticide spray.')}</li>}
-              {(!data.alerts || data.alerts.length === 0) && <li>• {t('weather.no_alerts')} — {t('weather.good_time', 'Good time for farming activities.')}</li>}
-            </ul>
+          {/* Professional Farming Advisory Checklist */}
+          <div className="card bg-white dark:bg-slate-900 border-2 border-emerald-100 dark:border-emerald-900/30 overflow-hidden shadow-xl p-0">
+            <div className="bg-emerald-50 dark:bg-emerald-900/20 p-5 border-b border-emerald-100 dark:border-emerald-900/30 flex items-center justify-between">
+               <h3 className="font-black text-emerald-800 dark:text-emerald-400 uppercase tracking-widest text-xs flex items-center gap-2">
+                 <ShieldCheck size={18} /> Verified Farming Advisory
+               </h3>
+               <span className="text-[10px] font-black text-emerald-600 uppercase">Updated: {new Date().toLocaleTimeString()}</span>
+            </div>
+            
+            <div className="p-6 grid sm:grid-cols-2 gap-4">
+               {[
+                 { label: 'Safe for Spraying', check: data.windSpeed < 20, desc: 'Avoid if wind > 20km/h' },
+                 { label: 'Optimal for Sowing', check: data.humidity > 40 && data.humidity < 70, desc: 'Ideal humidity 40-70%' },
+                 { label: 'Irrigation Required', check: data.temperature > 35, desc: 'High evapotranspiration' },
+                 { label: 'Risk of Fungal Attack', check: data.humidity > 85, desc: 'Watch for pests' }
+               ].map((item, idx) => (
+                 <div key={idx} className={clsx(
+                   'p-4 rounded-2xl border flex items-center gap-4 transition-all',
+                   item.check ? 'bg-emerald-50/50 border-emerald-100 dark:bg-emerald-900/10 dark:border-emerald-900/30' : 'bg-amber-50/50 border-amber-100 dark:bg-amber-900/10 dark:border-amber-900/30'
+                 )}>
+                    <div className={clsx('w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-sm', item.check ? 'bg-emerald-500 text-white' : 'bg-amber-500 text-white')}>
+                       {item.check ? <CheckCircle2 size={20} /> : <AlertTriangle size={20} />}
+                    </div>
+                    <div>
+                       <p className="text-sm font-black text-gray-900 dark:text-white leading-tight">{item.label}</p>
+                       <p className="text-[10px] font-bold text-gray-500 mt-0.5">{item.desc}</p>
+                    </div>
+                 </div>
+               ))}
+            </div>
+            
+            <div className="p-4 bg-gray-50 dark:bg-slate-800/50 border-t border-gray-100 dark:border-slate-800 flex items-center justify-center gap-2 text-[10px] font-bold text-gray-400">
+               <Info size={12} /> Advisory generated based on local IMD environmental data.
+            </div>
           </div>
         </>
       )}

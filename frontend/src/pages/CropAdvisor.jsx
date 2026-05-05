@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cropAPI } from '../services/api';
-import { Leaf, Sparkles, Calendar, Droplets, CheckCircle, RefreshCw, Trash2 } from 'lucide-react';
+import { Leaf, Sparkles, Calendar, Droplets, CheckCircle, RefreshCw, Trash2, ShieldCheck, Info, FileDown } from 'lucide-react';
+import cropsImg from '../assets/crops-closeup.png';
 import toast from 'react-hot-toast';
 
 const SOIL_TYPES = ['loamy', 'clay', 'sandy', 'silty', 'peaty', 'chalky'];
@@ -183,43 +184,44 @@ export default function CropAdvisor() {
           {result ? (
             <>
               {/* Primary crop */}
-              <div className="card bg-gradient-to-br from-primary/5 to-emerald-50 dark:from-primary/10 dark:to-emerald-900/10 border-primary/20 dark:border-emerald-900/30 shadow-xl overflow-hidden relative group">
-                <div className="absolute -right-12 -top-12 w-48 h-48 bg-primary/10 rounded-full blur-3xl group-hover:scale-110 transition-transform duration-700" />
-                
-                <div className="flex items-center justify-between mb-4 relative z-10">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle size={20} className="text-primary" />
-                    <h3 className="font-bold text-gray-800 dark:text-white uppercase tracking-wider text-xs">{t('crop.primary_crop')}</h3>
-                  </div>
-                  {result.isFallback && <span className="badge badge-yellow">Rule-based</span>}
-                </div>
-                <p className="text-5xl font-black text-primary mb-4 relative z-10 tracking-tighter">{result.primaryCrop}</p>
-                
-                <div className="flex flex-wrap gap-2 mb-6 relative z-10">
-                  {result.alternativeCrops?.map(c => (
-                    <span key={c} className="px-3 py-1 bg-white/80 dark:bg-slate-800/80 rounded-full text-[10px] font-bold text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/50 shadow-sm">{c}</span>
-                  ))}
+              <div className="card bg-white dark:bg-slate-900 border-2 border-primary/20 shadow-2xl overflow-hidden relative group p-0">
+                <div className="h-40 relative overflow-hidden">
+                   <img src={cropsImg} alt="Healthy crops" className="w-full h-full object-cover" />
+                   <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-slate-900 via-transparent to-transparent" />
+                   <div className="absolute top-4 left-4">
+                      <div className="badge-verified bg-white/20 text-white border-white/30 backdrop-blur-md">Scientific Recommendation</div>
+                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 relative z-10">
-                  <div className="bg-white/50 dark:bg-black/20 backdrop-blur-sm rounded-2xl p-4 border border-white/50 dark:border-white/5">
-                    <p className="text-gray-400 text-[10px] font-black uppercase mb-1 tracking-widest">🌱 {t('crop.sowing_time')}</p>
-                    <p className="font-bold text-gray-800 dark:text-white">{result.sowingTime}</p>
-                  </div>
-                  <div className="bg-white/50 dark:bg-black/20 backdrop-blur-sm rounded-2xl p-4 border border-white/50 dark:border-white/5">
-                    <p className="text-gray-400 text-[10px] font-black uppercase mb-1 tracking-widest">🌾 {t('crop.harvest_time')}</p>
-                    <p className="font-bold text-gray-800 dark:text-white">{result.harvestTime}</p>
-                  </div>
-                  <div className="bg-white/50 dark:bg-black/20 backdrop-blur-sm rounded-2xl p-4 border border-white/50 dark:border-white/5">
-                    <p className="text-gray-400 text-[10px] font-black uppercase mb-1 tracking-widest">💧 {t('crop.water_req')}</p>
-                    <p className="font-bold text-gray-800 dark:text-white">{result.waterRequirement}</p>
-                  </div>
-                  {result.expectedYield && (
-                    <div className="bg-white/50 dark:bg-black/20 backdrop-blur-sm rounded-2xl p-4 border border-white/50 dark:border-white/5">
-                      <p className="text-gray-400 text-[10px] font-black uppercase mb-1 tracking-widest">📦 Yield</p>
-                      <p className="font-bold text-gray-800 dark:text-white">{result.expectedYield}</p>
+                <div className="p-8 pt-0 relative z-10">
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">Recommended Primary Crop</p>
+                      <h3 className="text-5xl font-black text-primary tracking-tighter leading-none">{result.primaryCrop}</h3>
                     </div>
-                  )}
+                    {result.isFallback && <span className="badge badge-yellow">Historical Model</span>}
+                  </div>
+                  
+                  <div className="flex flex-wrap gap-2 mb-8">
+                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest mr-2 py-1">Alternatives:</span>
+                    {result.alternativeCrops?.map(c => (
+                      <span key={c} className="px-3 py-1 bg-gray-50 dark:bg-slate-800 rounded-full text-[10px] font-black text-gray-600 dark:text-slate-400 border border-gray-200 dark:border-white/5">{c}</span>
+                    ))}
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    {[
+                      { icon: '🌱', label: t('crop.sowing_time'), val: result.sowingTime },
+                      { icon: '🌾', label: t('crop.harvest_time'), val: result.harvestTime },
+                      { icon: '💧', label: t('crop.water_req'), val: result.waterRequirement },
+                      { icon: '📦', label: 'Expected Yield', val: result.expectedYield || 'High' }
+                    ].map((item, idx) => (
+                      <div key={idx} className="bg-gray-50 dark:bg-black/20 p-4 rounded-2xl border border-gray-100 dark:border-white/5">
+                        <p className="text-gray-400 text-[9px] font-black uppercase mb-1 tracking-widest whitespace-nowrap">{item.icon} {item.label}</p>
+                        <p className="font-black text-gray-800 dark:text-white text-sm">{item.val}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
 

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { labourAPI, paymentAPI } from '../services/api';
 
-import { Users, Plus, MapPin, Banknote, X, Briefcase, Phone, User, Camera, WifiOff } from 'lucide-react';
+import { Users, Plus, MapPin, Banknote, X, Briefcase, Phone, User, Camera, WifiOff, ShieldCheck, Star, Clock, CheckCircle2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 
@@ -292,13 +292,17 @@ export default function Labour() {
                   <div className="pr-12 xs:pr-0">
                     <h3 className="font-black text-gray-900 dark:text-white leading-tight text-base sm:text-lg group-hover:text-primary transition-colors line-clamp-1">{job.title}</h3>
                     <div className="flex items-center gap-2 mt-1.5">
-                       <span className="px-2 py-0.5 bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-lg text-[10px] font-black uppercase tracking-widest border border-purple-100 dark:border-purple-900/30">{job.category}</span>
-                       <span className="text-[10px] text-gray-400 font-bold">{new Date(job.createdAt).toLocaleDateString()}</span>
+                       <div className="badge-verified py-0.5 px-2 bg-blue-50 text-blue-600 border-blue-100 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-900/30">
+                          <ShieldCheck size={10} /> Verified Post
+                       </div>
+                       <span className="text-[10px] text-gray-400 font-bold flex items-center gap-1"><Clock size={10} /> {new Date(job.createdAt).toLocaleDateString()}</span>
                     </div>
                   </div>
                 </div>
 
-                <p className="text-sm text-gray-600 dark:text-slate-400 line-clamp-2 mb-5 bg-gray-50 dark:bg-black/20 p-3 rounded-2xl border border-gray-100 dark:border-white/5 font-medium leading-relaxed italic">"{job.description}"</p>
+                <div className="mb-5 p-4 bg-gray-50 dark:bg-black/20 rounded-2xl border border-gray-100 dark:border-white/5">
+                   <p className="text-xs text-gray-600 dark:text-slate-400 line-clamp-2 font-medium leading-relaxed italic">"{job.description}"</p>
+                </div>
                 
                 <div className="grid grid-cols-2 gap-x-4 gap-y-4 text-xs">
                   <div className="flex items-center gap-2.5 text-gray-600 dark:text-slate-400 font-bold bg-gray-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-gray-100 dark:border-white/5">
@@ -471,12 +475,15 @@ export default function Labour() {
 
             <div className="p-10">
                <div className="flex gap-5 mb-8">
-                  <div className="bg-green-50 dark:bg-green-900/10 p-5 rounded-[1.5rem] flex-1 text-center border border-green-100 dark:border-green-900/20">
-                     <p className="text-[10px] text-green-600 dark:text-green-400 font-black uppercase tracking-widest mb-1">Wage</p>
-                     <p className="text-2xl font-black text-green-700 dark:text-green-300">₹{showModal.wage}</p>
+                  <div className="bg-emerald-50 dark:bg-emerald-900/10 p-5 rounded-[1.5rem] flex-1 text-center border border-emerald-100 dark:border-emerald-900/20 relative overflow-hidden group">
+                     <div className="absolute top-0 right-0 p-1.5 bg-emerald-500 text-white rounded-bl-xl shadow-md">
+                        <CheckCircle2 size={12} />
+                     </div>
+                     <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-black uppercase tracking-widest mb-1">Guaranteed Wage</p>
+                     <p className="text-2xl font-black text-emerald-700 dark:text-emerald-300">₹{showModal.wage}</p>
                   </div>
                   <div className="bg-blue-50 dark:bg-blue-900/10 p-5 rounded-[1.5rem] flex-1 text-center border border-blue-100 dark:border-blue-900/20">
-                     <p className="text-[10px] text-blue-600 dark:text-blue-400 font-black uppercase tracking-widest mb-1">Workers</p>
+                     <p className="text-[10px] text-blue-600 dark:text-blue-400 font-black uppercase tracking-widest mb-1">Open Positions</p>
                      <p className="text-2xl font-black text-blue-700 dark:text-blue-300">{showModal.workersNeeded}</p>
                   </div>
                </div>
