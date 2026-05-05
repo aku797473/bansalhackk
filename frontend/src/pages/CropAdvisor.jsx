@@ -14,38 +14,21 @@ export default function CropAdvisor() {
   const { t, i18n } = useTranslation();
   const isHi = i18n.language === 'hi';
 
-  const translateOption = (opt) => {
-    if (!isHi) return opt;
-    const hiMap = {
-      'loamy': 'दोमट (Loamy)',
-      'clay': 'चिकनी (Clay)',
-      'sandy': 'बलुई (Sandy)',
-      'silty': 'गाद (Silty)',
-      'peaty': 'दलदली (Peaty)',
-      'chalky': 'चूनेदार (Chalky)',
-      'Kharif': 'खरीफ',
-      'Rabi': 'रबी',
-      'Zaid': 'जायद',
-      'Low': 'कम',
-      'Medium': 'मध्यम',
-      'High': 'उच्च',
-      'Punjab': 'पंजाब',
-      'Haryana': 'हरियाणा',
-      'Uttar Pradesh': 'उत्तर प्रदेश',
-      'Bihar': 'बिहार',
-      'Madhya Pradesh': 'मध्य प्रदेश',
-      'Maharashtra': 'महाराष्ट्र',
-      'Gujarat': 'गुजरात',
-      'Rajasthan': 'राजस्थान',
-      'Karnataka': 'कर्नाटक',
-      'Andhra Pradesh': 'आंध्र प्रदेश',
-      'Telangana': 'तेलंगाना',
-      'West Bengal': 'पश्चिम बंगाल',
-      'Odisha': 'ओडिशा',
-      'Assam': 'असम',
-      'Tamil Nadu': 'तमिलनाडु'
-    };
-    return hiMap[opt] || opt;
+  const translateOption = (opt, ns = 'crop') => {
+    // Attempt to find in specific namespaces
+    const keys = [
+      `${ns}.soil_types.${opt}`,
+      `${ns}.seasons.${opt}`,
+      `${ns}.levels.${opt.toLowerCase()}`,
+      `auth.${opt.toLowerCase()}`,
+      `common.${opt.toLowerCase()}`
+    ];
+    
+    for (const key of keys) {
+      const val = t(key);
+      if (val !== key) return val;
+    }
+    return t(opt, opt); // Fallback to literal
   };
 
   const [form, setForm] = useState({
@@ -144,7 +127,7 @@ export default function CropAdvisor() {
               <Trash2 size={16} /> <span className="hidden sm:inline">{t('crop.clear_result')}</span>
             </button>
           )}
-          <button onClick={() => window.location.reload()} className="btn-icon bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-sm" title="Refresh">
+          <button onClick={() => window.location.reload()} className="btn-icon bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-sm" title={t('dashboard.labels.refresh', 'Refresh')}>
             <RefreshCw size={16} className="text-gray-600 dark:text-slate-400" />
           </button>
         </div>
@@ -153,7 +136,7 @@ export default function CropAdvisor() {
       <div className="grid lg:grid-cols-2 gap-8">
         {/* Form */}
         <div className="card shadow-xl border-none bg-white dark:bg-slate-900">
-          <h2 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-6">{t('dashboard.labels.details', 'Provide field details')}</h2>
+          <h2 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-6">{t('market.live_mandi_desc', 'Provide field details')}</h2>
           <div className="space-y-5">
             <div className="grid grid-cols-2 gap-4">
               <Select label={t('crop.soil_type')} value={form.soilType} onChange={v => set('soilType', v)} options={SOIL_TYPES} />
@@ -170,7 +153,7 @@ export default function CropAdvisor() {
             </div>
             <NumberInput label={t('crop.rainfall')} value={form.rainfall} onChange={v => set('rainfall', v)} min={0} max={3000} unit="mm" />
             <div className="pt-2">
-              <label className="label text-xs font-black uppercase tracking-widest text-gray-400 mb-3 block">Soil Nutrients (N-P-K)</label>
+              <label className="label text-xs font-black uppercase tracking-widest text-gray-400 mb-3 block">{t('crop.soil_nutrients', 'Soil Nutrients (N-P-K)')}</label>
               <div className="grid grid-cols-3 gap-3">
                 {['nitrogen','phosphorus','potassium'].map(k => (
                   <div key={k} className="space-y-2">
@@ -190,7 +173,7 @@ export default function CropAdvisor() {
             </div>
           </div>
           <button onClick={handleSubmit} disabled={loading} className="btn-primary w-full h-14 rounded-2xl justify-center mt-8 text-base font-bold shadow-lg shadow-primary/20 active:scale-[0.98]">
-            {loading ? <><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" /> <span>Thinking...</span></> : <><Sparkles size={18} className="mr-2" /><span>{t('crop.recommend_btn')}</span></>}
+            {loading ? <><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" /> <span>{t('crop.thinking', 'Thinking...')}</span></> : <><Sparkles size={18} className="mr-2" /><span>{t('crop.recommend_btn')}</span></>}
           </button>
         </div>
 
@@ -204,21 +187,21 @@ export default function CropAdvisor() {
                    <img src={cropsImg} alt="Healthy crops" className="w-full h-full object-cover" />
                    <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-slate-900 via-transparent to-transparent" />
                    <div className="absolute top-4 left-4">
-                      <div className="badge-verified bg-white/20 text-white border-white/30 backdrop-blur-md">Scientific Recommendation</div>
+                      <div className="badge-verified bg-white/20 text-white border-white/30 backdrop-blur-md">{t('crop.scientific_rec', 'Scientific Recommendation')}</div>
                    </div>
                 </div>
 
                 <div className="p-8 pt-0 relative z-10">
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">Recommended Primary Crop</p>
+                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">{t('crop.primary_crop_title', 'Recommended Primary Crop')}</p>
                       <h3 className="text-5xl font-black text-primary tracking-tighter leading-none">{result.primaryCrop}</h3>
                     </div>
-                    {result.isFallback && <span className="badge badge-yellow">Historical Model</span>}
+                    {result.isFallback && <span className="badge badge-yellow">{t('crop.historical_model', 'Historical Model')}</span>}
                   </div>
                   
                   <div className="flex flex-wrap gap-2 mb-8">
-                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest mr-2 py-1">Alternatives:</span>
+                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest mr-2 py-1">{t('crop.alternatives_label', 'Alternatives:')}</span>
                     {result.alternativeCrops?.map(c => (
                       <span key={c} className="px-3 py-1 bg-gray-50 dark:bg-slate-800 rounded-full text-[10px] font-black text-gray-600 dark:text-slate-400 border border-gray-200 dark:border-white/5">{c}</span>
                     ))}
@@ -229,7 +212,7 @@ export default function CropAdvisor() {
                       { icon: '🌱', label: t('crop.sowing_time'), val: result.sowingTime },
                       { icon: '🌾', label: t('crop.harvest_time'), val: result.harvestTime },
                       { icon: '💧', label: t('crop.water_req'), val: result.waterRequirement },
-                      { icon: '📦', label: t('crop.expected_yield'), val: result.expectedYield || 'High' }
+                      { icon: '📦', label: t('crop.expected_yield'), val: result.expectedYield || t('crop.high', 'High') }
                     ].map((item, idx) => (
                       <div key={idx} className="bg-gray-50 dark:bg-black/20 p-4 rounded-2xl border border-gray-100 dark:border-white/5">
                         <p className="text-gray-400 text-[9px] font-black uppercase mb-1 tracking-widest whitespace-nowrap">{item.icon} {item.label}</p>
@@ -272,8 +255,8 @@ export default function CropAdvisor() {
           ) : (
             <div className="card flex flex-col items-center justify-center py-20 text-center bg-gray-50 dark:bg-slate-900/50 border-dashed border-2">
               <div className="w-20 h-20 bg-white dark:bg-slate-800 rounded-3xl shadow-sm flex items-center justify-center text-4xl mb-6 animate-bounce-sm">🌱</div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white">Get AI Recommendation</h3>
-              <p className="text-sm text-gray-400 dark:text-slate-500 mt-2 max-w-xs mx-auto font-medium">Fill in the details to see the best crops for your region.</p>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white">{t('crop.get_ai_rec', 'Get AI Recommendation')}</h3>
+              <p className="text-sm text-gray-400 dark:text-slate-500 mt-2 max-w-xs mx-auto font-medium">{t('crop.get_ai_rec_desc', 'Fill in the details to see the best crops for your region.')}</p>
             </div>
           )}
 
@@ -282,7 +265,7 @@ export default function CropAdvisor() {
             <div className="card shadow-xl border-none bg-white dark:bg-slate-900 animate-slide-up">
               <h3 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-8 border-b border-gray-100 dark:border-white/5 pb-4 flex items-center gap-2">
                 <Calendar size={14} className="text-primary" />
-                <span>{calendar.crop} — Crop Calendar</span>
+                <span>{calendar.crop} — {t('crop.crop_calendar', 'Crop Calendar')}</span>
               </h3>
               <div className="space-y-6 relative before:absolute before:left-[47px] before:top-2 before:bottom-2 before:w-0.5 before:bg-gray-100 dark:before:bg-slate-800">
                 {calendar.activities?.map((a, i) => (

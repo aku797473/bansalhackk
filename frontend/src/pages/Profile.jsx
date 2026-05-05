@@ -103,7 +103,7 @@ export default function Profile() {
           <User className="text-primary" size={24} />
           {t('nav.profile')}
         </h1>
-        <p className="text-gray-500 dark:text-slate-400 mt-1">Update your personal and farming information</p>
+        <p className="text-gray-500 dark:text-slate-400 mt-1">{t('profile.update_desc', 'Update your personal and farming information')}</p>
       </div>
 
       {/* Profile header card */}
@@ -123,7 +123,7 @@ export default function Profile() {
               onClick={() => fileInputRef.current?.click()}
               className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white gap-1">
               <Camera size={20} />
-              <span className="text-[10px] font-bold">CHANGE</span>
+              <span className="text-[10px] font-bold">{t('profile.change', 'CHANGE')}</span>
             </button>
           </div>
           
@@ -151,7 +151,7 @@ export default function Profile() {
           <p className="text-sm text-gray-500 dark:text-slate-400 font-medium">{user?.email || user?.phone}</p>
           <div className="flex flex-wrap justify-center sm:justify-start gap-2 mt-2">
             <span className="badge badge-green text-xs font-bold py-1 px-3">{t(roleInfo.labelKey)}</span>
-            <span className="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold border border-primary/20 tracking-wider uppercase">Verified</span>
+            <span className="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold border border-primary/20 tracking-wider uppercase">{t('profile.verified', 'Verified')}</span>
           </div>
         </div>
       </div>
@@ -163,7 +163,7 @@ export default function Profile() {
             <div className="p-1.5 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
               <User size={16} />
             </div>
-            <span>{t('auth.register_title', 'Personal Information')}</span>
+            <span>{t('profile.personal_info', 'Personal Information')}</span>
           </h2>
           <div className="space-y-4">
             <div>
@@ -183,7 +183,7 @@ export default function Profile() {
             <div className="p-1.5 rounded-lg bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400">
               <Globe size={16} />
             </div>
-            <span>{t('profile.language', 'Preferred Language')}</span>
+            <span>{t('profile.preferred_lang', 'Preferred Language')}</span>
           </h2>
           <div className="grid grid-cols-1 gap-2">
             {LANGUAGES.map(l => (
@@ -212,21 +212,21 @@ export default function Profile() {
             <div className="p-1.5 rounded-lg bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400">
               <MapPin size={16} />
             </div>
-            <span>{t('labour.district', 'Address Details')}</span>
+            <span>{t('profile.address_details', 'Address Details')}</span>
           </h2>
           <div className="space-y-4">
             <div>
-              <label className="label">{t('labour.village', 'Village / Town')}</label>
-              <input className="input" placeholder="Enter village name" value={form.location.village} onChange={e => setL('village', e.target.value)} />
+              <label className="label">{t('profile.village_town', 'Village / Town')}</label>
+              <input className="input" placeholder={t('profile.village_placeholder', 'Enter village name')} value={form.location.village} onChange={e => setL('village', e.target.value)} />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="label">{t('labour.district')}</label>
-                <input className="input" placeholder="District" value={form.location.district} onChange={e => setL('district', e.target.value)} />
+                <label className="label">{t('profile.district', 'District')}</label>
+                <input className="input" placeholder={t('profile.district', 'District')} value={form.location.district} onChange={e => setL('district', e.target.value)} />
               </div>
               <div>
-                <label className="label">{t('labour.pincode', 'Pincode')}</label>
-                <input className="input" placeholder="000000" value={form.location.pincode} onChange={e => setL('pincode', e.target.value)} />
+                <label className="label">{t('profile.pincode', 'Pincode')}</label>
+                <input className="input" placeholder={t('profile.pincode_placeholder', '000000')} value={form.location.pincode} onChange={e => setL('pincode', e.target.value)} />
               </div>
             </div>
             <div>
@@ -245,12 +245,12 @@ export default function Profile() {
             <div className="p-1.5 rounded-lg bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400">
               <Tractor size={16} />
             </div>
-            <span>{t('crop.title', 'Farm Information')}</span>
+            <span>{t('profile.farm_info', 'Farm Information')}</span>
           </h2>
           <div className="space-y-4">
             <div>
-              <label className="label">{t('crop.land_area', 'Land Area (Acres)')}</label>
-              <input className="input" type="number" min={0} placeholder="e.g. 5" value={form.farmDetails.landArea} onChange={e => setF('landArea', e.target.value)} />
+              <label className="label">{t('profile.land_area', 'Land Area (Acres)')}</label>
+              <input className="input" type="number" min={0} placeholder={t('profile.land_area_placeholder', 'e.g. 5')} value={form.farmDetails.landArea} onChange={e => setF('landArea', e.target.value)} />
             </div>
             <div>
               <label className="label">{t('crop.soil_type')}</label>
@@ -259,7 +259,7 @@ export default function Profile() {
               </select>
             </div>
             <div>
-              <label className="label">{t('crop.irrigation', 'Irrigation System')}</label>
+              <label className="label">{t('profile.irrigation_system', 'Irrigation System')}</label>
               <select className="input" value={form.farmDetails.irrigation} onChange={e => setF('irrigation', e.target.value)}>
                 {IRRIGATION.map(i => <option key={i} value={i}>{i}</option>)}
               </select>
@@ -275,11 +275,11 @@ export default function Profile() {
           disabled={saving} 
           className="btn-primary flex-1 justify-center py-4 rounded-2xl shadow-lg hover:shadow-xl active:scale-[0.98] transition-all">
           {saved ? (
-            <span className="flex items-center gap-2 animate-bounce-sm"><CheckCircle size={20} /> SAVED!</span>
+            <span className="flex items-center gap-2 animate-bounce-sm"><CheckCircle size={20} /> {t('profile.saved', 'SAVED!')}</span>
           ) : saving ? (
             <span className="flex items-center gap-2">
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              SAVING...
+              {t('profile.saving', 'SAVING...')}
             </span>
           ) : (
             <span className="flex items-center gap-2 font-bold"><Save size={20} /> {t('common.save')}</span>

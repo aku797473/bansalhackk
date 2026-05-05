@@ -66,9 +66,9 @@ export default function Schemes() {
                 </h2>
                 <div className="flex flex-wrap gap-2 mb-4">
                   <span className="px-2.5 py-1 text-[10px] font-black uppercase tracking-widest rounded-lg bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/50">
-                    {scheme.benefit}
+                    {lang === 'hi' ? (scheme.benefitHi || scheme.benefit) : scheme.benefit}
                   </span>
-                  {scheme.tags.map(t => (
+                  {(lang === 'hi' ? (scheme.tagsHi || scheme.tags) : scheme.tags).map(t => (
                     <span key={t} className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest rounded-lg bg-gray-50 dark:bg-slate-800 text-gray-500 dark:text-slate-400 border border-gray-100 dark:border-slate-700">
                       {t}
                     </span>

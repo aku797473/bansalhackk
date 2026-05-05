@@ -80,11 +80,11 @@ export default function Weather() {
 
       {/* Search */}
       <div className="flex gap-2 mb-6">
-        <input className="input flex-1" placeholder={t('market.search', 'Search city...')}
+        <input className="input flex-1" placeholder={t('market.search')}
           value={citySearch} onChange={e => setCitySearch(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && searchCity()} />
         <button onClick={searchCity} disabled={searching} className="btn-primary">
-          {searching ? '...' : t('common.submit', 'Search')}
+          {searching ? '...' : t('common.submit')}
         </button>
       </div>
 
@@ -118,7 +118,7 @@ export default function Weather() {
                     <p className="text-xl font-bold text-sky-100 capitalize mt-2 flex items-center gap-2">
                        {data.description} 
                        <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                       <span className="text-xs uppercase tracking-widest opacity-70">Real-Time Data</span>
+                       <span className="text-xs uppercase tracking-widest opacity-70">{t('weather.real_time')}</span>
                     </p>
                   </div>
                 </div>
@@ -148,7 +148,7 @@ export default function Weather() {
           {data.forecast?.length > 0 && (
             <div className="mb-8">
               <h2 className="text-xl font-black text-gray-900 dark:text-white mb-5 flex items-center gap-2">
-                7-Day Outlook <Calendar className="text-primary" />
+                {t('weather.outlook')} <Calendar className="text-primary" />
               </h2>
               <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-none snap-x">
                 {data.forecast.map((day, i) => (
@@ -157,7 +157,7 @@ export default function Weather() {
                     i === 0 ? 'border-primary shadow-lg bg-emerald-50/50 dark:bg-emerald-900/10' : 'border-gray-100 dark:border-white/5'
                   )}>
                     <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">
-                      {i === 0 ? t('common.today', 'Today') : new Date(day.date).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric' })}
+                      {i === 0 ? t('common.today') : new Date(day.date).toLocaleDateString(i18n.language === 'hi' ? 'hi-IN' : 'en-IN', { weekday: 'short', day: 'numeric' })}
                     </p>
                     <span className="text-4xl block mb-4 drop-shadow-sm">{getEmoji(day.icon)}</span>
                     <p className="text-2xl font-black text-gray-900 dark:text-white leading-none mb-1">{day.tempMax}°</p>
@@ -175,17 +175,15 @@ export default function Weather() {
           <div className="card bg-white dark:bg-slate-900 border-2 border-emerald-100 dark:border-emerald-900/30 overflow-hidden shadow-xl p-0">
             <div className="bg-emerald-50 dark:bg-emerald-900/20 p-5 border-b border-emerald-100 dark:border-emerald-900/30 flex items-center justify-between">
                <h3 className="font-black text-emerald-800 dark:text-emerald-400 uppercase tracking-widest text-xs flex items-center gap-2">
-                 <ShieldCheck size={18} /> Verified Farming Advisory
+                 <ShieldCheck size={18} /> {t('weather.advisory_title')}
                </h3>
-               <span className="text-[10px] font-black text-emerald-600 uppercase">Updated: {new Date().toLocaleTimeString()}</span>
+               <span className="text-[10px] font-black text-emerald-600 uppercase">{t('weather.updated')}: {new Date().toLocaleTimeString()}</span>
             </div>
             
             <div className="p-6 grid sm:grid-cols-2 gap-4">
                {[
-                 { label: 'Safe for Spraying', check: data.windSpeed < 20, desc: 'Avoid if wind > 20km/h' },
-                 { label: 'Optimal for Sowing', check: data.humidity > 40 && data.humidity < 70, desc: 'Ideal humidity 40-70%' },
-                 { label: 'Irrigation Required', check: data.temperature > 35, desc: 'High evapotranspiration' },
-                 { label: 'Risk of Fungal Attack', check: data.humidity > 85, desc: 'Watch for pests' }
+                 { label: t('weather.irrigation_req', 'Irrigation Required'), check: data.temperature > 35, desc: t('weather.temp_tip', 'High evapotranspiration') },
+                 { label: t('weather.fungal_risk', 'Risk of Fungal Attack'), check: data.humidity > 85, desc: t('weather.pest_tip', 'Watch for pests') }
                ].map((item, idx) => (
                  <div key={idx} className={clsx(
                    'p-4 rounded-2xl border flex items-center gap-4 transition-all',
@@ -203,7 +201,7 @@ export default function Weather() {
             </div>
             
             <div className="p-4 bg-gray-50 dark:bg-slate-800/50 border-t border-gray-100 dark:border-slate-800 flex items-center justify-center gap-2 text-[10px] font-bold text-gray-400">
-               <Info size={12} /> Advisory generated based on local IMD environmental data.
+               <Info size={12} /> {t('weather.advisory_disclaimer')}
             </div>
           </div>
         </>

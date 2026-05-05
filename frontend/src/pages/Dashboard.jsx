@@ -120,7 +120,7 @@ export default function Dashboard() {
           icon: '💰',
           trend: `${trendVal > 0 ? '+' : ''}${trendVal}%`,
           up: trendVal >= 0,
-          sub: 'Wheat today'
+          sub: t('dashboard.labels.wheat_today', 'Wheat today')
         });
       }
 
@@ -143,7 +143,7 @@ export default function Dashboard() {
           label: t('weather.temp', 'Temperature'),
           value: `${Math.round(weather.temperature)}°C`,
           icon: '🌡️',
-          trend: weather.temperature > 30 ? 'High' : 'Normal',
+          trend: weather.temperature > 30 ? t('dashboard.trends.high', 'High') : t('dashboard.trends.normal', 'Normal'),
           up: weather.temperature < 35,
           sub: weather.city
         });
@@ -154,7 +154,7 @@ export default function Dashboard() {
           icon: '💧',
           trend: '-2%',
           up: false,
-          sub: 'Air Humidity'
+          sub: t('dashboard.labels.air_humidity', 'Air Humidity')
         });
       }
       return newStats;
@@ -181,9 +181,9 @@ export default function Dashboard() {
         </div>
         <div className="flex items-center gap-3">
           <div className="badge-verified">
-             <CheckCircle2 size={10} /> Verified Data
+             <CheckCircle2 size={10} /> {t('dashboard.labels.verified_data')}
           </div>
-          <button onClick={() => window.location.reload()} className="btn-icon bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-sm" title="Refresh">
+          <button onClick={() => window.location.reload()} className="btn-icon bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-sm" title={t('dashboard.labels.refresh')}>
             <RefreshCw size={16} className="text-gray-600 dark:text-slate-400" />
           </button>
         </div>
@@ -237,7 +237,7 @@ export default function Dashboard() {
                 className="flex items-center gap-2 bg-white text-primary hover:bg-emerald-50 font-bold px-6 py-3 rounded-2xl transition-all shadow-md active:scale-95">
                 {t('dashboard.labels.details')} <ArrowRight size={18} />
               </button>
-              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-emerald-100/60">Source: OpenWeather • Live via IMD</p>
+              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-emerald-100/60">{t('dashboard.labels.source_weather')}</p>
             </div>
           </div>
         </div>
@@ -281,7 +281,7 @@ export default function Dashboard() {
                   {s.trend}
                 </span>
                 {s.label === t('dashboard.stats.market_price') && (
-                  <span className="text-[8px] font-black uppercase text-gray-400 tracking-widest">Source: Agmarknet</span>
+                  <span className="text-[8px] font-black uppercase text-gray-400 tracking-widest">{t('dashboard.labels.source_agmarknet')}</span>
                 )}
               </div>
             </div>

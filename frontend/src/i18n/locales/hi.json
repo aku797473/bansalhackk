@@ -1,128 +1,223 @@
 {
   "nav": {
-    "home": "होम", "weather": "मौसम", "crop": "फसल सलाह",
-    "fertilizer": "उर्वरक", "market": "बाजार भाव",
-    "labour": "मजदूर", "map": "नक्शा", "profile": "प्रोफाइल", "logout": "लॉगआउट",
+    "home": "होम", "weather": "मौसम", "crop": "फसल सलाहकार",
+    "fertilizer": "उर्वरक", "market": "मंडी भाव",
+    "labour": "श्रमिक", "map": "नक्शा", "profile": "प्रोफाइल", "logout": "लॉगआउट",
     "news": "समाचार", "schemes": "योजनाएं"
   },
   "landing": {
     "hero_title": "आपका डिजिटल खेती साथी",
-    "hero_sub": "AI-आधारित फसल सलाह, रियल-टाइम मौसम अलर्ट, और बाजार भाव — सब एक जगह।",
+    "hero_sub": "AI आधारित फसल सलाह, लाइव मौसम अलर्ट और मंडी भाव — सब एक ही जगह पर।",
     "get_started": "शुरू करें", "learn_more": "और जानें",
-    "features_title": "किसान को चाहिए सब कुछ",
-    "feat_weather": "मौसम अलर्ट", "feat_weather_desc": "आपके क्षेत्र के लिए रियल-टाइम अलर्ट",
+    "features_title": "किसान की हर ज़रूरत यहाँ",
+    "feat_weather": "मौसम अलर्ट", "feat_weather_desc": "आपके स्थान के लिए सटीक मौसम सूचना",
     "feat_crop": "फसल AI", "feat_crop_desc": "मिट्टी और मौसम के आधार पर स्मार्ट सलाह",
-    "feat_fertilizer": "उर्वरक विश्लेषण", "feat_fertilizer_desc": "फोटो अपलोड करें और कमियां जानें",
-    "feat_market": "बाजार भाव", "feat_market_desc": "500+ मंडियों से लाइव भाव",
-    "feat_labour": "मजदूर बाजार", "feat_labour_desc": "कृषि मजदूर खोजें या काम पोस्ट करें",
-    "feat_chat": "AI चैटबॉट", "feat_chat_desc": "हिंदी में खेती का कोई भी सवाल पूछें"
+    "feat_fertilizer": "उर्वरक विश्लेषण", "feat_fertilizer_desc": "फोटो अपलोड करें और कमियों का पता लगाएं",
+    "feat_market": "मंडी भाव", "feat_market_desc": "500+ मंडियों से लाइव भाव",
+    "feat_labour": "श्रमिक बाजार", "feat_labour_desc": "खेती के लिए श्रमिक खोजें या काम दें",
+    "feat_chat": "AI चैटबॉट", "feat_chat_desc": "खेती का कोई भी सवाल हिंदी में पूछें",
+    "v2": "v2.0",
+    "login": "लॉगिन",
+    "get_started_btn": "शुरू करें",
+    "official_partners": "आधिकारिक डेटा पार्टनर: एगमार्कनेट और आईएमडी",
+    "empowering": "किसानों को <span class=\"text-primary\">रियल-टाइम</span> डेटा और AI के साथ सशक्त बनाना",
+    "hero_desc": "सटीक मंडी भाव, मौसम की सलाह और फसल विश्लेषण प्राप्त करें — सीधे आधिकारिक स्रोतों से आपके स्मार्टफोन पर।",
+    "trusted_by": "भरोसेमंद और समर्थित",
+    "platform_ecosystem": "प्लेटफॉर्म इकोसिस्टम",
+    "unified_dashboard": "आपकी खेती के चक्र को बेहतर बनाने के लिए AI-संचालित स्मार्ट उपकरण — सब एक ही डैशबोर्ड में।",
+    "explore_module": "मॉड्यूल देखें",
+    "verified": "सत्यापित",
+    "simple_workflow": "सरल कार्यप्रवाह",
+    "steps_title": "3 आसान चरणों में शुरू करें",
+    "steps": {
+      "01": { "title": "पंजीकरण", "desc": "2 मिनट में अपना मुफ्त खाता बनाएं" },
+      "02": { "title": "जानकारी पाएं", "desc": "मौसम, भाव, फसल सलाह सब एक जगह" },
+      "03": { "title": "खेती बढ़ाएं", "desc": "AI की मदद से बेहतर निर्णय लें" }
+    },
+    "step_label": "चरण",
+    "success_stories": "सफलता की कहानियां",
+    "farmer_stories": "किसानों की बातें",
+    "start_free": "आज ही शुरू करें — बिल्कुल मुफ्त",
+    "join_millions": "लाखों किसानों से जुड़ें और अपनी पारंपरिक खेती को डेटा-आधारित स्मार्ट व्यवसाय में बदलें।",
+    "secure": "सुरक्षित",
+    "fast_setup": "तेज़ सेटअप",
+    "free_forever": "हमेशा के लिए मुफ्त",
+    "footer_tag": "© 2025 स्मार्ट किसान — किसानों के लिए, किसानों द्वारा। भारत में ❤️ के साथ निर्मित"
   },
   "auth": {
     "login_title": "स्मार्ट किसान में आपका स्वागत है",
-    "login_subtitle": "अपने अकाउंट में लॉगिन करें",
+    "login_subtitle": "अपने खाते में लॉगिन करें",
     "register_title": "स्मार्ट किसान से जुड़ें",
-    "register_subtitle": "अपना खेती अकाउंट बनाएं",
-    "email_label": "ईमेल एड्रेस",
+    "register_subtitle": "अपना किसान खाता बनाएं",
+    "email_label": "ईमेल पता",
     "email_placeholder": "email@example.com",
     "password_label": "पासवर्ड",
     "password_placeholder": "••••••••",
     "name_label": "पूरा नाम",
     "name_placeholder": "आपका नाम",
     "login_btn": "लॉगिन",
-    "register_btn": "अकाउंट बनाएं",
-    "switch_register": "अकाउंट नहीं है? रजिस्टर करें",
-    "switch_login": "पहले से अकाउंट है? लॉगिन करें",
-    "select_role": "मैं हूँ एक",
-    "farmer": "किसान", "buyer": "खरीदार", "labour": "मजदूर", "admin": "एडमिन",
-    "farmer_desc": "मैं फसल उगाता हूँ", "buyer_desc": "मैं उपज खरीदता हूँ", "labour_desc": "मैं काम प्रदान करता हूँ"
+    "register_btn": "खाता बनाएं",
+    "switch_register": "खाता नहीं है? रजिस्टर करें",
+    "switch_login": "पहले से खाता है? लॉगिन करें",
+    "select_role": "मैं एक हूँ",
+    "farmer": "किसान", "buyer": "खरीदार", "labour": "श्रमिक", "admin": "एडमिन",
+    "farmer_desc": "मैं फसल उगाता हूँ", "buyer_desc": "मैं फसल खरीदता हूँ", "labour_desc": "मैं काम देता हूँ"
   },
   "dashboard": {
     "greeting_morning": "सुप्रभात",
-    "greeting_afternoon": "नमस्ते",
+    "greeting_afternoon": "नमस्कार",
     "greeting_evening": "शुभ संध्या",
-    "welcome": "वापसी पर स्वागत है",
+    "welcome": "आपका स्वागत है",
     "weather_title": "आज का मौसम",
-    "quick_actions": "त्वरित क्रियाएं",
+    "quick_actions": "त्वरित कार्य",
     "recent_alerts": "हाल के अलर्ट",
-    "tips": "खेती के टिप्स",
+    "tips": "खेती के नुस्खे",
     "stats": {
-      "crop_health": "फसल स्वास्थ्य",
-      "market_price": "बाजार भाव",
+      "crop_health": "फसल का स्वास्थ्य",
+      "market_price": "मंडी भाव",
       "moisture": "नमी",
-      "labour": "मजदूर"
+      "labour": "श्रमिक"
     },
     "labels": {
       "live_forecast": "लाइव पूर्वानुमान",
-      "ai_powered": "AI संचालित",
-      "mandi_rates": "मंडी दरें",
+      "ai_powered": "AI द्वारा संचालित",
+      "mandi_rates": "मंडी के भाव",
       "soil_analysis": "मिट्टी विश्लेषण",
-      "hire_workers": "मजदूर काम पर रखें",
+      "hire_workers": "श्रमिक खोजें",
       "smart_map": "स्मार्ट मैप",
       "details": "विवरण",
-      "vs_last_week": "पिछले हफ्ते की तुलना में",
-      "available_now": "अभी उपलब्ध"
+      "vs_last_week": "पिछले सप्ताह की तुलना में",
+      "available_now": "अभी उपलब्ध है",
+      "verified_data": "सत्यापित डेटा",
+      "refresh": "ताज़ा करें",
+      "wheat_today": "आज का गेहूं",
+      "air_humidity": "हवा की नमी",
+      "source_agmarknet": "स्रोत: एगमार्कनेट",
+      "source_weather": "स्रोत: ओपनवेदर • आईएमडी के माध्यम से लाइव"
+    },
+    "trends": {
+      "high": "उच्च",
+      "normal": "सामान्य"
     },
     "alerts": {
-      "pm_kisan": "नई पीएम-किसान किस्त जमा हुई",
-      "locust": "पड़ोसी जिले में टिड्डियों की चेतावनी",
-      "wheat_price": "आज गेहूं के भाव में 5% की वृद्धि",
+      "pm_kisan": "पीएम-किसान की नई किस्त जमा हुई",
+      "locust": "पड़ोसी जिले में टिड्डी दल की चेतावनी",
+      "wheat_price": "आज गेहूं के भाव 5% बढ़ गए",
       "view_details": "विवरण देखें",
       "see_alert": "अलर्ट देखें",
       "check_mandi": "मंडी देखें"
     },
     "farming_tips": {
       "soil_health_title": "मिट्टी का स्वास्थ्य",
-      "soil_health_body": "उर्वरक उपयोग को अनुकूलित करने और लागत बचाने के लिए हर 2 साल में अपनी मिट्टी का परीक्षण करें।",
-      "watering_title": "सिंचाई की सलाह",
-      "watering_body": "सुबह जल्दी सिंचाई करने से वाष्पीकरण कम होता है और फंगल विकास रुकता है।"
+      "soil_health_body": "उर्वरक के उपयोग को अनुकूलित करने और लागत बचाने के लिए हर 2 साल में अपनी मिट्टी का परीक्षण करें।",
+      "watering_title": "सिंचाई का नुस्खा",
+      "watering_body": "सुबह जल्दी सिंचाई करने से वाष्पीकरण कम होता है और फंगल रोगों से बचाव होता है।"
     }
   },
   "weather": {
-    "title": "मौसम पूर्वानुमान",
+    "title": "मौसम का पूर्वानुमान",
     "current": "वर्तमान मौसम",
-    "forecast": "5 दिन का पूर्वानुमान",
-    "humidity": "आर्द्रता",
+    "forecast": "5-दिन का पूर्वानुमान",
+    "humidity": "नमी",
     "wind": "हवा की गति",
-    "feels_like": "महसूस होता है",
+    "feels_like": "ऐसा महसूस होता है",
     "alerts": "मौसम अलर्ट",
-    "no_alerts": "कोई गंभीर अलर्ट नहीं"
+    "no_alerts": "कोई गंभीर चेतावनी नहीं",
+    "outlook": "7-दिवसीय दृष्टिकोण",
+    "advisory_title": "सत्यापित कृषि सलाह",
+    "real_time": "रियल-टाइम डेटा",
+    "updated": "अपडेट किया गया",
+    "safe_spraying": "छिड़काव के लिए सुरक्षित",
+    "optimal_sowing": "बुवाई के लिए उपयुक्त",
+    "irrigation_req": "सिंचाई की आवश्यकता",
+    "fungal_risk": "कवक (Fungal) हमले का खतरा",
+    "wind_tip": "यदि हवा > 20km/h हो तो बचें",
+    "humidity_tip": "आदर्श नमी 40-70%",
+    "temp_tip": "उच्च वाष्पोत्सर्जन (Evapotranspiration)",
+    "pest_tip": "कीटों पर नज़र रखें",
+    "advisory_disclaimer": "स्थानीय आईएमडी पर्यावरणीय डेटा के आधार पर उत्पन्न सलाह।"
   },
   "crop": {
     "title": "फसल सलाहकार",
-    "subtitle": "AI-आधारित फसल अनुशंसाएं प्राप्त करें",
-    "soil_type": "मिट्टी का प्रकार", "season": "मौसम", "state": "राज्य",
-    "rainfall": "वार्षिक वर्षा (मिमी)", "temperature": "तापमान (°C)",
+    "subtitle": "AI आधारित फसल अनुशंसा प्राप्त करें",
+    "soil_type": "मिट्टी का प्रकार", "season": "सीजन", "state": "राज्य",
+    "rainfall": "वार्षिक वर्षा (mm)", "temperature": "तापमान (°C)",
     "nitrogen": "नाइट्रोजन स्तर", "phosphorus": "फास्फोरस स्तर", "potassium": "पोटेशियम स्तर",
-    "recommend_btn": "अनुशंसा प्राप्त करें",
+    "recommend_btn": "सलाह प्राप्त करें",
     "primary_crop": "अनुशंसित फसल",
     "alternatives": "वैकल्पिक फसलें",
     "sowing_time": "बुवाई का समय",
     "harvest_time": "कटाई का समय",
     "water_req": "पानी की आवश्यकता",
     "fertilizers": "सुझाए गए उर्वरक",
-    "tips": "खेती के टिप्स",
+    "tips": "खेती के नुस्खे",
     "district_label": "जिला",
     "district_placeholder": "जिले का नाम दर्ज करें",
     "expected_yield": "अपेक्षित उपज",
     "clear_result": "परिणाम साफ़ करें",
     "view_calendar": "फसल कैलेंडर देखें",
-    "states": {
-      "Punjab": "पंजाब", "Haryana": "हरियाणा", "Uttar Pradesh": "उत्तर प्रदेश",
-      "Bihar": "बिहार", "Madhya Pradesh": "मध्य प्रदेश", "Maharashtra": "महाराष्ट्र",
-      "Gujarat": "गुजरात", "Rajasthan": "राजस्थान", "Karnataka": "कर्नाटक",
-      "Andhra Pradesh": "आंध्र प्रदेश", "Telangana": "तेलंगाना", "West Bengal": "पश्चिम बंगाल",
-      "Odisha": "ओडिशा", "Assam": "असम", "Tamil Nadu": "तमिलनाडु"
+    "thinking": "सोच रहा हूँ...",
+    "scientific_rec": "वैज्ञानिक अनुशंसा",
+    "primary_crop_title": "अनुशंसित मुख्य फसल",
+    "historical_model": "ऐतिहासिक मॉडल",
+    "alternatives_label": "विकल्प:",
+    "high": "उच्च",
+    "get_ai_rec": "AI सलाह प्राप्त करें",
+    "get_ai_rec_desc": "अपने क्षेत्र के लिए सर्वोत्तम फसलें देखने के लिए विवरण भरें।",
+    "crop_calendar": "फसल कैलेंडर",
+    "soil_nutrients": "मिट्टी के पोषक तत्व (N-P-K)",
+    "levels": {
+      "low": "कम",
+      "medium": "मध्यम",
+      "high": "उच्च"
+    },
+    "soil_types": {
+      "loamy": "दोमट (Loamy)",
+      "clay": "चिकनी (Clay)",
+      "sandy": "बलुई (Sandy)",
+      "silty": "गाद (Silty)",
+      "peaty": "दलदली (Peaty)",
+      "chalky": "चूनेदार (Chalky)"
+    },
+    "seasons": {
+      "Kharif": "खरीफ",
+      "Rabi": "रबी",
+      "Zaid": "जायद"
     }
   },
   "fertilizer": {
     "title": "उर्वरक और रोग पहचान",
-    "subtitle": "अपनी फसल की पत्तियों की फोटो अपलोड करें",
-    "upload_label": "यहाँ फोटो डालें या क्लिक करें",
-    "analyze_btn": "विश्लेषण करें",
+    "subtitle": "अपनी फसल की पत्तियों का फोटो अपलोड करें",
+    "upload_label": "छवि यहाँ छोड़ें या अपलोड करने के लिए क्लिक करें",
+    "analyze_btn": "छवि का विश्लेषण करें",
     "analyzing": "विश्लेषण हो रहा है...",
     "result_title": "विश्लेषण परिणाम",
     "severity": "गंभीरता", "treatment": "उपचार",
-    "prevention": "रोकथाम", "confidence": "विश्वास"
+    "prevention": "बचाव", "confidence": "भरोसा",
+    "seed_iq": "सीड IQ",
+    "ai_desc": "पौधों, बीजों और रिपोर्टों का AI विश्लेषण",
+    "clear_result": "परिणाम साफ़ करें",
+    "analyzing_sample": "नमूने का विश्लेषण हो रहा है...",
+    "upload_desc": "पौधे, बीज या रिपोर्ट की फोटो अपलोड करें",
+    "file_limits": "JPG, PNG, WEBP, PDF — अधिकतम 10MB",
+    "remove": "हटाएं",
+    "analyze_health": "स्वास्थ्य / किस्म का विश्लेषण करें",
+    "recent_reports": "हाल की रिपोर्ट",
+    "no_history": "अभी तक कोई इतिहास नहीं",
+    "unknown_analysis": "अज्ञात विश्लेषण",
+    "certificate_title": "मिट्टी स्वास्थ्य प्रमाण पत्र",
+    "sample_id": "नमूना ID",
+    "ai_verified": "AI द्वारा सत्यापित",
+    "generating_pdf": "मिट्टी स्वास्थ्य रिपोर्ट तैयार की जा रही है...",
+    "export_pdf": "PDF निर्यात करें",
+    "diagnosis": "रोग की पहचान",
+    "confidence_score": "सटीकता स्कोर",
+    "expert_advice": "विशेषज्ञ की सलाह",
+    "health_status": "स्वास्थ्य स्थिति",
+    "verified_advisory": "वैज्ञानिक रूप से सत्यापित सलाह",
+    "advisory_guidance": "यह रिपोर्ट मार्गदर्शन के लिए AI द्वारा तैयार की गई है।",
+    "select_for_report": "विस्तृत रिपोर्ट के लिए एक छवि चुनें",
+    "upload_instruction": "बाईं ओर एक छवि अपलोड करें या पिछला विश्लेषण देखने के लिए इतिहास का उपयोग करें।"
   },
   "market": {
     "title": "बाजार भाव",
@@ -155,6 +250,32 @@
       "description": "बेहतर समझ के लिए विवरण स्पष्ट रखें।",
       "photo": "फोटो जोड़ने से प्रतिक्रिया दर 2 गुना बढ़ जाती है।"
     },
+    "fallback": {
+      "wheat": {
+        "title": "गेहूं की कटाई के लिए मजदूरों की जरूरत",
+        "desc": "गेहूं की कटाई के लिए 10 मजदूरों की तलाश है। 5 दिन का काम।"
+      },
+      "soybean": {
+        "title": "सोयाबीन की बुवाई के लिए सहायता",
+        "desc": "20 एकड़ जमीन के लिए विशेषज्ञ बुवाई मजदूरों की जरूरत है।"
+      },
+      "sugarcane": {
+        "title": "गन्ना कटाई टीम",
+        "desc": "गन्ना कटाई और परिवहन के लिए एक टीम की आवश्यकता है।"
+      },
+      "irrigation": {
+        "title": "सिंचाई सेटअप श्रमिक",
+        "desc": "ड्रिप सिंचाई प्रणाली स्थापित करने के लिए श्रमिकों की आवश्यकता है।"
+      },
+      "potato": {
+        "title": "आलू छंटाई और पैकिंग",
+        "desc": "कोल्ड स्टोरेज में आलू की छंटाई और पैकिंग के लिए मजदूर।"
+      },
+      "pesticide": {
+        "title": "कीटनाशक छिड़काव श्रमिक",
+        "desc": "50 एकड़ कपास के खेत में कीटनाशक छिड़काव के लिए श्रमिकों की जरूरत है।"
+      }
+    },
     "guaranteed_wage": "गारंटीकृत मजदूरी",
     "open_positions": "खुले पद",
     "call_details": "विवरण के लिए कॉल करें",
@@ -172,13 +293,24 @@
     "wage_units": {
       "per_day": "प्रति दिन",
       "fixed": "फिक्स्ड"
-    },
-    "placeholders": {
-      "title": "जैसे: कटाई के लिए टीम चाहिए",
-      "phone": "10 अंकों का मोबाइल नंबर",
-      "description": "काम का विस्तार से वर्णन करें...",
-      "district": "जिला दर्ज करें"
     }
+  },
+  "map": {
+    "title": "लाइव फील्ड मैपिंग",
+    "subtitle": "GPS का उपयोग करके अपनी गतिविधि ट्रैक करें और खेत का क्षेत्रफल मापें।",
+    "street": "नक्शा",
+    "satellite": "सैटेलाइट",
+    "tap_tip": "सीमा बिंदु जोड़ने के लिए नक्शे पर टैप करें",
+    "gps_tracking": "GPS ट्रैकिंग",
+    "meters": "मीटर",
+    "stop": "रोकें",
+    "start": "शुरू करें",
+    "area_measurement": "क्षेत्रफल मापन",
+    "total_acres": "कुल एकड़",
+    "hectares": "हेक्टेयर",
+    "sq_meters": "वर्ग मीटर",
+    "points_added": "बिंदु जोड़े गए: {{count}}",
+    "clear_boundary": "सीमा हटाएँ"
   },
   "chat": {
     "title": "किसान मित्र",

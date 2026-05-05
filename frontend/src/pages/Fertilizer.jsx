@@ -105,14 +105,14 @@ export default function Fertilizer() {
         <div>
           <h1 className="page-title flex items-center gap-2">
             <FlaskConical className="text-amber-500" size={22} />
-            <span>{t('fertilizer.title')} & <span className="text-green-600">Seed IQ</span></span>
+            <span>{t('fertilizer.title')} & <span className="text-green-600">{t('fertilizer.seed_iq', 'Seed IQ')}</span></span>
           </h1>
-          <p className="page-subtitle text-gray-500 font-medium">AI analysis for plants, seeds, and reports</p>
+          <p className="page-subtitle text-gray-500 font-medium">{t('fertilizer.ai_desc', 'AI analysis for plants, seeds, and reports')}</p>
         </div>
         <div className="flex items-center gap-2">
           {result && (
             <button onClick={clearActive} className="btn-ghost text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-2">
-              <Trash2 size={16} /> <span className="hidden sm:inline">Clear Result</span>
+              <Trash2 size={16} /> <span className="hidden sm:inline">{t('fertilizer.clear_result', 'Clear Result')}</span>
             </button>
           )}
           <div className="flex items-center gap-2 text-xs font-bold text-gray-500 bg-gray-100 dark:bg-slate-800 px-4 py-2 rounded-xl">
@@ -138,7 +138,7 @@ export default function Fertilizer() {
                       <div className="absolute inset-0 bg-primary/20 backdrop-blur-[2px] rounded-xl overflow-hidden">
                         <div className="absolute top-0 left-0 w-full h-1 bg-primary shadow-[0_0_15px_rgba(21,128,61,0.8)] animate-scan" />
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="bg-white/90 dark:bg-slate-900/90 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-primary shadow-xl">Analyzing Sample...</span>
+                          <span className="bg-white/90 dark:bg-slate-900/90 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-primary shadow-xl">{t('fertilizer.analyzing_sample', 'Analyzing Sample...')}</span>
                         </div>
                       </div>
                     )}
@@ -149,8 +149,8 @@ export default function Fertilizer() {
                     <Upload size={24} className="text-amber-500" />
                     </div>
                     <div>
-                    <p className="text-sm font-medium text-gray-700 dark:text-slate-300">Upload plant, seed, or report photo</p>
-                    <p className="text-[10px] text-gray-400 mt-1">JPG, PNG, WEBP, PDF — max 10MB</p>
+                    <p className="text-sm font-medium text-gray-700 dark:text-slate-300">{t('fertilizer.upload_desc', 'Upload plant, seed, or report photo')}</p>
+                    <p className="text-[10px] text-gray-400 mt-1">{t('fertilizer.file_limits', 'JPG, PNG, WEBP, PDF — max 10MB')}</p>
                     </div>
                 </div>
                 )}
@@ -165,7 +165,7 @@ export default function Fertilizer() {
                 )}
                 <button onClick={analyze} disabled={!file || loading} className="btn-primary flex-[2] justify-center text-xs py-2">
                     {loading ? <RefreshCw size={14} className="animate-spin" /> : <FlaskConical size={14} />}
-                    {loading ? 'Analyzing...' : 'Analyze Health / Variety'}
+                    {loading ? t('fertilizer.analyzing') : t('fertilizer.analyze_health', 'Analyze Health / Variety')}
                 </button>
             </div>
           </div>
@@ -180,7 +180,7 @@ export default function Fertilizer() {
                 {history.length === 0 ? (
                     <div className="p-8 text-center text-gray-400">
                         <History size={24} className="mx-auto mb-2 opacity-20" />
-                        <p className="text-xs italic">{t('common.no_data', 'No history yet')}</p>
+                        <p className="text-xs italic">{t('fertilizer.no_history', 'No history yet')}</p>
                     </div>
                 ) : (
                     <div className="divide-y divide-gray-50 dark:divide-slate-800">
@@ -195,7 +195,7 @@ export default function Fertilizer() {
                                     <FlaskConical size={14} />
                                 </div>
                                 <div className="min-w-0 flex-1">
-                                    <p className="text-xs font-bold text-gray-800 dark:text-white truncate">{item.title}</p>
+                                    <p className="text-xs font-bold text-gray-800 dark:text-white truncate">{t(`market.${item.title}`, item.title)}</p>
                                     <p className="text-[10px] text-gray-500">{new Date(item.date).toLocaleDateString()}</p>
                                 </div>
                                 <button onClick={(e) => deleteHistoryItem(e, item.id)}
@@ -223,17 +223,17 @@ export default function Fertilizer() {
                       <ShieldCheck size={28} />
                     </div>
                     <div>
-                      <h3 className="font-black text-gray-900 dark:text-white uppercase tracking-tighter text-xl">Soil Health Certificate</h3>
-                      <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Sample ID: SK-2026-{Math.floor(Math.random()*9000)+1000} • AI Verified</p>
+                      <h3 className="font-black text-gray-900 dark:text-white uppercase tracking-tighter text-xl">{t('fertilizer.certificate_title', 'Soil Health Certificate')}</h3>
+                      <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">{t('fertilizer.sample_id', 'Sample ID')}: SK-2026-{Math.floor(Math.random()*9000)+1000} • {t('fertilizer.ai_verified', 'AI Verified')}</p>
                     </div>
                   </div>
                   <button 
                     onClick={() => {
-                      toast.success('Generating Soil Health Report...');
+                      toast.success(t('fertilizer.generating_pdf', 'Generating Soil Health Report...'));
                       setTimeout(() => window.print(), 1000);
                     }}
                     className="btn-secondary h-10 px-4 text-[10px] font-black uppercase tracking-widest border-2">
-                    <Download size={14} /> Export PDF
+                    <Download size={14} /> {t('fertilizer.export_pdf', 'Export PDF')}
                   </button>
                 </div>
 
@@ -241,7 +241,7 @@ export default function Fertilizer() {
                   <div className="grid sm:grid-cols-2 gap-8 mb-8">
                     <div className="space-y-4">
                       <div>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Diagnosis</p>
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{t('fertilizer.diagnosis', 'Diagnosis')}</p>
                         <div className="flex items-center gap-3">
                           <span className="text-3xl font-black text-gray-900 dark:text-white">{result.primaryIssue?.deficiency}</span>
                           <span className={clsx('badge-verified', SEVERITY_COLOR[result.primaryIssue?.severity] || 'badge-yellow')}>
@@ -255,7 +255,7 @@ export default function Fertilizer() {
                     </div>
 
                     <div className="flex flex-col items-center justify-center bg-primary/5 rounded-[2.5rem] p-6 border border-primary/10">
-                       <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-2">Confidence Score</p>
+                       <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-2">{t('fertilizer.confidence_score', 'Confidence Score')}</p>
                        <div className="relative w-24 h-24 flex items-center justify-center">
                           <svg className="w-full h-full -rotate-90">
                             <circle cx="48" cy="48" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-gray-200 dark:text-slate-800" />
@@ -289,9 +289,9 @@ export default function Fertilizer() {
               {/* Overall Advice Card */}
               <div className="card bg-gray-900 dark:bg-slate-900 text-white border-none shadow-xl">
                 <div className="flex items-center justify-between mb-4">
-                   <h4 className="font-bold text-gray-300 uppercase text-xs tracking-widest">{t('crop.tips', 'Expert Advice')}</h4>
+                   <h4 className="font-bold text-gray-300 uppercase text-xs tracking-widest">{t('fertilizer.expert_advice', 'Expert Advice')}</h4>
                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] text-gray-400">Health Status:</span>
+                      <span className="text-[10px] text-gray-400">{t('fertilizer.health_status', 'Health Status')}:</span>
                       <span className={clsx(
                         'text-xs font-bold px-2 py-0.5 rounded-full',
                         result.overallHealth === 'Good' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'
@@ -321,17 +321,17 @@ export default function Fertilizer() {
                       <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                          <ShieldCheck size={16} />
                       </div>
-                      <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Scientifically Verified Advisory</p>
+                      <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">{t('fertilizer.verified_advisory', 'Scientifically Verified Advisory')}</p>
                    </div>
-                   <p className="text-[10px] text-gray-400 italic">This report is AI-generated for guidance.</p>
+                   <p className="text-[10px] text-gray-400 italic">{t('fertilizer.advisory_guidance', 'This report is AI-generated for guidance.')}</p>
                 </div>
               </div>
             </div>
           ) : (
             <div className="card h-full flex flex-col items-center justify-center py-32 text-center bg-gray-50 dark:bg-slate-900/50 border-dashed border-2">
               <div className="w-20 h-20 bg-white dark:bg-slate-800 rounded-3xl shadow-sm flex items-center justify-center text-4xl mb-6">🔬</div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white">Select an image for detailed report</h3>
-              <p className="text-sm text-gray-400 dark:text-slate-500 mt-2 max-w-sm mx-auto">Upload an image on the left or use History to see previous analyses.</p>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white">{t('fertilizer.select_for_report', 'Select an image for detailed report')}</h3>
+              <p className="text-sm text-gray-400 dark:text-slate-500 mt-2 max-w-sm mx-auto">{t('fertilizer.upload_instruction', 'Upload an image on the left or use History to see previous analyses.')}</p>
             </div>
           )}
         </div>

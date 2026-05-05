@@ -149,7 +149,7 @@ export default function Login() {
           )}
 
           <div className="mt-8 text-center">
-             <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">{t('auth.secure_by_clerk', 'Secured by Clerk Authentication')}</p>
+             <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">{t('auth.secure_by_clerk', 'Secured by Clerk')}</p>
           </div>
         </div>
       </div>

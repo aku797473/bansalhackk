@@ -10,33 +10,27 @@ import clsx from 'clsx';
 // ─── Fallback seed data shown when API is unreachable ─────────────────────────
 const FALLBACK_JOBS = [
   {
-    _id: 'seed-1', title: 'Wheat Harvesting Workers Needed', description: 'Looking for 10 workers for wheat harvesting. 5 days work.',
-    category: 'harvesting', wage: 500, wageUnit: 'per day', workersNeeded: 10, contactNumber: '9876543210', status: 'open',
+    _id: 'seed-1', key: 'wheat', category: 'harvesting', wage: 500, wageUnit: 'per_day', workersNeeded: 10, contactNumber: '9876543210', status: 'open',
     location: { district: 'Rewa', state: 'Madhya Pradesh' }, createdAt: new Date().toISOString()
   },
   {
-    _id: 'seed-2', title: 'Sowing Help for Soybean', description: 'Expert sowing workers needed for 20 acres land.',
-    category: 'sowing', wage: 450, wageUnit: 'per day', workersNeeded: 5, contactNumber: '9988776655', status: 'open',
+    _id: 'seed-2', key: 'soybean', category: 'sowing', wage: 450, wageUnit: 'per_day', workersNeeded: 5, contactNumber: '9988776655', status: 'open',
     location: { district: 'Indore', state: 'Madhya Pradesh' }, createdAt: new Date().toISOString()
   },
   {
-    _id: 'seed-3', title: 'Sugarcane Cutting Team', description: 'Need a team for sugarcane cutting and transport.',
-    category: 'harvesting', wage: 600, wageUnit: 'per day', workersNeeded: 20, contactNumber: '8877665544', status: 'open',
+    _id: 'seed-3', key: 'sugarcane', category: 'harvesting', wage: 600, wageUnit: 'per_day', workersNeeded: 20, contactNumber: '8877665544', status: 'open',
     location: { district: 'Pune', state: 'Maharashtra' }, createdAt: new Date().toISOString()
   },
   {
-    _id: 'seed-4', title: 'Irrigation Setup Workers', description: 'Workers needed to install drip irrigation systems.',
-    category: 'irrigation', wage: 550, wageUnit: 'per day', workersNeeded: 3, contactNumber: '7766554433', status: 'open',
+    _id: 'seed-4', key: 'irrigation', category: 'irrigation', wage: 550, wageUnit: 'per_day', workersNeeded: 3, contactNumber: '7766554433', status: 'open',
     location: { district: 'Ambala', state: 'Haryana' }, createdAt: new Date().toISOString()
   },
   {
-    _id: 'seed-5', title: 'Potato Sorting & Packing', description: 'Workers for sorting and packing potatoes in cold storage.',
-    category: 'storage', wage: 400, wageUnit: 'per day', workersNeeded: 15, contactNumber: '6655443322', status: 'open',
+    _id: 'seed-5', key: 'potato', category: 'storage', wage: 400, wageUnit: 'per_day', workersNeeded: 15, contactNumber: '6655443322', status: 'open',
     location: { district: 'Jalandhar', state: 'Punjab' }, createdAt: new Date().toISOString()
   },
   {
-    _id: 'seed-6', title: 'Pesticide Spraying Workers', description: 'Need workers for pesticide spraying on 50 acres cotton field.',
-    category: 'pesticide', wage: 480, wageUnit: 'per day', workersNeeded: 8, contactNumber: '9911223344', status: 'open',
+    _id: 'seed-6', key: 'pesticide', category: 'pesticide', wage: 480, wageUnit: 'per_day', workersNeeded: 8, contactNumber: '9911223344', status: 'open',
     location: { district: 'Nagpur', state: 'Maharashtra' }, createdAt: new Date().toISOString()
   },
 ];
@@ -284,7 +278,9 @@ export default function Labour() {
                     {CATEGORY_EMOJI[job.category] || '💼'}
                   </div>
                   <div className="pr-12 xs:pr-0">
-                    <h3 className="font-black text-gray-900 dark:text-white leading-tight text-base sm:text-lg group-hover:text-primary transition-colors line-clamp-1">{job.title}</h3>
+                    <h3 className="font-black text-gray-900 dark:text-white leading-tight text-base sm:text-lg group-hover:text-primary transition-colors line-clamp-1">
+                      {job.key ? t(`labour.fallback.${job.key}.title`) : job.title}
+                    </h3>
                     <div className="flex items-center gap-2 mt-1.5">
                        <div className="badge-verified py-0.5 px-2 bg-blue-50 text-blue-600 border-blue-100 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-900/30">
                           <ShieldCheck size={10} /> {t('labour.verified_post')}
@@ -295,7 +291,9 @@ export default function Labour() {
                 </div>
 
                 <div className="mb-5 p-4 bg-gray-50 dark:bg-black/20 rounded-2xl border border-gray-100 dark:border-white/5">
-                   <p className="text-xs text-gray-600 dark:text-slate-400 line-clamp-2 font-medium leading-relaxed italic">"{job.description}"</p>
+                   <p className="text-xs text-gray-600 dark:text-slate-400 line-clamp-2 font-medium leading-relaxed italic">
+                      "{job.key ? t(`labour.fallback.${job.key}.desc`) : job.description}"
+                    </p>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-x-4 gap-y-4 text-xs">
@@ -367,7 +365,7 @@ export default function Labour() {
                     onChange={e => setForm(f => ({...f, wage: Number(e.target.value)}))} />
                 </div>
                 <div>
-                  <label className="label">Unit</label>
+                  <label className="label">{t('labour.wage_unit', 'Unit')}</label>
                   <select className="input dark:bg-slate-800 border-2" value={form.wageUnit} onChange={e => setForm(f => ({...f, wageUnit: e.target.value}))}>
                     {['per_day','fixed'].map(u => <option key={u} value={u}>{t(`labour.wage_units.${u}`)}</option>)}
                   </select>
@@ -439,7 +437,9 @@ export default function Labour() {
                    </div>
                 </div>
                 <div className="flex items-center gap-4">
-                   <span className={clsx('px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest', job.status === 'open' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700')}>{job.status}</span>
+                   <span className={clsx('px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest', job.status === 'open' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700')}>
+                      {t(`labour.status.${job.status}`, job.status)}
+                   </span>
                    <button className="p-2.5 text-gray-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-xl transition-all"><X size={18} /></button>
                 </div>
               </div>
@@ -461,7 +461,9 @@ export default function Labour() {
                      {showModal.image ? <img src={showModal.image} alt="Identity" className="w-full h-full object-cover" /> : <span className="text-5xl">{CATEGORY_EMOJI[showModal.category]}</span>}
                   </div>
                   <div>
-                     <h3 className="text-2xl font-black text-white tracking-tight leading-none mb-2">{showModal.title}</h3>
+                     <h3 className="text-2xl font-black text-white tracking-tight leading-none mb-2">
+                        {showModal.key ? t(`labour.fallback.${showModal.key}.title`) : showModal.title}
+                     </h3>
                      <p className="text-white/70 font-bold uppercase tracking-widest text-[10px]">{showModal.location?.district}, {t(`crop.states.${showModal.location?.state}`, showModal.location?.state)}</p>
                   </div>
                </div>
@@ -484,7 +486,9 @@ export default function Labour() {
 
                <div className="mb-8">
                   <p className="text-[10px] text-gray-400 font-black uppercase mb-3 tracking-widest">{t('labour.job_description')}</p>
-                  <p className="text-gray-700 dark:text-slate-300 leading-relaxed bg-gray-50 dark:bg-black/20 p-5 rounded-2xl border border-gray-100 dark:border-white/5 font-medium italic">"{showModal.description}"</p>
+                  <p className="text-gray-700 dark:text-slate-300 leading-relaxed bg-gray-50 dark:bg-black/20 p-5 rounded-2xl border border-gray-100 dark:border-white/5 font-medium italic">
+                    "{showModal.key ? t(`labour.fallback.${showModal.key}.desc`) : showModal.description}"
+                  </p>
                </div>
 
                <div className="flex flex-col gap-4">

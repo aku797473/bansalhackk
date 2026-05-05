@@ -21,7 +21,7 @@ export default function News() {
       return data.data;
     },
     onError: (err) => {
-      toast.error('Failed to fetch latest news');
+      toast.error(t('news.error_fetch', 'Failed to fetch latest news'));
       console.error(err);
     }
   });
@@ -40,7 +40,7 @@ export default function News() {
             {t('news.subtitle')}
           </p>
         </div>
-        <button onClick={fetchNews} className="btn-icon bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-sm" title="Refresh News">
+        <button onClick={fetchNews} className="btn-icon bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-sm" title={t('dashboard.labels.refresh')}>
           <RefreshCw size={18} className={`text-gray-600 dark:text-slate-400 ${loading ? 'animate-spin' : ''}`} />
         </button>
       </div>

@@ -15,7 +15,34 @@
     "feat_fertilizer": "Fertilizer Analysis", "feat_fertilizer_desc": "Upload a photo to detect deficiencies",
     "feat_market": "Market Prices", "feat_market_desc": "Live prices from 500+ mandis",
     "feat_labour": "Labour Marketplace", "feat_labour_desc": "Find or post agricultural labour",
-    "feat_chat": "AI Chatbot", "feat_chat_desc": "Ask any farming question in Hindi"
+    "feat_chat": "AI Chatbot", "feat_chat_desc": "Ask any farming question in Hindi",
+    "v2": "v2.0",
+    "login": "Login",
+    "get_started_btn": "Get Started",
+    "official_partners": "Official Data Partner: Agmarknet & IMD",
+    "empowering": "Empowering Farmers with <span class=\"text-primary\">Real-Time</span> Data & AI",
+    "hero_desc": "Get accurate Mandi rates, weather advisories, and crop analysis — verified data directly from official sources to your smartphone.",
+    "trusted_by": "Trusted & Supported by",
+    "platform_ecosystem": "Platform Ecosystem",
+    "unified_dashboard": "AI-powered smart tools to enhance your farming lifecycle — all in one unified dashboard.",
+    "explore_module": "Explore Module",
+    "verified": "Verified",
+    "simple_workflow": "Simple Workflow",
+    "steps_title": "Start in 3 Easy Steps",
+    "steps": {
+      "01": { "title": "Register", "desc": "Create a free account in 2 minutes" },
+      "02": { "title": "Get Insights", "desc": "Weather, rates, crop advice all in one place" },
+      "03": { "title": "Grow Farming", "desc": "Make better decisions with AI help" }
+    },
+    "step_label": "STEP",
+    "success_stories": "Success Stories",
+    "farmer_stories": "Farmer Stories",
+    "start_free": "Start Today — For Free",
+    "join_millions": "Join millions of farmers and transform your traditional farming into a data-driven smart business.",
+    "secure": "Secure",
+    "fast_setup": "Fast Setup",
+    "free_forever": "Free Forever",
+    "footer_tag": "© 2025 Smart Kisan — For farmers, by farmers. Made with ❤️ in India"
   },
   "auth": {
     "login_title": "Welcome to Smart Kisan",
@@ -60,7 +87,17 @@
       "smart_map": "Smart map",
       "details": "Details",
       "vs_last_week": "vs last week",
-      "available_now": "Available now"
+      "available_now": "Available now",
+      "verified_data": "Verified Data",
+      "refresh": "Refresh",
+      "wheat_today": "Wheat today",
+      "air_humidity": "Air Humidity",
+      "source_agmarknet": "Source: Agmarknet",
+      "source_weather": "Source: OpenWeather • Live via IMD"
+    },
+    "trends": {
+      "high": "High",
+      "normal": "Normal"
     },
     "alerts": {
       "pm_kisan": "New PM-Kisan installment credited",
@@ -85,7 +122,20 @@
     "wind": "Wind Speed",
     "feels_like": "Feels Like",
     "alerts": "Weather Alerts",
-    "no_alerts": "No severe alerts"
+    "no_alerts": "No severe alerts",
+    "outlook": "7-Day Outlook",
+    "advisory_title": "Verified Farming Advisory",
+    "real_time": "Real-Time Data",
+    "updated": "Updated",
+    "safe_spraying": "Safe for Spraying",
+    "optimal_sowing": "Optimal for Sowing",
+    "irrigation_req": "Irrigation Required",
+    "fungal_risk": "Risk of Fungal Attack",
+    "wind_tip": "Avoid if wind > 20km/h",
+    "humidity_tip": "Ideal humidity 40-70%",
+    "temp_tip": "High evapotranspiration",
+    "pest_tip": "Watch for pests",
+    "advisory_disclaimer": "Advisory generated based on local IMD environmental data."
   },
   "crop": {
     "title": "Crop Advisor",
@@ -105,7 +155,35 @@
     "district_placeholder": "Enter district name",
     "expected_yield": "Expected Yield",
     "clear_result": "Clear Result",
-    "view_calendar": "View Crop Calendar"
+    "view_calendar": "View Crop Calendar",
+    "thinking": "Thinking...",
+    "scientific_rec": "Scientific Recommendation",
+    "primary_crop_title": "Recommended Primary Crop",
+    "historical_model": "Historical Model",
+    "alternatives_label": "Alternatives:",
+    "high": "High",
+    "get_ai_rec": "Get AI Recommendation",
+    "get_ai_rec_desc": "Fill in the details to see the best crops for your region.",
+    "crop_calendar": "Crop Calendar",
+    "soil_nutrients": "Soil Nutrients (N-P-K)",
+    "levels": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    },
+    "soil_types": {
+      "loamy": "Loamy",
+      "clay": "Clay",
+      "sandy": "Sandy",
+      "silty": "Silty",
+      "peaty": "Peaty",
+      "chalky": "Chalky"
+    },
+    "seasons": {
+      "Kharif": "Kharif",
+      "Rabi": "Rabi",
+      "Zaid": "Zaid"
+    }
   },
   "fertilizer": {
     "title": "Fertilizer & Disease Detection",
@@ -115,7 +193,31 @@
     "analyzing": "Analyzing...",
     "result_title": "Analysis Result",
     "severity": "Severity", "treatment": "Treatment",
-    "prevention": "Prevention", "confidence": "Confidence"
+    "prevention": "Prevention", "confidence": "Confidence",
+    "seed_iq": "Seed IQ",
+    "ai_desc": "AI analysis for plants, seeds, and reports",
+    "clear_result": "Clear Result",
+    "analyzing_sample": "Analyzing Sample...",
+    "upload_desc": "Upload plant, seed, or report photo",
+    "file_limits": "JPG, PNG, WEBP, PDF — max 10MB",
+    "remove": "Remove",
+    "analyze_health": "Analyze Health / Variety",
+    "recent_reports": "Recent Reports",
+    "no_history": "No history yet",
+    "unknown_analysis": "Unknown Analysis",
+    "certificate_title": "Soil Health Certificate",
+    "sample_id": "Sample ID",
+    "ai_verified": "AI Verified",
+    "generating_pdf": "Generating Soil Health Report...",
+    "export_pdf": "Export PDF",
+    "diagnosis": "Diagnosis",
+    "confidence_score": "Confidence Score",
+    "expert_advice": "Expert Advice",
+    "health_status": "Health Status",
+    "verified_advisory": "Scientifically Verified Advisory",
+    "advisory_guidance": "This report is AI-generated for guidance.",
+    "select_for_report": "Select an image for detailed report",
+    "upload_instruction": "Upload an image on the left or use History to see previous analyses."
   },
   "market": {
     "title": "Market Prices",
@@ -125,7 +227,42 @@
     "commodity": "Commodity", "variety": "Variety",
     "min": "Min (₹)", "max": "Max (₹)", "modal": "Modal (₹)",
     "market_name": "Mandi", "date": "Date", "trend": "Trend",
-    "msp": "MSP Price"
+    "msp": "MSP Price",
+    "analytics": "Mandi Analytics",
+    "insights": "Market Insights",
+    "insights_desc": "Track historical prices and view AI-driven forecasts across districts in India.",
+    "official_source": "Official Data Source: Agmarknet",
+    "live_mandi": "Real-Time Mandi Board",
+    "live_mandi_desc": "Live rates from over 500+ markets across India",
+    "all_states": "All States",
+    "all_districts": "All Districts",
+    "select_commodity": "Select Commodity",
+    "price_trend": "Price Trend",
+    "horizon": "45 Day Horizon",
+    "historical": "Historical",
+    "forecast": "AI Forecast",
+    "no_trend": "No trend data available for this selection.",
+    "current_modal": "Current Modal Price",
+    "per_quintal": "/ Quintal",
+    "range_30d": "30-Day Historical Range",
+    "lowest": "Lowest",
+    "highest": "Highest",
+    "forecast_15d": "15-Day AI Forecast",
+    "expected_to_reach": "Expected to reach",
+    "select_to_view": "Select a commodity to view analytics",
+    "table_title": "Live Mandi Board",
+    "table_subtitle": "Today's Modal Prices",
+    "search_table": "Search table...",
+    "no_market_data": "No market data found",
+    "headers": {
+      "commodity": "Commodity",
+      "variety": "Variety",
+      "market": "Market",
+      "min": "Min",
+      "modal_avg": "Modal (Avg)",
+      "max": "Max",
+      "trend": "Trend"
+    }
   },
   "labour": {
     "title": "Labour Marketplace",
@@ -150,7 +287,33 @@
     },
     "guaranteed_wage": "Guaranteed Wage",
     "open_positions": "Open Positions",
-    "call_details": "Call for details",
+    "call_details": "Call for Details",
+    "fallback": {
+      "wheat": {
+        "title": "Wheat Harvesting Workers Needed",
+        "desc": "Looking for 10 workers for wheat harvesting. 5 days work."
+      },
+      "soybean": {
+        "title": "Sowing Help for Soybean",
+        "desc": "Expert sowing workers needed for 20 acres land."
+      },
+      "sugarcane": {
+        "title": "Sugarcane Cutting Team",
+        "desc": "Need a team for sugarcane cutting and transport."
+      },
+      "irrigation": {
+        "title": "Irrigation Setup Workers",
+        "desc": "Workers needed to install drip irrigation systems."
+      },
+      "potato": {
+        "title": "Potato Sorting & Packing",
+        "desc": "Workers for sorting and packing potatoes in cold storage."
+      },
+      "pesticide": {
+        "title": "Pesticide Spraying Workers",
+        "desc": "Need workers for pesticide spraying on 50 acres cotton field."
+      }
+    },
     "pay_book": "Pay ₹{{amount}} & Book Now",
     "processing": "Processing...",
     "categories": {
@@ -166,12 +329,49 @@
       "per_day": "per day",
       "fixed": "fixed"
     },
-    "placeholders": {
-      "title": "e.g. Need team for harvesting",
-      "phone": "10-digit mobile number",
-      "description": "Describe the work in detail...",
-      "district": "Enter district"
+    "important_tips": "Important Tips",
+    "tips_list": {
+      "phone": "Ensure your mobile number is correct.",
+      "description": "Keep description clear for better understanding.",
+      "photo": "Adding a photo increases response rate by 2x."
     }
+  },
+  "map": {
+    "title": "Live Field Mapping",
+    "subtitle": "Track your movement & measure field area using GPS.",
+    "street": "Street",
+    "satellite": "Satellite",
+    "tap_tip": "Tap map to add boundary points",
+    "gps_tracking": "GPS Tracking",
+    "meters": "Meters",
+    "stop": "Stop",
+    "start": "Start",
+    "area_measurement": "Area Measurement",
+    "total_acres": "Total Acres",
+    "hectares": "Hectares",
+    "sq_meters": "Sq. Meters",
+    "points_added": "Points added: {{count}}",
+    "clear_boundary": "Clear Boundary"
+  },
+  "profile": {
+    "update_desc": "Update your personal and farming information",
+    "change": "CHANGE",
+    "farmer_default": "Farmer",
+    "verified": "Verified",
+    "personal_info": "Personal Information",
+    "preferred_lang": "Preferred Language",
+    "address_details": "Address Details",
+    "village_town": "Village / Town",
+    "village_placeholder": "Enter village name",
+    "district": "District",
+    "pincode": "Pincode",
+    "pincode_placeholder": "000000",
+    "farm_info": "Farm Information",
+    "land_area": "Land Area (Acres)",
+    "land_area_placeholder": "e.g. 5",
+    "irrigation_system": "Irrigation System",
+    "saved": "SAVED!",
+    "saving": "SAVING..."
   },
   "chat": {
     "title": "Kisan Mitra",

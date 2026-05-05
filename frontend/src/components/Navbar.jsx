@@ -106,7 +106,7 @@ export default function Navbar() {
             <button
               onClick={handleNotificationClick}
               className="relative p-2 text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
-              title="Notifications">
+              title={t('nav.notifications', 'Notifications')}>
               <Bell size={18} />
               {hasNewNews && (
                 <span className="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-slate-900 animate-pulse" />
@@ -169,7 +169,7 @@ export default function Navbar() {
               </span>
               <button onClick={handleLogout}
                 className="flex items-center gap-1.5 text-xs text-red-500 font-medium hover:text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors">
-                <LogOut size={14} /> Logout
+                <LogOut size={14} /> {t('nav.logout')}
               </button>
             </div>
           </div>
