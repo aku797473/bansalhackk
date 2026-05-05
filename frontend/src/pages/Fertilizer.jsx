@@ -195,7 +195,7 @@ export default function Fertilizer() {
                                     <FlaskConical size={14} />
                                 </div>
                                 <div className="min-w-0 flex-1">
-                                    <p className="text-xs font-bold text-gray-800 dark:text-white truncate">{t(`market.${item.title}`, item.title)}</p>
+                                    <p className="text-xs font-bold text-gray-800 dark:text-white truncate">{t(`fertilizer.results.${item.title}`, item.title)}</p>
                                     <p className="text-[10px] text-gray-500">{new Date(item.date).toLocaleDateString()}</p>
                                 </div>
                                 <button onClick={(e) => deleteHistoryItem(e, item.id)}
@@ -243,9 +243,9 @@ export default function Fertilizer() {
                       <div>
                         <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{t('fertilizer.diagnosis', 'Diagnosis')}</p>
                         <div className="flex items-center gap-3">
-                          <span className="text-3xl font-black text-gray-900 dark:text-white">{result.primaryIssue?.deficiency}</span>
+                          <span className="text-3xl font-black text-gray-900 dark:text-white">{t(`fertilizer.results.${result.primaryIssue?.deficiency}`, result.primaryIssue?.deficiency)}</span>
                           <span className={clsx('badge-verified', SEVERITY_COLOR[result.primaryIssue?.severity] || 'badge-yellow')}>
-                             {result.primaryIssue?.severity}
+                             {t(`fertilizer.results.${result.primaryIssue?.severity}`, result.primaryIssue?.severity)}
                           </span>
                         </div>
                       </div>
@@ -295,7 +295,7 @@ export default function Fertilizer() {
                       <span className={clsx(
                         'text-xs font-bold px-2 py-0.5 rounded-full',
                         result.overallHealth === 'Good' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'
-                      )}>{result.overallHealth}</span>
+                      )}>{t(`fertilizer.results.${result.overallHealth}`, result.overallHealth)}</span>
                    </div>
                 </div>
                 
@@ -305,7 +305,7 @@ export default function Fertilizer() {
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
                       </span>
-                      {result.urgency}
+                      {t(`fertilizer.results.${result.urgency}`, result.urgency)}
                    </p>
                    <ul className="grid sm:grid-cols-2 gap-x-6 gap-y-2">
                     {result.generalRecommendations?.map((r, i) => (

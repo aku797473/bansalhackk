@@ -17,7 +17,7 @@ const TrendIcon = ({ trend, size = 14 }) => {
 };
 
 export default function Market() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   
   // Selection State
   const [selState, setSelState]       = useState('Madhya Pradesh');
@@ -104,7 +104,7 @@ export default function Market() {
       const data = payload[0].payload;
       return (
         <div className="bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 p-3 rounded-xl shadow-xl">
-          <p className="text-xs text-gray-500 font-bold mb-1">{new Date(label).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+          <p className="text-xs text-gray-500 font-bold mb-1">{new Date(label).toLocaleDateString(i18n.language === 'hi' ? 'hi-IN' : 'en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
           <p className="text-lg font-black text-primary">₹{data.price.toLocaleString()}</p>
           <div className="mt-1">
             <span className={clsx(
@@ -155,8 +155,8 @@ export default function Market() {
           <div className="flex flex-col gap-2">
             <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2 flex items-center gap-1.5"><MapPin size={12} className="text-primary"/> {t('crop.state', 'State')}</label>
             <select className="input rounded-2xl bg-white/50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-700/50 font-bold text-sm shadow-sm" value={selState} onChange={e => setSelState(e.target.value)}>
-              <option value="">{t('market.all_states', 'All States')}</option>
-              {states.map(s => <option key={s} value={s}>{s}</option>)}
+              <option value="">{t('market.all_states')}</option>
+              {states.map(s => <option key={s} value={s}>{t(`market.states.${s}`, s)}</option>)}
             </select>
           </div>
           <div className="flex flex-col gap-2">
@@ -169,8 +169,8 @@ export default function Market() {
           <div className="flex flex-col gap-2">
             <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2 flex items-center gap-1.5"><Package size={12} className="text-primary"/> {t('market.commodity', 'Commodity')} / {t('market.variety', 'Ingredient')}</label>
             <select className="input rounded-2xl bg-white/50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-700/50 font-bold text-sm shadow-sm" value={selCommodity} onChange={e => setSelCommodity(e.target.value)}>
-              <option value="">{t('market.select_commodity', 'Select Commodity')}</option>
-              {commodities.map(c => <option key={c} value={c}>{c}</option>)}
+              <option value="">{t('market.select_commodity')}</option>
+              {commodities.map(c => <option key={c} value={c}>{t(`market.items.${c}`, c)}</option>)}
             </select>
           </div>
         </div>
@@ -187,10 +187,10 @@ export default function Market() {
             <div className="flex items-start justify-between mb-8 relative z-10">
               <div>
                 <h3 className="text-xl font-black text-gray-900 dark:text-white flex items-center gap-2">
-                  {selCommodity || t('market.select_commodity', 'Select Commodity')} {t('market.price_trend', 'Price Trend')}
+                  {selCommodity ? t(`market.items.${selCommodity}`, selCommodity) : t('market.select_commodity')} {t('market.price_trend')}
                 </h3>
                 <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">
-                  {selDistrict ? `${selDistrict}, ` : ''}{selState || 'India'} • {t('market.horizon', '45 Day Horizon')}
+                  {selDistrict ? `${selDistrict}, ` : ''}{selState ? t(`market.states.${selState}`, selState) : 'India'} • {t('market.horizon')}
                 </p>
               </div>
               <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-widest">
@@ -217,7 +217,7 @@ export default function Market() {
                     <XAxis 
                       dataKey="date" 
                       tick={{ fontSize: 10, fontWeight: 600, fill: '#9ca3af' }} 
-                      tickFormatter={d => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} 
+                      tickFormatter={d => new Date(d).toLocaleDateString(i18n.language === 'hi' ? 'hi-IN' : 'en-IN', { month: 'short', day: 'numeric' })} 
                       axisLine={false} 
                       tickLine={false} 
                       minTickGap={20}
@@ -364,7 +364,7 @@ export default function Market() {
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-lg">{p.commodity === 'Wheat' ? '🌾' : p.commodity === 'Onion' ? '🧅' : p.commodity === 'Tomato' ? '🍅' : p.commodity === 'Potato' ? '🥔' : '📦'}</div>
-                      <span className="font-black text-gray-900 dark:text-white">{p.commodity}</span>
+                      <span className="font-black text-gray-900 dark:text-white">{t(`market.items.${p.commodity}`, p.commodity)}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4 text-gray-500 font-semibold">{p.variety}</td>

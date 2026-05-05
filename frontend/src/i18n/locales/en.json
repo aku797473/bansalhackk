@@ -217,7 +217,23 @@
     "verified_advisory": "Scientifically Verified Advisory",
     "advisory_guidance": "This report is AI-generated for guidance.",
     "select_for_report": "Select an image for detailed report",
-    "upload_instruction": "Upload an image on the left or use History to see previous analyses."
+    "upload_instruction": "Upload an image on the left or use History to see previous analyses.",
+    "results": {
+      "Nitrogen Deficiency": "Nitrogen Deficiency",
+      "Phosphorus Deficiency": "Phosphorus Deficiency",
+      "Potassium Deficiency": "Potassium Deficiency",
+      "Fungal Infection": "Fungal Infection",
+      "Pest Attack": "Pest Attack",
+      "Healthy": "Healthy",
+      "Mild": "Mild",
+      "Moderate": "Moderate",
+      "Severe": "Severe",
+      "Good": "Good",
+      "Critical": "Critical",
+      "Average": "Average",
+      "Urgent": "Urgent",
+      "Normal": "Normal"
+    }
   },
   "market": {
     "title": "Market Prices",
@@ -262,6 +278,27 @@
       "modal_avg": "Modal (Avg)",
       "max": "Max",
       "trend": "Trend"
+    },
+    "items": {
+      "Wheat": "Wheat",
+      "Onion": "Onion",
+      "Tomato": "Tomato",
+      "Potato": "Potato",
+      "Rice": "Rice",
+      "Soybean": "Soybean",
+      "Mustard": "Mustard",
+      "Garlic": "Garlic",
+      "Ginger": "Ginger",
+      "Cotton": "Cotton",
+      "Sugarcane": "Sugarcane"
+    },
+    "states": {
+      "Madhya Pradesh": "Madhya Pradesh",
+      "Uttar Pradesh": "Uttar Pradesh",
+      "Punjab": "Punjab",
+      "Haryana": "Haryana",
+      "Rajasthan": "Rajasthan",
+      "Maharashtra": "Maharashtra"
     }
   },
   "labour": {
