@@ -7,7 +7,7 @@ import { schemesAPI } from '../services/api';
 import * as Icons from 'lucide-react';
 
 export default function Schemes() {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const lang = i18n.language === 'hi' ? 'hi' : 'en';
 
   const { data: response, isLoading, isError } = useQuery({

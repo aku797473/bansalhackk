@@ -55,6 +55,30 @@ const COMMANDS = {
     responseEn: 'Fetching latest farming news',
     responseHi: 'ताजा खबरें देख रहे हैं',
   },
+  map: {
+    en: ['map', 'location', 'field'],
+    hi: ['naksha', 'nakshe', 'jagah', 'sthan',
+         'नक्शा', 'नक्शे', 'जगह', 'स्थान', 'खेत'],
+    route: '/map',
+    responseEn: 'Opening field map',
+    responseHi: 'खेत का नक्शा खोल रहे हैं',
+  },
+  schemes: {
+    en: ['schemes', 'government', 'subsidy', 'yojana', 'help'],
+    hi: ['yojana', 'yojanaye', 'sarkari', 'madad',
+         'योजना', 'योजनाएं', 'सरकारी', 'मदद', 'सब्सिडी'],
+    route: '/schemes',
+    responseEn: 'Checking government schemes',
+    responseHi: 'सरकारी योजनाएं देख रहे हैं',
+  },
+  profile: {
+    en: ['profile', 'account', 'my info', 'settings'],
+    hi: ['profile', 'khata', 'meri jankari',
+         'प्रोफ़ाइल', 'खाता', 'मेरी जानकारी', 'सेटिंग्स'],
+    route: '/profile',
+    responseEn: 'Opening your profile',
+    responseHi: 'आपकी प्रोफाइल खोल रहे हैं',
+  },
   home: {
     en: ['home', 'dashboard', 'back', 'main'],
     hi: ['ghar', 'wapas',
@@ -67,8 +91,8 @@ const COMMANDS = {
 
 // ─── Hints for each language ─────────────────────────────────────────────────
 const HINTS = {
-  en: '"Weather", "Mandi rates", "Crop advice"',
-  hi: '"मौसम", "मंडी भाव", "फसल सलाह"',
+  en: '"Weather", "Market rates", "Schemes", "Map"',
+  hi: '"मौसम", "मंडी भाव", "योजनाएं", "नक्शा"',
 };
 
 export default function VoiceAssistant() {
