@@ -227,7 +227,12 @@ export default function Fertilizer() {
                       <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Sample ID: SK-2026-{Math.floor(Math.random()*9000)+1000} • AI Verified</p>
                     </div>
                   </div>
-                  <button className="btn-secondary h-10 px-4 text-[10px] font-black uppercase tracking-widest border-2">
+                  <button 
+                    onClick={() => {
+                      toast.success('Generating Soil Health Report...');
+                      setTimeout(() => window.print(), 1000);
+                    }}
+                    className="btn-secondary h-10 px-4 text-[10px] font-black uppercase tracking-widest border-2">
                     <Download size={14} /> Export PDF
                   </button>
                 </div>
