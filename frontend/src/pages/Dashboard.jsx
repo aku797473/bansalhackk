@@ -55,9 +55,9 @@ const getTips = (t) => [
 ];
 
 const getRecentAlerts = (t) => [
-  { type: 'info',    icon: '📢', text: t('dashboard.alerts.pm_kisan'),    action: t('dashboard.alerts.view_details'),  color: 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800/30 text-blue-800 dark:text-blue-300',   btn: 'bg-blue-600 hover:bg-blue-700 text-white' },
-  { type: 'warning', icon: '🦗', text: t('dashboard.alerts.locust'), action: t('dashboard.alerts.see_alert'),    color: 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800/30 text-amber-800 dark:text-amber-300', btn: 'bg-amber-500 hover:bg-amber-600 text-white' },
-  { type: 'success', icon: '📈', text: t('dashboard.alerts.wheat_price'),           action: t('dashboard.alerts.check_mandi'),  color: 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800/30 text-green-800 dark:text-green-300',  btn: 'bg-green-600 hover:bg-green-700 text-white' },
+  { type: 'info',    icon: '📢', text: t('dashboard.alerts.pm_kisan'),    action: t('dashboard.alerts.view_details'),  to: '/schemes', color: 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800/30 text-blue-800 dark:text-blue-300',   btn: 'bg-blue-600 hover:bg-blue-700 text-white' },
+  { type: 'warning', icon: '🦗', text: t('dashboard.alerts.locust'), action: t('dashboard.alerts.see_alert'),    to: '/weather', color: 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800/30 text-amber-800 dark:text-amber-300', btn: 'bg-amber-500 hover:bg-amber-600 text-white' },
+  { type: 'success', icon: '📈', text: t('dashboard.alerts.wheat_price'),           action: t('dashboard.alerts.check_mandi'),  to: '/market', color: 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800/30 text-green-800 dark:text-green-300',  btn: 'bg-green-600 hover:bg-green-700 text-white' },
 ];
 
 function getGreetingKey() {
@@ -214,7 +214,9 @@ export default function Dashboard() {
               <span className="text-xl">{a.icon}</span>
               <span className="text-xs font-bold leading-tight max-w-[150px] whitespace-normal">{a.text}</span>
             </div>
-            <button className={clsx('text-[10px] font-black uppercase tracking-wider px-3 py-2 rounded-xl shrink-0 transition-all active:scale-95', a.btn)}>
+            <button 
+              onClick={() => navigate(a.to)}
+              className={clsx('text-[10px] font-black uppercase tracking-wider px-3 py-2 rounded-xl shrink-0 transition-all active:scale-95', a.btn)}>
               {a.action}
             </button>
           </div>
