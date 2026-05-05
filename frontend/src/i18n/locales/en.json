@@ -109,9 +109,13 @@
     },
     "farming_tips": {
       "soil_health_title": "Soil Health",
-      "soil_health_body": "Test your soil every 2 years to optimize fertilizer usage and save costs.",
-      "watering_title": "Watering Tip",
-      "watering_body": "Early morning irrigation reduces evaporation and prevents fungal growth."
+      "soil_health_body": "Test your soil every 2 years to optimize fertilizer use and save costs.",
+      "watering_title": "Irrigation Tip",
+      "watering_body": "Early morning watering reduces evaporation and prevents fungal diseases.",
+      "pest_control_title": "Pest Control",
+      "pest_control_body": "Use Neem oil as a natural pesticide to protect crops without harmful chemicals.",
+      "fertilizer_title": "Fertilizer Tip",
+      "fertilizer_body": "Apply fertilizers in split doses for better absorption and less wastage."
     }
   },
   "weather": {
@@ -120,6 +124,7 @@
     "forecast": "5-Day Forecast",
     "humidity": "Humidity",
     "wind": "Wind Speed",
+    "temp": "Temperature",
     "feels_like": "Feels Like",
     "alerts": "Weather Alerts",
     "no_alerts": "No severe alerts",

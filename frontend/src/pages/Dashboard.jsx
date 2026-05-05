@@ -37,6 +37,20 @@ const getTips = (t) => [
     icon: '💧', 
     color: 'bg-emerald-50 dark:bg-emerald-900/10', 
     border: 'border-emerald-100 dark:border-emerald-900/30' 
+  },
+  { 
+    title: t('dashboard.farming_tips.pest_control_title'), 
+    body: t('dashboard.farming_tips.pest_control_body'), 
+    icon: '🦟', 
+    color: 'bg-amber-50 dark:bg-amber-900/10', 
+    border: 'border-amber-100 dark:border-amber-800/30' 
+  },
+  { 
+    title: t('dashboard.farming_tips.fertilizer_title'), 
+    body: t('dashboard.farming_tips.fertilizer_body'), 
+    icon: '📦', 
+    color: 'bg-blue-50 dark:bg-blue-900/10', 
+    border: 'border-blue-100 dark:border-blue-900/30' 
   }
 ];
 
