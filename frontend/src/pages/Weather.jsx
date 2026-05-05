@@ -98,7 +98,6 @@ export default function Weather() {
                 <div className="flex items-center justify-center md:justify-start gap-2 mb-4 text-sky-50 font-bold tracking-wide">
                   <MapPin size={18} />
                   <span className="text-lg">{data.city}, {data.country}</span>
-                  {data.isMock && <span className="bg-yellow-400 text-yellow-900 text-[10px] px-2 py-0.5 rounded-full font-black uppercase">Demo</span>}
                 </div>
                 <div className="flex flex-col md:flex-row items-center gap-6">
                   <span className="text-8xl drop-shadow-lg animate-bounce-sm">{getEmoji(data.icon)}</span>

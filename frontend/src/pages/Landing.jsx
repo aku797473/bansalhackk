@@ -83,7 +83,7 @@ export default function Landing() {
               <img src={logo} alt="Smart Kisan Logo" className="w-full h-full object-cover" />
             </div>
             <span className="font-black text-gray-900 dark:text-white text-xl tracking-tighter">Smart Kisan</span>
-            <span className="hidden sm:block px-2 py-0.5 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-lg text-[10px] font-black uppercase tracking-widest border border-green-100 dark:border-green-900/20 ml-2">Beta</span>
+            <span className="hidden sm:block px-2 py-0.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg text-[10px] font-black uppercase tracking-widest border border-blue-100 dark:border-blue-900/20 ml-2">v2.0</span>
           </div>
           <div className="flex items-center gap-3 sm:gap-6">
             <button onClick={() => navigate('/login')} className="text-sm font-black text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors uppercase tracking-widest hidden sm:flex">
