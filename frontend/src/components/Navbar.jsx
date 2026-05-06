@@ -98,7 +98,7 @@ export default function Navbar() {
         </NavLink>
 
         {/* ── Desktop Navigation ── */}
-        <nav className="hidden xl:flex items-center gap-1 bg-gray-100/50 dark:bg-slate-800/50 p-1.5 rounded-2xl border border-gray-200/50 dark:border-slate-700/50">
+        <nav className="hidden lg:flex items-center gap-1 bg-gray-100/50 dark:bg-slate-800/50 p-1.5 rounded-2xl border border-gray-200/50 dark:border-slate-700/50">
           {links.map(({ to, icon: Icon, label }) => (
             <NavLink key={to} to={to}
               className={({ isActive }) => clsx(
@@ -150,8 +150,8 @@ export default function Navbar() {
 
       {/* ── Mobile Menu Overlay ── */}
       <div className={clsx(
-        "lg:hidden fixed inset-0 top-20 bg-white/80 dark:bg-slate-950/80 backdrop-blur-3xl transition-all duration-500 pointer-events-auto",
-        open ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full pointer-events-none"
+        "lg:hidden fixed inset-0 top-[64px] sm:top-[80px] bg-white/90 dark:bg-slate-950/90 backdrop-blur-3xl transition-all duration-500 pointer-events-auto z-40",
+        open ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full pointer-events-none invisible"
       )}>
         <div className="p-6 grid grid-cols-2 gap-3 max-w-2xl mx-auto">
           {links.map(({ to, icon: Icon, label }) => (
