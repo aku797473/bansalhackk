@@ -107,8 +107,12 @@ export default function Navbar() {
                   ? 'bg-white dark:bg-slate-700 text-primary dark:text-emerald-400 shadow-sm'
                   : 'text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-100'
               )}>
-              <Icon size={14} className={clsx(isActive ? "animate-pulse" : "")} />
-              {label}
+              {({ isActive }) => (
+                <>
+                  <Icon size={14} className={clsx(isActive ? "animate-pulse" : "")} />
+                  {label}
+                </>
+              )}
             </NavLink>
           ))}
         </nav>
