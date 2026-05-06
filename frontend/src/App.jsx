@@ -62,7 +62,7 @@ function AppLayout({ children }) {
   return (
     <div className="min-h-screen bg-surface dark:bg-slate-900 transition-colors duration-200">
       {isAuth && <Navbar />}
-      <main className={isAuth ? 'pt-16' : ''}>
+      <main className={clsx("transition-all duration-200", isAuth ? 'pt-16' : '')}>
         <Suspense fallback={<LoadingScreen />}>
           {children}
         </Suspense>
