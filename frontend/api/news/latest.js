@@ -2,55 +2,85 @@ const newsData = {
   en: [
     { 
       id: 1, 
-      title: "PM Kisan Installment Released", 
-      description: "The government has released the latest installment of PM Kisan Samman Nidhi. Farmers can check their status on the official portal.", 
+      title: "PM Kisan 17th Installment Released", 
+      description: "Hon'ble Prime Minister has released the 17th installment of PM-KISAN scheme, benefiting over 9.26 crore farmers across India.", 
       category: "Govt", 
       pubDate: new Date().toISOString(), 
-      source: "Agri Dept",
+      source: "PIB India",
       imageUrl: "https://images.unsplash.com/photo-1595067331631-f8442707b864?q=80&w=1000&auto=format&fit=crop",
       link: "https://pmkisan.gov.in"
     },
     { 
       id: 2, 
-      title: "Good Monsoon Predicted for 2026", 
-      description: "Meteorological department predicts a healthy monsoon season, which is expected to boost crop yields across major agricultural belts.", 
-      category: "Weather", 
-      pubDate: new Date(Date.now() - 86400000).toISOString(), 
-      source: "IMD",
-      imageUrl: "https://images.unsplash.com/photo-1561470508-fd4df1ed90b2?q=80&w=1000&auto=format&fit=crop",
-      link: "https://mausam.imd.gov.in"
+      title: "New Subsidy for Drip Irrigation Systems", 
+      description: "State government announces 80% subsidy for small and marginal farmers on micro-irrigation equipment to save water and improve yields.", 
+      category: "Schemes", 
+      pubDate: new Date(Date.now() - 43200000).toISOString(), 
+      source: "Agri Ministry",
+      imageUrl: "https://images.unsplash.com/photo-1563514227147-6d2ff665a6a0?q=80&w=1000&auto=format&fit=crop",
+      link: "https://agricoop.nic.in"
     },
     { 
       id: 3, 
-      title: "Organic Farming Subsidy Announced", 
-      description: "New incentives for farmers switching to organic methods. Applications open next month for state-wide programs.", 
-      category: "Schemes", 
-      pubDate: new Date(Date.now() - 172800000).toISOString(), 
-      source: "State Agri",
+      title: "Wheat Procurement Prices Increased", 
+      description: "The Cabinet Committee on Economic Affairs has approved an increase in the Minimum Support Price (MSP) for wheat for the 2026 season.", 
+      category: "Market", 
+      pubDate: new Date(Date.now() - 86400000).toISOString(), 
+      source: "Economic Times",
+      imageUrl: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?q=80&w=1000&auto=format&fit=crop",
+      link: "https://economictimes.indiatimes.com"
+    },
+    { 
+      id: 4, 
+      title: "Organic Certification Now Simplified", 
+      description: "FSSAI introduces a new unified portal for organic farmers to get certification faster and reach international markets.", 
+      category: "Business", 
+      pubDate: new Date(Date.now() - 129600000).toISOString(), 
+      source: "FSSAI",
       imageUrl: "https://images.unsplash.com/photo-1589923188900-85dae523342b?q=80&w=1000&auto=format&fit=crop",
-      link: "https://darpg.gov.in"
+      link: "https://fssai.gov.in"
+    },
+    { 
+      id: 5, 
+      title: "Smart Drone Technology for Pest Control", 
+      description: "Indian startups are introducing affordable drone spraying services for farmers, reducing chemical usage by up to 30%.", 
+      category: "Tech", 
+      pubDate: new Date(Date.now() - 172800000).toISOString(), 
+      source: "TechAgri",
+      imageUrl: "https://images.unsplash.com/photo-1508614589041-895b88991e3e?q=80&w=1000&auto=format&fit=crop",
+      link: "https://example.com/tech"
     }
   ],
   hi: [
     { 
       id: 1, 
-      title: "पीएम किसान की किस्त जारी", 
-      description: "सरकार ने पीएम किसान सम्मान निधि की ताजा किस्त जारी कर दी है। किसान आधिकारिक पोर्टल पर अपनी स्थिति देख सकते हैं।", 
+      title: "पीएम किसान की 17वीं किस्त जारी", 
+      description: "माननीय प्रधानमंत्री ने पीएम-किसान योजना की 17वीं किस्त जारी की है, जिससे पूरे भारत में 9.26 करोड़ से अधिक किसानों को लाभ होगा।", 
       category: "सरकार", 
       pubDate: new Date().toISOString(), 
-      source: "कृषि विभाग",
+      source: "पीआईबी भारत",
       imageUrl: "https://images.unsplash.com/photo-1595067331631-f8442707b864?q=80&w=1000&auto=format&fit=crop",
       link: "https://pmkisan.gov.in"
     },
     { 
       id: 2, 
-      title: "2026 के लिए अच्छे मानसून की भविष्यवाणी", 
-      description: "मौसम विभाग ने अच्छे मानसून के मौसम की भविष्यवाणी की है, जिससे प्रमुख कृषि क्षेत्रों में फसल की पैदावार बढ़ने की उम्मीद है।", 
-      category: "मौसम", 
+      title: "ड्रिप सिंचाई प्रणालियों के लिए नई सब्सिडी", 
+      description: "राज्य सरकार ने छोटे और सीमांत किसानों के लिए सूक्ष्म सिंचाई उपकरणों पर 80% सब्सिडी की घोषणा की है।", 
+      category: "योजनाएं", 
+      pubDate: new Date(Date.now() - 43200000).toISOString(), 
+      source: "कृषि मंत्रालय",
+      imageUrl: "https://images.unsplash.com/photo-1563514227147-6d2ff665a6a0?q=80&w=1000&auto=format&fit=crop",
+      link: "https://agricoop.nic.in"
+    },
+    { 
+      id: 3, 
+      title: "गेहूं के समर्थन मूल्य में वृद्धि", 
+      description: "आर्थिक मामलों की कैबिनेट समिति ने 2026 सीजन के लिए गेहूं के न्यूनतम समर्थन मूल्य (MSP) में वृद्धि को मंजूरी दे दी है।", 
+      category: "बाजार", 
       pubDate: new Date(Date.now() - 86400000).toISOString(), 
-      source: "IMD",
-      imageUrl: "https://images.unsplash.com/photo-1561470508-fd4df1ed90b2?q=80&w=1000&auto=format&fit=crop",
-      link: "https://mausam.imd.gov.in"
+      source: "इकोनॉमिक टाइम्स",
+      imageUrl: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?q=80&w=1000&auto=format&fit=crop",
+      link: "https://economictimes.indiatimes.com"
     }
   ]
 };
