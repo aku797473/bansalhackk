@@ -3,6 +3,10 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "rewrites": [
+    { "source": "/api/weather/:path*", "destination": "/api/weather.js" },
+    { "source": "/api/news/:path*", "destination": "/api/news.js" },
+    { "source": "/api/schemes/:path*", "destination": "/api/schemes.js" },
+    { "source": "/api/market/:path*", "destination": "/api/market.js" },
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
