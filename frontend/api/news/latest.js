@@ -1,11 +1,3 @@
-const express = require('express');
-const cors = require('cors');
-const app = express();
-const PORT = process.env.PORT || 5009;
-
-app.use(cors());
-app.use(express.json());
-
 const newsData = {
   en: [
     { 
@@ -63,11 +55,20 @@ const newsData = {
   ]
 };
 
-app.get('/news/latest', (req, res) => {
-  const lang = req.query.lang || 'en';
-  res.json({ success: true, data: newsData[lang] || newsData.en });
-});
+export default function handler(req, res) {
+  const { lang = 'en' } = req.query;
+  
+  // Basic CORS headers for safety
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-app.get('/health', (req, res) => res.json({ status: 'ok', service: 'news-service' }));
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
 
-app.listen(PORT, () => console.log(`📰 News Service running on port ${PORT}`));
+  res.status(200).json({ 
+    success: true, 
+    data: newsData[lang] || newsData.en 
+  });
+}
