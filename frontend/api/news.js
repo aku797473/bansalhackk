@@ -22,6 +22,16 @@ module.exports = async (req, res) => {
     const data = await response.json();
 
     if (data.status === 'ok' && data.items) {
+      const agriImages = [
+        "https://images.unsplash.com/photo-1595067331631-f8442707b864?q=80&w=1000",
+        "https://images.unsplash.com/photo-1508614589041-895b88991e3e?q=80&w=1000",
+        "https://images.unsplash.com/photo-1563514227147-6d2ff665a6a0?q=80&w=1000",
+        "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?q=80&w=1000",
+        "https://images.unsplash.com/photo-1589923188900-85dae523342b?q=80&w=1000",
+        "https://images.unsplash.com/photo-1561470508-fd4df1ed90b2?q=80&w=1000",
+        "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=1000"
+      ];
+
       const mappedItems = data.items.map((item, index) => ({
         id: item.guid || index,
         title: item.title,
@@ -29,7 +39,7 @@ module.exports = async (req, res) => {
         category: "Live News",
         pubDate: item.pubDate,
         source: item.author || "Google News",
-        imageUrl: item.enclosure?.link || item.thumbnail || `https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=1000&auto=format&fit=crop`,
+        imageUrl: item.enclosure?.link || item.thumbnail || agriImages[index % agriImages.length],
         link: item.link
       }));
       
