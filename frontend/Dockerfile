@@ -1,31 +1,15 @@
-# Build stage
 FROM node:20-alpine AS build
 WORKDIR /app
+ARG VITE_CLERK_PUBLISHABLE_KEY
+ENV VITE_CLERK_PUBLISHABLE_KEY=$VITE_CLERK_PUBLISHABLE_KEY
+ENV NODE_OPTIONS="--max-old-space-size=1536"
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 COPY . .
-
-# Pass build args if needed (VITE_ prefixed vars)
-ARG VITE_API_BASE_URL
-ARG VITE_GOOGLE_MAPS_API_KEY
-ARG VITE_FIREBASE_API_KEY
-ARG VITE_FIREBASE_AUTH_DOMAIN
-ARG VITE_FIREBASE_PROJECT_ID
-ARG VITE_FIREBASE_APP_ID
-
-ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
-ENV VITE_GOOGLE_MAPS_API_KEY=$VITE_GOOGLE_MAPS_API_KEY
-ENV VITE_FIREBASE_API_KEY=$VITE_FIREBASE_API_KEY
-ENV VITE_FIREBASE_AUTH_DOMAIN=$VITE_FIREBASE_AUTH_DOMAIN
-ENV VITE_FIREBASE_PROJECT_ID=$VITE_FIREBASE_PROJECT_ID
-ENV VITE_FIREBASE_APP_ID=$VITE_FIREBASE_APP_ID
-
 RUN npm run build
 
-# Production stage
-FROM nginx:stable-alpine
-COPY --from=build /app/dist /usr/share/nginx/html
-# Copy custom nginx config for SPA routing
+FROM nginx:alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
