@@ -145,11 +145,15 @@ export default function Navbar() {
                     ? 'bg-primary text-white shadow-lg shadow-primary/20' 
                     : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-900'
                 )}>
-                <div className="flex items-center gap-3">
-                  <Icon size={18} />
-                  {label}
-                </div>
-                <ChevronRight size={14} className={isActive ? "opacity-100" : "opacity-0"} />
+                {({ isActive }) => (
+                  <>
+                    <div className="flex items-center gap-3">
+                      <Icon size={18} />
+                      {label}
+                    </div>
+                    <ChevronRight size={14} className={isActive ? "opacity-100" : "opacity-0"} />
+                  </>
+                )}
               </NavLink>
             ))}
           </nav>
