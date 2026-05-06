@@ -1,40 +1,25 @@
-const Parser = require('rss-parser');
-const parser = new Parser({
-  headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' },
-  customFields: {
-    item: [
-      ['media:content', 'mediaContent'],
-      ['image', 'image'],
-      ['enclosure', 'enclosure']
-    ]
-  }
-});
-
+// Using a public RSS-to-JSON API to ensure compatibility and avoid dependency issues
+const RSS_TO_JSON_API = "https://api.rss2json.com/v1/api.json?rss_url=";
 const FEEDS = {
-  en: [
-    'https://krishijagran.com/rss/news/',
-    'https://www.thehindubusinessline.com/economy/agri-business/?service=rss'
-  ],
-  hi: [
-    'https://hindi.krishijagran.com/rss/news/'
-  ]
+  en: "https://krishijagran.com/rss/news/",
+  hi: "https://hindi.krishijagran.com/rss/news/"
 };
 
 const fallbackNews = {
   en: [
     { 
-      id: "f1", title: "PM Kisan 17th Installment Released", 
-      description: "Hon'ble Prime Minister has released the 17th installment of PM-KISAN scheme.", 
-      category: "Govt", pubDate: new Date().toISOString(), source: "PIB India",
+      id: "f1", title: "Agricultural Reforms 2026", 
+      description: "New policies focused on digital infrastructure for farmers launched today.", 
+      category: "Policy", pubDate: new Date().toISOString(), source: "Agri Ministry",
       imageUrl: "https://images.unsplash.com/photo-1595067331631-f8442707b864?q=80&w=1000&auto=format&fit=crop",
       link: "https://pmkisan.gov.in"
     }
   ],
   hi: [
     { 
-      id: "f1", title: "पीएम किसान की 17वीं किस्त जारी", 
-      description: "माननीय प्रधानमंत्री ने पीएम-किसान योजना की 17वीं किस्त जारी की है।", 
-      category: "सरकार", pubDate: new Date().toISOString(), source: "पीआईबी भारत",
+      id: "f1", title: "कृषि सुधार 2026", 
+      description: "किसानों के लिए डिजिटल बुनियादी ढांचे पर केंद्रित नई नीतियां आज शुरू की गईं।", 
+      category: "नीति", pubDate: new Date().toISOString(), source: "कृषि मंत्रालय",
       imageUrl: "https://images.unsplash.com/photo-1595067331631-f8442707b864?q=80&w=1000&auto=format&fit=crop",
       link: "https://pmkisan.gov.in"
     }
@@ -52,56 +37,33 @@ module.exports = async (req, res) => {
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   try {
-    const feedUrls = FEEDS[targetLang];
-    const allItems = [];
+    const rssUrl = FEEDS[targetLang];
+    const apiUrl = `${RSS_TO_JSON_API}${encodeURIComponent(rssUrl)}`;
+    
+    console.log(`Calling News API: ${apiUrl}`);
+    
+    const response = await fetch(apiUrl);
+    const data = await response.json();
 
-    for (const url of feedUrls) {
-      try {
-        console.log(`Fetching feed: ${url}`);
-        const feed = await parser.parseURL(url);
-        if (feed && feed.items) {
-          const mappedItems = feed.items.map(item => {
-            let imageUrl = "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=1000&auto=format&fit=crop";
-            
-            if (item.mediaContent && item.mediaContent.$ && item.mediaContent.$.url) {
-              imageUrl = item.mediaContent.$.url;
-            } else if (item.enclosure && item.enclosure.url) {
-              imageUrl = item.enclosure.url;
-            } else if (item.content && item.content.includes('<img')) {
-              const match = item.content.match(/src="([^"]+)"/);
-              if (match) imageUrl = match[1];
-            }
-
-            return {
-              id: item.guid || item.link || Math.random().toString(),
-              title: item.title,
-              description: item.contentSnippet || item.description || "",
-              category: "Agriculture",
-              pubDate: item.pubDate || new Date().toISOString(),
-              source: feed.title || "Agri News",
-              imageUrl: imageUrl,
-              link: item.link
-            };
-          });
-          allItems.push(...mappedItems);
-        }
-      } catch (err) {
-        console.error(`Error in ${url}:`, err.message);
-      }
+    if (data.status === 'ok' && data.items) {
+      const mappedItems = data.items.map((item, index) => ({
+        id: item.guid || index,
+        title: item.title,
+        description: item.description.replace(/<[^>]*>?/gm, '').substring(0, 200) + '...',
+        category: "Latest",
+        pubDate: item.pubDate,
+        source: data.feed.title || "Agri News",
+        imageUrl: item.enclosure?.link || item.thumbnail || "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=1000&auto=format&fit=crop",
+        link: item.link
+      }));
+      
+      return res.status(200).json({ success: true, data: mappedItems });
     }
 
-    if (allItems.length === 0) {
-      console.log('No items found, returning fallback');
-      return res.status(200).json({ success: true, data: fallbackNews[targetLang] });
-    }
-
-    const sortedItems = allItems
-      .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate))
-      .slice(0, 12);
-
-    res.status(200).json({ success: true, data: sortedItems });
+    throw new Error('API returned non-ok status');
   } catch (error) {
-    console.error('Global API Error:', error);
+    console.error('News API Error:', error.message);
+    // Return fallback so the UI doesn't break
     res.status(200).json({ success: true, data: fallbackNews[targetLang] });
   }
 };
