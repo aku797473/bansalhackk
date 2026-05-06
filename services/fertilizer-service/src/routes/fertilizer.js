@@ -72,6 +72,8 @@ router.post('/analyze', upload.single('image'), async (req, res) => {
       console.warn('No GROQ_API_KEY found, using mock.');
       analysisResult = getMockAnalysis(language);
     } else {
+        const isHi = language?.startsWith('hi');
+        const langName = isHi ? 'Hindi (in Devanagari script)' : 'English';
         const prompt = `You are an expert agricultural scientist and plant pathologist. 
 Analyze this image which could be a plant, crop, or seeds.
 Identify:
@@ -79,9 +81,7 @@ Identify:
 2. Nutrient deficiencies or diseases (if a plant is shown)
 3. Soil report details (if a document is shown)
 
-IMPORTANT: Provide all descriptive text (deficiency, symptoms, treatment, prevention, generalRecommendations) in ${language?.startsWith('hi') ? 'Hindi' : 'English'}.
-
-Return ONLY valid JSON in this format:
+Return ONLY valid JSON in this format (JSON KEYS MUST REMAIN IN ENGLISH):
 {
   "primaryIssue": {
     "deficiency": "Name of Seed/Disease/Deficiency",
@@ -95,7 +95,11 @@ Return ONLY valid JSON in this format:
   "overallHealth": "Good|Fair|Poor",
   "urgency": "Immediate|Monitor",
   "generalRecommendations": ["tip1", "tip2"]
-}`;
+}
+
+CRITICAL REQUIREMENT: 
+You MUST provide all string VALUES for all descriptive fields (deficiency, symptoms, treatment, prevention, generalRecommendations, severity, overallHealth, urgency) STRICTLY AND ONLY in ${langName}. 
+Do NOT mix languages. Do NOT use English words in the values if Hindi is requested. Translate everything fully into ${langName}.`;
 
         try {
             console.log('Attempting Groq Vision Analysis (Llama 4 Scout)...');

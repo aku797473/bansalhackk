@@ -87,7 +87,8 @@ router.post('/recommend', async (req, res) => {
       temperature, humidity, rainfall, season, state, district,
     } = req.body;
 
-    const cacheKey = `crop:rec:${soilType}:${season}:${state}:${Math.round(temperature)}`;
+    const lang = req.body.language || 'en';
+    const cacheKey = `crop:rec:${soilType}:${season}:${state}:${Math.round(temperature)}:${lang}`;
     const isRedisReady = redis.status === 'ready';
     const cached = isRedisReady ? await redis.get(cacheKey) : null;
     if (cached) return res.json({ success: true, data: JSON.parse(cached), cached: true });
@@ -95,6 +96,8 @@ router.post('/recommend', async (req, res) => {
     let recommendation;
 
     if (openai) {
+      const isHi = req.body.language?.startsWith('hi');
+      const langName = isHi ? 'Hindi (in Devanagari script)' : 'English';
       const prompt = `You are an expert agricultural advisor for Indian farmers.
 Given the following soil and climate data, recommend the best crops to grow.
 
@@ -110,21 +113,23 @@ Season: ${season || 'Kharif'}
 State: ${state || 'Punjab'}
 District: ${district || ''}
 
-    Respond with a valid JSON object with these exact fields:
+Respond with a valid JSON object with these exact fields (JSON KEYS MUST REMAIN IN ENGLISH):
 {
   "primaryCrop": "string",
   "alternativeCrops": ["string", "string", "string"],
   "season": "string",
   "sowingTime": "string",
   "harvestTime": "string",
-  "waterRequirement": "Low|Medium|High",
+  "waterRequirement": "${isHi ? 'कम|मध्यम|उच्च' : 'Low|Medium|High'}",
   "fertilizers": ["string"],
   "tips": ["string", "string", "string"],
   "expectedYield": "string",
   "marketDemand": "Low|Medium|High"
 }
 
-IMPORTANT: Provide all text content (primaryCrop, alternativeCrops, sowingTime, harvestTime, fertilizers, tips, expectedYield) in ${req.body.language?.startsWith('hi') ? 'Hindi' : 'English'}.
+CRITICAL REQUIREMENT: 
+You MUST provide all string VALUES for all fields (primaryCrop, alternativeCrops, sowingTime, harvestTime, fertilizers, tips, expectedYield, waterRequirement) STRICTLY AND ONLY in ${langName}. 
+Do NOT mix languages. Do NOT use English words in the values if Hindi is requested. Translate everything fully into ${langName}.
 `;
 
       try {
