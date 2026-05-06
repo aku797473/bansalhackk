@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import LanguageSelector from '../components/LanguageSelector';
 import {
   Cloud, Leaf, FlaskConical, TrendingUp, Users, MessageCircle,
   ArrowRight, Sprout, MapPin, ShieldCheck, Zap, ChevronRight
@@ -85,7 +86,8 @@ export default function Landing() {
             <span className="font-black text-gray-900 dark:text-white text-xl tracking-tighter">Smart Kisan</span>
             <span className="hidden sm:block px-2 py-0.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg text-[10px] font-black uppercase tracking-widest border border-blue-100 dark:border-blue-900/20 ml-2">{t('landing.v2', 'v2.0')}</span>
           </div>
-          <div className="flex items-center gap-3 sm:gap-6">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <LanguageSelector showLabel={true} align="right" />
             <button onClick={() => navigate('/login')} className="text-sm font-black text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors uppercase tracking-widest hidden sm:flex">
               {t('landing.login', 'Login')}
             </button>
