@@ -9,6 +9,7 @@
     { "source": "/api/market/:path*", "destination": "/api/market.js" },
     { "source": "/api/crop/:path*", "destination": "/api/crop.js" },
     { "source": "/api/fertilizer/:path*", "destination": "/api/fertilizer.js" },
+    { "source": "/api/labour/:path*", "destination": "/api/labour.js" },
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
