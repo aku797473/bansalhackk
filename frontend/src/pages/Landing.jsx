@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import LanguageSelector from '../components/LanguageSelector';
 import {
-  Cloud, Leaf, FlaskConical, TrendingUp, Users, MessageCircle,
+  Cloud, Leaf, FlaskConical, TrendingUp, Users, MessageCircle, Map,
   ArrowRight, Sprout, MapPin, ShieldCheck, Zap, ChevronRight
 } from 'lucide-react';
 import logo from '../assets/logo.png';
@@ -44,6 +44,13 @@ const features = [
     accent: '#9333ea',
     key: 'labour',
     emoji: '👷',
+  },
+  {
+    icon: Map,
+    color: 'bg-teal-50 text-teal-600',
+    accent: '#0d9488',
+    key: 'map',
+    emoji: '🗺️',
   },
   {
     icon: MessageCircle,
