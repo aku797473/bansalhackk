@@ -97,8 +97,9 @@ export const chatAPI = {
 
 // ─── News ──────────────────────────────────────────
 export const newsAPI = {
-  // Calling live Vercel Function with static JSON fallback
-  getLatest: (lang) => api.get(`/news?lang=${lang}`),
+  // We use axios directly to ensure it hits Vercel (/api/news) 
+  // instead of trying to find news on the Render gateway.
+  getLatest: (lang) => axios.get(`/api/news?lang=${lang}`),
 };
 
 // ─── Payment ───────────────────────────────────────
