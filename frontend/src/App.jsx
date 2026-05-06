@@ -12,6 +12,7 @@ import TourGuide from './components/TourGuide';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { ClerkProvider } from '@clerk/clerk-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import clsx from 'clsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
