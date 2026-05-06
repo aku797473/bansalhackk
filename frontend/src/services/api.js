@@ -97,8 +97,8 @@ export const chatAPI = {
 
 // ─── News ──────────────────────────────────────────
 export const newsAPI = {
-  // Fetching from static public/news_${lang}.json for bilingual support
-  getLatest: (lang) => axios.get(`/news_${lang === 'hi' ? 'hi' : 'en'}.json`),
+  // Calling live Vercel Function with static JSON fallback
+  getLatest: (lang) => api.get(`/news?lang=${lang}`),
 };
 
 // ─── Payment ───────────────────────────────────────
