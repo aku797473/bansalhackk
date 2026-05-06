@@ -141,9 +141,13 @@ export default function Navbar() {
             <UserButton appearance={{ elements: { userButtonAvatarBox: "w-9 h-9 rounded-2xl ring-2 ring-primary/10" } }} />
           </div>
 
-          {/* Mobile Toggle */}
-          <button onClick={() => setOpen(!open)} className="lg:hidden p-2.5 bg-gray-100 dark:bg-slate-800 rounded-2xl text-gray-900 dark:text-white active:scale-90 transition-all">
-            {open ? <X size={20} /> : <Menu size={20} />}
+          {/* Mobile Toggle Button */}
+          <button 
+            onClick={() => setOpen(!open)} 
+            className="flex lg:hidden p-2.5 bg-primary/10 dark:bg-emerald-500/10 text-primary dark:text-emerald-400 rounded-xl active:scale-95 transition-all border border-primary/20 dark:border-emerald-500/20"
+            aria-label="Toggle Menu"
+          >
+            {open ? <X size={20} strokeWidth={2.5} /> : <Menu size={20} strokeWidth={2.5} />}
           </button>
         </div>
       </header>
