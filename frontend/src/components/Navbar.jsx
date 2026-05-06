@@ -87,13 +87,13 @@ export default function Navbar() {
       )}>
         
         {/* ── Logo ── */}
-        <NavLink to="/dashboard" className="flex items-center gap-3 shrink-0 group">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-primary to-emerald-400 flex items-center justify-center shadow-lg shadow-primary/20 group-hover:rotate-6 transition-all overflow-hidden p-1.5">
+        <NavLink to="/dashboard" className="flex items-center gap-2 sm:gap-3 shrink-0 group">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-gradient-to-br from-primary to-emerald-400 flex items-center justify-center shadow-lg shadow-primary/20 group-hover:rotate-6 transition-all overflow-hidden p-1.5">
             <img src={logo} alt="Logo" className="w-full h-full object-contain brightness-0 invert" />
           </div>
           <div className="flex flex-col">
-            <span className="font-extrabold text-gray-900 dark:text-white text-base tracking-tight leading-none">Smart Kisan</span>
-            <span className="text-[10px] font-bold text-primary dark:text-emerald-400 uppercase tracking-widest mt-0.5">Agriculture Platform</span>
+            <span className="font-extrabold text-gray-900 dark:text-white text-sm sm:text-base tracking-tight leading-none">Smart Kisan</span>
+            <span className="text-[9px] font-bold text-primary dark:text-emerald-400 uppercase tracking-widest mt-0.5 hidden sm:block">Agriculture Platform</span>
           </div>
         </NavLink>
 
@@ -118,7 +118,7 @@ export default function Navbar() {
         </nav>
 
         {/* ── Action Buttons ── */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-3">
           
           <div className="hidden sm:flex items-center gap-1">
             {/* Theme */}
@@ -136,9 +136,9 @@ export default function Navbar() {
           <div className="h-8 w-px bg-gray-200 dark:bg-slate-800 hidden sm:block" />
 
           {/* Language & Profile */}
-          <div className="flex items-center gap-3">
-            <LanguageSelector />
-            <UserButton appearance={{ elements: { userButtonAvatarBox: "w-9 h-9 rounded-2xl ring-2 ring-primary/10" } }} />
+          <div className="flex items-center gap-1.5 sm:gap-3">
+            <LanguageSelector showLabel={false} />
+            <UserButton appearance={{ elements: { userButtonAvatarBox: "w-8 h-8 sm:w-9 sm:h-9 rounded-xl sm:rounded-2xl ring-2 ring-primary/10" } }} />
           </div>
 
           {/* Mobile Toggle Button */}
