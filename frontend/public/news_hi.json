@@ -1,0 +1,33 @@
+{
+  "success": true,
+  "data": [
+    { 
+      "id": "hi1", "title": "पीएम किसान 17वीं किस्त: किसानों के खातों में पैसे ट्रांसफर", 
+      "description": "प्रधानमंत्री ने पीएम-किसान योजना की 17वीं किस्त जारी कर दी है। किसान आधिकारिक वेबसाइट पर अपना स्टेटस चेक कर सकते हैं।", 
+      "category": "सरकार", "pubDate": "2026-05-06T12:00:00Z", "source": "कृषि विभाग",
+      "imageUrl": "https://images.unsplash.com/photo-1595067331631-f8442707b864?q=80&w=1000&auto=format&fit=crop",
+      "link": "https://pmkisan.gov.in"
+    },
+    { 
+      "id": "hi2", "title": "ड्रोन सब्सिडी योजना: किसानों को 80% तक की छूट", 
+      "description": "ड्रोन दीदी योजना के तहत महिलाओं और किसान समूहों को कृषि ड्रोन खरीदने पर 80% तक की सब्सिडी मिल रही है।", 
+      "category": "तकनीक", "pubDate": "2026-05-06T10:00:00Z", "source": "कृषि मंत्रालय",
+      "imageUrl: "https://images.unsplash.com/photo-1508614589041-895b88991e3e?q=80&w=1000&auto=format&fit=crop",
+      "link": "https://agricoop.nic.in"
+    },
+    { 
+      "id": "hi3", "title": "गेहूं और धान के समर्थन मूल्य (MSP) में बड़ी वृद्धि", 
+      "description": "सरकार ने इस सीजन के लिए गेहूं और धान की एमएसपी में बढ़ोतरी को मंजूरी दी है, जिससे किसानों की आय में सुधार होगा।", 
+      "category": "बाजार", "pubDate": "2026-05-06T08:00:00Z", "source": "इकोनॉमिक टाइम्स",
+      "imageUrl": "https://images.unsplash.com/photo-1563514227147-6d2ff665a6a0?q=80&w=1000&auto=format&fit=crop",
+      "link": "https://economictimes.indiatimes.com"
+    },
+    { 
+      "id": "hi4", "title": "मिट्टी परीक्षण: अब अपने मोबाइल पर पाएं रिपोर्ट", 
+      "description": "मृदा स्वास्थ्य कार्ड योजना के तहत किसान अब अपनी मिट्टी की जांच रिपोर्ट सीधे अपने मोबाइल पर प्राप्त कर सकते हैं।", 
+      "category": "मिट्टी", "pubDate": "2026-05-06T06:00:00Z", "source": "सॉइल हेल्थ पोर्टल",
+      "imageUrl": "https://images.unsplash.com/photo-1561470508-fd4df1ed90b2?q=80&w=1000&auto=format&fit=crop",
+      "link": "https://soilhealth.dac.gov.in"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "success": true,
+  "data": [
+    { 
+      "id": "1", "title": "PM Kisan 17th Installment Released", 
+      "description": "The government has successfully disbursed the latest installment. Farmers can check their credit status on the PM-Kisan portal.", 
+      "category": "Govt", "pubDate": "2026-05-06T12:00:00Z", "source": "PIB India",
+      "imageUrl": "https://images.unsplash.com/photo-1595067331631-f8442707b864?q=80&w=1000&auto=format&fit=crop",
+      "link": "https://pmkisan.gov.in"
+    },
+    { 
+      "id": "2", "title": "New Drone Subsidy for Rural Youth", 
+      "description": "Under the 'Drone Didi' scheme, the government is providing 80% subsidy for agricultural drones.", 
+      "category": "Tech", "pubDate": "2026-05-06T10:00:00Z", "source": "Agri Ministry",
+      "imageUrl": "https://images.unsplash.com/photo-1508614589041-895b88991e3e?q=80&w=1000&auto=format&fit=crop",
+      "link": "https://agricoop.nic.in"
+    },
+    { 
+      "id": "3", "title": "MSP for Wheat Increased for 2026", 
+      "description": "The cabinet has approved a significant increase in the Minimum Support Price for wheat.", 
+      "category": "Market", "pubDate": "2026-05-06T08:00:00Z", "source": "Economic Times",
+      "imageUrl": "https://images.unsplash.com/photo-1563514227147-6d2ff665a6a0?q=80&w=1000&auto=format&fit=crop",
+      "link": "https://economictimes.indiatimes.com"
+    }
+  ]
+}
