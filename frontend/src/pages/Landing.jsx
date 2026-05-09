@@ -3,211 +3,239 @@ import { useTranslation } from 'react-i18next';
 import LanguageSelector from '../components/LanguageSelector';
 import {
   Cloud, Leaf, FlaskConical, TrendingUp, Users, MessageCircle, Map,
-  ArrowRight, Sprout, MapPin, ShieldCheck, Zap, ChevronRight
+  ArrowRight, ShieldCheck, Zap, ChevronRight, Globe, BarChart3, 
+  Smartphone, Award, CheckCircle2, Star, Quote, Landmark
 } from 'lucide-react';
+import clsx from 'clsx';
 import logo from '../assets/logo.png';
-import heroImg from '../assets/hero-farmer.png';
-import cropsImg from '../assets/crops-closeup.png';
+import premiumHero from '../smart_kisan_hero_bg_1778305723903.png';
 
 const features = [
   {
     icon: Cloud,
-    color: 'bg-sky-50 text-sky-600',
+    color: 'bg-sky-50 text-sky-600 dark:bg-sky-500/10 dark:text-sky-400',
     accent: '#0ea5e9',
     key: 'weather',
     emoji: '🌦️',
+    size: 'lg', 
   },
   {
     icon: Leaf,
-    color: 'bg-green-50 text-green-600',
+    color: 'bg-green-50 text-green-600 dark:bg-green-500/10 dark:text-green-400',
     accent: '#16a34a',
     key: 'crop',
     emoji: '🌱',
-  },
-  {
-    icon: FlaskConical,
-    color: 'bg-amber-50 text-amber-600',
-    accent: '#d97706',
-    key: 'fertilizer',
-    emoji: '🧪',
+    size: 'md',
   },
   {
     icon: TrendingUp,
-    color: 'bg-blue-50 text-blue-600',
+    color: 'bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400',
     accent: '#2563eb',
     key: 'market',
     emoji: '📈',
+    size: 'md',
+  },
+  {
+    icon: FlaskConical,
+    color: 'bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400',
+    accent: '#d97706',
+    key: 'fertilizer',
+    emoji: '🧪',
+    size: 'lg',
   },
   {
     icon: Users,
-    color: 'bg-purple-50 text-purple-600',
+    color: 'bg-purple-50 text-purple-600 dark:bg-purple-500/10 dark:text-purple-400',
     accent: '#9333ea',
     key: 'labour',
     emoji: '👷',
+    size: 'md',
   },
   {
     icon: Map,
-    color: 'bg-teal-50 text-teal-600',
+    color: 'bg-teal-50 text-teal-600 dark:bg-teal-500/10 dark:text-teal-400',
     accent: '#0d9488',
     key: 'map',
     emoji: '🗺️',
-  },
-  {
-    icon: MessageCircle,
-    color: 'bg-teal-50 text-teal-600',
-    accent: '#0d9488',
-    key: 'chat',
-    emoji: '💬',
+    size: 'md',
   },
 ];
 
 const stats = [
-  { value: '10L+', key: 'farmers' },
-  { value: '500+', key: 'mandis' },
-  { value: '15+',  key: 'states' },
-  { value: '24/7', key: 'support' },
+  { value: '1M+', key: 'farmers', icon: Users },
+  { value: '500+', key: 'mandis', icon: Landmark },
+  { value: '28',    key: 'states', icon: Globe },
+  { value: '24/7', key: 'support', icon: Zap },
 ];
 
-const testimonials = [
-  { id: 'ramlal', avatar: '👨‍🌾' },
-  { id: 'sunita', avatar: '👩‍🌾' },
-  { id: 'jagdish', avatar: '🧑‍🌾' },
+const trustedBy = [
+  { name: 'AGMARKNET', label: 'Official Prices' },
+  { name: 'IMD INDIA', label: 'Satellite Data' },
+  { name: 'ICAR', label: 'Scientific Models' },
+  { name: 'PM-KISAN', label: 'Scheme Sync' },
 ];
-
-const trustedBy = ['🏛️ NABARD', '🌿 ICAR', '🏦 SBI Agri', '🇮🇳 PM-KISAN'];
 
 export default function Landing() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950 overflow-x-hidden animate-fade-in">
+    <div className="min-h-screen bg-white dark:bg-slate-950 overflow-x-hidden selection:bg-primary selection:text-white">
 
       {/* ── Navbar ──────────────────────────────────────── */}
-      <header className="sticky top-0 z-50 glass border-b border-gray-200/50 dark:border-white/5" style={{ boxShadow: '0 2px 20px rgba(0,0,0,0.06)' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-2xl bg-white flex items-center justify-center shadow-lg shadow-primary/20 overflow-hidden">
-              <img src={logo} alt={t('common.logo', 'Smart Kisan Logo')} className="w-full h-full object-cover" />
+      <header className="sticky top-0 z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-b border-gray-100 dark:border-white/5 h-20 shadow-sm transition-all">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 group cursor-pointer shrink-0" onClick={() => window.scrollTo(0, 0)}>
+            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform duration-300">
+              <img src={logo} alt="Logo" className="w-6 h-6 invert brightness-0" />
             </div>
-            <span className="font-black text-gray-900 dark:text-white text-xl tracking-tighter">Smart Kisan</span>
-            <span className="hidden sm:block px-2 py-0.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg text-[10px] font-black uppercase tracking-widest border border-blue-100 dark:border-blue-900/20 ml-2">{t('landing.v2', 'v2.0')}</span>
+            <div className="flex flex-col">
+               <span className="font-black text-gray-900 dark:text-white text-xl tracking-tighter leading-none">Smart Kisan</span>
+               <span className="text-[9px] text-primary dark:text-emerald-400 font-black uppercase tracking-[0.2em]">{t('landing.v2')}</span>
+            </div>
           </div>
-          <div className="flex items-center gap-3 sm:gap-4">
+
+          <div className="flex items-center gap-4 sm:gap-6">
+            <nav className="hidden lg:flex items-center gap-8 mr-4">
+               {['features', 'steps', 'impact'].map(item => (
+                 <a key={item} href={`#${item}`} className="text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-primary transition-colors">{t(`landing.nav.${item}`, item)}</a>
+               ))}
+            </nav>
             <LanguageSelector showLabel={true} align="right" />
-            <button onClick={() => navigate('/login')} className="text-sm font-black text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors uppercase tracking-widest hidden sm:flex">
-              {t('landing.login', 'Login')}
-            </button>
-            <button onClick={() => navigate('/login')} className="btn-primary h-12 px-6 text-sm font-black uppercase tracking-widest shadow-xl shadow-primary/20 active:scale-95">
-              <span>{t('landing.get_started_btn', 'Get Started')}</span> <ArrowRight size={16} />
+            <button onClick={() => navigate('/login')} className="btn-primary h-12 px-8 text-[10px] font-black uppercase tracking-widest rounded-xl shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all">
+              {t('landing.get_started_btn')}
             </button>
           </div>
         </div>
       </header>
 
-      {/* ── Hero ──────────────────────────────────────────── */}
-      <section className="relative overflow-hidden pt-20 pb-32 sm:pt-32 sm:pb-48 px-4 sm:px-6">
-        {/* Real Hero Background */}
+      {/* ── Hero Section ──────────────────────────────────── */}
+      <section className="relative min-h-[90vh] flex items-center justify-center pt-20 pb-32 px-4 overflow-hidden">
+        {/* Cinematic Background */}
         <div className="absolute inset-0 z-0">
-           <img src={heroImg} alt="Farmer in field" className="w-full h-full object-cover opacity-10 dark:opacity-20" />
-           <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/40 to-white dark:from-slate-950/90 dark:via-slate-950/40 dark:to-slate-950" />
+          <img src={premiumHero} alt="Premium Farm" className="w-full h-full object-cover opacity-30 dark:opacity-40 animate-fade-in" />
+          <div className="absolute inset-0 bg-gradient-to-b from-white via-white/40 to-white dark:from-slate-950 dark:via-slate-950/40 dark:to-slate-950" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,white_100%)] dark:bg-[radial-gradient(circle_at_center,transparent_0%,#020617_100%)]" />
         </div>
 
-        <div className="relative z-10 max-w-5xl mx-auto text-center">
-          {/* Pill badge */}
-          <div className="inline-flex items-center gap-2.5 bg-white dark:bg-slate-900 border border-green-200 dark:border-green-900/30 text-primary text-[10px] font-black uppercase tracking-[0.2em] px-6 py-3 rounded-full mb-12 shadow-2xl float-up">
-            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse inline-block" />
-            <ShieldCheck size={14} className="text-green-500" />
-            <span>{t('landing.official_partners', 'Official Data Partner: Agmarknet & IMD')}</span>
+        <div className="relative z-10 max-w-6xl mx-auto text-center px-4">
+          <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-white dark:bg-slate-900 border border-primary/20 dark:border-primary/10 text-primary dark:text-emerald-400 text-[10px] font-black uppercase tracking-[0.25em] rounded-full mb-10 shadow-premium animate-slide-down">
+            <span className="flex h-2 w-2 relative">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+            </span>
+            {t('landing.official_partners')}
           </div>
 
-          <h1 className="text-fluid-xl font-black text-gray-900 dark:text-white text-balance mb-10 float-up-2 tracking-tighter leading-[0.95]"
-            dangerouslySetInnerHTML={{ __html: t('landing.empowering', 'Empowering Farmers with <span class="text-primary">Real-Time</span> Data & AI') }} />
+          <h1 className="text-fluid-xl font-black text-gray-900 dark:text-white leading-[0.95] tracking-tighter mb-8 animate-slide-up"
+              dangerouslySetInnerHTML={{ __html: t('landing.empowering') }} />
 
-          <p className="text-lg sm:text-xl text-gray-500 dark:text-slate-400 max-w-2xl mx-auto mb-14 text-balance float-up-3 font-medium leading-relaxed">
-            {t('landing.hero_desc', 'Get accurate Mandi rates, weather advisories, and crop analysis — verified data directly from official sources to your smartphone.')}
+          <p className="text-lg sm:text-2xl text-gray-500 dark:text-slate-400 max-w-3xl mx-auto mb-14 font-medium leading-relaxed animate-slide-up [animation-delay:100ms]">
+            {t('landing.hero_desc')}
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center float-up-4 px-4 sm:px-0">
-            <button
-              onClick={() => navigate('/login')}
-              className="btn-primary h-16 sm:h-18 px-10 text-base font-black uppercase tracking-widest rounded-2xl shadow-2xl shadow-primary/30 hover:scale-105 active:scale-95 w-full sm:w-auto">
-              <span>{t('landing.get_started')}</span> <ArrowRight size={20} />
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up [animation-delay:200ms]">
+            <button onClick={() => navigate('/login')} className="btn-primary h-18 px-12 text-base font-black uppercase tracking-widest rounded-2xl shadow-2xl shadow-primary/30 hover:scale-105 active:scale-95 w-full sm:w-auto group">
+              <span>{t('landing.get_started')}</span> 
+              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </button>
-            <button className="btn-secondary h-16 sm:h-18 px-10 text-base font-black uppercase tracking-widest rounded-2xl border-2 dark:bg-slate-900 dark:border-slate-800 hover:scale-105 active:scale-95 w-full sm:w-auto">
-              <span>{t('landing.learn_more')}</span>
+            <button className="h-18 px-10 text-base font-black uppercase tracking-widest text-gray-600 dark:text-slate-300 hover:text-primary transition-all border-2 border-transparent hover:border-primary/20 rounded-2xl">
+              {t('landing.learn_more')}
             </button>
           </div>
 
-          {/* Trusted by */}
-          <div className="mt-24 flex flex-col items-center gap-8 float-up-4 opacity-70">
-            <p className="text-[10px] text-gray-400 font-black uppercase tracking-[0.3em]">{t('landing.trusted_by', 'Trusted & Supported by')}</p>
-            <div className="flex flex-wrap justify-center gap-4 sm:gap-10">
-              {trustedBy.map(t => (
-                <span key={t} className="text-sm text-gray-400 font-black grayscale hover:grayscale-0 transition-all cursor-default uppercase tracking-widest">
-                  {t}
-                </span>
-              ))}
-            </div>
+          {/* Floating Showcase */}
+          <div className="mt-24 relative max-w-4xl mx-auto animate-scale-up [animation-delay:400ms]">
+             <div className="absolute -top-12 -left-12 w-48 h-48 bg-primary/20 blur-[100px] rounded-full" />
+             <div className="absolute -bottom-12 -right-12 w-48 h-48 bg-blue-500/20 blur-[100px] rounded-full" />
+             <div className="relative glass-dark p-2 rounded-[2.5rem] border border-white/20 shadow-3xl overflow-hidden group">
+                <img src={premiumHero} className="w-full rounded-[2rem] shadow-inner group-hover:scale-[1.02] transition-transform duration-1000" alt="Platform Dashboard" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-10 text-left">
+                   <div className="flex items-center gap-4 mb-4">
+                      <div className="badge-verified bg-white/20 backdrop-blur-md text-white border-white/20">
+                         <ShieldCheck size={10} /> {t('landing.verified')}
+                      </div>
+                      <div className="text-[10px] text-white/60 font-black uppercase tracking-widest">LIVE MANDI FEED</div>
+                   </div>
+                   <h3 className="text-white text-2xl font-black tracking-tight">{t('landing.hero_title')}</h3>
+                </div>
+             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Stats Strip ───────────────────────────────────── */}
-      <section className="py-20 sm:py-24 bg-gray-50/50 dark:bg-black/20 border-y border-gray-100 dark:border-white/5">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-4 gap-10 sm:gap-8">
-            {stats.map(s => (
-              <div key={s.key} className="text-center group">
-                <p className="text-4xl sm:text-5xl font-black text-primary tracking-tighter mb-1 group-hover:scale-110 transition-transform">{s.value}</p>
-                <p className="text-xs font-black text-gray-900 dark:text-white uppercase tracking-widest">{t(`landing.stats_label.${s.key}`, s.key)}</p>
-                <p className="text-[10px] text-gray-400 font-bold mt-1 uppercase tracking-wider">{t(`landing.stats_desc.${s.key}`, s.key)}</p>
+      {/* ── Trusted By Strip ──────────────────────────────── */}
+      <section className="py-16 border-y border-gray-100 dark:border-white/5 bg-gray-50/30 dark:bg-black/20">
+        <div className="max-w-7xl mx-auto px-6">
+           <p className="text-center text-[10px] font-black text-gray-400 uppercase tracking-[0.4em] mb-12">{t('landing.trusted_by')}</p>
+           <div className="flex flex-wrap justify-center gap-12 sm:gap-24 opacity-50 dark:opacity-40">
+             {trustedBy.map(brand => (
+               <div key={brand.name} className="flex flex-col items-center">
+                 <span className="text-xl sm:text-2xl font-black text-gray-900 dark:text-white tracking-tighter grayscale">{brand.name}</span>
+                 <span className="text-[8px] font-bold uppercase tracking-widest mt-1">{brand.label}</span>
+               </div>
+             ))}
+           </div>
+        </div>
+      </section>
+
+      {/* ── Stats Bento ───────────────────────────────────── */}
+      <section id="impact" className="py-24 sm:py-32 bg-white dark:bg-slate-950 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
+            {stats.map(({ value, key, icon: Icon }) => (
+              <div key={key} className="p-8 rounded-[2rem] bg-gray-50/50 dark:bg-slate-900/50 border border-gray-100 dark:border-white/5 flex flex-col items-center text-center group hover:border-primary/30 transition-all duration-500">
+                <div className="w-14 h-14 rounded-2xl bg-white dark:bg-slate-800 flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform">
+                  <Icon size={24} className="text-primary dark:text-emerald-400" />
+                </div>
+                <div className="text-4xl sm:text-5xl font-black text-gray-900 dark:text-white tracking-tighter mb-2">{value}</div>
+                <p className="text-xs font-black text-gray-500 uppercase tracking-widest mb-1">{t(`landing.stats_label.${key}`)}</p>
+                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest opacity-60">{t(`landing.stats_desc.${key}`)}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Features ──────────────────────────────────────── */}
-      <section className="py-24 sm:py-32 px-4 sm:px-6 bg-white dark:bg-slate-950">
+      {/* ── Features Bento Grid ───────────────────────────── */}
+      <section id="features" className="py-24 sm:py-32 bg-gray-50/50 dark:bg-black/20 px-6 overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-20 sm:mb-24">
-            <span className="px-4 py-1.5 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full text-[10px] font-black uppercase tracking-[0.25em] border border-green-100 dark:border-green-900/20 mb-6 inline-block">{t('landing.platform_ecosystem', 'Platform Ecosystem')}</span>
-            <h2 className="text-fluid-lg font-black text-gray-900 dark:text-white mb-6 tracking-tighter leading-none">
-              {t('landing.features_title')}
+          <div className="max-w-3xl mb-24">
+            <span className="px-4 py-1.5 bg-primary/10 text-primary dark:text-emerald-400 rounded-full text-[10px] font-black uppercase tracking-[0.25em] border border-primary/10 mb-6 inline-block">{t('landing.platform_ecosystem')}</span>
+            <h2 className="text-fluid-lg font-black text-gray-900 dark:text-white mb-8 tracking-tighter leading-none">
+               {t('landing.features_title')}
             </h2>
-            <p className="text-lg text-gray-500 dark:text-slate-400 max-w-2xl mx-auto font-medium">
-              {t('landing.unified_dashboard', 'AI-powered smart tools to enhance your farming lifecycle — all in one unified dashboard.')}
+            <p className="text-xl text-gray-500 dark:text-slate-400 font-medium">
+              {t('landing.unified_dashboard')}
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
-            {features.map(({ icon: Icon, color, accent, key, emoji }) => (
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-[280px]">
+            {features.map(({ icon: Icon, color, accent, key, emoji, size }, i) => (
               <div
                 key={key}
-                className="bg-gray-50/50 dark:bg-slate-900/50 rounded-[2.5rem] border border-gray-100 dark:border-white/5 p-10 hover:shadow-3xl hover:-translate-y-2 transition-all duration-500 group cursor-default relative overflow-hidden"
-              >
-                {key === 'crop' && (
-                  <div className="absolute top-0 right-0 w-32 h-32 opacity-10 pointer-events-none">
-                    <img src={cropsImg} alt="Crops" className="w-full h-full object-cover grayscale" />
-                  </div>
+                onClick={() => navigate('/login')}
+                className={clsx(
+                  "group relative rounded-[2.5rem] p-10 overflow-hidden border border-gray-100 dark:border-white/5 bg-white dark:bg-slate-900 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-700 cursor-pointer",
+                  size === 'lg' ? 'md:col-span-7' : 'md:col-span-5',
+                  i === 0 && 'md:row-span-2 md:h-full'
                 )}
-                <div className={`w-16 h-16 rounded-2xl ${color} dark:bg-opacity-20 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg`}>
-                  <Icon size={28} />
+              >
+                <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-transparent to-primary/5 -translate-y-1/2 translate-x-1/4 rounded-full pointer-events-none group-hover:scale-150 transition-transform duration-1000" />
+                
+                <div className={clsx("w-14 h-14 rounded-2xl flex items-center justify-center mb-8 shadow-inner group-hover:scale-110 group-hover:rotate-3 transition-all duration-500", color)}>
+                  <Icon size={26} />
                 </div>
-                <h3 className="font-black text-gray-900 dark:text-white mb-4 text-xl tracking-tight flex items-center gap-3">
-                  <span className="text-2xl">{emoji}</span> <span>{t(`landing.feat_${key}`)}</span>
+                
+                <h3 className="text-2xl font-black text-gray-900 dark:text-white mb-4 tracking-tight flex items-center gap-3">
+                   <span className="text-3xl">{emoji}</span> {t(`landing.feat_${key}`)}
                 </h3>
-                <p className="text-sm text-gray-500 dark:text-slate-400 leading-relaxed font-medium">
+                <p className="text-sm text-gray-500 dark:text-slate-400 font-medium leading-relaxed max-w-sm">
                   {t(`landing.feat_${key}_desc`)}
                 </p>
-                <div className="mt-8 flex items-center gap-3">
-                  <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest" style={{ color: accent }}>
-                    <span>{t('landing.explore_module', 'Explore Module')}</span> <ChevronRight size={14} />
-                  </div>
-                  <div className="badge-verified ml-auto">
-                    <ShieldCheck size={10} /> {t('landing.verified', 'Verified')}
-                  </div>
+
+                <div className="absolute bottom-8 right-8 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all duration-500" style={{ color: accent }}>
+                   {t('landing.explore_module')} <ChevronRight size={14} />
                 </div>
               </div>
             ))}
@@ -215,113 +243,157 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── How it works ──────────────────────────────────── */}
-      <section className="py-24 sm:py-32 px-4 sm:px-6 bg-gray-50 dark:bg-black/40">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-20">
-            <span className="px-4 py-1.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-[10px] font-black uppercase tracking-[0.25em] border border-blue-100 dark:border-blue-900/20 mb-6 inline-block">{t('landing.simple_workflow', 'Simple Workflow')}</span>
-            <h2 className="text-fluid-lg font-black text-gray-900 dark:text-white tracking-tighter leading-none">
-              {t('landing.steps_title', 'Start in 3 Easy Steps')}
-            </h2>
-          </div>
-          <div className="grid sm:grid-cols-3 gap-12 relative">
-            {/* Connector line */}
-            <div className="hidden sm:block absolute top-12 left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-
-            {[
-              { step: '01', key: '01', icon: '📝' },
-              { step: '02', key: '02', icon: '📊' },
-              { step: '03', key: '03', icon: '🚀' },
-            ].map(({ step, key, icon }) => (
-              <div key={step} className="flex flex-col items-center text-center gap-6 relative">
-                <div className="w-24 h-24 rounded-[2rem] bg-white dark:bg-slate-900 border-2 border-primary/20 flex items-center justify-center text-4xl shadow-2xl transition-transform hover:scale-110">
-                  {icon}
+      {/* ── Steps Section ─────────────────────────────────── */}
+      <section id="steps" className="py-24 sm:py-32 bg-white dark:bg-slate-950 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col lg:flex-row items-center gap-20">
+             <div className="flex-1 text-center lg:text-left">
+                <span className="px-4 py-1.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-[10px] font-black uppercase tracking-[0.25em] border border-blue-100 dark:border-blue-900/20 mb-8 inline-block">{t('landing.simple_workflow')}</span>
+                <h2 className="text-fluid-lg font-black text-gray-900 dark:text-white mb-10 tracking-tighter leading-none">
+                   {t('landing.steps_title')}
+                </h2>
+                <div className="space-y-12">
+                   {['01', '02', '03'].map(step => (
+                     <div key={step} className="flex flex-col sm:flex-row items-center lg:items-start gap-6 group">
+                        <div className="w-16 h-16 rounded-[1.25rem] bg-primary/10 dark:bg-primary/20 text-primary dark:text-emerald-400 flex items-center justify-center font-black text-2xl shrink-0 group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all">
+                           {step}
+                        </div>
+                        <div>
+                           <h3 className="font-black text-gray-900 dark:text-white text-lg mb-2 uppercase tracking-tight">{t(`landing.steps.${step}.title`)}</h3>
+                           <p className="text-base text-gray-500 dark:text-slate-400 font-medium">{t(`landing.steps.${step}.desc`)}</p>
+                        </div>
+                     </div>
+                   ))}
                 </div>
-                <div>
-                  <div className="text-[10px] font-black text-primary/60 mb-2 tracking-[0.3em]">{t('landing.step_label', 'STEP')} {step}</div>
-                  <h3 className="font-black text-gray-900 dark:text-white text-lg mb-2 uppercase tracking-tight">{t(`landing.steps.${key}.title`)}</h3>
-                  <p className="text-sm text-gray-500 dark:text-slate-400 font-medium leading-relaxed">{t(`landing.steps.${key}.desc`)}</p>
+             </div>
+             <div className="flex-1 relative">
+                <div className="absolute inset-0 bg-primary/20 blur-[120px] rounded-full animate-pulse" />
+                <div className="relative bg-gray-900 rounded-[3rem] p-4 shadow-3xl border border-white/10 overflow-hidden">
+                   <div className="flex items-center gap-2 mb-4 px-4">
+                      <div className="w-3 h-3 rounded-full bg-red-500/20" />
+                      <div className="w-3 h-3 rounded-full bg-amber-500/20" />
+                      <div className="w-3 h-3 rounded-full bg-green-500/20" />
+                   </div>
+                   <img src={premiumHero} alt="Onboarding" className="w-full rounded-[2rem]" />
                 </div>
-              </div>
-            ))}
+             </div>
           </div>
         </div>
       </section>
 
       {/* ── Testimonials ──────────────────────────────────── */}
-      <section className="py-24 sm:py-32 px-4 sm:px-6 bg-white dark:bg-slate-950">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-20">
-            <span className="px-4 py-1.5 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-full text-[10px] font-black uppercase tracking-[0.25em] border border-amber-100 dark:border-amber-900/20 mb-6 inline-block">{t('landing.success_stories', 'Success Stories')}</span>
-            <h2 className="text-fluid-lg font-black text-gray-900 dark:text-white tracking-tighter leading-none">
-              {t('landing.farmer_stories', 'Farmer Stories')}
-            </h2>
-          </div>
-          <div className="grid sm:grid-cols-3 gap-8">
-            {testimonials.map((test, i) => (
-              <div key={i} className="bg-gray-50/50 dark:bg-slate-900/50 rounded-[2.5rem] border border-gray-100 dark:border-white/5 p-10 shadow-sm transition-all hover:shadow-2xl hover:border-primary/20">
-                <div className="text-2xl mb-6">⭐⭐⭐⭐⭐</div>
-                <p className="text-base text-gray-600 dark:text-slate-300 leading-relaxed mb-8 font-medium italic">"{t(`landing.testimonials.${test.id}.text`)}"</p>
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-white dark:bg-slate-800 flex items-center justify-center text-3xl shadow-lg shadow-gray-100 dark:shadow-none">
-                    {test.avatar}
-                  </div>
-                  <div>
-                    <p className="font-black text-gray-900 dark:text-white text-base tracking-tight">{t(`landing.testimonials.${test.id}.name`)}</p>
-                    <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest">{t(`landing.testimonials.${test.id}.role`)}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+      <section className="py-24 sm:py-48 px-6 bg-gray-900 dark:bg-black overflow-hidden relative">
+         <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-white dark:from-slate-950 to-transparent" />
+         
+         <div className="max-w-7xl mx-auto relative z-10">
+            <div className="text-center mb-24">
+               <span className="text-[10px] font-black text-primary uppercase tracking-[0.4em] mb-6 block">{t('landing.success_stories')}</span>
+               <h2 className="text-fluid-lg font-black text-white tracking-tighter leading-none mb-4">{t('landing.farmer_stories')}</h2>
+               <div className="flex items-center justify-center gap-1 text-amber-400">
+                  {[1,2,3,4,5].map(i => <Star key={i} size={16} fill="currentColor" />)}
+               </div>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8">
+               {['ramlal', 'sunita', 'jagdish'].map((id) => (
+                 <div key={id} className="relative group">
+                    <div className="absolute inset-0 bg-white/5 rounded-[2.5rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="relative p-10 rounded-[2.5rem] border border-white/10 bg-white/5 backdrop-blur-sm h-full flex flex-col">
+                       <Quote size={40} className="text-primary mb-8 opacity-40" />
+                       <p className="text-lg text-white/80 font-medium italic leading-relaxed mb-10 flex-1">
+                         "{t(`landing.testimonials.${id}.text`)}"
+                       </p>
+                       <div className="flex items-center gap-4 mt-auto">
+                          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-blue-500/20 border border-white/10 flex items-center justify-center text-3xl">
+                             {id === 'ramlal' ? '👨‍🌾' : id === 'sunita' ? '👩‍🌾' : '🧑‍🌾'}
+                          </div>
+                          <div className="text-left">
+                             <p className="text-white font-black text-base tracking-tight">{t(`landing.testimonials.${id}.name`)}</p>
+                             <p className="text-[10px] text-white/40 font-black uppercase tracking-widest">{t(`landing.testimonials.${id}.role`)}</p>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+               ))}
+            </div>
+         </div>
       </section>
 
-      {/* ── CTA Banner ────────────────────────────────────── */}
-      <section className="py-24 sm:py-32 px-4 sm:px-6 bg-primary-gradient relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10 pointer-events-none" style={{
-          backgroundImage: 'radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px)',
-          backgroundSize: '48px 48px'
-        }} />
-        <div className="relative max-w-3xl mx-auto text-center text-white">
-          <div className="w-20 h-20 rounded-[1.75rem] bg-white flex items-center justify-center text-4xl mx-auto mb-10 border border-white/30 shadow-2xl overflow-hidden">
-            <img src={logo} alt={t('common.logo', 'Smart Kisan Logo')} className="w-full h-full object-cover" />
-          </div>
-          <h2 className="text-fluid-lg font-black mb-8 tracking-tighter leading-[0.9]">{t('landing.start_free', 'Start Today — For Free')}</h2>
-          <p className="text-lg sm:text-xl text-green-100 mb-14 font-medium opacity-90 text-balance">
-            {t('landing.join_millions', 'Join millions of farmers and transform your traditional farming into a data-driven smart business.')}
-          </p>
-          <div className="flex flex-col xs:flex-row gap-5 justify-center">
-            <button
-              onClick={() => navigate('/login')}
-              className="bg-white text-primary h-18 px-12 rounded-[1.5rem] font-black uppercase tracking-[0.2em] hover:scale-105 active:scale-95 transition-all inline-flex items-center justify-center gap-3 shadow-2xl text-base group">
-              <span>{t('landing.get_started')}</span> <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
-            </button>
-          </div>
-          <div className="mt-14 flex flex-wrap items-center justify-center gap-8 text-[10px] font-black uppercase tracking-[0.25em] text-green-100 opacity-80">
-            <span className="flex items-center gap-2.5"><ShieldCheck size={16} /> <span>{t('landing.secure', 'Secure')}</span></span>
-            <span className="flex items-center gap-2.5"><Zap size={16} /> <span>{t('landing.fast_setup', 'Fast Setup')}</span></span>
-            <span className="flex items-center gap-2.5">💯 <span>{t('landing.free_forever', 'Free Forever')}</span></span>
-          </div>
-        </div>
+      {/* ── CTA Section ────────────────────────────────────── */}
+      <section className="py-24 sm:py-48 px-6 bg-white dark:bg-slate-950 overflow-hidden">
+         <div className="max-w-5xl mx-auto">
+            <div className="relative rounded-[4rem] bg-gradient-to-br from-primary-dark to-primary p-12 sm:p-24 text-center text-white overflow-hidden shadow-premium group">
+               <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white/5 rounded-full -translate-y-1/2 translate-x-1/4 pointer-events-none group-hover:scale-110 transition-transform duration-1000" />
+               <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-black/5 rounded-full translate-y-1/2 -translate-x-1/4 pointer-events-none" />
+               
+               <div className="relative z-10">
+                  <div className="w-20 h-20 rounded-[1.75rem] bg-white flex items-center justify-center mx-auto mb-12 shadow-2xl animate-bounce-sm">
+                     <img src={logo} alt="Logo" className="w-10 h-10" />
+                  </div>
+                  <h2 className="text-fluid-lg font-black mb-8 tracking-tighter leading-[0.95]">{t('landing.start_free')}</h2>
+                  <p className="text-xl text-green-100/80 mb-16 max-w-2xl mx-auto font-medium leading-relaxed">
+                    {t('landing.join_millions')}
+                  </p>
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+                    <button onClick={() => navigate('/login')} className="bg-white text-primary h-20 px-14 rounded-2xl font-black uppercase tracking-[0.2em] shadow-3xl hover:scale-105 active:scale-95 transition-all inline-flex items-center gap-3 text-lg group">
+                      {t('landing.get_started')} <ArrowRight size={24} className="group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  </div>
+                  
+                  <div className="mt-20 flex flex-wrap justify-center gap-8 sm:gap-16">
+                     {[
+                       { icon: ShieldCheck, label: t('landing.secure') },
+                       { icon: Zap, label: t('landing.fast_setup') },
+                       { icon: Award, label: t('landing.free_forever') }
+                     ].map(({ icon: Icon, label }) => (
+                       <div key={label} className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.25em] text-white/70">
+                          <Icon size={18} />
+                          <span>{label}</span>
+                       </div>
+                     ))}
+                  </div>
+               </div>
+            </div>
+         </div>
       </section>
 
       {/* ── Footer ────────────────────────────────────────── */}
-      <footer className="bg-white dark:bg-slate-950 border-t border-gray-100 dark:border-white/5 py-12 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-8">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-white overflow-hidden shadow-sm shrink-0">
-              <img src={logo} alt={t('common.logo', 'Smart Kisan Logo')} className="w-full h-full object-cover" />
-            </div>
-            <span className="font-black text-gray-900 dark:text-white uppercase tracking-tighter text-lg">Smart Kisan</span>
+      <footer className="bg-white dark:bg-slate-950 pt-24 pb-12 px-6 border-t border-gray-100 dark:border-white/5">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-12 mb-20">
+             <div className="flex flex-col items-center md:items-start gap-4">
+                <div className="flex items-center gap-3">
+                   <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+                      <img src={logo} alt="Logo" className="w-5 h-5 invert brightness-0" />
+                   </div>
+                   <span className="text-xl font-black tracking-tighter text-gray-900 dark:text-white uppercase">Smart Kisan</span>
+                </div>
+                <p className="text-sm text-gray-500 font-medium text-center md:text-left max-w-xs">{t('landing.hero_sub')}</p>
+             </div>
+             
+             <div className="flex flex-wrap justify-center gap-10 sm:gap-20">
+                {['product', 'company', 'resources'].map(section => (
+                  <div key={section} className="flex flex-col items-center md:items-start gap-6">
+                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em]">{section}</span>
+                    <ul className="flex flex-col items-center md:items-start gap-4">
+                       {[1,2,3].map(i => (
+                         <li key={i}><a href="#" className="text-sm font-bold text-gray-600 dark:text-slate-400 hover:text-primary transition-colors">Link Item {i}</a></li>
+                       ))}
+                    </ul>
+                  </div>
+                ))}
+             </div>
           </div>
-          <p className="text-[10px] text-gray-400 font-black uppercase tracking-[0.2em] text-center">
-            {t('landing.footer_tag', '© 2025 Smart Kisan — For farmers, by farmers. Made with ❤️ in India')}
-          </p>
-          <div className="flex items-center gap-8 text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">
-            <a href="#" className="hover:text-primary transition-colors">Privacy</a>
-            <a href="#" className="hover:text-primary transition-colors">Terms</a>
-            <a href="#" className="hover:text-primary transition-colors">Help</a>
+          
+          <div className="pt-12 border-t border-gray-50 dark:border-white/5 flex flex-col md:flex-row items-center justify-between gap-8">
+             <p className="text-[10px] text-gray-400 font-black uppercase tracking-[0.25em] text-center md:text-left leading-relaxed">
+                {t('landing.footer_tag')}
+             </p>
+             <div className="flex items-center gap-8 text-[10px] font-black uppercase tracking-[0.25em] text-gray-400">
+               <a href="#" className="hover:text-primary transition-colors tracking-[0.4em]">PRIVACY</a>
+               <a href="#" className="hover:text-primary transition-colors tracking-[0.4em]">TERMS</a>
+               <a href="#" className="hover:text-primary transition-colors tracking-[0.4em]">CONTACT</a>
+             </div>
           </div>
         </div>
       </footer>
