@@ -87,19 +87,19 @@ export default function Dashboard() {
       id: 'crop', 
       to: '/crop', 
       size: 'md',
-      color: 'bg-white dark:bg-slate-900 border-gray-100 dark:border-slate-800',
+      color: 'card hover:border-emerald-500/30',
       icon: Leaf,
       label: t('nav.crop'),
       render: () => (
         <div className="flex flex-col h-full">
-           <div className="w-10 h-10 rounded-xl bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400 flex items-center justify-center mb-4">
-              <Leaf size={20} />
+           <div className="flex items-center gap-3 mb-4">
+              <Leaf size={24} className="text-emerald-500" />
+              <div className="text-sm font-black text-gray-900 dark:text-white uppercase tracking-tight">{t('nav.crop')}</div>
            </div>
-           <div className="text-sm font-black text-gray-900 dark:text-white uppercase tracking-tight mb-1">{t('nav.crop')}</div>
            <p className="text-[10px] text-gray-500 dark:text-slate-400 font-bold leading-tight">AI Soil Health & Crop Prediction System</p>
            <div className="mt-auto flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-              <span className="text-[8px] font-black uppercase text-green-600 tracking-widest">AI Engine Ready</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-[8px] font-black uppercase text-emerald-600 dark:text-emerald-400 tracking-widest">AI Engine Ready</span>
            </div>
         </div>
       )
@@ -108,97 +108,64 @@ export default function Dashboard() {
       id: 'market', 
       to: '/market', 
       size: 'md',
-      color: 'bg-white dark:bg-slate-900 border-gray-100 dark:border-slate-800',
+      color: 'card hover:border-blue-500/30',
       icon: TrendingUp,
       label: t('nav.market'),
       render: () => {
         const latest = marketData?.trends?.[marketData.trends.length - 1];
-        const trend = 2.4; // Sample
+        const trend = 2.4;
         return (
           <div className="flex flex-col h-full">
              <div className="flex justify-between items-start mb-4">
-                <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
-                   <TrendingUp size={20} />
+                <div className="flex items-center gap-3">
+                   <TrendingUp size={24} className="text-blue-500" />
+                   <div className="text-sm font-black text-gray-900 dark:text-white uppercase tracking-tight">{t('nav.market')}</div>
                 </div>
-                <div className="text-[9px] font-black text-emerald-500 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-1 rounded-lg">+{trend}%</div>
+                <div className="text-[9px] font-black text-emerald-500 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-1 rounded-md">+{trend}%</div>
              </div>
-             <div className="text-sm font-black text-gray-900 dark:text-white uppercase tracking-tight mb-1">{t('nav.market')}</div>
-             <div className="text-xl font-black text-gray-900 dark:text-white tracking-tighter">₹{latest?.price?.toLocaleString() || '---'}</div>
-             <p className="text-[10px] text-gray-400 font-bold">Wheat • Satna Mandi</p>
+             <div className="mt-auto">
+                <div className="text-2xl font-black text-gray-900 dark:text-white tracking-tighter">₹{latest?.price?.toLocaleString() || '---'}</div>
+                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Wheat • Satna Mandi</p>
+             </div>
           </div>
         );
       }
     },
     { 
-      id: 'fertilizer', 
-      to: '/fertilizer', 
-      size: 'sm',
-      color: 'bg-white dark:bg-slate-900 border-gray-100 dark:border-slate-800',
-      icon: FlaskConical,
-      label: t('nav.fertilizer'),
-      render: () => (
-        <div className="flex flex-col items-center text-center py-2">
-           <FlaskConical size={22} className="text-orange-500 mb-2" />
-           <div className="text-[10px] font-black text-gray-900 dark:text-white uppercase">{t('nav.fertilizer')}</div>
-        </div>
-      )
+      id: 'fertilizer', to: '/fertilizer', size: 'sm',
+      color: 'card hover:border-orange-500/30 flex items-center gap-4',
+      icon: FlaskConical, label: t('nav.fertilizer'),
+      render: () => ( <><FlaskConical size={20} className="text-orange-500" /><div className="text-xs font-black text-gray-900 dark:text-white uppercase">{t('nav.fertilizer')}</div></> )
     },
     { 
-      id: 'labour', 
-      to: '/labour', 
-      size: 'sm',
-      color: 'bg-white dark:bg-slate-900 border-gray-100 dark:border-slate-800',
-      icon: Users,
-      label: t('nav.labour'),
-      render: () => (
-        <div className="flex flex-col items-center text-center py-2">
-           <Users size={22} className="text-purple-500 mb-2" />
-           <div className="text-[10px] font-black text-gray-900 dark:text-white uppercase">{t('nav.labour')}</div>
-        </div>
-      )
+      id: 'labour', to: '/labour', size: 'sm',
+      color: 'card hover:border-purple-500/30 flex items-center gap-4',
+      icon: Users, label: t('nav.labour'),
+      render: () => ( <><Users size={20} className="text-purple-500" /><div className="text-xs font-black text-gray-900 dark:text-white uppercase">{t('nav.labour')}</div></> )
     },
     { 
-      id: 'news', 
-      to: '/news', 
-      size: 'sm',
-      color: 'bg-white dark:bg-slate-900 border-gray-100 dark:border-slate-800',
-      icon: Newspaper,
-      label: t('nav.news'),
-      render: () => (
-        <div className="flex flex-col items-center text-center py-2">
-           <Newspaper size={22} className="text-sky-500 mb-2" />
-           <div className="text-[10px] font-black text-gray-900 dark:text-white uppercase">{t('nav.news')}</div>
-        </div>
-      )
+      id: 'news', to: '/news', size: 'sm',
+      color: 'card hover:border-sky-500/30 flex items-center gap-4',
+      icon: Newspaper, label: t('nav.news'),
+      render: () => ( <><Newspaper size={20} className="text-sky-500" /><div className="text-xs font-black text-gray-900 dark:text-white uppercase">{t('nav.news')}</div></> )
     },
     { 
-      id: 'schemes', 
-      to: '/schemes', 
-      size: 'sm',
-      color: 'bg-white dark:bg-slate-900 border-gray-100 dark:border-slate-800',
-      icon: Landmark,
-      label: t('nav.schemes'),
-      render: () => (
-        <div className="flex flex-col items-center text-center py-2">
-           <Landmark size={22} className="text-amber-600 mb-2" />
-           <div className="text-[10px] font-black text-gray-900 dark:text-white uppercase">{t('nav.schemes')}</div>
-        </div>
-      )
+      id: 'schemes', to: '/schemes', size: 'sm',
+      color: 'card hover:border-amber-500/30 flex items-center gap-4',
+      icon: Landmark, label: t('nav.schemes'),
+      render: () => ( <><Landmark size={20} className="text-amber-500" /><div className="text-xs font-black text-gray-900 dark:text-white uppercase">{t('nav.schemes')}</div></> )
     },
     { 
-      id: 'map', 
-      to: '/map', 
-      size: 'md',
-      color: 'bg-white dark:bg-slate-900 border-gray-100 dark:border-slate-800',
-      icon: Map,
-      label: t('nav.map'),
+      id: 'map', to: '/map', size: 'md',
+      color: 'card hover:border-teal-500/30',
+      icon: Map, label: t('nav.map'),
       render: () => (
         <div className="flex flex-col h-full">
-           <div className="w-10 h-10 rounded-xl bg-teal-50 dark:bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center mb-4">
-              <Map size={20} />
+           <div className="flex items-center gap-3 mb-4">
+              <Map size={24} className="text-teal-500" />
+              <div className="text-sm font-black text-gray-900 dark:text-white uppercase tracking-tight">{t('nav.map')}</div>
            </div>
-           <div className="text-sm font-black text-gray-900 dark:text-white uppercase tracking-tight mb-1">{t('nav.map')}</div>
-           <p className="text-[10px] text-gray-400 font-bold">Field Survey & GPS Mapping</p>
+           <p className="text-[10px] text-gray-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-auto">Field Survey & GPS Mapping</p>
         </div>
       )
     },
@@ -261,27 +228,28 @@ export default function Dashboard() {
       </div>
 
       {/* ── The Bento Grid ───────────────────────────────── */}
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6 auto-rows-[160px] sm:auto-rows-[180px]">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 auto-rows-auto">
          {modules.map((m) => (
            <div
              key={m.id}
              onClick={() => navigate(m.to)}
              className={clsx(
-               "group relative p-6 sm:p-8 rounded-[2rem] border transition-all duration-500 cursor-pointer shadow-sm hover:shadow-2xl hover:-translate-y-1.5 active:scale-[0.98] overflow-hidden",
-               m.size === 'lg' ? 'col-span-2 row-span-2' : m.size === 'md' ? 'col-span-2' : 'col-span-1',
-               m.id === 'weather' ? 'text-white' : 'dark:text-white',
+               "group relative cursor-pointer overflow-hidden",
+               m.size === 'lg' ? 'col-span-1 sm:col-span-2 row-span-1 sm:row-span-2 rounded-[2rem] p-8' : 
+               m.size === 'md' ? 'col-span-1 sm:col-span-1 row-span-1' : 'col-span-1 sm:col-span-1 row-span-1 !p-5',
+               m.id === 'weather' ? 'text-white shadow-xl hover:-translate-y-1 transition-all duration-300' : 'dark:text-white',
                m.color
              )}
            >
              {m.id === 'weather' && (
-                <div className="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/4 pointer-events-none group-hover:scale-125 transition-transform duration-1000" />
+                <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/4 pointer-events-none group-hover:scale-125 transition-transform duration-1000" />
              )}
              {m.render()}
            </div>
          ))}
 
          {/* Extra Bento Items: Support Card */}
-         <div className="col-span-2 row-span-1 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-[2rem] p-6 sm:p-8 text-white relative overflow-hidden group cursor-pointer shadow-sm hover:shadow-2xl transition-all" onClick={() => navigate('/chat')}>
+         <div className="col-span-1 sm:col-span-2 lg:col-span-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-[2rem] p-6 sm:p-8 text-white relative overflow-hidden group cursor-pointer shadow-xl hover:-translate-y-1 transition-all" onClick={() => navigate('/chat')}>
             <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform" />
             <div className="flex items-center gap-4 mb-4">
                <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center">
@@ -293,8 +261,8 @@ export default function Dashboard() {
          </div>
 
          {/* Secondary Stats Card */}
-         <div className="col-span-2 row-span-1 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-[2rem] p-6 sm:p-8 flex flex-col justify-between group hover:shadow-xl transition-all">
-            <div className="flex items-center justify-between">
+         <div className="col-span-1 sm:col-span-2 lg:col-span-2 card flex flex-col justify-between group">
+            <div className="flex items-center justify-between mb-4">
                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Active Schemes</span>
                <Award className="text-amber-500" size={18} />
             </div>
