@@ -60,6 +60,12 @@ export default function Landing() {
              <span className="text-lg sm:text-xl font-black tracking-tighter uppercase text-slate-900">Smart Kisan <span className="text-emerald-600">AI</span></span>
           </div>
 
+          <div className="hidden lg:flex items-center gap-10">
+             {['ecosystem', 'technology', 'network'].map(item => (
+                <a key={item} href={`#${item}`} className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 hover:text-emerald-600 transition-colors">{t(`landing.nav.${item}`)}</a>
+             ))}
+          </div>
+
           <div className="flex items-center gap-4">
              <LanguageSelector showLabel={false} align="right" />
              <button 
@@ -83,8 +89,7 @@ export default function Landing() {
                   </div>
 
                   <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black leading-tight sm:leading-[1.1] tracking-tighter mb-8 text-slate-900">
-                     {t('landing.title').split(' ').slice(0, -2).join(' ')} <br className="hidden sm:block" />
-                     <span className="text-emerald-600">{t('landing.title').split(' ').slice(-2).join(' ')}</span>
+                     {t('landing.title')}
                   </h1>
 
                   <p className="text-lg sm:text-xl text-slate-500 font-medium max-w-xl mx-auto lg:mx-0 mb-12 leading-relaxed">
@@ -142,7 +147,7 @@ export default function Landing() {
          <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16 sm:mb-20">
                <span className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.4em] mb-6 block">{t('landing.eco_badge')}</span>
-               <h2 className="text-3xl sm:text-5xl md:text-7xl font-black tracking-tighter mb-8 leading-none">{t('landing.eco_title').split(' ').slice(0, 2).join(' ')} <br className="hidden sm:block" /> {t('landing.eco_title').split(' ').slice(2).join(' ')}</h2>
+               <h2 className="text-3xl sm:text-5xl md:text-7xl font-black tracking-tighter mb-8 leading-none">{t('landing.eco_title')}</h2>
                <p className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto font-medium">
                   {t('landing.eco_desc')}
                </p>
@@ -188,8 +193,7 @@ export default function Landing() {
             <div className="flex-1 w-full text-center lg:text-left">
                <span className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.4em] mb-8 block">{t('landing.infra_badge')}</span>
                <h2 className="text-5xl sm:text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] mb-12">
-                  {t('landing.infra_title').split(' ').slice(0, 2).join(' ')} <br />
-                  {t('landing.infra_title').split(' ').slice(2).join(' ')} <br />
+                  {t('landing.infra_title')} <br />
                   <span className="text-slate-300">STREAMING</span>
                </h2>
                <div className="space-y-8 text-left">
@@ -254,7 +258,7 @@ export default function Landing() {
             <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-2xl sm:rounded-[2rem] bg-emerald-600 flex items-center justify-center mx-auto mb-12 shadow-3xl shadow-emerald-500/20">
                <img src={logo} className="w-8 h-8 sm:w-12 sm:h-12 invert brightness-0" alt="logo" />
             </div>
-            <h2 className="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter leading-none mb-12 text-white">{t('landing.final_title').split(' ').slice(0, 2).join(' ')} <br /> <span className="text-emerald-500">{t('landing.final_title').split(' ').slice(2).join(' ')}</span></h2>
+            <h2 className="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter leading-none mb-12 text-white">{t('landing.final_title')}</h2>
             <p className="text-lg sm:text-2xl text-slate-400 font-medium mb-12 sm:mb-16 max-w-2xl mx-auto">
                {t('landing.final_desc')}
             </p>
