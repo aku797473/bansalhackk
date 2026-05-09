@@ -160,7 +160,7 @@ export default function Navbar() {
             {/* Mobile Hamburger Menu Button */}
             <button 
               onClick={() => setOpen(true)} 
-              className="lg:hidden ml-1 p-2 bg-gray-100 dark:bg-slate-800 text-gray-900 dark:text-white rounded-xl hover:bg-gray-200 transition-all active:scale-95 border border-gray-200 dark:border-slate-700"
+              className="xl:hidden ml-1 p-2 bg-gray-100 dark:bg-slate-800 text-gray-900 dark:text-white rounded-xl hover:bg-gray-200 transition-all active:scale-95 border border-gray-200 dark:border-slate-700"
               aria-label="Open Menu"
             >
               <Menu size={22} strokeWidth={2.5} />
@@ -171,7 +171,7 @@ export default function Navbar() {
 
       {/* Mobile Sidebar Drawer */}
       <div className={clsx(
-        "fixed inset-0 z-[200] lg:hidden transition-all duration-300",
+        "fixed inset-0 z-[200] xl:hidden transition-all duration-300",
         open ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
       )}>
         {/* Backdrop */}
