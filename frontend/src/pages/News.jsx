@@ -4,9 +4,11 @@ import { newsAPI } from '../services/api';
 import { useQuery } from '@tanstack/react-query';
 import { Newspaper, ExternalLink, Calendar, RefreshCw } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { usePageAnimation } from '../hooks/usePageAnimation';
 
 export default function News() {
   const { t, i18n } = useTranslation();
+  const ref = usePageAnimation();
   const lang = i18n.language === 'hi' ? 'hi' : 'en';
 
   const { 
@@ -29,8 +31,8 @@ export default function News() {
   const fetchNews = () => refetch();
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6 page-enter animate-fade-in">
-      <div className="page-header flex items-center justify-between mb-8">
+    <div ref={ref} className="max-w-7xl mx-auto px-4 py-6">
+      <div className="anim-header page-header flex items-center justify-between mb-8">
         <div>
           <h1 className="page-title flex items-center gap-2 tracking-tighter text-3xl font-black text-gray-900 dark:text-white">
             <Newspaper className="text-primary" size={28} />
@@ -61,7 +63,7 @@ export default function News() {
       ) : news.length > 0 ? (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {news.map((item, i) => (
-            <a key={i} href={item.link} target="_blank" rel="noopener noreferrer" className="card p-0 overflow-hidden group hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 flex flex-col bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800">
+            <a key={i} href={item.link} target="_blank" rel="noopener noreferrer" className="anim-card card p-0 overflow-hidden group hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 flex flex-col bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800">
               <div className="w-full h-48 relative overflow-hidden bg-gray-100 dark:bg-slate-800 shrink-0">
                 <img 
                   src={item.imageUrl} 

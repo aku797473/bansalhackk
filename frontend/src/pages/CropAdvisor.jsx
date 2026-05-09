@@ -4,6 +4,7 @@ import { cropAPI } from '../services/api';
 import { Leaf, Sparkles, Calendar, Droplets, CheckCircle, RefreshCw, Trash2, ShieldCheck, Info, FileDown, Plus } from 'lucide-react';
 import cropsImg from '../assets/crops-closeup.png';
 import toast from 'react-hot-toast';
+import { usePageAnimation } from '../hooks/usePageAnimation';
 
 const SOIL_TYPES = ['loamy', 'clay', 'sandy', 'silty', 'peaty', 'chalky'];
 const SEASONS    = ['Kharif', 'Rabi', 'Zaid'];
@@ -24,6 +25,7 @@ const DISTRICTS_DATA = {
 export default function CropAdvisor() {
   const { t, i18n } = useTranslation();
   const isHi = i18n.language === 'hi';
+  const ref = usePageAnimation();
 
   const translateOption = (opt, ns = 'crop') => {
     const keys = [
@@ -140,8 +142,8 @@ export default function CropAdvisor() {
   const districts = DISTRICTS_DATA[form.state] || [];
 
   return (
-    <div className="page-wrapper max-w-7xl mx-auto px-4 sm:px-6">
-      <div className="page-header flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+    <div ref={ref} className="page-wrapper max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="anim-header page-header flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
         <div>
           <h1 className="page-title flex items-center gap-3 tracking-tighter">
             <div className="p-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-2xl shadow-inner">
@@ -167,7 +169,7 @@ export default function CropAdvisor() {
       <div className="grid lg:grid-cols-12 gap-8">
         {/* Form Column */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="card border-none shadow-premium relative overflow-hidden bg-gradient-to-br from-white via-white to-emerald-50/30 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/10">
+          <div className="anim-card card border-none shadow-premium relative overflow-hidden bg-gradient-to-br from-white via-white to-emerald-50/30 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/10">
             <div className="absolute -top-24 -right-24 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
             
             <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-8 flex items-center gap-3">
@@ -222,7 +224,7 @@ export default function CropAdvisor() {
           {result && (
             <>
               {/* Primary crop */}
-              <div className="card border-2 border-primary/20 shadow-2xl overflow-hidden relative group p-0">
+              <div className="anim-card card border-2 border-primary/20 shadow-2xl overflow-hidden relative group p-0">
                 <div className="h-40 relative overflow-hidden">
                    <img src={cropsImg} alt="Healthy crops" className="w-full h-full object-cover" />
                    <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-slate-900 via-transparent to-transparent" />
@@ -264,7 +266,7 @@ export default function CropAdvisor() {
               </div>
 
               {/* Fertilizers */}
-              <div className="card shadow-md">
+              <div className="anim-fade card shadow-md">
                 <h3 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-4">{t('crop.fertilizers')}</h3>
                 <div className="flex flex-wrap gap-2">
                   {result.fertilizers?.map(f => <span key={f} className="px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-xl text-xs font-bold border border-blue-100 dark:border-blue-900/30">{translateOption(f, 'fertilizer')}</span>)}

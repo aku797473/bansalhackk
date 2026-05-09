@@ -1,13 +1,14 @@
 import { useTranslation } from 'react-i18next';
 import { Landmark, FileText, CheckCircle2, IndianRupee, ArrowRight, ExternalLink } from 'lucide-react';
 import clsx from 'clsx';
-
 import { useQuery } from '@tanstack/react-query';
 import { schemesAPI } from '../services/api';
 import * as Icons from 'lucide-react';
+import { usePageAnimation } from '../hooks/usePageAnimation';
 
 export default function Schemes() {
   const { t, i18n } = useTranslation();
+  const ref = usePageAnimation();
   const lang = i18n.language === 'hi' ? 'hi' : 'en';
 
   const { data: response, isLoading, isError } = useQuery({
@@ -21,9 +22,9 @@ export default function Schemes() {
   const schemes = response?.data || [];
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 page-enter animate-fade-in">
+    <div ref={ref} className="max-w-6xl mx-auto px-4 py-8">
       {/* Header */}
-      <div className="mb-10 text-center sm:text-left">
+      <div className="anim-header mb-10 text-center sm:text-left">
         <h1 className="text-3xl font-black tracking-tight text-gray-900 dark:text-white flex items-center justify-center sm:justify-start gap-3 mb-2">
           <Landmark className="text-emerald-500" size={32} />
           {t('schemes.title')}
@@ -51,7 +52,7 @@ export default function Schemes() {
         {schemes.map((scheme) => {
           const Icon = Icons[scheme.iconName] || Icons.Landmark;
           return (
-          <div key={scheme.id} className="card p-6 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 shadow-xl hover:shadow-2xl transition-all duration-300 group overflow-hidden relative flex flex-col h-full">
+          <div key={scheme.id} className="anim-card card p-6 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 shadow-xl hover:shadow-2xl transition-all duration-300 group overflow-hidden relative flex flex-col h-full">
             
             {/* Top right decoration */}
             <div className={clsx('absolute -top-10 -right-10 w-32 h-32 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-500 bg-gradient-to-br', scheme.color)} />

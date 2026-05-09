@@ -5,12 +5,14 @@ import { useQuery } from '@tanstack/react-query';
 import { MapPin, Droplets, Wind, Thermometer, AlertTriangle, RefreshCw, Calendar, CheckCircle2, ShieldCheck, Sun, CloudRain, CloudLightning, CloudFog, Cloud, Info } from 'lucide-react';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
+import { usePageAnimation } from '../hooks/usePageAnimation';
 
 const WEATHER_EMOJIS = { '01': '☀️', '02': '🌤️', '03': '⛅', '04': '☁️', '09': '🌧️', '10': '🌦️', '11': '⛈️', '13': '❄️', '50': '🌫️' };
 const getEmoji = (icon) => WEATHER_EMOJIS[icon?.slice(0, 2)] || '🌡️';
 
 export default function Weather() {
   const { t, i18n } = useTranslation();
+  const ref = usePageAnimation();
   const [citySearch, setCitySearch] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -69,8 +71,8 @@ export default function Weather() {
   );
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-6 page-enter">
-      <div className="page-header flex items-center justify-between">
+    <div ref={ref} className="max-w-4xl mx-auto px-4 py-6">
+      <div className="anim-header page-header flex items-center justify-between">
         <div>
           <h1 className="page-title">{t('weather.title')}</h1>
           <p className="page-subtitle">{t('weather.current')}</p>
@@ -79,7 +81,7 @@ export default function Weather() {
       </div>
 
       {/* Search */}
-      <div className="flex gap-2 mb-6">
+      <div className="anim-card flex gap-2 mb-6">
         <input className="input flex-1" placeholder={t('market.search')}
           value={citySearch} onChange={e => setCitySearch(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && searchCity()} />
@@ -102,7 +104,7 @@ export default function Weather() {
           )}
 
           {/* Current */}
-          <div className="bg-gradient-to-br from-sky-400 to-blue-600 rounded-[2.5rem] p-8 text-white shadow-premium mb-8 relative overflow-hidden group">
+          <div className="anim-card bg-gradient-to-br from-sky-400 to-blue-600 rounded-[2.5rem] p-8 text-white shadow-premium mb-8 relative overflow-hidden group">
             <div className="absolute -top-20 -right-20 w-80 h-80 bg-white/20 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-1000" />
             
             <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-8 relative z-10">
@@ -146,7 +148,7 @@ export default function Weather() {
 
           {/* 5-day forecast */}
           {data.forecast?.length > 0 && (
-            <div className="mb-8">
+            <div className="anim-fade mb-8">
               <h2 className="text-xl font-black text-gray-900 dark:text-white mb-5 flex items-center gap-2">
                 {t('weather.outlook')} <Calendar className="text-primary" />
               </h2>
@@ -178,7 +180,7 @@ export default function Weather() {
           )}
 
           {/* Professional Farming Advisory Checklist */}
-          <div className="card bg-white dark:bg-slate-900 border-2 border-emerald-100 dark:border-emerald-900/30 overflow-hidden shadow-xl p-0">
+          <div className="anim-fade card bg-white dark:bg-slate-900 border-2 border-emerald-100 dark:border-emerald-900/30 overflow-hidden shadow-xl p-0">
             <div className="bg-emerald-50 dark:bg-emerald-900/20 p-5 border-b border-emerald-100 dark:border-emerald-900/30 flex items-center justify-between">
                <h3 className="font-black text-emerald-800 dark:text-emerald-400 uppercase tracking-widest text-xs flex items-center gap-2">
                  <ShieldCheck size={18} /> {t('weather.advisory_title')}

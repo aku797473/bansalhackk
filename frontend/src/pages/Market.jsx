@@ -9,6 +9,7 @@ import { TrendingUp, TrendingDown, Minus, Search, RefreshCw, MapPin, Package, Ca
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import mandiImg from '../assets/mandi-scene.png';
+import { usePageAnimation } from '../hooks/usePageAnimation';
 
 const TrendIcon = ({ trend, size = 14 }) => {
   if (trend === 'up')     return <TrendingUp size={size} className="text-green-500" />;
@@ -31,6 +32,7 @@ const DISTRICTS_DATA = {
 
 export default function Market() {
   const { t, i18n } = useTranslation();
+  const ref = usePageAnimation();
   
   // Selection State
   const [selState, setSelState]       = useState('Punjab');
@@ -139,9 +141,9 @@ export default function Market() {
   };
 
   return (
-    <div className="page-wrapper max-w-7xl">
+    <div ref={ref} className="page-wrapper max-w-7xl">
       {/* ── Header ────────────────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10">
+      <div className="anim-header flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10">
         <div>
           <span className="px-3 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-[10px] font-black uppercase tracking-widest border border-blue-100 dark:border-blue-900/20 mb-4 inline-block">{t('market.analytics', 'Mandi Analytics')}</span>
           <h1 className="text-3xl sm:text-5xl font-black text-gray-900 dark:text-white tracking-tighter flex items-center gap-3 leading-none">
@@ -157,7 +159,7 @@ export default function Market() {
       </div>
 
       {/* ── Imagery & Header ─────────────────────────────────────── */}
-      <div className="relative h-64 rounded-[2.5rem] overflow-hidden mb-8 shadow-premium">
+      <div className="anim-card relative h-64 rounded-[2.5rem] overflow-hidden mb-8 shadow-premium">
          <img src={mandiImg} alt="Mandi scene" className="w-full h-full object-cover" />
          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
          <div className="absolute bottom-8 left-8 text-white">
@@ -168,7 +170,7 @@ export default function Market() {
       </div>
 
       {/* ── Filters Strip ─────────────────────────────────────── */}
-      <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border border-white/20 dark:border-white/5 rounded-[2.5rem] p-5 sm:p-7 mb-8 shadow-premium animate-slide-down">
+      <div className="anim-card bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border border-white/20 dark:border-white/5 rounded-[2.5rem] p-5 sm:p-7 mb-8 shadow-premium">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
           <div className="flex flex-col gap-2">
             <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2 flex items-center gap-1.5"><MapPin size={12} className="text-primary"/> {t('crop.state')}</label>
@@ -208,11 +210,11 @@ export default function Market() {
       </div>
 
       {/* ── Main Dashboard Area ───────────────────────────────── */}
-      <div className="grid lg:grid-cols-3 gap-8 mb-8 animate-slide-up">
+      <div className="grid lg:grid-cols-3 gap-8 mb-8">
         
         {/* Chart Column (Spans 2) */}
         <div className="lg:col-span-2 flex flex-col gap-6">
-          <div className="card border-none shadow-premium relative overflow-hidden">
+          <div className="anim-card card border-none shadow-premium relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
             
             <div className="flex items-start justify-between mb-8 relative z-10">
@@ -357,7 +359,7 @@ export default function Market() {
       </div>
 
       {/* ── Today's Mandi Board ───────────────────────────────── */}
-      <div className="card p-0 overflow-hidden shadow-2xl border-none relative group">
+      <div className="anim-fade card p-0 overflow-hidden shadow-2xl border-none relative group">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 pointer-events-none" />
         <div className="p-6 border-b border-gray-100 dark:border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
           <div>
