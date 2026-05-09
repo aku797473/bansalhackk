@@ -13,9 +13,9 @@ import { weatherAPI, marketAPI, labourAPI } from '../services/api';
 import clsx from 'clsx';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useGSAP } from '@gsap/react';
 
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+gsap.registerPlugin(ScrollTrigger);
+
 
 const WEATHER_EMOJIS = { '01': '☀️', '02': '🌤️', '03': '⛅', '04': '☁️', '09': '🌧️', '10': '🌦️', '11': '⛈️', '13': '❄️', '50': '🌫️' };
 const getWeatherEmoji = (icon) => WEATHER_EMOJIS[icon?.slice(0, 2)] || '🌡️';
@@ -36,36 +36,57 @@ export default function Dashboard() {
   const locale = i18n.language === 'hi' ? 'hi-IN' : 'en-US';
   const container = useRef();
 
-  useGSAP(() => {
-    // Header animation
-    gsap.from('.dash-header', {
-      y: -40, opacity: 0, duration: 0.8, ease: 'power3.out'
-    });
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Set initial hidden states immediately
+      gsap.set('.dash-header', { opacity: 0, y: -40 });
+      gsap.set('.bento-card', { opacity: 0, y: 60 });
 
-    // Bento cards staggered entry
-    gsap.from('.bento-card', {
-      y: 60, opacity: 0, duration: 0.7, stagger: 0.08,
-      ease: 'power3.out', delay: 0.3
-    });
+      // Master timeline
+      const tl = gsap.timeline();
 
-    // Bottom tips section
-    gsap.from('.tip-card', {
-      scrollTrigger: { trigger: '.tips-section', start: 'top 85%' },
-      y: 40, opacity: 0, duration: 0.7, stagger: 0.15, ease: 'power2.out'
-    });
+      // 1. Header slides down
+      tl.to('.dash-header', {
+        opacity: 1, y: 0, duration: 0.7, ease: 'power3.out'
+      });
 
-    // Alert items
-    gsap.from('.alert-item', {
-      scrollTrigger: { trigger: '.alerts-section', start: 'top 85%' },
-      x: -30, opacity: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out'
-    });
+      // 2. Bento cards stagger up
+      tl.to('.bento-card', {
+        opacity: 1, y: 0, duration: 0.65,
+        stagger: { amount: 0.6, from: 'start' },
+        ease: 'power3.out'
+      }, '-=0.3');
 
-    // Sync status sidebar
-    gsap.from('.sync-item', {
-      scrollTrigger: { trigger: '.sync-section', start: 'top 90%' },
-      x: 30, opacity: 0, duration: 0.6, stagger: 0.12, ease: 'power2.out'
-    });
-  }, { scope: container });
+      // Scroll-triggered: tip cards
+      gsap.fromTo('.tip-card',
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1, y: 0, duration: 0.7, stagger: 0.15, ease: 'power2.out',
+          scrollTrigger: { trigger: '.tips-section', start: 'top 85%', once: true }
+        }
+      );
+
+      // Scroll-triggered: alert items
+      gsap.fromTo('.alert-item',
+        { opacity: 0, x: -30 },
+        {
+          opacity: 1, x: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out',
+          scrollTrigger: { trigger: '.alerts-section', start: 'top 85%', once: true }
+        }
+      );
+
+      // Scroll-triggered: sync items
+      gsap.fromTo('.sync-item',
+        { opacity: 0, x: 30 },
+        {
+          opacity: 1, x: 0, duration: 0.6, stagger: 0.12, ease: 'power2.out',
+          scrollTrigger: { trigger: '.sync-section', start: 'top 90%', once: true }
+        }
+      );
+    }, container);
+
+    return () => ctx.revert();
+  }, []);
 
 
   // Weather Query
