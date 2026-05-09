@@ -185,7 +185,7 @@ export default function CropAdvisor() {
 
         {/* Result */}
         <div className="space-y-6">
-          {result ? (
+          {result && (
             <>
               {/* Primary crop */}
               <div className="card border-2 border-primary/20 shadow-2xl overflow-hidden relative group p-0">
@@ -265,7 +265,7 @@ export default function CropAdvisor() {
                 className="w-full h-14 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 transition-all active:scale-[0.98]">
                 <Calendar size={18} /> <span>{t('crop.view_calendar')}</span>
               </button>
-            </div>
+            </>
           )}
 
           {/* Calendar */}

@@ -215,58 +215,86 @@ export default function Fertilizer() {
         {/* Right Column: Active Result Display */}
         <div className="lg:col-span-8">
           {result ? (
-            <div className="space-y-4 animate-slide-up">
+            <div className="space-y-6 animate-slide-up">
               {/* Soil Health Certificate UI */}
               <div className="card border-0 p-0 shadow-2xl overflow-hidden relative">
                 {/* Colorful Certificate Gradient Border */}
                 <div className="absolute inset-0 bg-gradient-to-br from-amber-400 via-orange-500 to-rose-500 p-1">
                   <div className="w-full h-full bg-white dark:bg-slate-900 rounded-[2rem] overflow-hidden">
-                <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/5 p-4 sm:p-6 border-b border-amber-500/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-amber-500/30">
-                      <ShieldCheck size={28} />
-                    </div>
-                    <div>
-                      <h3 className="font-black text-gray-900 dark:text-white uppercase tracking-tighter text-lg sm:text-xl">{t('fertilizer.certificate_title', 'Soil Health Certificate')}</h3>
-                      <p className="text-[10px] font-black text-amber-600 uppercase tracking-[0.2em]">{t('fertilizer.sample_id', 'Sample ID')}: SK-2026-{Math.floor(Math.random()*9000)+1000} • {t('fertilizer.ai_verified', 'AI Verified')}</p>
-                    </div>
-                  </div>
-                  <button 
-                    onClick={() => {
-                      toast.success(t('fertilizer.generating_pdf', 'Generating Soil Health Report...'));
-                      setTimeout(() => window.print(), 1000);
-                    }}
-                    className="w-full sm:w-auto btn-ghost h-10 px-4 text-[10px] font-black uppercase tracking-widest border border-amber-500/20 text-amber-700 dark:text-amber-500 hover:bg-amber-500/10 bg-white dark:bg-slate-800 shadow-sm">
-                    <Download size={14} /> {t('fertilizer.export_pdf', 'Export PDF')}
-                  </button>
-                </div>
-
-                <div className="p-8">
-                  <div className="grid sm:grid-cols-2 gap-8 mb-8">
-                    <div className="space-y-4">
-                      <div>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{t('fertilizer.diagnosis', 'Diagnosis')}</p>
-                        <div className="flex items-center gap-3">
-                          <span className="text-3xl font-black text-gray-900 dark:text-white">{t(`fertilizer.results.${result.primaryIssue?.deficiency}`, result.primaryIssue?.deficiency)}</span>
-                          <span className={clsx('badge-verified', SEVERITY_COLOR[result.primaryIssue?.severity] || 'badge-yellow')}>
-                             {t(`fertilizer.results.${result.primaryIssue?.severity}`, result.primaryIssue?.severity)}
-                          </span>
+                    <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/5 p-4 sm:p-6 border-b border-amber-500/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-amber-500/30">
+                          <ShieldCheck size={28} />
+                        </div>
+                        <div>
+                          <h3 className="font-black text-gray-900 dark:text-white uppercase tracking-tighter text-lg sm:text-xl">{t('fertilizer.certificate_title', 'Soil Health Certificate')}</h3>
+                          <p className="text-[10px] font-black text-amber-600 uppercase tracking-[0.2em]">{t('fertilizer.sample_id', 'Sample ID')}: SK-2026-{Math.floor(Math.random()*9000)+1000} • {t('fertilizer.ai_verified', 'AI Verified')}</p>
                         </div>
                       </div>
-                      <div className="p-4 bg-gray-50 dark:bg-black/20 rounded-2xl border border-gray-100 dark:border-white/5 italic text-sm text-gray-600 dark:text-slate-400">
-                        "{result.primaryIssue?.symptoms}"
-                      </div>
+                      <button 
+                        onClick={() => {
+                          toast.success(t('fertilizer.generating_pdf', 'Generating Soil Health Report...'));
+                          setTimeout(() => window.print(), 1000);
+                        }}
+                        className="w-full sm:w-auto btn-ghost h-10 px-4 text-[10px] font-black uppercase tracking-widest border border-amber-500/20 text-amber-700 dark:text-amber-500 hover:bg-amber-500/10 bg-white dark:bg-slate-800 shadow-sm">
+                        <Download size={14} /> {t('fertilizer.export_pdf', 'Export PDF')}
+                      </button>
                     </div>
 
-                    <div className="flex flex-col items-center justify-center bg-primary/5 rounded-[2.5rem] p-6 border border-primary/10">
-                       <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-2">{t('fertilizer.confidence_score', 'Confidence Score')}</p>
-                       <div className="relative w-24 h-24 flex items-center justify-center">
-                          <svg className="w-full h-full -rotate-90">
-                            <circle cx="48" cy="48" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-gray-200 dark:text-slate-800" />
-                            <circle cx="48" cy="48" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" strokeDasharray={251} strokeDashoffset={251 - (251 * result.primaryIssue?.confidence) / 100} className="text-primary transition-all duration-1000" />
-                          </svg>
-                          <span className="absolute inset-0 flex items-center justify-center text-xl font-black text-primary">{result.primaryIssue?.confidence}%</span>
-                       </div>
+                    <div className="p-8">
+                      <div className="grid sm:grid-cols-2 gap-8 mb-8">
+                        <div className="space-y-6">
+                          <div>
+                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{t('fertilizer.diagnosis', 'Diagnosis')}</p>
+                            <div className="flex items-center gap-3">
+                              <span className="text-3xl font-black text-gray-900 dark:text-white">{t(`fertilizer.results.${result.primaryIssue?.deficiency}`, result.primaryIssue?.deficiency)}</span>
+                              <span className={clsx('badge-verified px-3 py-1 text-[10px]', SEVERITY_COLOR[result.primaryIssue?.severity] || 'badge-yellow')}>
+                                 {t(`fertilizer.results.${result.primaryIssue?.severity}`, result.primaryIssue?.severity)}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="space-y-4">
+                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{t('fertilizer.npk_levels', 'Estimated NPK Levels')}</p>
+                            {[
+                              { k: 'N', label: t('fertilizer.nitrogen', 'Nitrogen'), val: result.npkEstimates?.N || 'Low', color: 'from-emerald-400 to-teal-500' },
+                              { k: 'P', label: t('fertilizer.phosphorus', 'Phosphorus'), val: result.npkEstimates?.P || 'Medium', color: 'from-blue-400 to-indigo-500' },
+                              { k: 'K', label: t('fertilizer.potassium', 'Potassium'), val: result.npkEstimates?.K || 'High', color: 'from-amber-400 to-orange-500' },
+                            ].map(n => (
+                              <div key={n.k} className="flex items-center gap-3">
+                                <div className={`w-8 h-8 rounded-xl bg-gradient-to-br ${n.color} text-white flex items-center justify-center font-black text-xs shadow-sm shrink-0`}>{n.k}</div>
+                                <div className="flex-1">
+                                  <div className="flex justify-between items-end mb-1">
+                                    <span className="text-[10px] font-bold text-gray-500 uppercase">{n.label}</span>
+                                    <span className="text-[10px] font-black text-gray-800 dark:text-white uppercase">{t(`fertilizer.results.${n.val}`, n.val)}</span>
+                                  </div>
+                                  <div className="h-1.5 bg-gray-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                    <div className={`h-full bg-gradient-to-r ${n.color} rounded-full transition-all duration-1000`} style={{ width: `${n.val === 'Low' ? 30 : n.val === 'Medium' ? 60 : 90}%` }} />
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="space-y-6">
+                          <div className="p-5 bg-amber-50/50 dark:bg-amber-900/10 rounded-2xl border border-amber-100 dark:border-amber-900/30">
+                            <p className="text-[10px] font-black text-amber-600 dark:text-amber-400 uppercase tracking-widest mb-2">{t('fertilizer.symptoms', 'Symptoms')}</p>
+                            <p className="text-sm text-gray-700 dark:text-slate-300 italic leading-relaxed">"{result.primaryIssue?.symptoms}"</p>
+                          </div>
+
+                          <div className="flex flex-col items-center justify-center bg-amber-500/5 rounded-[2.5rem] p-6 border border-amber-500/10">
+                             <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest mb-2">{t('fertilizer.confidence_score', 'Confidence Score')}</p>
+                             <div className="relative w-24 h-24 flex items-center justify-center">
+                                <svg className="w-full h-full -rotate-90">
+                                  <circle cx="48" cy="48" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-gray-100 dark:text-slate-800" />
+                                  <circle cx="48" cy="48" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" strokeDasharray={251} strokeDashoffset={251 - (251 * (result.primaryIssue?.confidence || 85)) / 100} className="text-amber-500 transition-all duration-1000" />
+                                </svg>
+                                <span className="absolute inset-0 flex items-center justify-center text-xl font-black text-amber-600">{result.primaryIssue?.confidence || 85}%</span>
+                             </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -274,60 +302,56 @@ export default function Fertilizer() {
 
               <div className="grid sm:grid-cols-2 gap-4">
                 {/* Treatment Card */}
-                <div className="card border-l-4 border-l-green-500">
-                    <h4 className="font-bold text-green-700 dark:text-green-400 flex items-center gap-2 mb-3">
-                        <CheckCircle size={18} /> {t('fertilizer.treatment')}
+                <div className="card border-l-4 border-l-emerald-500 bg-gradient-to-br from-white to-emerald-50/30 dark:from-slate-900 dark:to-emerald-950/10">
+                    <h4 className="font-black text-emerald-700 dark:text-emerald-400 flex items-center gap-2 mb-3 uppercase text-xs tracking-widest">
+                        <CheckCircle size={16} /> {t('fertilizer.treatment')}
                     </h4>
-                    <p className="text-sm text-gray-700 dark:text-slate-300 leading-relaxed bg-green-50/50 dark:bg-green-900/10 p-3 rounded-xl">{result.primaryIssue?.treatment}</p>
+                    <p className="text-sm text-gray-700 dark:text-slate-300 leading-relaxed">{result.primaryIssue?.treatment}</p>
                 </div>
 
                 {/* Prevention Card */}
-                <div className="card border-l-4 border-l-blue-500">
-                    <h4 className="font-bold text-blue-700 dark:text-blue-400 flex items-center gap-2 mb-3">
-                        🛡️ {t('fertilizer.prevention')}
+                <div className="card border-l-4 border-l-blue-500 bg-gradient-to-br from-white to-blue-50/30 dark:from-slate-900 dark:to-blue-950/10">
+                    <h4 className="font-black text-blue-700 dark:text-blue-400 flex items-center gap-2 mb-3 uppercase text-xs tracking-widest">
+                        <ShieldCheck size={16} /> {t('fertilizer.prevention')}
                     </h4>
-                    <p className="text-sm text-gray-700 dark:text-slate-300 leading-relaxed bg-blue-50/50 dark:bg-blue-900/10 p-3 rounded-xl">{result.primaryIssue?.prevention}</p>
+                    <p className="text-sm text-gray-700 dark:text-slate-300 leading-relaxed">{result.primaryIssue?.prevention}</p>
                 </div>
               </div>
 
               {/* Overall Advice Card */}
-              <div className="card bg-gray-900 dark:bg-slate-900 text-white border-none shadow-xl">
-                <div className="flex items-center justify-between mb-4">
-                   <h4 className="font-bold text-gray-300 uppercase text-xs tracking-widest">{t('fertilizer.expert_advice', 'Expert Advice')}</h4>
+              <div className="card bg-slate-900 text-white border-none shadow-2xl relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+                <div className="flex items-center justify-between mb-6 relative z-10">
+                   <h4 className="font-black text-gray-400 uppercase text-[10px] tracking-widest">{t('fertilizer.expert_advice', 'Expert Advice')}</h4>
                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] text-gray-400">{t('fertilizer.health_status', 'Health Status')}:</span>
+                      <span className="text-[10px] text-gray-500 font-bold uppercase">{t('fertilizer.health_status', 'Health Status')}:</span>
                       <span className={clsx(
-                        'text-xs font-bold px-2 py-0.5 rounded-full',
-                        result.overallHealth === 'Good' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'
+                        'text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter',
+                        result.overallHealth === 'Good' ? 'bg-emerald-500 text-white' : 'bg-amber-500 text-white'
                       )}>{t(`fertilizer.results.${result.overallHealth}`, result.overallHealth)}</span>
                    </div>
                 </div>
                 
-                <div className="bg-white/5 rounded-2xl p-4 mb-4">
-                   <p className="text-amber-400 font-bold flex items-center gap-2 mb-3">
-                      <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
-                      </span>
-                      {t(`fertilizer.results.${result.urgency}`, result.urgency)}
+                <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 mb-6 relative z-10 border border-white/5">
+                   <p className="text-amber-400 font-black flex items-center gap-2 mb-4 uppercase text-xs tracking-widest">
+                      <AlertTriangle size={16} /> {t(`fertilizer.results.${result.urgency}`, result.urgency)}
                    </p>
-                   <ul className="grid sm:grid-cols-2 gap-x-6 gap-y-2">
+                   <ul className="grid sm:grid-cols-2 gap-x-8 gap-y-3">
                     {result.generalRecommendations?.map((r, i) => (
-                        <li key={i} className="text-xs text-gray-300 flex gap-2 items-start">
-                        <span className="text-primary mt-1 shrink-0">✓</span>{r}
+                        <li key={i} className="text-sm text-gray-300 flex gap-3 items-start">
+                          <CheckCircle className="text-emerald-500 mt-1 shrink-0" size={14} />
+                          <span className="font-medium">{r}</span>
                         </li>
                     ))}
                     </ul>
                 </div>
                 
-                <div className="p-6 bg-gray-50 dark:bg-slate-800/50 border-t border-gray-100 dark:border-slate-800 flex items-center justify-between">
+                <div className="flex items-center justify-between opacity-50 relative z-10">
                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                         <ShieldCheck size={16} />
-                      </div>
-                      <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">{t('fertilizer.verified_advisory', 'Scientifically Verified Advisory')}</p>
+                      <ShieldCheck size={14} className="text-emerald-500" />
+                      <p className="text-[10px] font-black uppercase tracking-widest">{t('fertilizer.verified_advisory', 'Verified Advisory')}</p>
                    </div>
-                   <p className="text-[10px] text-gray-400 italic">{t('fertilizer.advisory_guidance', 'This report is AI-generated for guidance.')}</p>
+                   <p className="text-[10px] italic">{t('fertilizer.advisory_guidance', 'AI-generated for guidance.')}</p>
                 </div>
               </div>
             </div>

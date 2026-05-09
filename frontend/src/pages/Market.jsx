@@ -326,19 +326,20 @@ export default function Market() {
       </div>
 
       {/* ── Today's Mandi Board ───────────────────────────────── */}
-      <div className="card p-0 overflow-hidden shadow-sm border-t-[6px] border-t-primary relative">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="p-6 border-b border-gray-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gradient-to-r from-gray-50/50 to-white dark:from-slate-900/50 dark:to-slate-900 relative z-10">
+      <div className="card p-0 overflow-hidden shadow-2xl border-none relative group">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 pointer-events-none" />
+        <div className="p-6 border-b border-gray-100 dark:border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
           <div>
-            <h3 className="text-xl font-black text-gray-900 dark:text-white uppercase tracking-tighter flex items-center gap-2">
-              <Package size={20} className="text-primary" /> {t('market.table_title', 'Live Mandi Board')}
+            <h3 className="text-xl font-black text-gray-900 dark:text-white flex items-center gap-2">
+              {t('market.table_title', 'Live Mandi Board')}
+              <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
             </h3>
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1 ml-7">{t('market.table_subtitle', "Today's Modal Prices")}</p>
+            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">{t('market.table_subtitle', "Today's Modal Prices")}</p>
           </div>
-          <div className="relative w-full sm:w-auto">
-            <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+          <div className="relative group">
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
             <input 
-              className="w-full sm:w-72 pl-11 h-12 text-sm font-bold rounded-2xl bg-white dark:bg-slate-800 border-2 border-gray-100 dark:border-slate-700 focus:border-primary focus:ring-0 shadow-sm" 
+              className="input pl-10 h-11 text-sm rounded-2xl bg-gray-50 dark:bg-slate-800 border-none shadow-inner w-full sm:w-64 focus:ring-2 focus:ring-blue-500/20 transition-all" 
               placeholder={t('market.search_table', 'Search table...')} 
               value={search} 
               onChange={e => setSearch(e.target.value)} 
@@ -346,47 +347,67 @@ export default function Market() {
           </div>
         </div>
         
-        <div className="overflow-x-auto scrollbar-none">
+        <div className="overflow-x-auto scrollbar-none relative z-10">
           <table className="w-full text-sm">
             <thead>
-              <tr>
-                {['commodity', 'variety', 'market', 'min', 'modal_avg', 'max', 'trend'].map(h => (
-                  <th key={h} className="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-400 border-b border-gray-100 dark:border-white/5 whitespace-nowrap">{t(`market.headers.${h}`)}</th>
+              <tr className="bg-gradient-to-r from-gray-50 to-white dark:from-slate-900 dark:to-slate-800/50">
+                {[
+                  { id: 'commodity', label: t('market.headers.commodity') },
+                  { id: 'variety', label: t('market.headers.variety') },
+                  { id: 'market', label: t('market.headers.market') },
+                  { id: 'prices', label: t('market.headers.modal_avg'), className: 'text-center' },
+                  { id: 'trend', label: t('market.headers.trend'), className: 'text-right' }
+                ].map(h => (
+                  <th key={h.id} className={clsx("px-6 py-5 text-left text-[10px] font-black uppercase tracking-widest text-gray-400 border-b border-gray-100 dark:border-white/5 whitespace-nowrap", h.className)}>
+                    {h.label}
+                  </th>
                 ))}
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50 dark:divide-white/5">
               {loading ? (
                 [...Array(5)].map((_, i) => (
-                  <tr key={i}><td colSpan={7} className="px-6 py-4"><div className="skeleton h-6 w-full rounded-md" /></td></tr>
+                  <tr key={i}><td colSpan={5} className="px-6 py-4"><div className="skeleton h-8 w-full rounded-xl" /></td></tr>
                 ))
               ) : filteredPrices.length === 0 ? (
-                <tr><td colSpan={7} className="text-center py-12 text-gray-400 font-bold text-xs uppercase tracking-widest">{t('market.no_market_data', 'No market data found')}</td></tr>
+                <tr><td colSpan={5} className="text-center py-16 text-gray-400 font-bold text-xs uppercase tracking-widest italic">{t('market.no_market_data', 'No market data found')}</td></tr>
               ) : filteredPrices.map((p, i) => (
-                <tr key={i} className="hover:bg-gray-50/50 dark:hover:bg-slate-800/50 transition-colors group">
-                  <td className="px-6 py-4">
+                <tr key={i} className="hover:bg-blue-50/30 dark:hover:bg-blue-900/10 transition-colors group cursor-default">
+                  <td className="px-6 py-5">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-lg">{p.commodity === 'Wheat' ? '🌾' : p.commodity === 'Onion' ? '🧅' : p.commodity === 'Tomato' ? '🍅' : p.commodity === 'Potato' ? '🥔' : '📦'}</div>
-                      <span className="font-black text-gray-900 dark:text-white">{t(`market.items.${p.commodity}`, p.commodity)}</span>
+                      <div className="w-10 h-10 rounded-2xl bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                        {p.commodity === 'Wheat' ? '🌾' : p.commodity === 'Onion' ? '🧅' : p.commodity === 'Tomato' ? '🍅' : p.commodity === 'Potato' ? '🥔' : '📦'}
+                      </div>
+                      <div>
+                        <span className="font-black text-gray-900 dark:text-white block leading-none mb-1">{t(`market.items.${p.commodity}`, p.commodity)}</span>
+                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">{p.state}</span>
+                      </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-gray-500 font-semibold">{p.variety}</td>
-                  <td className="px-6 py-4 text-gray-900 dark:text-white font-bold">{p.market}</td>
-                  <td className="px-6 py-4 text-gray-400">₹{p.minPrice?.toLocaleString()}</td>
-                  <td className="px-6 py-4">
-                    <span className="font-black text-primary bg-primary/10 px-3 py-1 rounded-lg">₹{p.modalPrice?.toLocaleString()}</span>
+                  <td className="px-6 py-5">
+                    <span className="px-2 py-1 bg-gray-100 dark:bg-slate-800 rounded-lg text-[10px] font-black text-gray-500 uppercase">{p.variety}</span>
                   </td>
-                  <td className="px-6 py-4 text-gray-400">₹{p.maxPrice?.toLocaleString()}</td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-1.5">
-                      <TrendIcon trend={p.trend} size={16} />
-                      <span className={clsx('text-[10px] font-black uppercase px-2 py-1 rounded-full',
-                        p.changePercent > 0 ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400' 
-                        : p.changePercent < 0 ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400' 
-                        : 'bg-gray-100 text-gray-700 dark:bg-slate-800 dark:text-gray-400'
-                      )}>
-                        {p.changePercent > 0 ? '+' : ''}{p.changePercent}%
-                      </span>
+                  <td className="px-6 py-5">
+                    <div className="flex items-center gap-2 text-gray-900 dark:text-white font-bold">
+                      <MapPin size={12} className="text-blue-500" />
+                      {p.market}
+                    </div>
+                  </td>
+                  <td className="px-6 py-5 text-center">
+                    <div className="inline-flex flex-col items-center">
+                      <span className="font-black text-lg text-blue-600 dark:text-blue-400 leading-none">₹{p.modalPrice?.toLocaleString()}</span>
+                      <span className="text-[9px] font-bold text-gray-400 uppercase mt-1">₹{p.minPrice} - ₹{p.maxPrice}</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-5 text-right">
+                    <div className={clsx(
+                      "inline-flex items-center gap-2 px-3 py-1.5 rounded-xl font-black text-xs shadow-sm",
+                      p.changePercent > 0 ? "bg-green-500 text-white shadow-green-500/20" : 
+                      p.changePercent < 0 ? "bg-red-500 text-white shadow-red-500/20" : 
+                      "bg-gray-100 text-gray-500 dark:bg-slate-800"
+                    )}>
+                      {p.changePercent > 0 ? <TrendingUp size={14} /> : p.changePercent < 0 ? <TrendingDown size={14} /> : <Minus size={14} />}
+                      <span>{p.changePercent > 0 ? '+' : ''}{p.changePercent}%</span>
                     </div>
                   </td>
                 </tr>
