@@ -51,11 +51,11 @@ export default function Landing() {
   useGSAP(() => {
     // Nav Bar Animation
     gsap.from('.nav-container', {
-      y: -100,
+      y: -50,
       opacity: 0,
-      duration: 1,
-      ease: 'power4.out',
-      delay: 0.2
+      duration: 0.8,
+      ease: 'power3.out',
+      clearProps: 'all'
     });
 
     // Hero Content Animation
