@@ -211,24 +211,28 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="page-wrapper max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
+    <div className="page-wrapper max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in relative">
+      
+      {/* Subtle Premium Background Glow */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 dark:bg-primary/10 blur-[120px] rounded-full pointer-events-none -z-10" />
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-500/5 dark:bg-blue-500/10 blur-[120px] rounded-full pointer-events-none -z-10" />
 
       {/* ── Header Command Bar ──────────────────────────── */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-10">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-12">
         <div>
-           <div className="flex items-center gap-3 mb-2">
-              <span className="px-3 py-1 bg-primary/10 text-primary dark:text-emerald-400 text-[9px] font-black uppercase tracking-widest rounded-full border border-primary/20">
+           <div className="flex items-center gap-3 mb-3">
+              <span className="px-3 py-1 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-[9px] font-black uppercase tracking-widest rounded-full shadow-lg shadow-emerald-500/20">
                  Command Center v2.1
               </span>
-              <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-1">
-                 <RefreshCw size={10} className="animate-spin-slow" /> System Sync: Live
+              <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest flex items-center gap-1.5 bg-white dark:bg-slate-900 px-3 py-1 rounded-full border border-gray-100 dark:border-slate-800 shadow-sm">
+                 <RefreshCw size={10} className="text-emerald-500 animate-spin-slow" /> Live Sync
               </span>
            </div>
-           <h1 className="text-3xl sm:text-4xl font-black tracking-tighter text-gray-900 dark:text-white flex items-center gap-3">
-              {t(greetingKey)}, {user?.name?.split(' ')[0] || t('auth.farmer')} <Sparkles className="text-amber-400" size={24} />
+           <h1 className="text-4xl sm:text-5xl font-black tracking-tighter text-gray-900 dark:text-white flex items-center gap-3 leading-none">
+              {t(greetingKey)}, {user?.name?.split(' ')[0] || t('auth.farmer')} <Sparkles className="text-amber-400" size={28} />
            </h1>
-           <p className="text-sm text-gray-500 dark:text-slate-400 font-medium mt-1 flex items-center gap-2">
-              <Calendar size={14} /> {new Date().toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' })}
+           <p className="text-sm text-gray-500 dark:text-slate-400 font-medium mt-3 flex items-center gap-2">
+              <Calendar size={14} className="text-primary" /> {new Date().toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' })}
            </p>
         </div>
         

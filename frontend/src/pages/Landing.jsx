@@ -92,12 +92,12 @@ export default function Landing() {
                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-400">Next-Gen Agricultural Intelligence</span>
                   </div>
 
-                  <h1 className="text-5xl sm:text-6xl md:text-8xl font-black leading-[0.9] tracking-tighter mb-10 animate-slide-up">
-                     REVOLUTIONIZING <br />
-                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-blue-500">BHARAT'S FARMS</span>
+                  <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black leading-tight sm:leading-[1.1] tracking-tighter mb-8 animate-slide-up">
+                     The Future of <br className="hidden sm:block" />
+                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-blue-500">Smart Farming</span>
                   </h1>
 
-                  <p className="text-xl text-slate-400 font-medium max-w-xl mb-12 leading-relaxed animate-slide-up [animation-delay:100ms]">
+                  <p className="text-lg sm:text-xl text-slate-400 font-medium max-w-xl mb-12 leading-relaxed animate-slide-up [animation-delay:100ms]">
                      Experience the world's most advanced AI platform for farmers. Real-time satellite data, predictive crop analytics, and live market intelligence—all in one unified ecosystem.
                   </p>
 
