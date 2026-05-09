@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cropAPI } from '../services/api';
-import { Leaf, Sparkles, Calendar, Droplets, CheckCircle, RefreshCw, Trash2, ShieldCheck, Info, FileDown } from 'lucide-react';
+import { Leaf, Sparkles, Calendar, Droplets, CheckCircle, RefreshCw, Trash2, ShieldCheck, Info, FileDown, Plus } from 'lucide-react';
 import cropsImg from '../assets/crops-closeup.png';
 import toast from 'react-hot-toast';
 
