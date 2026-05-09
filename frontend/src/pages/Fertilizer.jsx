@@ -216,7 +216,7 @@ export default function Fertilizer() {
           {result ? (
             <div className="space-y-4 animate-slide-up">
               {/* Soil Health Certificate UI */}
-              <div className="card bg-white dark:bg-slate-900 border-2 border-primary/20 p-0 shadow-2xl overflow-hidden">
+              <div className="card border-2 border-primary/20 p-0 shadow-premium overflow-hidden">
                 <div className="bg-primary/5 p-6 border-b border-primary/10 flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 bg-primary text-white rounded-2xl flex items-center justify-center shadow-lg">

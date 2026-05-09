@@ -264,7 +264,7 @@ export default function Labour() {
         ) : (
           <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
             {jobs.map(job => (
-              <div key={job._id} className="card hover:shadow-2xl transition-all cursor-pointer group relative overflow-hidden bg-white dark:bg-slate-900 border-none shadow-lg p-6 sm:p-7"
+              <div key={job._id} className="card cursor-pointer group relative p-6 sm:p-7"
                 onClick={() => setShowModal(job)}>
                 
                 {job.image && (
@@ -324,8 +324,9 @@ export default function Labour() {
       {/* Post Form */}
       {tab === 'post' && (
         <div className="grid lg:grid-cols-12 gap-8">
-          <div className="lg:col-span-8 card shadow-2xl border-none bg-white dark:bg-slate-900">
-            <h2 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-8 flex items-center gap-3">
+          <div className="lg:col-span-8 card border-none shadow-premium relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+            <h2 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-8 flex items-center gap-3 relative z-10">
               <Plus className="bg-primary text-white rounded-xl p-1.5 shadow-lg shadow-primary/30" size={28} /> 
               <span>{t('labour.tabs.post')}</span>
             </h2>
@@ -428,7 +429,7 @@ export default function Labour() {
           {myJobs.length === 0
             ? <div className="card text-center py-24 text-gray-400 dark:text-slate-600 italic font-bold border-dashed border-2">{t('common.no_data')}</div>
             : myJobs.map(job => (
-              <div key={job._id} className="card flex items-center justify-between hover:border-primary transition-all bg-white dark:bg-slate-900 border-none shadow-lg py-5 px-6 group">
+              <div key={job._id} className="card flex items-center justify-between group py-5 px-6">
                 <div className="flex items-center gap-5">
                    <div className="w-12 h-12 rounded-2xl bg-gray-50 dark:bg-slate-800 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">{CATEGORY_EMOJI[job.category]}</div>
                    <div>

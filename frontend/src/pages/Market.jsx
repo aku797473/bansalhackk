@@ -181,7 +181,7 @@ export default function Market() {
         
         {/* Chart Column (Spans 2) */}
         <div className="lg:col-span-2 flex flex-col gap-6">
-          <div className="bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/20 dark:border-white/5 rounded-[2.5rem] p-7 shadow-premium relative overflow-hidden">
+          <div className="card border-none shadow-premium relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
             
             <div className="flex items-start justify-between mb-8 relative z-10">
@@ -278,7 +278,7 @@ export default function Market() {
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-white/5 rounded-[2rem] p-6 shadow-sm">
+              <div className="card shadow-sm">
                 <p className="text-xs font-black uppercase tracking-widest text-gray-400 mb-4">{t('market.range_30d', '30-Day Historical Range')}</p>
                 <div className="flex items-center justify-between">
                   <div>
@@ -326,8 +326,8 @@ export default function Market() {
       </div>
 
       {/* ── Today's Mandi Board ───────────────────────────────── */}
-      <div className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-white/5 rounded-[2rem] overflow-hidden shadow-sm">
-        <div className="p-6 border-b border-gray-100 dark:border-white/5 flex items-center justify-between bg-gray-50/50 dark:bg-slate-900/50">
+      <div className="card p-0 overflow-hidden shadow-sm">
+        <div className="p-6 border-b border-gray-100 dark:border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h3 className="text-lg font-black text-gray-900 dark:text-white">{t('market.table_title', 'Live Mandi Board')}</h3>
             <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">{t('market.table_subtitle', "Today's Modal Prices")}</p>
@@ -345,7 +345,7 @@ export default function Market() {
         
         <div className="overflow-x-auto scrollbar-none">
           <table className="w-full text-sm">
-            <thead className="bg-white dark:bg-slate-900">
+            <thead>
               <tr>
                 {['commodity', 'variety', 'market', 'min', 'modal_avg', 'max', 'trend'].map(h => (
                   <th key={h} className="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-gray-400 border-b border-gray-100 dark:border-white/5 whitespace-nowrap">{t(`market.headers.${h}`)}</th>

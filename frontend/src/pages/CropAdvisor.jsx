@@ -138,7 +138,8 @@ export default function CropAdvisor() {
 
       <div className="grid lg:grid-cols-2 gap-8">
         {/* Form */}
-        <div className="card shadow-xl border-none bg-white dark:bg-slate-900">
+        <div className="card border-none shadow-premium relative">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-2xl pointer-events-none" />
           <h2 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-6">{t('market.live_mandi_desc', 'Provide field details')}</h2>
           <div className="space-y-5">
             <div className="grid grid-cols-2 gap-4">
@@ -185,7 +186,7 @@ export default function CropAdvisor() {
           {result ? (
             <>
               {/* Primary crop */}
-              <div className="card bg-white dark:bg-slate-900 border-2 border-primary/20 shadow-2xl overflow-hidden relative group p-0">
+              <div className="card border-2 border-primary/20 shadow-2xl overflow-hidden relative group p-0">
                 <div className="h-40 relative overflow-hidden">
                    <img src={cropsImg} alt="Healthy crops" className="w-full h-full object-cover" />
                    <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-slate-900 via-transparent to-transparent" />
@@ -265,7 +266,7 @@ export default function CropAdvisor() {
 
           {/* Calendar */}
           {calendar && (
-            <div className="card shadow-xl border-none bg-white dark:bg-slate-900 animate-slide-up">
+            <div className="card shadow-premium border-none animate-slide-up">
               <h3 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-8 border-b border-gray-100 dark:border-white/5 pb-4 flex items-center gap-2">
                 <Calendar size={14} className="text-primary" />
                 <span>{calendar.crop} — {t('crop.crop_calendar', 'Crop Calendar')}</span>
