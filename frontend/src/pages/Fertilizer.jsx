@@ -100,23 +100,32 @@ export default function Fertilizer() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-6 page-enter">
-      <div className="page-header flex items-center justify-between">
+    <div className="page-wrapper max-w-6xl">
+      <div className="page-header flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
         <div>
-          <h1 className="page-title flex items-center gap-2">
-            <FlaskConical className="text-amber-500" size={22} />
-            <span>{t('fertilizer.title')} & <span className="text-green-600">{t('fertilizer.seed_iq', 'Seed IQ')}</span></span>
+          <h1 className="page-title flex items-center gap-3 tracking-tighter">
+            <div className="p-3 bg-amber-100 dark:bg-amber-900/30 rounded-2xl shadow-inner">
+               <FlaskConical className="text-amber-500 animate-pulse" size={28} />
+            </div>
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-orange-600 dark:from-amber-400 dark:to-orange-400">
+              {t('fertilizer.title')}
+            </span>
+            <span className="hidden sm:inline opacity-20">|</span>
+            <span className="text-green-600 dark:text-emerald-400 font-black">{t('fertilizer.seed_iq')}</span>
           </h1>
-          <p className="page-subtitle text-gray-500 font-medium">{t('fertilizer.ai_desc', 'AI analysis for plants, seeds, and reports')}</p>
+          <p className="page-subtitle mt-2">{t('fertilizer.ai_desc')}</p>
         </div>
-        <div className="flex items-center gap-2">
+        
+        <div className="flex items-center gap-3">
           {result && (
-            <button onClick={clearActive} className="btn-ghost text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-2">
-              <Trash2 size={16} /> <span className="hidden sm:inline">{t('fertilizer.clear_result', 'Clear Result')}</span>
+            <button onClick={clearActive} className="btn-danger h-11 px-5 rounded-2xl text-xs font-black uppercase tracking-widest flex items-center gap-2 group">
+              <Trash2 size={16} className="group-hover:rotate-12 transition-transform" /> 
+              <span>{t('fertilizer.clear_result')}</span>
             </button>
           )}
-          <div className="flex items-center gap-2 text-xs font-bold text-gray-500 bg-gray-100 dark:bg-slate-800 px-4 py-2 rounded-xl">
-             <History size={14}/> <span>{t('dashboard.recent_activity', 'History')}</span>
+          <div className="flex items-center gap-2 px-4 py-2 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md border border-white/20 dark:border-white/5 rounded-2xl shadow-sm">
+             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+             <span className="text-[10px] font-black uppercase tracking-widest text-gray-500">{t('fertilizer.ai_verified')}</span>
           </div>
         </div>
       </div>
@@ -125,48 +134,52 @@ export default function Fertilizer() {
         {/* Left Column: Upload & History */}
         <div className="lg:col-span-4 space-y-6">
           {/* Upload Area */}
-          <div className="card border-2 border-dashed border-amber-200 dark:border-amber-900/30 p-0 overflow-hidden bg-gradient-to-br from-white to-amber-50/50 dark:from-slate-900 dark:to-amber-950/20 relative group">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl pointer-events-none group-hover:scale-150 transition-transform duration-700" />
+          <div className="card border-none shadow-premium p-0 overflow-hidden bg-gradient-to-br from-white via-white to-amber-50/30 dark:from-slate-900 dark:via-slate-900 dark:to-amber-950/10 relative group">
+            <div className="absolute -top-24 -right-24 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none group-hover:scale-110 transition-transform duration-1000" />
+            
             <div {...getRootProps()} className={clsx(
-                'p-8 text-center cursor-pointer transition-all',
-                isDragActive ? 'bg-primary/5' : 'hover:bg-gray-50 dark:hover:bg-slate-900/50'
+                'p-10 text-center cursor-pointer transition-all border-2 border-dashed rounded-[2rem] m-4',
+                isDragActive ? 'border-primary bg-primary/5' : 'border-gray-100 dark:border-slate-800 hover:border-amber-400 dark:hover:border-amber-500/50 hover:bg-amber-50/30 dark:hover:bg-amber-900/5'
             )}>
                 <input {...getInputProps()} />
                 {preview ? (
-                  <div className="relative group">
-                    <img src={preview} alt="preview" className="max-h-48 mx-auto rounded-xl object-contain shadow-sm" />
+                  <div className="relative group max-w-xs mx-auto">
+                    <img src={preview} alt="preview" className="max-h-56 mx-auto rounded-3xl object-contain shadow-2xl border-4 border-white dark:border-slate-800" />
                     {loading && (
-                      <div className="absolute inset-0 bg-primary/20 backdrop-blur-[2px] rounded-xl overflow-hidden">
-                        <div className="absolute top-0 left-0 w-full h-1 bg-primary shadow-[0_0_15px_rgba(21,128,61,0.8)] animate-scan" />
+                      <div className="absolute inset-0 bg-primary/20 backdrop-blur-[2px] rounded-3xl overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-1 bg-primary shadow-[0_0_20px_rgba(21,128,61,1)] animate-scan" />
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="bg-white/90 dark:bg-slate-900/90 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-primary shadow-xl">{t('fertilizer.analyzing_sample', 'Analyzing Sample...')}</span>
+                          <div className="bg-white/95 dark:bg-slate-900/95 px-5 py-2 rounded-2xl flex items-center gap-3 shadow-2xl border border-primary/20">
+                             <RefreshCw className="animate-spin text-primary" size={16} />
+                             <span className="text-[10px] font-black uppercase tracking-widest text-primary">{t('fertilizer.analyzing')}</span>
+                          </div>
                         </div>
                       </div>
                     )}
                   </div>
                 ) : (
-                <div className="flex flex-col items-center gap-3 py-2">
-                    <div className="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center">
-                    <Upload size={24} className="text-amber-500" />
+                <div className="flex flex-col items-center gap-4 py-6">
+                    <div className="w-20 h-20 rounded-[2rem] bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-900/30 dark:to-orange-900/30 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-500">
+                       <Upload size={32} className="text-amber-600 dark:text-amber-400" />
                     </div>
                     <div>
-                    <p className="text-sm font-medium text-gray-700 dark:text-slate-300">{t('fertilizer.upload_desc', 'Upload plant, seed, or report photo')}</p>
-                    <p className="text-[10px] text-gray-400 mt-1">{t('fertilizer.file_limits', 'JPG, PNG, WEBP, PDF — max 10MB')}</p>
+                      <p className="text-base font-black text-gray-900 dark:text-white">{t('fertilizer.upload_desc')}</p>
+                      <p className="text-xs text-gray-400 mt-2 font-medium">{t('fertilizer.file_limits')}</p>
                     </div>
                 </div>
                 )}
             </div>
             
-            <div className="p-4 bg-gray-50 dark:bg-slate-900/50 border-t border-gray-100 dark:border-slate-800 flex gap-2">
-                {preview && (
-                    <button onClick={() => { setPreview(null); setFile(null); setResult(null); }}
-                    className="btn-ghost flex-1 justify-center text-xs text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20">
-                    {t('common.cancel', 'Remove')}
-                    </button>
-                )}
-                <button onClick={analyze} disabled={!file || loading} className="btn-primary flex-[2] justify-center text-xs py-2">
-                    {loading ? <RefreshCw size={14} className="animate-spin" /> : <FlaskConical size={14} />}
-                    {loading ? t('fertilizer.analyzing') : t('fertilizer.analyze_health', 'Analyze Health / Variety')}
+            <div className="p-6 bg-gray-50/50 dark:bg-slate-800/50 border-t border-gray-100 dark:border-white/5 flex flex-col sm:flex-row gap-3">
+                <button onClick={(e) => { e.stopPropagation(); document.querySelector('input[type="file"]').click(); }}
+                  className="btn-secondary h-12 flex-1 justify-center rounded-2xl text-xs font-bold gap-3 group">
+                  <FileText size={18} className="text-blue-500 group-hover:scale-110 transition-transform" />
+                  <span>{t('fertilizer.import_pdf', 'Import PDF Report')}</span>
+                </button>
+                <button onClick={analyze} disabled={!file || loading} 
+                  className="btn-primary h-12 flex-[1.5] justify-center rounded-2xl text-xs font-black uppercase tracking-widest shadow-xl shadow-primary/20 active:scale-95 disabled:opacity-50 disabled:active:scale-100 transition-all">
+                    {loading ? <RefreshCw size={18} className="animate-spin" /> : <FlaskConical size={18} />}
+                    <span className="ml-2">{loading ? t('fertilizer.analyzing') : t('fertilizer.analyze_health')}</span>
                 </button>
             </div>
           </div>

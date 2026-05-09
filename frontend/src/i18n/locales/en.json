@@ -226,7 +226,6 @@
       "Assam": "Assam",
       "Tamil Nadu": "Tamil Nadu"
     },
-    "items": {
       "Wheat": "Wheat",
       "Rice": "Rice",
       "Maize": "Maize",
@@ -236,10 +235,21 @@
       "Mustard": "Mustard",
       "Potato": "Potato",
       "Tomato": "Tomato",
-      "Onion": "Onion"
+      "Onion": "Onion",
+      "Garlic": "Garlic",
+      "Ginger": "Ginger"
     }
   },
   "fertilizer": {
+    "items": {
+      "Urea": "Urea",
+      "DAP": "DAP",
+      "MOP": "MOP",
+      "NPK": "NPK",
+      "SSP": "SSP",
+      "Compost": "Compost",
+      "Neem Cake": "Neem Cake"
+    },
     "title": "Fertilizer & Disease Detection",
     "subtitle": "Upload a photo of your crop leaves",
     "upload_label": "Drop image here or click to upload",
@@ -253,6 +263,7 @@
     "clear_result": "Clear Result",
     "analyzing_sample": "Analyzing Sample...",
     "upload_desc": "Upload plant, seed, or report photo",
+    "import_pdf": "Import PDF Report",
     "file_limits": "JPG, PNG, WEBP, PDF — max 10MB",
     "remove": "Remove",
     "analyze_health": "Analyze Health / Variety",

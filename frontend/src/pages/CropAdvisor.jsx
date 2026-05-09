@@ -115,34 +115,40 @@ export default function CropAdvisor() {
   );
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-6 page-enter animate-fade-in">
-      <div className="page-header flex items-center justify-between">
+    <div className="page-wrapper max-w-6xl">
+      <div className="page-header flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
         <div>
-          <h1 className="page-title flex items-center gap-2 tracking-tighter">
-            <Leaf className="text-primary" size={24} />
-            <span>{t('crop.title')}</span>
+          <h1 className="page-title flex items-center gap-3 tracking-tighter">
+            <div className="p-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-2xl shadow-inner">
+               <Leaf className="text-emerald-600 animate-bounce-sm" size={28} />
+            </div>
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-green-600 dark:from-emerald-400 dark:to-green-400">
+              {t('crop.title')}
+            </span>
           </h1>
-          <p className="page-subtitle text-gray-500 font-medium">{t('crop.subtitle')}</p>
+          <p className="page-subtitle mt-2">{t('crop.subtitle')}</p>
         </div>
-        <div className="flex items-center gap-2">
+        
+        <div className="flex items-center gap-3">
           {result && (
-            <button onClick={clear} className="btn-ghost text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-2">
-              <Trash2 size={16} /> <span className="hidden sm:inline">{t('crop.clear_result')}</span>
+            <button onClick={clear} className="btn-danger h-11 px-5 rounded-2xl text-xs font-black uppercase tracking-widest flex items-center gap-2 group">
+              <Trash2 size={16} className="group-hover:rotate-12 transition-transform" /> 
+              <span>{t('crop.clear_result')}</span>
             </button>
           )}
-          <button onClick={() => window.location.reload()} className="btn-icon bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-sm" title={t('dashboard.labels.refresh', 'Refresh')}>
-            <RefreshCw size={16} className="text-gray-600 dark:text-slate-400" />
-          </button>
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-8">
-        {/* Form */}
-        <div className="card border-none shadow-premium relative overflow-hidden bg-gradient-to-br from-white to-emerald-50/50 dark:from-slate-900 dark:to-emerald-950/20">
-          <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-          <h2 className="text-xs font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-6 flex items-center gap-2">
-            <Sparkles size={14} /> {t('market.live_mandi_desc', 'Provide field details')}
-          </h2>
+      <div className="grid lg:grid-cols-12 gap-8">
+        {/* Form Column */}
+        <div className="lg:col-span-5 space-y-6">
+          <div className="card border-none shadow-premium relative overflow-hidden bg-gradient-to-br from-white via-white to-emerald-50/30 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/10">
+            <div className="absolute -top-24 -right-24 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+            
+            <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-8 flex items-center gap-3">
+              <Plus className="bg-emerald-500 text-white rounded-lg p-1" size={18} />
+              <span>{t('crop.historical_model')}</span>
+            </h2>
           <div className="space-y-5">
             <div className="grid grid-cols-2 gap-4">
               <Select label={t('crop.soil_type')} value={form.soilType} onChange={v => set('soilType', v)} options={SOIL_TYPES} />
@@ -183,8 +189,10 @@ export default function CropAdvisor() {
           </button>
         </div>
 
-        {/* Result */}
-        <div className="space-y-6">
+        </div>
+
+        {/* Result Column */}
+        <div className="lg:col-span-7 space-y-6">
           {result && (
             <>
               {/* Primary crop */}
@@ -222,7 +230,7 @@ export default function CropAdvisor() {
                     ].map((item, idx) => (
                       <div key={idx} className="bg-gray-50 dark:bg-black/20 p-4 rounded-2xl border border-gray-100 dark:border-white/5">
                         <p className="text-gray-400 text-[9px] font-black uppercase mb-1 tracking-widest whitespace-nowrap">{item.icon} {item.label}</p>
-                        <p className="font-black text-gray-800 dark:text-white text-sm">{item.val}</p>
+                        <p className="font-black text-gray-800 dark:text-white text-sm">{translateOption(item.val)}</p>
                       </div>
                     ))}
                   </div>
@@ -233,7 +241,7 @@ export default function CropAdvisor() {
               <div className="card shadow-md">
                 <h3 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-4">{t('crop.fertilizers')}</h3>
                 <div className="flex flex-wrap gap-2">
-                  {result.fertilizers?.map(f => <span key={f} className="px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-xl text-xs font-bold border border-blue-100 dark:border-blue-900/30">{f}</span>)}
+                  {result.fertilizers?.map(f => <span key={f} className="px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-xl text-xs font-bold border border-blue-100 dark:border-blue-900/30">{translateOption(f, 'fertilizer')}</span>)}
                 </div>
               </div>
 

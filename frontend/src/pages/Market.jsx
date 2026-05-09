@@ -121,7 +121,7 @@ export default function Market() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6 page-enter">
+    <div className="page-wrapper max-w-7xl">
       {/* ── Header ────────────────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10">
         <div>

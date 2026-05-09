@@ -39,6 +39,24 @@ const CATEGORIES = ['harvesting','sowing','irrigation','pesticide','transport','
 const STATES = ['Punjab','Haryana','Uttar Pradesh','Bihar','Madhya Pradesh','Maharashtra','Gujarat','Rajasthan','Karnataka'];
 
 const CATEGORY_EMOJI = { harvesting:'🌾', sowing:'🌱', irrigation:'💧', pesticide:'🧪', transport:'🚛', storage:'🏪', other:'💼' };
+const CATEGORY_COLORS = {
+  harvesting: 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400 border-amber-200 dark:border-amber-900/30',
+  sowing: 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/30',
+  irrigation: 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 border-blue-200 dark:border-blue-900/30',
+  pesticide: 'bg-rose-100 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400 border-rose-200 dark:border-rose-900/30',
+  transport: 'bg-sky-100 text-sky-600 dark:bg-sky-900/30 dark:text-sky-400 border-sky-200 dark:border-sky-900/30',
+  storage: 'bg-slate-100 text-slate-600 dark:bg-slate-900/30 dark:text-slate-400 border-slate-200 dark:border-slate-900/30',
+  other: 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400 border-purple-200 dark:border-purple-900/30'
+};
+const CATEGORY_GRADIENTS = {
+  harvesting: 'from-amber-400 to-orange-500',
+  sowing: 'from-emerald-400 to-green-600',
+  irrigation: 'from-blue-400 to-indigo-500',
+  pesticide: 'from-rose-400 to-red-600',
+  transport: 'from-sky-400 to-blue-600',
+  storage: 'from-slate-400 to-gray-600',
+  other: 'from-purple-400 to-indigo-600'
+};
 
 export default function Labour() {
   const { t } = useTranslation();
@@ -216,14 +234,23 @@ export default function Labour() {
 
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-6 page-enter animate-fade-in">
-      <div className="page-header flex items-center justify-between">
+    <div className="page-wrapper max-w-6xl">
+      <div className="page-header flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
         <div>
-          <h1 className="page-title flex items-center gap-2 tracking-tighter">
-            <Users className="text-purple-500" size={24} />
-            <span>{t('labour.title')}</span>
+          <h1 className="page-title flex items-center gap-3 tracking-tighter">
+            <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-2xl shadow-inner">
+               <Users className="text-purple-600 animate-pulse" size={28} />
+            </div>
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400">
+              {t('labour.title')}
+            </span>
           </h1>
-          <p className="page-subtitle text-gray-500 font-medium">{t('labour.subtitle')}</p>
+          <p className="page-subtitle mt-2">{t('labour.subtitle')}</p>
+        </div>
+
+        <div className="flex items-center gap-2 px-4 py-2 bg-purple-50 dark:bg-purple-900/20 border border-purple-100 dark:border-purple-900/30 rounded-2xl shadow-sm">
+           <div className="w-2 h-2 rounded-full bg-purple-500 animate-ping" />
+           <span className="text-[10px] font-black uppercase tracking-widest text-purple-600 dark:text-purple-400">{t('labour.verified_post')}</span>
         </div>
       </div>
 
@@ -274,7 +301,7 @@ export default function Labour() {
                 )}
 
                 <div className="flex items-start gap-4 mb-5">
-                  <div className="w-14 h-14 rounded-2xl bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center text-3xl shrink-0 shadow-sm border border-purple-100 dark:border-purple-900/30">
+                  <div className={clsx("w-14 h-14 rounded-2xl flex items-center justify-center text-3xl shrink-0 shadow-lg border transition-transform group-hover:scale-110 duration-500", CATEGORY_COLORS[job.category] || CATEGORY_COLORS.other)}>
                     {CATEGORY_EMOJI[job.category] || '💼'}
                   </div>
                   <div className="pr-12 xs:pr-0">
@@ -282,8 +309,8 @@ export default function Labour() {
                       {job.key ? t(`labour.fallback.${job.key}.title`) : job.title}
                     </h3>
                     <div className="flex items-center gap-2 mt-1.5">
-                       <div className="badge-verified py-0.5 px-2 bg-blue-50 text-blue-600 border-blue-100 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-900/30">
-                          <ShieldCheck size={10} /> {t('labour.verified_post')}
+                       <div className={clsx("badge py-0.5 px-2 border font-black uppercase tracking-widest text-[9px]", CATEGORY_COLORS[job.category] || CATEGORY_COLORS.other)}>
+                          {t(`labour.categories.${job.category}`)}
                        </div>
                        <span className="text-[10px] text-gray-400 font-bold flex items-center gap-1"><Clock size={10} /> {new Date(job.createdAt).toLocaleDateString(t('common.locale'))}</span>
                     </div>
