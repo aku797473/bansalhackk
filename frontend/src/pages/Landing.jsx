@@ -1,15 +1,14 @@
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import LanguageSelector from '../components/LanguageSelector';
-import {
-  Cloud, Leaf, FlaskConical, TrendingUp, Users, Map,
+import { Cloud, Leaf, FlaskConical, TrendingUp, Users, Map,
   ArrowRight, ShieldCheck, Zap, ChevronRight, Globe, 
-  Award, Star, Quote, Landmark, PlayCircle, MousePointer2
+  Award, Star, Quote, Landmark, PlayCircle, MousePointer2, X
 } from 'lucide-react';
 import clsx from 'clsx';
 import logo from '../assets/logo.png';
 import ultraHero from '../assets/ultra-hero.png';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -47,6 +46,7 @@ export default function Landing() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const container = useRef();
+  const [showDemo, setShowDemo] = useState(false);
 
   useGSAP(() => {
     // Nav Bar Animation
@@ -202,7 +202,7 @@ export default function Landing() {
                      >
                         {t('landing.get_started')} <ArrowRight size={16} />
                      </button>
-                     <button className="h-14 px-8 w-full sm:w-auto bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-[11px] font-black uppercase tracking-[0.2em] rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex items-center justify-center gap-3">
+                     <button onClick={() => setShowDemo(true)} className="h-14 px-8 w-full sm:w-auto bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-[11px] font-black uppercase tracking-[0.2em] rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex items-center justify-center gap-3">
                         <PlayCircle size={18} className="text-emerald-600" /> {t('landing.watch_demo')}
                      </button>
                   </div>
@@ -360,6 +360,33 @@ export default function Landing() {
             </div>
          </div>
       </footer>
+
+      {/* ── Demo Modal ────────────────────────────────────── */}
+      {showDemo && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fade-in">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-4xl overflow-hidden shadow-2xl relative border border-slate-200 dark:border-slate-800">
+            <div className="p-4 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
+              <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2"><PlayCircle size={18} className="text-emerald-500"/> Smart Kisan Demo</h3>
+              <button onClick={() => setShowDemo(false)} className="p-2 bg-slate-200 dark:bg-slate-800 rounded-full hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors">
+                <X size={16} className="text-slate-600 dark:text-slate-300" />
+              </button>
+            </div>
+            <div className="aspect-video w-full bg-slate-100 dark:bg-black relative">
+              <iframe 
+                width="100%" 
+                height="100%" 
+                src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0" 
+                title="Smart Kisan Demo" 
+                frameBorder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowFullScreen
+                className="absolute inset-0"
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
