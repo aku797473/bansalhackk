@@ -375,7 +375,7 @@ export default function Landing() {
               <iframe 
                 width="100%" 
                 height="100%" 
-                src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0" 
+                src="https://www.youtube.com/embed/B9Z211U-f0k?autoplay=1&mute=1" 
                 title="Smart Kisan Demo" 
                 frameBorder="0" 
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
