@@ -37,68 +37,82 @@ export default function Dashboard() {
   const container = useRef();
 
   useEffect(() => {
-    const el = container.current;
-    if (!el) return;
+    // Use rAF to ensure DOM is fully painted before GSAP reads elements
+    const raf = requestAnimationFrame(() => {
+      const el = container.current;
+      if (!el) return;
 
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReduced) {
-      el.querySelectorAll('.dash-header,.bento-card').forEach(n => (n.style.opacity = '1'));
-      return;
-    }
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReduced) return;
 
-    const isMobile = window.innerWidth < 768;
-    const yOffset  = isMobile ? 30 : 60;
+      const isMobile = window.innerWidth < 768;
 
-    const ctx = gsap.context(() => {
-      gsap.set('.dash-header', { opacity: 0, y: -30 });
-      gsap.set('.bento-card',  { opacity: 0, y: yOffset, scale: 0.98 });
+      const header = el.querySelector('.dash-header');
+      const cards  = Array.from(el.querySelectorAll('.bento-card'));
+
+      if (!header && cards.length === 0) return;
+
+      // Hide elements before animating
+      if (header) gsap.set(header, { opacity: 0, y: -30 });
+      if (cards.length) gsap.set(cards, { opacity: 0, y: isMobile ? 28 : 50, scale: 0.97 });
 
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-      tl.to('.dash-header', { opacity: 1, y: 0, duration: 0.6 })
-        .to('.bento-card', {
-          opacity: 1, y: 0, scale: 1,
-          duration: isMobile ? 0.45 : 0.6,
-          stagger: { amount: isMobile ? 0.35 : 0.55, from: 'start' },
-        }, '-=0.3');
+      if (header) tl.to(header, { opacity: 1, y: 0, duration: 0.65, clearProps: 'transform' });
 
-      // Scroll-triggered (per element for reliability)
+      if (cards.length) {
+        tl.to(cards, {
+          opacity: 1, y: 0, scale: 1,
+          duration: isMobile ? 0.45 : 0.55,
+          stagger: { amount: isMobile ? 0.3 : 0.5, from: 'start' },
+          clearProps: 'transform',
+        }, header ? '-=0.3' : '0');
+      }
+
+      // Per-element scroll triggers
       el.querySelectorAll('.tip-card').forEach(tip => {
         gsap.fromTo(tip,
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out',
-            scrollTrigger: { trigger: tip, start: 'top 90%', once: true } }
+          { opacity: 0, y: 25 },
+          { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out', clearProps: 'transform',
+            scrollTrigger: { trigger: tip, start: 'top 92%', once: true } }
         );
       });
 
       el.querySelectorAll('.alert-item').forEach((item, i) => {
         gsap.fromTo(item,
-          { opacity: 0, x: isMobile ? -15 : -30 },
-          { opacity: 1, x: 0, duration: 0.5, delay: i * 0.08, ease: 'power2.out',
-            scrollTrigger: { trigger: item, start: 'top 92%', once: true } }
+          { opacity: 0, x: isMobile ? -12 : -25 },
+          { opacity: 1, x: 0, duration: 0.5, delay: i * 0.07, ease: 'power2.out', clearProps: 'transform',
+            scrollTrigger: { trigger: item, start: 'top 93%', once: true } }
         );
       });
 
       el.querySelectorAll('.sync-item').forEach((item, i) => {
         gsap.fromTo(item,
-          { opacity: 0, x: isMobile ? 15 : 30 },
-          { opacity: 1, x: 0, duration: 0.5, delay: i * 0.1, ease: 'power2.out',
-            scrollTrigger: { trigger: item, start: 'top 92%', once: true } }
+          { opacity: 0, x: isMobile ? 12 : 25 },
+          { opacity: 1, x: 0, duration: 0.5, delay: i * 0.09, ease: 'power2.out', clearProps: 'transform',
+            scrollTrigger: { trigger: item, start: 'top 93%', once: true } }
         );
       });
-    }, el);
 
-    let resizeTimer;
-    const onResize = () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => ScrollTrigger.refresh(), 200);
-    };
-    window.addEventListener('resize', onResize);
+      let resizeTimer;
+      const onResize = () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => ScrollTrigger.refresh(), 200);
+      };
+      window.addEventListener('resize', onResize);
+
+      // Cleanup stored on window for unmount
+      container.__cleanup = () => {
+        gsap.killTweensOf(el.querySelectorAll('*'));
+        ScrollTrigger.getAll().forEach(t => t.kill());
+        window.removeEventListener('resize', onResize);
+        clearTimeout(resizeTimer);
+      };
+    });
 
     return () => {
-      ctx.revert();
-      window.removeEventListener('resize', onResize);
-      clearTimeout(resizeTimer);
+      cancelAnimationFrame(raf);
+      if (container.__cleanup) container.__cleanup();
     };
   }, []);
 
@@ -252,7 +266,7 @@ export default function Dashboard() {
 
   return (
     <div ref={container} className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
-      <div className="page-wrapper max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-28 sm:pt-32 pb-12">
         
         {/* Subtle Background Decoration */}
         <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
