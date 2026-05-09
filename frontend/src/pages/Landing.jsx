@@ -263,18 +263,6 @@ export default function Landing() {
          </div>
       </section>
 
-      {/* ── Stats Bar ─────────────────────────────────────── */}
-      <section className="stats-section py-16 bg-slate-900 dark:bg-black text-white">
-         <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            {['farmers', 'accuracy', 'savings'].map(key => (
-               <div key={key} className="stat-item">
-                  <span className="block text-3xl font-black mb-1 text-emerald-500">{t(`landing.stats.${key}`).split(' ')[0]}</span>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">{t(`landing.stats.${key}`).split(' ').slice(1).join(' ')}</span>
-               </div>
-            ))}
-         </div>
-      </section>
-
       {/* ── Tech Section ──────────────────────────────────── */}
       <section className="infra-section py-20 bg-white dark:bg-slate-950 px-4">
          <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-16">
