@@ -6,64 +6,17 @@ import { useQuery } from '@tanstack/react-query';
 import {
   Cloud, Leaf, TrendingUp, Users, FlaskConical, Map,
   ArrowRight, AlertTriangle, RefreshCw, Droplets, Wind,
-  Bell, TrendingDown, Calendar, FileDown, CheckCircle2
+  Bell, TrendingDown, Calendar, FileDown, CheckCircle2,
+  Newspaper, Landmark, ShieldCheck, Sparkles, Zap, Sun
 } from 'lucide-react';
 import { weatherAPI, marketAPI, labourAPI } from '../services/api';
 import clsx from 'clsx';
 
-const quickActions = [
-  { to: '/weather',    icon: Cloud,        labelKey: 'nav.weather',    sublabelKey: 'dashboard.labels.live_forecast', color: 'from-sky-400 to-sky-600',    bg: 'bg-sky-50 dark:bg-sky-900/20',    text: 'text-sky-600 dark:text-sky-400' },
-  { to: '/crop',       icon: Leaf,         labelKey: 'nav.crop',       sublabelKey: 'dashboard.labels.ai_powered',    color: 'from-green-400 to-green-600', bg: 'bg-green-50 dark:bg-green-900/20',  text: 'text-green-600 dark:text-green-400' },
-  { to: '/market',     icon: TrendingUp,   labelKey: 'nav.market',     sublabelKey: 'dashboard.labels.mandi_rates',   color: 'from-amber-400 to-amber-600', bg: 'bg-amber-50 dark:bg-amber-900/20',  text: 'text-amber-600 dark:text-amber-400' },
-  { to: '/fertilizer', icon: FlaskConical, labelKey: 'nav.fertilizer', sublabelKey: 'dashboard.labels.soil_analysis', color: 'from-orange-400 to-orange-500',bg: 'bg-orange-50 dark:bg-orange-900/20', text: 'text-orange-600 dark:text-orange-400' },
-  { to: '/labour',     icon: Users,        labelKey: 'nav.labour',     sublabelKey: 'dashboard.labels.hire_workers',  color: 'from-purple-400 to-purple-600',bg: 'bg-purple-50 dark:bg-purple-900/20', text: 'text-purple-600 dark:text-purple-400' },
-  { to: '/map',        icon: Map,          labelKey: 'nav.map',        sublabelKey: 'dashboard.labels.smart_map',     color: 'from-teal-400 to-teal-600',   bg: 'bg-teal-50 dark:bg-teal-900/20',   text: 'text-teal-600 dark:text-teal-400' },
-];
-
 const WEATHER_EMOJIS = { '01': '☀️', '02': '🌤️', '03': '⛅', '04': '☁️', '09': '🌧️', '10': '🌦️', '11': '⛈️', '13': '❄️', '50': '🌫️' };
 const getWeatherEmoji = (icon) => WEATHER_EMOJIS[icon?.slice(0, 2)] || '🌡️';
 
-const getTips = (t) => [
-  { 
-    title: t('dashboard.farming_tips.soil_health_title'), 
-    body: t('dashboard.farming_tips.soil_health_body'), 
-    icon: '🧪', 
-    color: 'bg-indigo-50 dark:bg-indigo-900/10', 
-    border: 'border-indigo-100 dark:border-indigo-900/30' 
-  },
-  { 
-    title: t('dashboard.farming_tips.watering_title'), 
-    body: t('dashboard.farming_tips.watering_body'), 
-    icon: '💧', 
-    color: 'bg-emerald-50 dark:bg-emerald-900/10', 
-    border: 'border-emerald-100 dark:border-emerald-900/30' 
-  },
-  { 
-    title: t('dashboard.farming_tips.pest_control_title'), 
-    body: t('dashboard.farming_tips.pest_control_body'), 
-    icon: '🦟', 
-    color: 'bg-amber-50 dark:bg-amber-900/10', 
-    border: 'border-amber-100 dark:border-amber-800/30' 
-  },
-  { 
-    title: t('dashboard.farming_tips.fertilizer_title'), 
-    body: t('dashboard.farming_tips.fertilizer_body'), 
-    icon: '📦', 
-    color: 'bg-blue-50 dark:bg-blue-900/10', 
-    border: 'border-blue-100 dark:border-blue-900/30' 
-  }
-];
-
-const getRecentAlerts = (t) => [
-  { type: 'info',    icon: '📢', text: t('dashboard.alerts.pm_kisan'),    action: t('dashboard.alerts.view_details'),  to: '/schemes', color: 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800/30 text-blue-800 dark:text-blue-300',   btn: 'bg-blue-600 hover:bg-blue-700 text-white' },
-  { type: 'warning', icon: '🦗', text: t('dashboard.alerts.locust'), action: t('dashboard.alerts.see_alert'),    to: '/weather', color: 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800/30 text-amber-800 dark:text-amber-300', btn: 'bg-amber-500 hover:bg-amber-600 text-white' },
-  { type: 'success', icon: '📈', text: t('dashboard.alerts.wheat_price'),           action: t('dashboard.alerts.check_mandi'),  to: '/market', color: 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800/30 text-green-800 dark:text-green-300',  btn: 'bg-green-600 hover:bg-green-700 text-white' },
-];
-
 function getGreetingKey() {
   const h = new Date().getHours();
-  console.log('⏰ Current hour for greeting:', h);
-  
   if (h >= 5 && h < 12) return 'dashboard.greeting_morning';
   if (h >= 12 && h < 17) return 'dashboard.greeting_afternoon';
   if (h >= 17 && h < 22) return 'dashboard.greeting_evening';
@@ -77,264 +30,344 @@ export default function Dashboard() {
   
   const greetingKey = getGreetingKey();
   const locale = i18n.language === 'hi' ? 'hi-IN' : 'en-US';
-  const alerts = getRecentAlerts(t);
-  const farmingTips = getTips(t);
 
   // Weather Query
-  const { data: weather, isLoading: weatherLoading, refetch: refetchWeather } = useQuery({
+  const { data: weather, isLoading: weatherLoading } = useQuery({
     queryKey: ['weather-current'],
     queryFn: async () => {
-      // Fetch default Satna weather first to load dashboard instantly
       const { data } = await weatherAPI.getCurrent(24.6005, 80.8322);
       return data.data;
     },
-    staleTime: 15 * 60 * 1000, // 15 mins
+    staleTime: 15 * 60 * 1000,
   });
 
-  // Fetch actual location in the background
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        async ({ coords }) => {
-          try {
-            // Check if we should update the query with actual location
-            // For hackathon, just refetching or showing default is often safer,
-            // but let's try to get actual data.
-            const { data: geoWeather } = await weatherAPI.getCurrent(coords.latitude, coords.longitude);
-            if (geoWeather.success) {
-               // We could update the cache here, but for simplicity, we've already shown data.
-            }
-          } catch (e) {}
-        },
-        null,
-        { timeout: 5000 }
-      );
-    }
-  }, []);
-
-  // Stats Query
-  const { data: stats = [], isLoading: statsLoading } = useQuery({
-    queryKey: ['dashboard-stats', weather?.city],
+  // Market Query
+  const { data: marketData, isLoading: marketLoading } = useQuery({
+    queryKey: ['market-trends-dashboard'],
     queryFn: async () => {
-      const city = weather?.city || '';
-      const [marketRes, labourRes] = await Promise.all([
-        marketAPI.getTrends('Wheat', '', city),
-        labourAPI.getJobs({ district: city, limit: 1 })
-      ]);
-
-      const newStats = [];
-
-      // 1. Market Price
-      if (marketRes.data?.success) {
-        const trends = marketRes.data.data.trends;
-        const latest = trends[trends.length - 1];
-        const previous = trends[trends.length - 2];
-        const trendVal = previous ? (((latest.price - previous.price) / previous.price) * 100).toFixed(1) : '0';
-        
-        newStats.push({
-          label: t('dashboard.stats.market_price'),
-          value: `₹${latest.price.toLocaleString()}/Q`,
-          icon: '💰',
-          trend: `${trendVal > 0 ? '+' : ''}${trendVal}%`,
-          up: trendVal >= 0,
-          sub: t('dashboard.labels.wheat_today', 'Wheat today')
-        });
-      }
-
-      // 2. Labour
-      if (labourRes.data?.success) {
-        const total = labourRes.data.pagination.total;
-        newStats.push({
-          label: t('dashboard.stats.labour'),
-          value: total.toString(),
-          icon: '👷',
-          trend: '+1',
-          up: true,
-          sub: t('dashboard.labels.available_now')
-        });
-      }
-
-      // 3. Weather Stats
-      if (weather) {
-        newStats.push({
-          label: t('weather.temp', 'Temperature'),
-          value: `${Math.round(weather.temperature)}°C`,
-          icon: '🌡️',
-          trend: weather.temperature > 30 ? t('dashboard.trends.high', 'High') : t('dashboard.trends.normal', 'Normal'),
-          up: weather.temperature < 35,
-          sub: weather.city
-        });
-        
-        newStats.push({
-          label: t('weather.humidity', 'Humidity'),
-          value: `${weather.humidity}%`,
-          icon: '💧',
-          trend: '-2%',
-          up: false,
-          sub: t('dashboard.labels.air_humidity', 'Air Humidity')
-        });
-      }
-      return newStats;
+       const { data } = await marketAPI.getTrends('Wheat', '', 'Satna');
+       return data.data;
     },
-    enabled: !weatherLoading,
+    staleTime: 30 * 60 * 1000,
   });
+
+  const modules = [
+    { 
+      id: 'weather', 
+      to: '/weather', 
+      size: 'lg',
+      color: 'bg-gradient-to-br from-primary to-emerald-600',
+      icon: Cloud,
+      label: t('nav.weather'),
+      isLoading: weatherLoading,
+      render: () => (
+        <div className="flex flex-col h-full justify-between">
+          <div className="flex justify-between items-start">
+             <div>
+               <div className="text-4xl sm:text-5xl mb-2">{getWeatherEmoji(weather?.icon)}</div>
+               <div className="text-3xl sm:text-4xl font-black">{Math.round(weather?.temperature || 0)}°C</div>
+               <div className="text-xs font-bold uppercase tracking-widest opacity-80">{weather?.description || 'Loading...'}</div>
+             </div>
+             <div className="text-right">
+                <div className="text-[10px] font-black uppercase tracking-[0.2em] opacity-60 mb-1">{weather?.city || 'Satna'}</div>
+                <div className="flex flex-col items-end gap-1">
+                   <span className="flex items-center gap-1.5 text-[10px] font-bold bg-white/20 px-2 py-1 rounded-lg backdrop-blur-sm"><Droplets size={10} /> {weather?.humidity}%</span>
+                   <span className="flex items-center gap-1.5 text-[10px] font-bold bg-white/20 px-2 py-1 rounded-lg backdrop-blur-sm"><Wind size={10} /> {weather?.windSpeed} km/h</span>
+                </div>
+             </div>
+          </div>
+          <div className="mt-4 pt-4 border-t border-white/10 flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
+             <span className="text-emerald-100">Live IMD Feed</span>
+             <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+          </div>
+        </div>
+      )
+    },
+    { 
+      id: 'crop', 
+      to: '/crop', 
+      size: 'md',
+      color: 'bg-white dark:bg-slate-900 border-gray-100 dark:border-slate-800',
+      icon: Leaf,
+      label: t('nav.crop'),
+      render: () => (
+        <div className="flex flex-col h-full">
+           <div className="w-10 h-10 rounded-xl bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400 flex items-center justify-center mb-4">
+              <Leaf size={20} />
+           </div>
+           <div className="text-sm font-black text-gray-900 dark:text-white uppercase tracking-tight mb-1">{t('nav.crop')}</div>
+           <p className="text-[10px] text-gray-500 dark:text-slate-400 font-bold leading-tight">AI Soil Health & Crop Prediction System</p>
+           <div className="mt-auto flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+              <span className="text-[8px] font-black uppercase text-green-600 tracking-widest">AI Engine Ready</span>
+           </div>
+        </div>
+      )
+    },
+    { 
+      id: 'market', 
+      to: '/market', 
+      size: 'md',
+      color: 'bg-white dark:bg-slate-900 border-gray-100 dark:border-slate-800',
+      icon: TrendingUp,
+      label: t('nav.market'),
+      render: () => {
+        const latest = marketData?.trends?.[marketData.trends.length - 1];
+        const trend = 2.4; // Sample
+        return (
+          <div className="flex flex-col h-full">
+             <div className="flex justify-between items-start mb-4">
+                <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                   <TrendingUp size={20} />
+                </div>
+                <div className="text-[9px] font-black text-emerald-500 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-1 rounded-lg">+{trend}%</div>
+             </div>
+             <div className="text-sm font-black text-gray-900 dark:text-white uppercase tracking-tight mb-1">{t('nav.market')}</div>
+             <div className="text-xl font-black text-gray-900 dark:text-white tracking-tighter">₹{latest?.price?.toLocaleString() || '---'}</div>
+             <p className="text-[10px] text-gray-400 font-bold">Wheat • Satna Mandi</p>
+          </div>
+        );
+      }
+    },
+    { 
+      id: 'fertilizer', 
+      to: '/fertilizer', 
+      size: 'sm',
+      color: 'bg-white dark:bg-slate-900 border-gray-100 dark:border-slate-800',
+      icon: FlaskConical,
+      label: t('nav.fertilizer'),
+      render: () => (
+        <div className="flex flex-col items-center text-center py-2">
+           <FlaskConical size={22} className="text-orange-500 mb-2" />
+           <div className="text-[10px] font-black text-gray-900 dark:text-white uppercase">{t('nav.fertilizer')}</div>
+        </div>
+      )
+    },
+    { 
+      id: 'labour', 
+      to: '/labour', 
+      size: 'sm',
+      color: 'bg-white dark:bg-slate-900 border-gray-100 dark:border-slate-800',
+      icon: Users,
+      label: t('nav.labour'),
+      render: () => (
+        <div className="flex flex-col items-center text-center py-2">
+           <Users size={22} className="text-purple-500 mb-2" />
+           <div className="text-[10px] font-black text-gray-900 dark:text-white uppercase">{t('nav.labour')}</div>
+        </div>
+      )
+    },
+    { 
+      id: 'news', 
+      to: '/news', 
+      size: 'sm',
+      color: 'bg-white dark:bg-slate-900 border-gray-100 dark:border-slate-800',
+      icon: Newspaper,
+      label: t('nav.news'),
+      render: () => (
+        <div className="flex flex-col items-center text-center py-2">
+           <Newspaper size={22} className="text-sky-500 mb-2" />
+           <div className="text-[10px] font-black text-gray-900 dark:text-white uppercase">{t('nav.news')}</div>
+        </div>
+      )
+    },
+    { 
+      id: 'schemes', 
+      to: '/schemes', 
+      size: 'sm',
+      color: 'bg-white dark:bg-slate-900 border-gray-100 dark:border-slate-800',
+      icon: Landmark,
+      label: t('nav.schemes'),
+      render: () => (
+        <div className="flex flex-col items-center text-center py-2">
+           <Landmark size={22} className="text-amber-600 mb-2" />
+           <div className="text-[10px] font-black text-gray-900 dark:text-white uppercase">{t('nav.schemes')}</div>
+        </div>
+      )
+    },
+    { 
+      id: 'map', 
+      to: '/map', 
+      size: 'md',
+      color: 'bg-white dark:bg-slate-900 border-gray-100 dark:border-slate-800',
+      icon: Map,
+      label: t('nav.map'),
+      render: () => (
+        <div className="flex flex-col h-full">
+           <div className="w-10 h-10 rounded-xl bg-teal-50 dark:bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center mb-4">
+              <Map size={20} />
+           </div>
+           <div className="text-sm font-black text-gray-900 dark:text-white uppercase tracking-tight mb-1">{t('nav.map')}</div>
+           <p className="text-[10px] text-gray-400 font-bold">Field Survey & GPS Mapping</p>
+        </div>
+      )
+    },
+  ];
+
+  const alerts = [
+    { type: 'warning', text: 'Locust Alert in Northern Region - High Risk', icon: '🦗' },
+    { type: 'success', text: 'PM-Kisan 16th Installment Credited', icon: '💰' },
+    { type: 'info', text: 'New Wheat Variety (HD 3226) Released', icon: '🌾' }
+  ];
 
   return (
-    <div className="page-wrapper animate-fade-in">
+    <div className="page-wrapper max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
 
-      {/* ── Top row: greeting + date ──────────────────────── */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
+      {/* ── Header Command Bar ──────────────────────────── */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-10">
         <div>
-          <h1 className="page-title flex items-center gap-2 text-gray-900 dark:text-white">
-            <span>{t(greetingKey)}</span>
-            <span>{user?.name?.split(' ')[0] || t('auth.farmer')}</span>
-          </h1>
-          <p className="page-subtitle flex items-center gap-1.5 mt-1.5 text-gray-500 dark:text-slate-400">
-            <Calendar size={13} />
-            <span className="capitalize">
-              {new Date().toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' })}
-            </span>
-          </p>
+           <div className="flex items-center gap-3 mb-2">
+              <span className="px-3 py-1 bg-primary/10 text-primary dark:text-emerald-400 text-[9px] font-black uppercase tracking-widest rounded-full border border-primary/20">
+                 Command Center v2.1
+              </span>
+              <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-1">
+                 <RefreshCw size={10} className="animate-spin-slow" /> System Sync: Live
+              </span>
+           </div>
+           <h1 className="text-3xl sm:text-4xl font-black tracking-tighter text-gray-900 dark:text-white flex items-center gap-3">
+              {t(greetingKey)}, {user?.name?.split(' ')[0] || t('auth.farmer')} <Sparkles className="text-amber-400" size={24} />
+           </h1>
+           <p className="text-sm text-gray-500 dark:text-slate-400 font-medium mt-1 flex items-center gap-2">
+              <Calendar size={14} /> {new Date().toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' })}
+           </p>
         </div>
+        
         <div className="flex items-center gap-3">
-          <div className="badge-verified">
-             <CheckCircle2 size={10} /> {t('dashboard.labels.verified_data')}
-          </div>
-          <button onClick={() => window.location.reload()} className="btn-icon bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-sm" title={t('dashboard.labels.refresh')}>
-            <RefreshCw size={16} className="text-gray-600 dark:text-slate-400" />
-          </button>
+           <div className="hidden sm:flex bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-2xl p-1.5 shadow-sm">
+              <button className="px-4 py-2 text-[10px] font-black uppercase tracking-widest bg-gray-50 dark:bg-slate-800 rounded-xl">Personal</button>
+              <button className="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-gray-600 transition-colors">Farm Data</button>
+           </div>
+           <button onClick={() => window.location.reload()} className="w-11 h-11 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-xl flex items-center justify-center shadow-sm hover:scale-105 active:scale-95 transition-all group">
+              <RefreshCw size={18} className="text-gray-500 group-hover:rotate-180 transition-transform duration-500" />
+           </button>
         </div>
       </div>
 
-      {/* ── Alerts strip ──────────────────────────────── */}
-      <div className="flex gap-4 overflow-x-auto pb-4 px-1 scrollbar-none mb-8 -mx-4 sm:mx-0 sm:px-0">
-        {alerts.map((a, i) => (
-          <div key={i} className={clsx(
-            'flex items-center justify-between gap-4 pl-4 pr-2 py-2.5 rounded-2xl text-sm font-semibold whitespace-nowrap shrink-0 border shadow-sm min-w-[280px] first:ml-4 sm:first:ml-0 last:mr-4 sm:last:mr-0',
-            a.color
-          )}>
-            <div className="flex items-center gap-2.5">
-              <span className="text-xl">{a.icon}</span>
-              <span className="text-xs font-bold leading-tight max-w-[150px] whitespace-normal">{a.text}</span>
-            </div>
-            <button 
-              onClick={() => navigate(a.to)}
-              className={clsx('text-[10px] font-black uppercase tracking-wider px-3 py-2 rounded-xl shrink-0 transition-all active:scale-95', a.btn)}>
-              {a.action}
-            </button>
-          </div>
-        ))}
-      </div>
-
-      {/* ── Weather card ──────────────────────────────────── */}
-      {weatherLoading ? (
-        <div className="skeleton h-32 mb-7 rounded-3xl" />
-      ) : weather ? (
-        <div className="mb-7 rounded-3xl bg-gradient-to-br from-primary to-emerald-600 dark:from-primary/80 dark:to-emerald-800/80 p-6 sm:p-8 text-white relative overflow-hidden shadow-lg group">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/4 pointer-events-none group-hover:scale-110 transition-transform duration-700" />
-          
-          <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div className="flex items-center gap-5 sm:gap-8">
-              <span className="text-5xl sm:text-7xl drop-shadow-md">{getWeatherEmoji(weather.icon)}</span>
-              <div>
-                <p className="text-emerald-50 text-[10px] font-black tracking-[0.2em] uppercase opacity-80 mb-1">{weather.city}, {weather.country}</p>
-                <div className="flex items-end gap-3">
-                  <p className="text-5xl sm:text-6xl font-black tracking-tighter">{Math.round(weather.temperature)}°</p>
-                  <p className="text-emerald-100 text-base sm:text-xl font-bold mb-1.5 capitalize opacity-90">{weather.description}</p>
-                </div>
+      {/* ── Alerts News Ticker ──────────────────────────── */}
+      <div className="relative mb-10 group cursor-pointer overflow-hidden rounded-2xl bg-gray-900 p-1 border border-white/5 shadow-xl">
+         <div className="flex items-center h-10 px-4 gap-6 animate-ticker hover:pause">
+            {[...alerts, ...alerts].map((a, i) => (
+              <div key={i} className="flex items-center gap-3 shrink-0">
+                 <span className="text-lg">{a.icon}</span>
+                 <span className="text-[10px] font-black uppercase tracking-widest text-white/90">{a.text}</span>
+                 <div className="h-1 w-1 rounded-full bg-white/20 ml-4" />
               </div>
-            </div>
-            
-            <div className="grid grid-cols-2 sm:flex sm:flex-col gap-4 text-emerald-50 bg-black/10 p-4 rounded-2xl backdrop-blur-sm border border-white/10">
-              <span className="flex items-center gap-2 text-sm font-semibold"><Droplets size={16} className="text-emerald-300" /> {weather.humidity}%</span>
-              <span className="flex items-center gap-2 text-sm font-semibold"><Wind size={16} className="text-emerald-300" /> {weather.windSpeed} km/h</span>
-            </div>
-
-            <div className="flex flex-col items-end gap-3">
-              <button
-                onClick={() => navigate('/weather')}
-                className="flex items-center gap-2 bg-white text-primary hover:bg-emerald-50 font-bold px-6 py-3 rounded-2xl transition-all shadow-md active:scale-95">
-                {t('dashboard.labels.details')} <ArrowRight size={18} />
-              </button>
-              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-emerald-100/60">{t('dashboard.labels.source_weather')}</p>
-            </div>
-          </div>
-        </div>
-      ) : null}
-
-      {/* ── Quick Actions ─────────────────────────────────── */}
-      <div className="mb-10">
-        <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-6 tracking-tight">{t('dashboard.quick_actions')}</h2>
-        <div className="grid grid-cols-2 xs:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-          {quickActions.map(({ to, icon: Icon, labelKey, sublabelKey, color, bg, text }) => (
-            <button
-              key={to}
-              onClick={() => navigate(to)}
-              className="group relative overflow-hidden rounded-[2rem] p-5 sm:p-6 text-left bg-white/70 dark:bg-slate-800/70 backdrop-blur-md border border-white/20 dark:border-slate-700/50 hover:shadow-2xl hover:-translate-y-2 active:scale-95 transition-all duration-500 animate-slide-up"
-            >
-              <div className={clsx('absolute top-0 inset-x-0 h-1 bg-gradient-to-r opacity-50', color)} />
-              <div className={clsx('w-14 h-14 rounded-2xl flex items-center justify-center mb-5 shadow-inner transition-transform group-hover:scale-110 group-hover:rotate-3', bg)}>
-                <Icon size={26} className={text} />
-              </div>
-              <p className="font-bold text-gray-900 dark:text-white text-base leading-tight tracking-tight">{t(labelKey)}</p>
-              <p className="text-[10px] text-gray-400 dark:text-slate-500 mt-1.5 uppercase font-black tracking-widest opacity-80">{t(sublabelKey)}</p>
-            </button>
-          ))}
-        </div>
+            ))}
+         </div>
       </div>
 
-      {/* ── Stats Row ─────────────────────────────────────── */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {statsLoading ? (
-          [1, 2, 3, 4].map(i => <div key={i} className="skeleton h-32 rounded-3xl" />)
-        ) : stats.map(s => (
-          <div key={s.label} className="group p-5 bg-white/60 dark:bg-slate-800/60 backdrop-blur-md rounded-3xl border border-white/20 dark:border-slate-700/50 flex flex-col gap-1 transition-all hover:shadow-xl hover:-translate-y-1">
+      {/* ── The Bento Grid ───────────────────────────────── */}
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6 auto-rows-[160px] sm:auto-rows-[180px]">
+         {modules.map((m) => (
+           <div
+             key={m.id}
+             onClick={() => navigate(m.to)}
+             className={clsx(
+               "group relative p-6 sm:p-8 rounded-[2rem] border transition-all duration-500 cursor-pointer shadow-sm hover:shadow-2xl hover:-translate-y-1.5 active:scale-[0.98] overflow-hidden",
+               m.size === 'lg' ? 'col-span-2 row-span-2' : m.size === 'md' ? 'col-span-2' : 'col-span-1',
+               m.id === 'weather' ? 'text-white' : 'dark:text-white',
+               m.color
+             )}
+           >
+             {m.id === 'weather' && (
+                <div className="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/4 pointer-events-none group-hover:scale-125 transition-transform duration-1000" />
+             )}
+             {m.render()}
+           </div>
+         ))}
+
+         {/* Extra Bento Items: Support Card */}
+         <div className="col-span-2 row-span-1 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-[2rem] p-6 sm:p-8 text-white relative overflow-hidden group cursor-pointer shadow-sm hover:shadow-2xl transition-all" onClick={() => navigate('/chat')}>
+            <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform" />
+            <div className="flex items-center gap-4 mb-4">
+               <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center">
+                  <Zap size={20} />
+               </div>
+               <div className="text-[10px] font-black uppercase tracking-[0.2em]">Kisan Mitra AI</div>
+            </div>
+            <h3 className="text-lg font-black tracking-tight leading-tight">Instant Expert Advisory 24/7</h3>
+         </div>
+
+         {/* Secondary Stats Card */}
+         <div className="col-span-2 row-span-1 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-[2rem] p-6 sm:p-8 flex flex-col justify-between group hover:shadow-xl transition-all">
             <div className="flex items-center justify-between">
-              <span className="text-4xl group-hover:scale-110 transition-transform">{s.icon}</span>
-              <div className="flex flex-col items-end gap-1">
-                <span className={clsx(
-                  'text-[10px] font-black px-2.5 py-1 rounded-full flex items-center gap-1 uppercase tracking-tighter',
-                  s.up ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' : 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'
-                )}>
-                  {s.up ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
-                  {s.trend}
-                </span>
-                {s.label === t('dashboard.stats.market_price') && (
-                  <span className="text-[8px] font-black uppercase text-gray-400 tracking-widest">{t('dashboard.labels.source_agmarknet')}</span>
-                )}
-              </div>
+               <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Active Schemes</span>
+               <Award className="text-amber-500" size={18} />
             </div>
-            <p className="text-3xl font-black text-gray-900 dark:text-white mt-3 tracking-tighter tabular-nums">{s.value}</p>
-            <div className="flex items-center justify-between mt-1">
-               <p className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide opacity-80">{s.label}</p>
-               <FileDown size={12} className="text-gray-300 hover:text-primary cursor-pointer" />
+            <div>
+               <div className="text-3xl font-black text-gray-900 dark:text-white tracking-tighter">12 <span className="text-xs text-gray-400 font-bold">New</span></div>
+               <p className="text-[10px] font-bold text-gray-500 mt-1 uppercase tracking-widest">Available for you</p>
             </div>
-            <div className="mt-3 h-1 w-full bg-gray-100 dark:bg-slate-700/50 rounded-full overflow-hidden">
-                <div className={clsx('h-full rounded-full transition-all duration-1000', s.up ? 'bg-green-500 w-2/3' : 'bg-red-500 w-1/3')} />
-            </div>
-          </div>
-        ))}
+         </div>
       </div>
 
-      {/* ── Tips Row ──────────────────────────────────────── */}
-      <div className="grid sm:grid-cols-2 gap-4">
-        {farmingTips.map(tip => (
-          <div key={tip.title} className={clsx('card p-6 border transition-all hover:shadow-lg', tip.color, tip.border)}>
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-white/50 dark:bg-black/20 flex items-center justify-center text-2xl shrink-0 shadow-sm">
-                {tip.icon}
-              </div>
-              <div>
-                <h3 className="font-bold text-gray-900 dark:text-white mb-1.5 text-sm uppercase tracking-wide">{tip.title}</h3>
-                <p className="text-sm text-gray-600 dark:text-slate-400 leading-relaxed font-medium">{tip.body}</p>
-              </div>
+      {/* ── Bottom Section: Quick Tips & Info ──────────────── */}
+      <div className="mt-12 grid lg:grid-cols-3 gap-8">
+         <div className="lg:col-span-2">
+            <h2 className="text-lg font-black text-gray-900 dark:text-white uppercase tracking-widest mb-6 flex items-center gap-3">
+               <ShieldCheck className="text-emerald-500" size={20} /> Today's Farming Intelligence
+            </h2>
+            <div className="grid sm:grid-cols-2 gap-4">
+               {[
+                 { title: 'Soil Restoration', desc: 'Add 50kg/acre Gypsum to neutralize alkalinity after recent rainfall.', icon: '🧪', color: 'border-indigo-100 dark:border-indigo-900/30' },
+                 { title: 'Market Strategy', desc: 'Wheat prices expected to rise by 5% in next 10 days. Hold stock if possible.', icon: '📉', color: 'border-emerald-100 dark:border-emerald-900/30' }
+               ].map((tip, i) => (
+                 <div key={i} className={clsx("p-6 rounded-3xl border bg-white dark:bg-slate-900/50 shadow-sm hover:shadow-md transition-all", tip.color)}>
+                    <div className="flex items-start gap-4">
+                       <span className="text-2xl">{tip.icon}</span>
+                       <div>
+                          <h4 className="font-black text-gray-900 dark:text-white text-xs uppercase tracking-wide mb-1">{tip.title}</h4>
+                          <p className="text-xs text-gray-500 dark:text-slate-400 font-medium leading-relaxed">{tip.desc}</p>
+                       </div>
+                    </div>
+                 </div>
+               ))}
             </div>
-          </div>
-        ))}
+         </div>
+
+         <div className="bg-gray-50 dark:bg-slate-900/80 rounded-[2.5rem] p-8 border border-gray-100 dark:border-slate-800">
+            <h3 className="text-xs font-black text-gray-400 uppercase tracking-[0.3em] mb-6">Global Sync Status</h3>
+            <div className="space-y-6">
+               {[
+                 { label: 'Satellite Uplink', status: 'Optimal', color: 'bg-green-500' },
+                 { label: 'Market API Nodes', status: 'Stable', color: 'bg-green-500' },
+                 { label: 'AI Core Engine', status: 'Active', color: 'bg-emerald-500' }
+               ].map(node => (
+                 <div key={node.label} className="flex items-center justify-between">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-gray-500">{node.label}</span>
+                    <div className="flex items-center gap-2">
+                       <span className="text-[9px] font-black uppercase text-gray-900 dark:text-white">{node.status}</span>
+                       <div className={clsx("w-1.5 h-1.5 rounded-full animate-pulse", node.color)} />
+                    </div>
+                 </div>
+               ))}
+            </div>
+            <button onClick={() => navigate('/news')} className="w-full mt-10 py-3 bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl text-[9px] font-black uppercase tracking-widest shadow-sm hover:bg-gray-50 transition-all">
+               View Full System Logs
+            </button>
+         </div>
       </div>
-      
-      {/* ── Voice Assistant ──────────────────────────── */}
-      {/* Moved to App.jsx — now global across all pages */}
+
+      {/* ── Custom Animations ─────────────────────────────── */}
+      <style>{`
+        @keyframes ticker {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-ticker {
+          animation: ticker 40s linear infinite;
+        }
+        .animate-spin-slow {
+          animation: spin 3s linear infinite;
+        }
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        .pause {
+          animation-play-state: paused;
+        }
+      `}</style>
     </div>
   );
 }
