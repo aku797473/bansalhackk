@@ -16,42 +16,54 @@ const TrendIcon = ({ trend, size = 14 }) => {
   return <Minus size={size} className="text-gray-400" />;
 };
 
+const STATES = ['Punjab','Haryana','Uttar Pradesh','Bihar','Madhya Pradesh','Maharashtra','Gujarat','Rajasthan','Karnataka','Andhra Pradesh','Telangana','West Bengal','Odisha','Assam','Tamil Nadu'];
+
+const DISTRICTS_DATA = {
+  'Punjab': ['Amritsar', 'Barnala', 'Bathinda', 'Faridkot', 'Fatehgarh Sahib', 'Fazilka', 'Ferozepur', 'Gurdaspur', 'Hoshiarpur', 'Jalandhar', 'Kapurthala', 'Ludhiana', 'Mansa', 'Moga', 'Muktsar', 'Pathankot', 'Patiala', 'Rupnagar', 'Sahibzada Ajit Singh Nagar', 'Sangrur', 'Shahid Bhagat Singh Nagar', 'Tarn Taran'],
+  'Haryana': ['Ambala', 'Bhiwani', 'Charkhi Dadri', 'Faridabad', 'Fatehabad', 'Gurugram', 'Hisar', 'Jhajjar', 'Jind', 'Kaithal', 'Karnal', 'Kurukshetra', 'Mahendragarh', 'Nuh', 'Palwal', 'Panchkula', 'Panipat', 'Rewari', 'Rohtak', 'Sirsa', 'Sonipat', 'Yamunanagar'],
+  'Uttar Pradesh': ['Agra', 'Aligarh', 'Prayagraj', 'Ambedkar Nagar', 'Amethi', 'Amroha', 'Auraiya', 'Ayodhya', 'Azamgarh', 'Baghpat', 'Bahraich', 'Ballia', 'Balrampur', 'Banda', 'Barabanki', 'Bareilly', 'Basti', 'Bhadohi', 'Bijnor', 'Budaun', 'Bulandshahr', 'Chandauli', 'Chitrakoot', 'Deoria', 'Etah', 'Etawah', 'Farrukhabad', 'Fatehpur', 'Firozabad', 'Gautam Buddh Nagar', 'Ghaziabad', 'Ghazipur', 'Gonda', 'Gorakhpur', 'Hamirpur', 'Hapur', 'Hardoi', 'Hathras', 'Jalaun', 'Jaunpur', 'Jhansi', 'Kannauj', 'Kanpur Dehat', 'Kanpur Nagar', 'Kasganj', 'Kaushambi', 'Kushinagar', 'Lakhimpur Kheri', 'Lalitpur', 'Lucknow', 'Maharajganj', 'Mahoba', 'Mainpuri', 'Mathura', 'Mau', 'Meerut', 'Mirzapur', 'Moradabad', 'Muzaffarnagar', 'Pilibhit', 'Pratapgarh', 'Raebareli', 'Rampur', 'Saharanpur', 'Sambhal', 'Sant Kabir Nagar', 'Shahjahanpur', 'Shamli', 'Shravasti', 'Siddharthnagar', 'Sitapur', 'Sonbhadra', 'Sultanpur', 'Unnao', 'Varanasi'],
+  'Bihar': ['Araria', 'Arwal', 'Aurangabad', 'Banka', 'Begusarai', 'Bhagalpur', 'Bhojpur', 'Buxar', 'Darbhanga', 'East Champaran', 'Gaya', 'Gopalganj', 'Jamui', 'Jehanabad', 'Kaimur', 'Katihar', 'Khagaria', 'Kishanganj', 'Lakhisarai', 'Madhepura', 'Madhubani', 'Munger', 'Muzaffarpur', 'Nalanda', 'Nawada', 'Patna', 'Purnia', 'Rohtas', 'Saharsa', 'Samastipur', 'Saran', 'Sheikhpura', 'Sheohar', 'Sitamarhi', 'Siwan', 'Supaul', 'Vaishali', 'West Champaran'],
+  'Madhya Pradesh': ['Agar Malwa', 'Alirajpur', 'Anuppur', 'Ashoknagar', 'Balaghat', 'Barwani', 'Betul', 'Bhind', 'Bhopal', 'Burhanpur', 'Chhatarpur', 'Chhindwara', 'Damoh', 'Datia', 'Dewas', 'Dhar', 'Dindori', 'Guna', 'Gwalior', 'Harda', 'Hoshangabad', 'Indore', 'Jabalpur', 'Jhabua', 'Katni', 'Khandwa', 'Khargone', 'Mandla', 'Mandsaur', 'Morena', 'Narsinghpur', 'Neemuch', 'Panna', 'Raisen', 'Rajgarh', 'Ratlam', 'Rewa', 'Sagar', 'Satna', 'Sehore', 'Seoni', 'Shahdol', 'Shajapur', 'Sheopur', 'Shivpuri', 'Sidhi', 'Singrauli', 'Tikamgarh', 'Ujjain', 'Umaria', 'Vidisha'],
+  'Maharashtra': ['Ahmednagar', 'Akola', 'Amravati', 'Aurangabad', 'Beed', 'Bhandara', 'Buldhana', 'Chandrapur', 'Dhule', 'Gadchiroli', 'Gondia', 'Hingoli', 'Jalgaon', 'Jalna', 'Kolhapur', 'Latur', 'Mumbai City', 'Mumbai Suburban', 'Nagpur', 'Nanded', 'Nandurbar', 'Nashik', 'Osmanabad', 'Palghar', 'Parbhani', 'Pune', 'Raigad', 'Ratnagiri', 'Sangli', 'Satara', 'Sindhudurg', 'Solapur', 'Thane', 'Wardha', 'Washim', 'Yavatmal'],
+  'Gujarat': ['Ahmedabad', 'Amreli', 'Anand', 'Aravalli', 'Banaskantha', 'Bharuch', 'Bhavnagar', 'Botad', 'Chhota Udaipur', 'Dahod', 'Dang', 'Devbhoomi Dwarka', 'Gandhinagar', 'Gir Somnath', 'Jamnagar', 'Junagadh', 'Kheda', 'Kutch', 'Mahisagar', 'Mehsana', 'Morbi', 'Narmada', 'Navsari', 'Panchmahal', 'Patan', 'Porbandar', 'Rajkot', 'Sabarkantha', 'Surat', 'Surendranagar', 'Tapi', 'Vadodara', 'Valsad'],
+  'Rajasthan': ['Ajmer', 'Alwar', 'Banswara', 'Baran', 'Barmer', 'Bharatpur', 'Bhilwara', 'Bikaner', 'Bundi', 'Chittorgarh', 'Churu', 'Dausa', 'Dholpur', 'Dungarpur', 'Hanumangarh', 'Jaipur', 'Jaisalmer', 'Jalore', 'Jhalawar', 'Jhunjhunu', 'Jodhpur', 'Karauli', 'Kota', 'Nagaur', 'Pali', 'Pratapgarh', 'Rajsamand', 'Sawai Madhopur', 'Sikar', 'Sirohi', 'Sri Ganganagar', 'Tonk', 'Udaipur'],
+};
+
 export default function Market() {
   const { t, i18n } = useTranslation();
   
   // Selection State
-  const [selState, setSelState]       = useState('Madhya Pradesh');
-  const [selDistrict, setSelDistrict] = useState('Rewa');
+  const [selState, setSelState]       = useState('Punjab');
+  const [selDistrict, setSelDistrict] = useState('Amritsar');
   const [selCommodity, setSelCommodity] = useState('Wheat');
   const [search, setSearch]           = useState('');
+
+  const translateOption = (opt, ns = 'market') => {
+    const keys = [
+      `${ns}.states.${opt}`,
+      `crop.states.${opt}`,
+      `crop.districts.${opt}`,
+      `${ns}.items.${opt}`,
+      `common.${opt.toLowerCase()}`
+    ];
+    for (const key of keys) {
+      const val = t(key);
+      if (val !== key) return val;
+    }
+    return opt;
+  };
 
   // Queries
   const { data: initData, isLoading: initLoading } = useQuery({
     queryKey: ['market-init'],
     queryFn: async () => {
-      const [p, s, c] = await Promise.all([marketAPI.getPrices(), marketAPI.getStates(), marketAPI.getCommodities()]);
+      const [p, c] = await Promise.all([marketAPI.getPrices(), marketAPI.getCommodities()]);
       return {
         prices: p.data.data.prices || [],
-        states: s.data.data || [],
         commodities: c.data.data || []
       };
     },
     onError: () => toast.error('Market data unavailable')
-  });
-
-  const { data: districts = [] } = useQuery({
-    queryKey: ['districts', selState],
-    queryFn: async () => {
-      if (!selState) return [];
-      const res = await marketAPI.getDistricts(selState);
-      return res.data.data || [];
-    },
-    enabled: !!selState,
-    onSuccess: (data) => {
-      if (data.length > 0 && !data.includes(selDistrict)) {
-        setSelDistrict(data[0]);
-      }
-    }
   });
 
   const { data: trends, isLoading: trendsLoading } = useQuery({
@@ -65,7 +77,6 @@ export default function Market() {
   });
 
   const prices = initData?.prices || [];
-  const states = initData?.states || [];
   const commodities = initData?.commodities || [];
   const loading = initLoading;
 
@@ -73,7 +84,6 @@ export default function Market() {
     const matchSearch = !search || p.commodity.toLowerCase().includes(search.toLowerCase());
     const matchState  = !selState || p.state === selState;
     const matchDist   = !selDistrict || p.market === selDistrict;
-    // If district is selected, filter tightly. If not, just state.
     if (selDistrict) return matchSearch && matchState && matchDist;
     return matchSearch && matchState;
   }), [prices, search, selState, selDistrict]);
@@ -97,6 +107,14 @@ export default function Market() {
       currentPrice, high30, low30, futurePrice, expectedChange
     };
   }, [trends]);
+
+  const handleStateChange = (val) => {
+    setSelState(val);
+    const firstDist = DISTRICTS_DATA[val]?.[0] || '';
+    setSelDistrict(firstDist);
+  };
+
+  const districts = DISTRICTS_DATA[selState] || [];
 
   // Custom Tooltip for the chart
   const CustomTooltip = ({ active, payload, label }) => {
@@ -153,25 +171,38 @@ export default function Market() {
       <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border border-white/20 dark:border-white/5 rounded-[2.5rem] p-5 sm:p-7 mb-8 shadow-premium animate-slide-down">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
           <div className="flex flex-col gap-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2 flex items-center gap-1.5"><MapPin size={12} className="text-primary"/> {t('crop.state', 'State')}</label>
-            <select className="input rounded-2xl bg-white/50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-700/50 font-bold text-sm shadow-sm" value={selState} onChange={e => setSelState(e.target.value)}>
-              <option value="">{t('market.all_states')}</option>
-              {states.map(s => <option key={s} value={s}>{t(`market.states.${s}`, s)}</option>)}
-            </select>
+            <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2 flex items-center gap-1.5"><MapPin size={12} className="text-primary"/> {t('crop.state')}</label>
+            <div className="relative group">
+              <select className="input rounded-2xl bg-white/50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-700/50 font-bold text-sm shadow-sm appearance-none cursor-pointer hover:border-primary transition-colors" value={selState} onChange={e => handleStateChange(e.target.value)}>
+                {STATES.map(s => <option key={s} value={s}>{translateOption(s, 'crop')}</option>)}
+              </select>
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 group-hover:text-primary transition-colors">
+                <RefreshCw size={12} />
+              </div>
+            </div>
           </div>
           <div className="flex flex-col gap-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2 flex items-center gap-1.5"><MapPin size={12} className="text-primary"/> {t('crop.district_label', 'District')}</label>
-            <select className="input rounded-2xl bg-white/50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-700/50 font-bold text-sm shadow-sm" value={selDistrict} onChange={e => setSelDistrict(e.target.value)} disabled={!selState}>
-              <option value="">{t('market.all_districts', 'All Districts')}</option>
-              {districts.map(d => <option key={d} value={d}>{d}</option>)}
-            </select>
+            <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2 flex items-center gap-1.5"><MapPin size={12} className="text-primary"/> {t('crop.district_label')}</label>
+            <div className="relative group">
+              <select className="input rounded-2xl bg-white/50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-700/50 font-bold text-sm shadow-sm appearance-none cursor-pointer hover:border-primary transition-colors" value={selDistrict} onChange={e => setSelDistrict(e.target.value)} disabled={!selState}>
+                {districts.map(d => <option key={d} value={d}>{translateOption(d, 'crop')}</option>)}
+              </select>
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 group-hover:text-primary transition-colors">
+                <RefreshCw size={12} />
+              </div>
+            </div>
           </div>
           <div className="flex flex-col gap-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2 flex items-center gap-1.5"><Package size={12} className="text-primary"/> {t('market.commodity', 'Commodity')} / {t('market.variety', 'Ingredient')}</label>
-            <select className="input rounded-2xl bg-white/50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-700/50 font-bold text-sm shadow-sm" value={selCommodity} onChange={e => setSelCommodity(e.target.value)}>
-              <option value="">{t('market.select_commodity')}</option>
-              {commodities.map(c => <option key={c} value={c}>{t(`market.items.${c}`, c)}</option>)}
-            </select>
+            <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2 flex items-center gap-1.5"><Package size={12} className="text-primary"/> {t('market.commodity')} / {t('market.variety')}</label>
+            <div className="relative group">
+              <select className="input rounded-2xl bg-white/50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-700/50 font-bold text-sm shadow-sm appearance-none cursor-pointer hover:border-primary transition-colors" value={selCommodity} onChange={e => setSelCommodity(e.target.value)}>
+                <option value="">{t('market.select_commodity')}</option>
+                {commodities.map(c => <option key={c} value={c}>{t(`market.items.${c}`, c)}</option>)}
+              </select>
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 group-hover:text-primary transition-colors">
+                <RefreshCw size={12} />
+              </div>
+            </div>
           </div>
         </div>
       </div>
