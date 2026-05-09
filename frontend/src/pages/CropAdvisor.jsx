@@ -138,9 +138,11 @@ export default function CropAdvisor() {
 
       <div className="grid lg:grid-cols-2 gap-8">
         {/* Form */}
-        <div className="card border-none shadow-premium relative">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-2xl pointer-events-none" />
-          <h2 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-6">{t('market.live_mandi_desc', 'Provide field details')}</h2>
+        <div className="card border-none shadow-premium relative overflow-hidden bg-gradient-to-br from-white to-emerald-50/50 dark:from-slate-900 dark:to-emerald-950/20">
+          <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+          <h2 className="text-xs font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-6 flex items-center gap-2">
+            <Sparkles size={14} /> {t('market.live_mandi_desc', 'Provide field details')}
+          </h2>
           <div className="space-y-5">
             <div className="grid grid-cols-2 gap-4">
               <Select label={t('crop.soil_type')} value={form.soilType} onChange={v => set('soilType', v)} options={SOIL_TYPES} />
@@ -235,32 +237,34 @@ export default function CropAdvisor() {
                 </div>
               </div>
 
-              {/* Tips */}
-              <div className="card shadow-md">
-                <h3 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-4">{t('crop.tips')}</h3>
-                <ul className="space-y-3">
-                  {result.tips?.map((tip, i) => (
-                    <li key={i} className="text-sm text-gray-600 dark:text-slate-400 flex items-start gap-3 group">
-                      <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
-                        <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                      </div>
-                      <span className="font-medium leading-relaxed">{tip}</span>
-                    </li>
-                  ))}
-                </ul>
+
+
+              {/* Tips & Confidence */}
+              <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-2xl p-6 mb-6 shadow-sm border border-emerald-100 dark:border-emerald-800 relative z-10">
+                <h3 className="text-xs font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-2">{t('crop.confidence')}</h3>
+                <div className="flex items-center gap-4">
+                  <div className="flex-1 h-3 bg-gray-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full shadow-inner" style={{ width: `${result.confidence * 100}%` }} />
+                  </div>
+                  <span className="font-black text-gray-900 dark:text-white">{(result.confidence * 100).toFixed(0)}%</span>
+                </div>
               </div>
 
-              {/* Calendar button */}
+              <ul className="space-y-3 mb-8">
+                  {result.tips?.map((tip, i) => (
+                    <li key={i} className="text-sm text-gray-600 dark:text-slate-400 flex items-start gap-3">
+                      <div className="w-5 h-5 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0 mt-0.5">
+                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      </div>
+                      <span className="font-medium">{tip}</span>
+                    </li>
+                  ))}
+              </ul>
+
               <button onClick={() => fetchCalendar(result.primaryCrop)}
-                className="btn-secondary w-full h-14 rounded-2xl justify-center gap-2 font-bold hover:bg-primary/5 hover:text-primary hover:border-primary/20 transition-all">
+                className="w-full h-14 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 transition-all active:scale-[0.98]">
                 <Calendar size={18} /> <span>{t('crop.view_calendar')}</span>
               </button>
-            </>
-          ) : (
-            <div className="card flex flex-col items-center justify-center py-20 text-center bg-gray-50 dark:bg-slate-900/50 border-dashed border-2">
-              <div className="w-20 h-20 bg-white dark:bg-slate-800 rounded-3xl shadow-sm flex items-center justify-center text-4xl mb-6 animate-bounce-sm">🌱</div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white">{t('crop.get_ai_rec', 'Get AI Recommendation')}</h3>
-              <p className="text-sm text-gray-400 dark:text-slate-500 mt-2 max-w-xs mx-auto font-medium">{t('crop.get_ai_rec_desc', 'Fill in the details to see the best crops for your region.')}</p>
             </div>
           )}
 

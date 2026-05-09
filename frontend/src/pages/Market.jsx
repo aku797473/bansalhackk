@@ -326,16 +326,19 @@ export default function Market() {
       </div>
 
       {/* ── Today's Mandi Board ───────────────────────────────── */}
-      <div className="card p-0 overflow-hidden shadow-sm">
-        <div className="p-6 border-b border-gray-100 dark:border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="card p-0 overflow-hidden shadow-sm border-t-[6px] border-t-primary relative">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="p-6 border-b border-gray-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gradient-to-r from-gray-50/50 to-white dark:from-slate-900/50 dark:to-slate-900 relative z-10">
           <div>
-            <h3 className="text-lg font-black text-gray-900 dark:text-white">{t('market.table_title', 'Live Mandi Board')}</h3>
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">{t('market.table_subtitle', "Today's Modal Prices")}</p>
+            <h3 className="text-xl font-black text-gray-900 dark:text-white uppercase tracking-tighter flex items-center gap-2">
+              <Package size={20} className="text-primary" /> {t('market.table_title', 'Live Mandi Board')}
+            </h3>
+            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1 ml-7">{t('market.table_subtitle', "Today's Modal Prices")}</p>
           </div>
-          <div className="relative">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <div className="relative w-full sm:w-auto">
+            <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
             <input 
-              className="input pl-9 h-10 text-sm rounded-xl bg-white dark:bg-slate-800" 
+              className="w-full sm:w-72 pl-11 h-12 text-sm font-bold rounded-2xl bg-white dark:bg-slate-800 border-2 border-gray-100 dark:border-slate-700 focus:border-primary focus:ring-0 shadow-sm" 
               placeholder={t('market.search_table', 'Search table...')} 
               value={search} 
               onChange={e => setSearch(e.target.value)} 
@@ -377,8 +380,10 @@ export default function Market() {
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-1.5">
                       <TrendIcon trend={p.trend} size={16} />
-                      <span className={clsx('text-xs font-black',
-                        p.changePercent > 0 ? 'text-green-500' : p.changePercent < 0 ? 'text-red-500' : 'text-gray-400'
+                      <span className={clsx('text-[10px] font-black uppercase px-2 py-1 rounded-full',
+                        p.changePercent > 0 ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400' 
+                        : p.changePercent < 0 ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400' 
+                        : 'bg-gray-100 text-gray-700 dark:bg-slate-800 dark:text-gray-400'
                       )}>
                         {p.changePercent > 0 ? '+' : ''}{p.changePercent}%
                       </span>

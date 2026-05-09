@@ -125,7 +125,8 @@ export default function Fertilizer() {
         {/* Left Column: Upload & History */}
         <div className="lg:col-span-4 space-y-6">
           {/* Upload Area */}
-          <div className="card border-2 border-dashed border-gray-200 dark:border-slate-800 p-0 overflow-hidden">
+          <div className="card border-2 border-dashed border-amber-200 dark:border-amber-900/30 p-0 overflow-hidden bg-gradient-to-br from-white to-amber-50/50 dark:from-slate-900 dark:to-amber-950/20 relative group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl pointer-events-none group-hover:scale-150 transition-transform duration-700" />
             <div {...getRootProps()} className={clsx(
                 'p-8 text-center cursor-pointer transition-all',
                 isDragActive ? 'bg-primary/5' : 'hover:bg-gray-50 dark:hover:bg-slate-900/50'
@@ -216,15 +217,18 @@ export default function Fertilizer() {
           {result ? (
             <div className="space-y-4 animate-slide-up">
               {/* Soil Health Certificate UI */}
-              <div className="card border-2 border-primary/20 p-0 shadow-premium overflow-hidden">
-                <div className="bg-primary/5 p-6 border-b border-primary/10 flex items-center justify-between">
+              <div className="card border-0 p-0 shadow-2xl overflow-hidden relative">
+                {/* Colorful Certificate Gradient Border */}
+                <div className="absolute inset-0 bg-gradient-to-br from-amber-400 via-orange-500 to-rose-500 p-1">
+                  <div className="w-full h-full bg-white dark:bg-slate-900 rounded-[2rem] overflow-hidden">
+                <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/5 p-4 sm:p-6 border-b border-amber-500/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-primary text-white rounded-2xl flex items-center justify-center shadow-lg">
+                    <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-amber-500/30">
                       <ShieldCheck size={28} />
                     </div>
                     <div>
-                      <h3 className="font-black text-gray-900 dark:text-white uppercase tracking-tighter text-xl">{t('fertilizer.certificate_title', 'Soil Health Certificate')}</h3>
-                      <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">{t('fertilizer.sample_id', 'Sample ID')}: SK-2026-{Math.floor(Math.random()*9000)+1000} • {t('fertilizer.ai_verified', 'AI Verified')}</p>
+                      <h3 className="font-black text-gray-900 dark:text-white uppercase tracking-tighter text-lg sm:text-xl">{t('fertilizer.certificate_title', 'Soil Health Certificate')}</h3>
+                      <p className="text-[10px] font-black text-amber-600 uppercase tracking-[0.2em]">{t('fertilizer.sample_id', 'Sample ID')}: SK-2026-{Math.floor(Math.random()*9000)+1000} • {t('fertilizer.ai_verified', 'AI Verified')}</p>
                     </div>
                   </div>
                   <button 
@@ -232,7 +236,7 @@ export default function Fertilizer() {
                       toast.success(t('fertilizer.generating_pdf', 'Generating Soil Health Report...'));
                       setTimeout(() => window.print(), 1000);
                     }}
-                    className="btn-secondary h-10 px-4 text-[10px] font-black uppercase tracking-widest border-2">
+                    className="w-full sm:w-auto btn-ghost h-10 px-4 text-[10px] font-black uppercase tracking-widest border border-amber-500/20 text-amber-700 dark:text-amber-500 hover:bg-amber-500/10 bg-white dark:bg-slate-800 shadow-sm">
                     <Download size={14} /> {t('fertilizer.export_pdf', 'Export PDF')}
                   </button>
                 </div>

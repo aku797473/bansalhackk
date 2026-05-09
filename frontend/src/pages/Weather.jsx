@@ -124,19 +124,19 @@ export default function Weather() {
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-3 md:flex md:flex-col gap-6 bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/20 w-full md:w-auto">
+              <div className="grid grid-cols-3 md:flex md:flex-col gap-2 sm:gap-6 bg-white/10 backdrop-blur-md rounded-3xl p-4 sm:p-6 border border-white/20 w-full md:w-auto">
                 {[
                   { icon: Thermometer, label: t('weather.feels_like'), val: `${Math.round(data.feelsLike)}°C` },
                   { icon: Droplets,    label: t('weather.humidity'),   val: `${data.humidity}%` },
                   { icon: Wind,        label: t('weather.wind'),       val: `${data.windSpeed} km/h` },
                 ].map(({ icon: Icon, label, val }) => (
-                  <div key={label} className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-white/20 rounded-2xl flex items-center justify-center">
-                      <Icon size={20} className="text-white" />
+                  <div key={label} className="flex flex-col sm:flex-row items-center sm:items-start gap-2 sm:gap-3 text-center sm:text-left">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0">
+                      <Icon size={18} className="text-white sm:w-5 sm:h-5" />
                     </div>
                     <div>
-                      <p className="text-[10px] font-black uppercase tracking-widest text-sky-100/70">{label}</p>
-                      <p className="text-lg font-black">{val}</p>
+                      <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-sky-100/70 leading-tight">{label}</p>
+                      <p className="text-sm sm:text-lg font-black">{val}</p>
                     </div>
                   </div>
                 ))}
@@ -153,17 +153,23 @@ export default function Weather() {
               <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-none snap-x">
                 {data.forecast.map((day, i) => (
                   <div key={i} className={clsx(
-                    'min-w-[140px] snap-start bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border rounded-3xl p-5 text-center transition-all hover:-translate-y-2 hover:shadow-xl',
-                    i === 0 ? 'border-primary shadow-lg bg-emerald-50/50 dark:bg-emerald-900/10' : 'border-gray-100 dark:border-white/5'
+                    'min-w-[140px] snap-start border rounded-3xl p-5 text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl relative overflow-hidden group',
+                    i === 0 
+                      ? 'border-primary shadow-lg shadow-primary/20 bg-gradient-to-b from-primary/10 to-transparent dark:from-primary/20' 
+                      : 'border-gray-100 dark:border-white/5 bg-white dark:bg-slate-900 shadow-sm'
                   )}>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">
+                    {i === 0 && <div className="absolute top-0 right-0 w-16 h-16 bg-primary/20 rounded-full blur-xl group-hover:scale-150 transition-transform" />}
+                    <p className={clsx("text-[10px] font-black uppercase tracking-widest mb-3 relative z-10", i === 0 ? "text-primary dark:text-emerald-400" : "text-gray-400")}>
                       {i === 0 ? t('common.today') : new Date(day.date).toLocaleDateString(i18n.language === 'hi' ? 'hi-IN' : 'en-IN', { weekday: 'short', day: 'numeric' })}
                     </p>
-                    <span className="text-4xl block mb-4 drop-shadow-sm">{getEmoji(day.icon)}</span>
-                    <p className="text-2xl font-black text-gray-900 dark:text-white leading-none mb-1">{day.tempMax}°</p>
-                    <p className="text-xs font-bold text-gray-400 mb-4">{day.tempMin}°</p>
-                    <div className="bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 text-[10px] font-black py-1 rounded-full uppercase tracking-tighter">
-                      💧 {day.humidity}%
+                    <span className="text-4xl block mb-4 drop-shadow-sm group-hover:scale-110 transition-transform relative z-10">{getEmoji(day.icon)}</span>
+                    <p className="text-2xl font-black text-gray-900 dark:text-white leading-none mb-1 relative z-10">{day.tempMax}°</p>
+                    <p className="text-xs font-bold text-gray-400 mb-4 relative z-10">{day.tempMin}°</p>
+                    <div className={clsx(
+                      "text-[10px] font-black py-1.5 rounded-full uppercase tracking-tighter relative z-10 flex items-center justify-center gap-1",
+                      i === 0 ? "bg-primary text-white" : "bg-sky-50 dark:bg-slate-800 text-sky-600 dark:text-sky-400"
+                    )}>
+                      <Droplets size={10} /> {day.humidity}%
                     </div>
                   </div>
                 ))}
