@@ -7,10 +7,10 @@ import { ShieldCheck, Sun, Moon, ArrowRight, CheckCircle2 } from 'lucide-react';
 import clsx from 'clsx';
 
 const BENEFITS = [
-  { icon: '🌦️', textKey: 'landing.feat_weather' },
-  { icon: '📊', textKey: 'landing.feat_market' },
-  { icon: '🌱', textKey: 'landing.feat_crop' },
-  { icon: '👷', textKey: 'landing.feat_labour' },
+  { icon: '🌦️', textKey: 'landing.modules.weather.label' },
+  { icon: '📊', textKey: 'landing.modules.market.label' },
+  { icon: '🌱', textKey: 'landing.modules.crop.label' },
+  { icon: '🔒', textKey: 'landing.secure' },
 ];
 
 export default function Login() {
@@ -56,13 +56,13 @@ export default function Login() {
 
           <div className="space-y-8 max-w-lg">
             <h2 className="text-5xl xl:text-7xl font-black text-white leading-[1.1] tracking-tight animate-slide-up">
-              {t('landing.hero_title').split(' ').slice(0, 2).join(' ')} <br/>
+              {t('landing.title').split(' ').slice(0, 2).join(' ')} <br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-emerald-400 to-green-300">
-                {t('landing.hero_title').split(' ').slice(2).join(' ')}
+                {t('landing.title').split(' ').slice(2).join(' ')}
               </span>
             </h2>
             <p className="text-xl text-emerald-50/70 leading-relaxed font-medium animate-slide-up delay-100">
-              {t('landing.hero_sub')}
+              {t('landing.subtitle')}
             </p>
           </div>
         </div>

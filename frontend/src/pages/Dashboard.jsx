@@ -27,7 +27,6 @@ export default function Dashboard() {
   const { user }  = useAuth();
   const navigate  = useNavigate();
   const { t, i18n } = useTranslation();
-  
   const greetingKey = getGreetingKey();
   const locale = i18n.language === 'hi' ? 'hi-IN' : 'en-US';
 
@@ -178,142 +177,157 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="page-wrapper max-w-7xl mx-auto px-4 sm:px-6">
-      {/* ── Header Command Bar ──────────────────────────── */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-12">
-        <div>
-           <div className="flex flex-wrap items-center gap-3 mb-3">
-              <span className="px-3 py-1 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-[9px] font-black uppercase tracking-widest rounded-full shadow-lg shadow-emerald-500/20">
-                 {t('dashboard.command_center')}
-              </span>
-              <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest flex items-center gap-1.5 bg-white dark:bg-slate-900 px-3 py-1 rounded-full border border-gray-100 dark:border-slate-800 shadow-sm">
-                 <RefreshCw size={10} className="text-emerald-500 animate-spin-slow" /> {t('dashboard.live_sync')}
-              </span>
-           </div>
-           <h1 className="text-4xl sm:text-5xl font-black tracking-tighter text-gray-900 dark:text-white flex items-center gap-3 leading-none">
-              {t(greetingKey)}, {user?.name?.split(' ')[0] || t('auth.farmer')} <Sparkles className="text-amber-400" size={28} />
-           </h1>
-           <p className="text-sm text-gray-500 dark:text-slate-400 font-medium mt-3 flex items-center gap-2">
-              <Calendar size={14} className="text-primary" /> {new Date().toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' })}
-           </p>
-        </div>
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
+      <div className="page-wrapper max-w-7xl mx-auto px-4 sm:px-6">
         
-        <div className="flex items-center gap-3">
-           <div className="hidden sm:flex bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-2xl p-1.5 shadow-sm">
-              <button className="px-4 py-2 text-[10px] font-black uppercase tracking-widest bg-gray-50 dark:bg-slate-800 rounded-xl">Personal</button>
-              <button className="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-gray-600 transition-colors">Farm Data</button>
-           </div>
-           <button onClick={() => window.location.reload()} className="w-11 h-11 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-xl flex items-center justify-center shadow-sm hover:scale-105 active:scale-95 transition-all group">
-              <RefreshCw size={18} className="text-gray-500 group-hover:rotate-180 transition-transform duration-500" />
-           </button>
+        {/* Subtle Background Decoration */}
+        <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+          <div className="absolute top-0 right-0 w-[40%] h-[40%] bg-emerald-500/5 blur-[120px] rounded-full" />
+          <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-blue-500/5 blur-[120px] rounded-full" />
+        </div>
+
+        {/* ── Header Command Bar ──────────────────────────── */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-12">
+          <div>
+            <div className="flex flex-wrap items-center gap-3 mb-3">
+                <span className="px-3 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-[9px] font-black uppercase tracking-widest rounded-full border border-emerald-200 dark:border-emerald-800">
+                  {t('dashboard.command_center')}
+                </span>
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-1.5 bg-white dark:bg-slate-900 px-3 py-1 rounded-full border border-slate-100 dark:border-slate-800 shadow-sm">
+                  <RefreshCw size={10} className="text-emerald-500 animate-spin-slow" /> {t('dashboard.live_sync')}
+                </span>
+            </div>
+            <h1 className="text-4xl sm:text-5xl font-black tracking-tighter text-slate-900 dark:text-white flex items-center gap-3 leading-none">
+                {t(greetingKey)}, {user?.name?.split(' ')[0] || t('auth.farmer')} <Sparkles className="text-amber-400" size={28} />
+            </h1>
+            <p className="text-sm text-gray-500 dark:text-slate-400 font-medium mt-3 flex items-center gap-2">
+                <Calendar size={14} className="text-primary" /> {new Date().toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' })}
+            </p>
+          </div>
+          
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:flex bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-2xl p-1.5 shadow-sm">
+                <button className="px-4 py-2 text-[10px] font-black uppercase tracking-widest bg-slate-50 dark:bg-slate-800 rounded-xl">{t('dashboard.personal') || 'Personal'}</button>
+                <button className="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-gray-600 transition-colors">{t('dashboard.farm_data') || 'Farm Data'}</button>
+            </div>
+            <button onClick={() => window.location.reload()} className="w-11 h-11 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-xl flex items-center justify-center shadow-sm hover:scale-105 active:scale-95 transition-all group">
+                <RefreshCw size={18} className="text-gray-500 group-hover:rotate-180 transition-transform duration-500" />
+            </button>
+          </div>
+        </div>
+
+        {/* ── The Bento Grid ───────────────────────────────── */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 auto-rows-auto">
+          {modules.map((m) => (
+            <div
+              key={m.id}
+              onClick={() => navigate(m.to)}
+              className={clsx(
+                "group relative cursor-pointer overflow-hidden",
+                m.size === 'lg' ? 'col-span-1 sm:col-span-2 row-span-1 sm:row-span-2 rounded-[2rem] p-8' : 
+                m.size === 'md' ? 'col-span-1 sm:col-span-1 row-span-1' : 'col-span-1 sm:col-span-1 row-span-1 !p-5',
+                m.id === 'weather' ? 'text-white shadow-xl hover:-translate-y-1 transition-all duration-300' : 'bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 dark:text-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300',
+                m.color
+              )}
+            >
+              {m.id === 'weather' && (
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/4 pointer-events-none group-hover:scale-125 transition-transform duration-1000" />
+              )}
+              {m.render()}
+            </div>
+          ))}
+
+          {/* Extra Bento Items: Support Card */}
+          <div className="col-span-1 sm:col-span-2 lg:col-span-2 bg-emerald-600 rounded-[2rem] p-6 sm:p-8 text-white relative overflow-hidden group cursor-pointer shadow-xl shadow-emerald-500/20 hover:-translate-y-1 transition-all" onClick={() => navigate('/chat')}>
+              <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform" />
+              <div className="flex items-center gap-4 mb-4 relative z-10">
+                <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center">
+                    <Zap size={20} />
+                </div>
+                <div className="text-[10px] font-black uppercase tracking-[0.2em]">{t('dashboard.kisan_mitra')}</div>
+              </div>
+              <h3 className="text-xl font-black tracking-tight leading-tight relative z-10">{t('dashboard.expert_advisory')}</h3>
+          </div>
+
+          {/* Secondary Stats Card */}
+          <div className="col-span-1 sm:col-span-2 lg:col-span-2 card bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 flex flex-col justify-between group shadow-sm hover:shadow-xl">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('dashboard.active_schemes')}</span>
+                <Award className="text-amber-500" size={18} />
+              </div>
+              <div>
+                <div className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter">12 <span className="text-[10px] text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded-full font-bold ml-2">NEW</span></div>
+                <p className="text-[10px] font-bold text-slate-500 mt-1 uppercase tracking-widest">{t('dashboard.available_for_you')}</p>
+              </div>
+          </div>
+        </div>
+
+        {/* ── Bottom Section: Quick Tips & Info ──────────────── */}
+        <div className="mt-12 grid lg:grid-cols-12 gap-8">
+          <div className="lg:col-span-8">
+              <h2 className="text-lg font-black text-slate-900 dark:text-white uppercase tracking-widest mb-6 flex items-center gap-3">
+                <ShieldCheck className="text-emerald-500" size={20} /> {t('dashboard.farming_intel')}
+              </h2>
+              <div className="grid sm:grid-cols-2 gap-4">
+                {[
+                  { title: t('dashboard.tips.soil.title'), desc: t('dashboard.tips.soil.desc'), icon: '🧪', color: 'border-indigo-100 dark:border-indigo-900/30' },
+                  { title: t('dashboard.tips.market.title'), desc: t('dashboard.tips.market.desc'), icon: '📉', color: 'border-emerald-100 dark:border-emerald-900/30' }
+                ].map((tip, i) => (
+                  <div key={i} className={clsx("p-6 rounded-3xl border bg-white dark:bg-slate-900/50 shadow-sm hover:shadow-md transition-all", tip.color)}>
+                      <div className="flex items-start gap-4">
+                        <span className="text-2xl">{tip.icon}</span>
+                        <div>
+                            <h4 className="font-black text-slate-900 dark:text-white text-xs uppercase tracking-wide mb-1">{tip.title}</h4>
+                            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed">{tip.desc}</p>
+                        </div>
+                      </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* ── Intelligence Feed ─────────────────────────── */}
+              <div className="mt-8 card bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-xl overflow-hidden relative group">
+                <div className="flex items-center justify-between mb-6 relative z-10">
+                  <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">{t('dashboard.recent_alerts')}</h3>
+                  <Bell size={16} className="text-slate-400" />
+                </div>
+                <div className="space-y-4 relative z-10">
+                  {alerts.map((alert, idx) => (
+                      <div key={idx} className="flex gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 hover:border-emerald-200 dark:hover:border-emerald-900 transition-all cursor-pointer group/alert">
+                        <div className="text-xl shrink-0 group-hover/alert:scale-110 transition-transform">{alert.icon}</div>
+                        <p className="text-[11px] font-bold leading-relaxed text-slate-600 dark:text-slate-300">{alert.text}</p>
+                      </div>
+                  ))}
+                </div>
+              </div>
+          </div>
+
+          <div className="lg:col-span-4">
+            <div className="bg-white dark:bg-slate-900/80 rounded-[2.5rem] p-8 border border-slate-100 dark:border-slate-800 shadow-sm sticky top-28">
+                <h3 className="text-xs font-black text-slate-400 uppercase tracking-[0.3em] mb-6">{t('dashboard.sync_status')}</h3>
+                <div className="space-y-6">
+                  {[
+                    { label: t('dashboard.nodes.sat'), status: 'Optimal', color: 'bg-emerald-500' },
+                    { label: t('dashboard.nodes.market'), status: 'Stable', color: 'bg-emerald-500' },
+                    { label: t('dashboard.nodes.ai'), status: 'Active', color: 'bg-emerald-500' }
+                  ].map(node => (
+                    <div key={node.label} className="flex items-center justify-between">
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">{node.label}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[9px] font-black uppercase text-slate-900 dark:text-white">{node.status}</span>
+                          <div className={clsx("w-1.5 h-1.5 rounded-full animate-pulse", node.color)} />
+                        </div>
+                    </div>
+                  ))}
+                </div>
+                <button onClick={() => navigate('/news')} className="w-full mt-10 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl text-[9px] font-black uppercase tracking-widest shadow-sm hover:bg-slate-100 transition-all text-slate-600 dark:text-slate-400">
+                  {t('dashboard.view_logs')}
+                </button>
+            </div>
+          </div>
         </div>
       </div>
-
-      {/* ── Alerts News Ticker ──────────────────────────── */}
-      <div className="relative mb-10 group cursor-pointer overflow-hidden rounded-2xl bg-gray-900 p-1 border border-white/5 shadow-xl">
-         <div className="flex items-center h-10 px-4 gap-6 animate-ticker hover:pause">
-            {[...alerts, ...alerts].map((a, i) => (
-              <div key={i} className="flex items-center gap-3 shrink-0">
-                 <span className="text-lg">{a.icon}</span>
-                 <span className="text-[10px] font-black uppercase tracking-widest text-white/90">{a.text}</span>
-                 <div className="h-1 w-1 rounded-full bg-white/20 ml-4" />
-              </div>
-            ))}
-         </div>
-      </div>
-
-      {/* ── The Bento Grid ───────────────────────────────── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 auto-rows-auto">
-         {modules.map((m) => (
-           <div
-             key={m.id}
-             onClick={() => navigate(m.to)}
-             className={clsx(
-               "group relative cursor-pointer overflow-hidden",
-               m.size === 'lg' ? 'col-span-1 sm:col-span-2 row-span-1 sm:row-span-2 rounded-[2rem] p-8' : 
-               m.size === 'md' ? 'col-span-1 sm:col-span-1 row-span-1' : 'col-span-1 sm:col-span-1 row-span-1 !p-5',
-               m.id === 'weather' ? 'text-white shadow-xl hover:-translate-y-1 transition-all duration-300' : 'dark:text-white',
-               m.color
-             )}
-           >
-             {m.id === 'weather' && (
-                <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/4 pointer-events-none group-hover:scale-125 transition-transform duration-1000" />
-             )}
-             {m.render()}
-           </div>
-         ))}
-
-         {/* Extra Bento Items: Support Card */}
-         <div className="col-span-1 sm:col-span-2 lg:col-span-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-[2rem] p-6 sm:p-8 text-white relative overflow-hidden group cursor-pointer shadow-xl hover:-translate-y-1 transition-all" onClick={() => navigate('/chat')}>
-            <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform" />
-            <div className="flex items-center gap-4 mb-4">
-               <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center">
-                  <Zap size={20} />
-               </div>
-               <div className="text-[10px] font-black uppercase tracking-[0.2em]">{t('dashboard.kisan_mitra')}</div>
-            </div>
-            <h3 className="text-lg font-black tracking-tight leading-tight">{t('dashboard.expert_advisory')}</h3>
-         </div>
-
-         {/* Secondary Stats Card */}
-         <div className="col-span-1 sm:col-span-2 lg:col-span-2 card flex flex-col justify-between group">
-            <div className="flex items-center justify-between mb-4">
-               <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Active Schemes</span>
-               <Award className="text-amber-500" size={18} />
-            </div>
-            <div>
-               <div className="text-3xl font-black text-gray-900 dark:text-white tracking-tighter">12 <span className="text-xs text-gray-400 font-bold">New</span></div>
-               <p className="text-[10px] font-bold text-gray-500 mt-1 uppercase tracking-widest">Available for you</p>
-            </div>
-         </div>
-      </div>
-
-      {/* ── Bottom Section: Quick Tips & Info ──────────────── */}
-      <div className="mt-12 grid lg:grid-cols-3 gap-8">
-         <div className="lg:col-span-2">
-            <h2 className="text-lg font-black text-gray-900 dark:text-white uppercase tracking-widest mb-6 flex items-center gap-3">
-               <ShieldCheck className="text-emerald-500" size={20} /> {t('dashboard.farming_intel')}
-            </h2>
-            <div className="grid sm:grid-cols-2 gap-4">
-               {[
-                 { title: t('dashboard.tips.soil.title'), desc: t('dashboard.tips.soil.desc'), icon: '🧪', color: 'border-indigo-100 dark:border-indigo-900/30' },
-                 { title: t('dashboard.tips.market.title'), desc: t('dashboard.tips.market.desc'), icon: '📉', color: 'border-emerald-100 dark:border-emerald-900/30' }
-               ].map((tip, i) => (
-                 <div key={i} className={clsx("p-6 rounded-3xl border bg-white dark:bg-slate-900/50 shadow-sm hover:shadow-md transition-all", tip.color)}>
-                    <div className="flex items-start gap-4">
-                       <span className="text-2xl">{tip.icon}</span>
-                       <div>
-                          <h4 className="font-black text-gray-900 dark:text-white text-xs uppercase tracking-wide mb-1">{tip.title}</h4>
-                          <p className="text-xs text-gray-500 dark:text-slate-400 font-medium leading-relaxed">{tip.desc}</p>
-                       </div>
-                    </div>
-                 </div>
-               ))}
-            </div>
-         </div>
-
-         <div className="bg-gray-50 dark:bg-slate-900/80 rounded-[2.5rem] p-8 border border-gray-100 dark:border-slate-800">
-            <h3 className="text-xs font-black text-gray-400 uppercase tracking-[0.3em] mb-6">{t('dashboard.sync_status')}</h3>
-            <div className="space-y-6">
-               {[
-                 { label: t('dashboard.nodes.sat'), status: 'Optimal', color: 'bg-green-500' },
-                 { label: t('dashboard.nodes.market'), status: 'Stable', color: 'bg-green-500' },
-                 { label: t('dashboard.nodes.ai'), status: 'Active', color: 'bg-emerald-500' }
-               ].map(node => (
-                 <div key={node.label} className="flex items-center justify-between">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-gray-500">{node.label}</span>
-                    <div className="flex items-center gap-2">
-                       <span className="text-[9px] font-black uppercase text-gray-900 dark:text-white">{node.status}</span>
-                       <div className={clsx("w-1.5 h-1.5 rounded-full animate-pulse", node.color)} />
-                    </div>
-                 </div>
-               ))}
-            </div>
-            <button onClick={() => navigate('/news')} className="w-full mt-10 py-3 bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl text-[9px] font-black uppercase tracking-widest shadow-sm hover:bg-gray-50 transition-all">
-               {t('dashboard.view_logs')}
-            </button>
-         </div>
-      </div>
+    </div>
 
       {/* ── Custom Animations ─────────────────────────────── */}
       <style>{`
