@@ -16,7 +16,6 @@ export default function Weather() {
   const [citySearch, setCitySearch] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Weather Query
   const { data, isLoading: loading, refetch, isFetching: searching } = useQuery({
     queryKey: ['weather', searchQuery],
     queryFn: async () => {
@@ -25,33 +24,25 @@ export default function Weather() {
         return res.data.data;
       }
       
-      // Default to Satna immediately to avoid blocking UI
-      // We will handle geolocation as a separate effect or refetch
-      const res = await weatherAPI.getCurrent(24.6005, 80.8322); 
+      // Use React Query to handle geolocation state seamlessly
+      const getPosition = () => new Promise((resolve) => {
+        if (!navigator.geolocation) return resolve(null);
+        navigator.geolocation.getCurrentPosition(
+          pos => resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
+          err => resolve(null),
+          { timeout: 3000 } // Don't hang forever
+        );
+      });
+
+      const pos = await getPosition();
+      const lat = pos?.lat || 24.6005; // Fallback to Satna
+      const lon = pos?.lon || 80.8322;
+      
+      const res = await weatherAPI.getCurrent(lat, lon); 
       return res.data.data;
     },
     staleTime: 30 * 60 * 1000, // 30 mins
   });
-
-  // Handle geolocation in the background to avoid blocking the initial load
-  useEffect(() => {
-    if (!searchQuery && navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        async ({ coords: { latitude: lat, longitude: lon } }) => {
-          try {
-            const res = await weatherAPI.getCurrent(lat, lon);
-            // We can manually update the query cache or just let the user refetch if needed
-            // For hackathon, let's just refetch if we get a better location
-            if (res.data.data.city !== 'Satna') {
-               // Update logic if needed, but for now, we've shown data fast
-            }
-          } catch (e) {}
-        },
-        null,
-        { timeout: 5000 }
-      );
-    }
-  }, []);
 
   const fetchByLocation = () => {
     setSearchQuery('');
