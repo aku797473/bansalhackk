@@ -327,8 +327,6 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-    </div>
-
       {/* ── Custom Animations ─────────────────────────────── */}
       <style>{`
         @keyframes ticker {
