@@ -17,9 +17,26 @@ app.use(express.json({ limit: '5mb' }));
 app.use('/users', userRoutes);
 app.get('/health', (req, res) => res.json({ status: 'ok', service: 'user-service' }));
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/smart-kisan')
-  .then(() => {
-    console.log('✅ MongoDB connected');
-    app.listen(PORT, () => console.log(`👤 User Service on port ${PORT}`));
-  })
-  .catch(err => { console.error('❌ MongoDB:', err.message); });
+// ─── Robust MongoDB connect ───────────────────────────
+const connectMongo = async () => {
+  const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/smart-kisan';
+  const options = {
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
+  };
+
+  try {
+    await mongoose.connect(uri, options);
+    console.log('✅ User Service: MongoDB connected');
+  } catch (err) {
+    console.error('❌ User Service: MongoDB connection failed:', err.message);
+    console.log('⚠️  Starting server anyway for resilience...');
+  }
+};
+
+// Start both
+connectMongo().then(() => {
+  app.listen(PORT, () => {
+    console.log(`👤 User Service running on port ${PORT}`);
+  });
+});

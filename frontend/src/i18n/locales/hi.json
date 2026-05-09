@@ -67,6 +67,7 @@
     "greeting_morning": "सुप्रभात",
     "greeting_afternoon": "नमस्कार",
     "greeting_evening": "शुभ संध्या",
+    "greeting_night": "शुभ रात्रि",
     "welcome": "आपका स्वागत है",
     "weather_title": "आज का मौसम",
     "quick_actions": "त्वरित कार्य",
@@ -447,7 +448,7 @@
     "apply": "विवरण देखें और आवेदन करें"
   },
   "common": {
-    "loading": "लोड हो रहा है...", "error": "कुछ गलत हो गया",
+    "loading": "लोड हो रहा है...", "error": "कुछ गलत हो गया", "more": "और देखें",
     "retry": "फिर कोशिश करें", "save": "सहेजें", "cancel": "रद्द करें",
     "back": "वापस", "submit": "जमा करें", "view_all": "सब देखें",
     "no_data": "कोई डेटा उपलब्ध नहीं",

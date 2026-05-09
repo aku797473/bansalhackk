@@ -38,17 +38,22 @@ export default function Navbar() {
     if (user) checkNews();
   }, [i18n.language, user]);
 
-  const links = [
+  const primaryLinks = [
     { to: '/dashboard',  icon: Home,         label: t('nav.home') },
     { to: '/weather',    icon: Cloud,         label: t('nav.weather') },
     { to: '/crop',       icon: Leaf,          label: t('nav.crop') },
-    { to: '/fertilizer', icon: FlaskConical,  label: t('nav.fertilizer') },
     { to: '/market',     icon: TrendingUp,    label: t('nav.market') },
+    { to: '/fertilizer', icon: FlaskConical,  label: t('nav.fertilizer') },
+  ];
+
+  const moreLinks = [
     { to: '/labour',     icon: Users,         label: t('nav.labour') },
     { to: '/map',        icon: Map,           label: t('nav.map') },
     { to: '/news',       icon: Newspaper,     label: t('nav.news') },
     { to: '/schemes',    icon: Landmark,      label: t('nav.schemes') },
   ];
+
+  const [moreOpen, setMoreOpen] = useState(false);
 
   // Prevent scrolling when mobile menu is open
   useEffect(() => {
@@ -56,12 +61,12 @@ export default function Navbar() {
     else document.body.style.overflow = 'unset';
   }, [open]);
 
-  useEffect(() => { setOpen(false); }, [location.pathname]);
+  useEffect(() => { setOpen(false); setMoreOpen(false); }, [location.pathname]);
 
   return (
     <>
       <header className="fixed top-0 inset-x-0 z-[100] bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-b border-gray-200 dark:border-slate-800 shadow-sm transition-all h-16">
-        <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between gap-4">
           
           {/* Logo Section */}
           <NavLink to="/dashboard" className="flex items-center gap-2.5 shrink-0 group">
@@ -69,43 +74,90 @@ export default function Navbar() {
               <img src={logo} alt="Logo" className="w-6 h-6 brightness-0 invert object-contain" />
             </div>
             <div className="flex flex-col">
-              <span className="font-bold text-gray-900 dark:text-white text-base leading-none">Smart Kisan</span>
-              <span className="text-[10px] text-primary dark:text-emerald-400 font-bold uppercase tracking-wider hidden sm:block">Farm Smarter</span>
+              <span className="font-bold text-gray-900 dark:text-white text-sm sm:text-base leading-none">Smart Kisan</span>
+              <span className="text-[9px] text-primary dark:text-emerald-400 font-bold uppercase tracking-wider hidden md:block">Farm Smarter</span>
             </div>
           </NavLink>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-1">
-            {links.map(({ to, icon: Icon, label }) => (
+          <nav className="hidden xl:flex items-center gap-1">
+            {primaryLinks.map(({ to, icon: Icon, label }) => (
               <NavLink key={to} to={to}
                 className={({ isActive }) => clsx(
-                  'flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200',
+                  'flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition-all duration-200',
                   isActive
-                    ? 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-emerald-400 shadow-sm'
+                    ? 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-emerald-400'
                     : 'text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-100 hover:bg-gray-50 dark:hover:bg-slate-800'
                 )}>
                 <Icon size={14} />
                 {label}
               </NavLink>
             ))}
+
+            {/* More Dropdown */}
+            <div className="relative ml-1">
+              <button 
+                onClick={() => setMoreOpen(!moreOpen)}
+                className={clsx(
+                  "flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition-all",
+                  moreLinks.some(l => location.pathname === l.to)
+                    ? "bg-primary/10 text-primary dark:bg-primary/20"
+                    : "text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800"
+                )}
+              >
+                <span>{t('common.more', 'More')}</span>
+                <ChevronRight size={14} className={clsx("transition-transform", moreOpen ? "rotate-90" : "")} />
+              </button>
+
+              {moreOpen && (
+                <div className="absolute top-full right-0 mt-2 w-48 bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-2xl shadow-2xl p-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                  {moreLinks.map(({ to, icon: Icon, label }) => (
+                    <NavLink key={to} to={to}
+                      className={({ isActive }) => clsx(
+                        'flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all',
+                        isActive
+                          ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                          : 'text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700'
+                      )}>
+                      <Icon size={16} />
+                      {label}
+                    </NavLink>
+                  ))}
+                </div>
+              )}
+            </div>
           </nav>
 
           {/* Right Actions */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            <div className="hidden sm:flex items-center gap-1 mr-2">
-              <button onClick={toggleTheme} className="p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-xl transition-all">
+          <div className="flex items-center gap-1 sm:gap-3 shrink-0">
+            <div className="hidden md:flex items-center gap-1">
+              <button onClick={toggleTheme} className="p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-xl transition-all" title="Toggle Theme">
                 {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
               </button>
-              <button onClick={() => navigate('/news')} className="relative p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-xl transition-all">
+              <button onClick={() => navigate('/news')} className="relative p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-xl transition-all" title="Alerts">
                 <Bell size={18} />
                 {hasNewNews && <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white dark:ring-slate-900 animate-pulse" />}
               </button>
             </div>
             
+            <div className="h-6 w-px bg-gray-100 dark:bg-slate-800 hidden md:block mx-1" />
+            
             <LanguageSelector showLabel={false} />
-            <UserButton appearance={{ elements: { userButtonAvatarBox: "w-8 h-8 rounded-xl border-2 border-primary/10" } }} />
+            
+            <div className="flex items-center gap-2 pl-1 sm:pl-2">
+               <UserButton appearance={{ elements: { userButtonAvatarBox: "w-8 h-8 rounded-xl border-2 border-primary/10" } }} />
+               
+               {/* Quick Logout for Desktop - High Visibility */}
+               <button 
+                 onClick={async () => { await logout(); navigate('/'); }}
+                 className="hidden lg:flex items-center gap-2 px-3 py-2 bg-red-50 dark:bg-red-950/20 text-red-500 hover:bg-red-100 dark:hover:bg-red-950/40 rounded-xl transition-all text-[10px] font-black uppercase tracking-wider"
+               >
+                 <LogOut size={14} />
+                 <span className="hidden xl:inline">{t('nav.logout')}</span>
+               </button>
+            </div>
 
-            {/* Mobile Hamburger Menu Button - High Visibility */}
+            {/* Mobile Hamburger Menu Button */}
             <button 
               onClick={() => setOpen(true)} 
               className="lg:hidden ml-1 p-2 bg-gray-100 dark:bg-slate-800 text-gray-900 dark:text-white rounded-xl hover:bg-gray-200 transition-all active:scale-95 border border-gray-200 dark:border-slate-700"
@@ -131,14 +183,19 @@ export default function Navbar() {
           open ? "translate-x-0" : "translate-x-full"
         )}>
           <div className="flex items-center justify-between mb-8">
-            <span className="font-bold text-gray-900 dark:text-white text-lg">Menu</span>
+            <div className="flex items-center gap-3">
+               <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+                  <img src={logo} className="w-5 h-5 invert brightness-0" alt="logo" />
+               </div>
+               <span className="font-bold text-gray-900 dark:text-white text-lg">Menu</span>
+            </div>
             <button onClick={() => setOpen(false)} className="p-2 bg-gray-100 dark:bg-slate-800 rounded-xl text-gray-900 dark:text-white">
               <X size={20} />
             </button>
           </div>
 
-          <nav className="flex-1 space-y-2 overflow-y-auto pr-2 scrollbar-thin">
-            {links.map(({ to, icon: Icon, label }) => (
+          <nav className="flex-1 space-y-2 overflow-y-auto pr-2 scrollbar-none">
+            {[...primaryLinks, ...moreLinks].map(({ to, icon: Icon, label }) => (
               <NavLink key={to} to={to}
                 className={({ isActive }) => clsx(
                   'flex items-center justify-between w-full p-4 rounded-2xl text-sm font-bold transition-all',
@@ -164,9 +221,9 @@ export default function Navbar() {
               {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
               {theme === 'dark' ? 'Light Appearance' : 'Dark Appearance'}
             </button>
-            <button onClick={async () => { await logout(); navigate('/'); }} className="flex items-center gap-3 w-full p-4 rounded-2xl bg-red-50 dark:bg-red-950/10 text-red-500 font-bold text-sm">
+            <button onClick={async () => { await logout(); navigate('/'); }} className="flex items-center gap-3 w-full p-4 rounded-2xl bg-red-50 dark:bg-red-950/10 text-red-500 font-bold text-sm shadow-sm active:scale-95 transition-transform">
               <LogOut size={20} />
-              Sign Out
+              {t('nav.logout')}
             </button>
           </div>
         </div>

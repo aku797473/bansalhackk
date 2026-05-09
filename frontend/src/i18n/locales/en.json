@@ -67,6 +67,7 @@
     "greeting_morning": "Good Morning",
     "greeting_afternoon": "Good Afternoon",
     "greeting_evening": "Good Evening",
+    "greeting_night": "Good Night",
     "welcome": "Welcome back",
     "weather_title": "Today's Weather",
     "quick_actions": "Quick Actions",
@@ -473,7 +474,7 @@
     "apply": "View Details & Apply"
   },
   "common": {
-    "loading": "Loading...", "error": "Something went wrong",
+    "loading": "Loading...", "error": "Something went wrong", "more": "More",
     "retry": "Try Again", "save": "Save", "cancel": "Cancel",
     "back": "Back", "submit": "Submit", "view_all": "View All",
     "no_data": "No data available",

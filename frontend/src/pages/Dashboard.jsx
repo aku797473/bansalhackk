@@ -62,9 +62,12 @@ const getRecentAlerts = (t) => [
 
 function getGreetingKey() {
   const h = new Date().getHours();
-  if (h < 12) return 'dashboard.greeting_morning';
-  if (h < 17) return 'dashboard.greeting_afternoon';
-  return 'dashboard.greeting_evening';
+  console.log('⏰ Current hour for greeting:', h);
+  
+  if (h >= 5 && h < 12) return 'dashboard.greeting_morning';
+  if (h >= 12 && h < 17) return 'dashboard.greeting_afternoon';
+  if (h >= 17 && h < 22) return 'dashboard.greeting_evening';
+  return 'dashboard.greeting_night';
 }
 
 export default function Dashboard() {
