@@ -82,7 +82,7 @@ export default function Landing() {
       {/* ── Hero Section ──────────────────────────────────── */}
       <header className="relative pt-48 pb-32 px-6">
          <div className="max-w-7xl mx-auto">
-            <div className="grid lg:grid-cols-2 gap-20 items-center">
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
                <div className="text-left">
                   <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full mb-8 animate-fade-in">
                      <span className="relative flex h-2 w-2">
@@ -92,7 +92,7 @@ export default function Landing() {
                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-400">Next-Gen Agricultural Intelligence</span>
                   </div>
 
-                  <h1 className="text-6xl md:text-8xl font-black leading-[0.9] tracking-tighter mb-10 animate-slide-up">
+                  <h1 className="text-5xl sm:text-6xl md:text-8xl font-black leading-[0.9] tracking-tighter mb-10 animate-slide-up">
                      REVOLUTIONIZING <br />
                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-blue-500">BHARAT'S FARMS</span>
                   </h1>
@@ -101,7 +101,7 @@ export default function Landing() {
                      Experience the world's most advanced AI platform for farmers. Real-time satellite data, predictive crop analytics, and live market intelligence—all in one unified ecosystem.
                   </p>
 
-                  <div className="flex flex-wrap gap-4 animate-slide-up [animation-delay:200ms]">
+                  <div className="flex flex-col sm:flex-row flex-wrap gap-4 animate-slide-up [animation-delay:200ms]">
                      <button 
                         onClick={() => navigate('/login')}
                         className="h-16 px-10 bg-emerald-500 text-slate-950 font-black uppercase tracking-widest rounded-2xl flex items-center gap-3 hover:bg-emerald-400 hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-emerald-500/20"
@@ -113,7 +113,7 @@ export default function Landing() {
                      </button>
                   </div>
 
-                  <div className="mt-16 flex items-center gap-8 opacity-40 grayscale animate-fade-in [animation-delay:400ms]">
+                  <div className="mt-16 flex flex-wrap items-center gap-4 sm:gap-8 opacity-40 grayscale animate-fade-in [animation-delay:400ms]">
                      <div className="text-sm font-black tracking-widest uppercase">OFFICIAL PARTNERS:</div>
                      <span className="text-xl font-black tracking-tighter">AGMARKNET</span>
                      <span className="text-xl font-black tracking-tighter">IMD INDIA</span>
@@ -153,7 +153,7 @@ export default function Landing() {
          <div className="max-w-7xl mx-auto">
             <div className="text-center mb-20">
                <span className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.4em] mb-6 block">The Platform Ecosystem</span>
-               <h2 className="text-5xl md:text-7xl font-black tracking-tighter mb-8 leading-none">BUILT FOR <br /> HIGH PERFORMANCE</h2>
+               <h2 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter mb-8 leading-none">BUILT FOR <br /> HIGH PERFORMANCE</h2>
                <p className="text-xl text-slate-400 max-w-2xl mx-auto font-medium">
                   A professional suite of data-driven tools designed to eliminate guesswork and maximize farm profitability.
                </p>
@@ -183,10 +183,10 @@ export default function Landing() {
       {/* ── Tech Section ──────────────────────────────────── */}
       <section className="py-48 bg-white text-slate-950 relative overflow-hidden">
          <div className="absolute inset-0 bg-slate-50 opacity-50" />
-         <div className="max-w-7xl mx-auto px-6 relative z-10 flex flex-col lg:flex-row items-center gap-24">
+         <div className="max-w-7xl mx-auto px-6 relative z-10 flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
             <div className="flex-1">
                <span className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.4em] mb-8 block">Verified Infrastructure</span>
-               <h2 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] mb-12">
+               <h2 className="text-5xl sm:text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] mb-12">
                   OFFICIAL <br />
                   DATA <br />
                   <span className="text-slate-300">STREAMING</span>
@@ -225,13 +225,13 @@ export default function Landing() {
             <div className="w-24 h-24 rounded-[2rem] bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center mx-auto mb-12 shadow-3xl shadow-emerald-500/20">
                <img src={logo} className="w-12 h-12 invert brightness-0" alt="logo" />
             </div>
-            <h2 className="text-6xl md:text-8xl font-black tracking-tighter leading-none mb-12">READY TO <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">UPGRADE?</span></h2>
+            <h2 className="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter leading-none mb-12">READY TO <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">UPGRADE?</span></h2>
             <p className="text-2xl text-slate-400 font-medium mb-16 max-w-2xl mx-auto">
                Join 1,000,000+ farmers in the digital revolution. Start your data-driven journey today.
             </p>
             <button 
                onClick={() => navigate('/login')}
-               className="h-24 px-20 bg-white text-slate-950 text-xl font-black uppercase tracking-[0.2em] rounded-[2.5rem] hover:bg-emerald-400 transition-all hover:scale-105 active:scale-95 shadow-2xl shadow-white/5"
+               className="h-16 px-10 sm:h-24 sm:px-20 w-full sm:w-auto bg-white text-slate-950 text-base sm:text-xl font-black uppercase tracking-[0.2em] rounded-full sm:rounded-[2.5rem] hover:bg-emerald-400 transition-all hover:scale-105 active:scale-95 shadow-2xl shadow-white/5"
             >
                Initialize Portal
             </button>

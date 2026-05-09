@@ -7,7 +7,7 @@ import {
   Cloud, Leaf, TrendingUp, Users, FlaskConical, Map,
   ArrowRight, AlertTriangle, RefreshCw, Droplets, Wind,
   Bell, TrendingDown, Calendar, FileDown, CheckCircle2,
-  Newspaper, Landmark, ShieldCheck, Sparkles, Zap, Sun
+  Newspaper, Landmark, ShieldCheck, Sparkles, Zap, Sun, Award
 } from 'lucide-react';
 import { weatherAPI, marketAPI, labourAPI } from '../services/api';
 import clsx from 'clsx';
