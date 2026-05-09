@@ -5,11 +5,13 @@ import { fertilizerAPI } from '../services/api';
 import { FlaskConical, Upload, AlertTriangle, CheckCircle, Loader, History, Trash2, ChevronRight, RefreshCw, ShieldCheck, FileText, Download } from 'lucide-react';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
+import { usePageAnimation } from '../hooks/usePageAnimation';
 
 const SEVERITY_COLOR = { Mild: 'badge-yellow', Moderate: 'badge-yellow', Severe: 'badge-red' };
 
 export default function Fertilizer() {
   const { t, i18n } = useTranslation();
+  const ref = usePageAnimation();
   const [preview, setPreview] = useState(null);
   const [file, setFile]       = useState(null);
   const [result, setResult]   = useState(null);
@@ -100,8 +102,8 @@ export default function Fertilizer() {
   };
 
   return (
-    <div className="page-wrapper max-w-7xl mx-auto px-4 sm:px-6">
-      <div className="page-header flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+    <div ref={ref} className="page-wrapper max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="anim-header page-header flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
         <div>
           <h1 className="page-title flex items-center gap-3 tracking-tighter">
             <div className="p-3 bg-amber-100 dark:bg-amber-900/30 rounded-2xl shadow-inner">
@@ -134,7 +136,7 @@ export default function Fertilizer() {
         {/* Left Column: Upload & History */}
         <div className="lg:col-span-4 space-y-6">
           {/* Upload Area */}
-          <div className="card border-none shadow-premium p-0 overflow-hidden bg-gradient-to-br from-white via-white to-amber-50/30 dark:from-slate-900 dark:via-slate-900 dark:to-amber-950/10 relative group">
+          <div className="anim-card card border-none shadow-premium p-0 overflow-hidden bg-gradient-to-br from-white via-white to-amber-50/30 dark:from-slate-900 dark:via-slate-900 dark:to-amber-950/10 relative group">
             <div className="absolute -top-24 -right-24 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none group-hover:scale-110 transition-transform duration-1000" />
             
             <div {...getRootProps()} className={clsx(
@@ -185,7 +187,7 @@ export default function Fertilizer() {
           </div>
 
           {/* History List */}
-          <div className="card p-0 overflow-hidden">
+          <div className="anim-card card p-0 overflow-hidden">
              <div className="p-3 border-b border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-900/50 flex items-center justify-between">
                 <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">{t('dashboard.recent_alerts', 'Recent Reports')}</span>
                 <span className="badge badge-gray">{history.length}</span>
@@ -242,6 +244,9 @@ export default function Fertilizer() {
                         <div>
                           <h3 className="font-black text-gray-900 dark:text-white uppercase tracking-tighter text-lg sm:text-xl">{t('fertilizer.certificate_title', 'Soil Health Certificate')}</h3>
                           <p className="text-[10px] font-black text-amber-600 uppercase tracking-[0.2em]">{t('fertilizer.sample_id', 'Sample ID')}: SK-2026-{Math.floor(Math.random()*9000)+1000} • {t('fertilizer.ai_verified', 'AI Verified')}</p>
+                          {result.cropType && (
+                             <p className="text-[10px] font-bold text-gray-500 mt-1 uppercase tracking-widest">{t('crop.title', 'Crop')}: <span className="text-gray-900 dark:text-white font-black">{result.cropType}</span></p>
+                          )}
                         </div>
                       </div>
                       <button 
@@ -313,6 +318,25 @@ export default function Fertilizer() {
                 </div>
               </div>
 
+              {result.recommendedFertilizers?.length > 0 && (
+                <div className="card shadow-md border-l-4 border-l-amber-500 mb-6 bg-gradient-to-br from-white to-amber-50/30 dark:from-slate-900 dark:to-amber-950/10">
+                  <h4 className="font-black text-amber-700 dark:text-amber-400 flex items-center gap-2 mb-4 uppercase text-xs tracking-widest">
+                      <FlaskConical size={16} /> {t('fertilizer.recommended_fertilizers', 'Recommended Fertilizers & Dosage')}
+                  </h4>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    {result.recommendedFertilizers.map((fert, i) => (
+                      <div key={i} className="bg-white/50 dark:bg-slate-800/50 p-4 rounded-xl border border-amber-100 dark:border-amber-900/30 hover:shadow-md transition-shadow">
+                        <p className="font-black text-gray-900 dark:text-white mb-2 text-sm">{fert.name}</p>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs font-medium text-gray-600 dark:text-slate-400">
+                          <span className="flex items-center gap-1.5"><ShieldCheck size={14} className="text-amber-500" /> {fert.dosage}</span>
+                          <span className="flex items-center gap-1.5"><AlertTriangle size={14} className="text-amber-500" /> {fert.timing}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="grid sm:grid-cols-2 gap-4">
                 {/* Treatment Card */}
                 <div className="card border-l-4 border-l-emerald-500 bg-gradient-to-br from-white to-emerald-50/30 dark:from-slate-900 dark:to-emerald-950/10">
@@ -369,7 +393,7 @@ export default function Fertilizer() {
               </div>
             </div>
           ) : (
-            <div className="card h-full flex flex-col items-center justify-center py-32 text-center bg-gray-50 dark:bg-slate-900/50 border-dashed border-2">
+            <div className="anim-fade card h-full flex flex-col items-center justify-center py-32 text-center bg-gray-50 dark:bg-slate-900/50 border-dashed border-2">
               <div className="w-20 h-20 bg-white dark:bg-slate-800 rounded-3xl shadow-sm flex items-center justify-center text-4xl mb-6">🔬</div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white">{t('fertilizer.select_for_report', 'Select an image for detailed report')}</h3>
               <p className="text-sm text-gray-400 dark:text-slate-500 mt-2 max-w-sm mx-auto">{t('fertilizer.upload_instruction', 'Upload an image on the left or use History to see previous analyses.')}</p>

@@ -75,30 +75,35 @@ router.post('/analyze', upload.single('image'), async (req, res) => {
         const isHi = language?.startsWith('hi');
         const langName = isHi ? 'Hindi (in Devanagari script)' : 'English';
         const prompt = `You are an expert agricultural scientist and plant pathologist. 
-Analyze this image which could be a plant, crop, or seeds.
-Identify:
-1. Seed variety and quality (if seeds are shown)
-2. Nutrient deficiencies or diseases (if a plant is shown)
-3. Soil report details (if a document is shown)
+Analyze this image which could be a plant, crop, seeds, or a soil report document.
+Provide a highly detailed, professional agricultural analysis.
 
 Return ONLY valid JSON in this format (JSON KEYS MUST REMAIN IN ENGLISH):
 {
+  "cropType": "Identified crop or plant type",
   "primaryIssue": {
-    "deficiency": "Name of Seed/Disease/Deficiency",
-    "severity": "High|Moderate|Low Quality/Severity",
-    "symptoms": "Description of what is seen",
-    "treatment": "Actionable steps",
-    "prevention": "Tips for future",
-    "confidence": 0-100
+    "deficiency": "Specific Name of Disease / Nutrient Deficiency / Seed Quality",
+    "severity": "High|Moderate|Low",
+    "symptoms": "Detailed scientific description of visual symptoms",
+    "treatment": "Immediate actionable chemical or organic treatment steps",
+    "prevention": "Long-term cultural and preventative strategies",
+    "confidence": 85
   },
-  "additionalIssues": [],
+  "npkEstimates": {
+    "N": "Low|Medium|High",
+    "P": "Low|Medium|High",
+    "K": "Low|Medium|High"
+  },
+  "recommendedFertilizers": [
+    { "name": "Fertilizer Name", "dosage": "Recommended dosage/acre", "timing": "When to apply" }
+  ],
   "overallHealth": "Good|Fair|Poor",
-  "urgency": "Immediate|Monitor",
-  "generalRecommendations": ["tip1", "tip2"]
+  "urgency": "Immediate|Monitor|Routine",
+  "generalRecommendations": ["Detailed scientific tip 1", "Detailed tip 2"]
 }
 
 CRITICAL REQUIREMENT: 
-You MUST provide all string VALUES for all descriptive fields (deficiency, symptoms, treatment, prevention, generalRecommendations, severity, overallHealth, urgency) STRICTLY AND ONLY in ${langName}. 
+You MUST provide all string VALUES for all descriptive fields (cropType, deficiency, symptoms, treatment, prevention, generalRecommendations, name, dosage, timing) STRICTLY AND ONLY in ${langName}. 
 Do NOT mix languages. Do NOT use English words in the values if Hindi is requested. Translate everything fully into ${langName}.`;
 
         try {
@@ -152,20 +157,37 @@ Do NOT mix languages. Do NOT use English words in the values if Hindi is request
 const getMockAnalysis = (lang = 'en') => {
   const isHi = lang?.startsWith('hi');
   return {
+    cropType: isHi ? 'गेहूँ (Wheat)' : 'Wheat',
     primaryIssue: {
-      deficiency: isHi ? 'नाइट्रोजन (N) की कमी' : 'Nitrogen (N) Deficiency',
-      severity: isHi ? 'Moderate' : 'Moderate', // Keep keys as is for SEVERITY_COLOR mapping, translate in UI
-      symptoms: isHi ? 'पुरानी पत्तियों का पीला पड़ना' : 'Yellowing of older leaves',
-      treatment: isHi ? 'यूरिया (Urea) का प्रयोग करें' : 'Apply Urea',
-      prevention: isHi ? 'मिट्टी का परीक्षण (Soil testing) करवाएं' : 'Soil testing',
-      confidence: 78,
+      deficiency: isHi ? 'नाइट्रोजन (N) की गंभीर कमी' : 'Severe Nitrogen (N) Deficiency',
+      severity: 'High',
+      symptoms: isHi ? 'निचली और पुरानी पत्तियों का व्यापक रूप से पीला पड़ना, पौधों का विकास रुक जाना।' : 'Widespread yellowing of lower/older leaves, stunted plant growth.',
+      treatment: isHi ? 'प्रति एकड़ 40-50 किलो यूरिया का तत्काल छिड़काव करें। 2% यूरिया के घोल का पर्णीय छिड़काव भी किया जा सकता है।' : 'Immediate broadcast of 40-50 kg Urea per acre. Foliar spray of 2% Urea solution can also be applied.',
+      prevention: isHi ? 'बुवाई से पहले मिट्टी परीक्षण करवाएं। हरी खाद (ढैंचा/मूंग) का उपयोग करें।' : 'Conduct soil testing before sowing. Use green manure (Dhaincha/Moong) to improve soil health.',
+      confidence: 92,
     },
-    additionalIssues: [],
-    overallHealth: isHi ? 'Fair' : 'Fair', // Key for translation
-    urgency: isHi ? 'Within 7 days' : 'Within 7 days', // Key for translation
+    npkEstimates: {
+      N: 'Low',
+      P: 'Medium',
+      K: 'Medium'
+    },
+    recommendedFertilizers: [
+      {
+        name: isHi ? 'यूरिया (46% N)' : 'Urea (46% N)',
+        dosage: isHi ? '45 किग्रा/एकड़' : '45 kg/acre',
+        timing: isHi ? 'सिंचाई के बाद (शीर्ष ड्रेसिंग)' : 'After irrigation (Top dressing)'
+      },
+      {
+        name: isHi ? 'जिंक सल्फेट' : 'Zinc Sulphate',
+        dosage: isHi ? '10 किग्रा/एकड़' : '10 kg/acre',
+        timing: isHi ? 'बुवाई के समय' : 'At sowing time'
+      }
+    ],
+    overallHealth: 'Poor',
+    urgency: 'Immediate',
     generalRecommendations: isHi 
-      ? ['विकास की निगरानी करें', 'पानी की जाँच करें'] 
-      : ['Monitor growth', 'Check water'],
+      ? ['खेत में उचित नमी बनाए रखें।', 'फसल चक्र अपनाएं, अगली बार फलीदार फसल बोएं।', 'खरपतवार नियंत्रण समय पर करें।'] 
+      : ['Maintain proper moisture in the field.', 'Adopt crop rotation, sow leguminous crops next season.', 'Control weeds timely to reduce nutrient competition.'],
     isMock: true
   };
 };
