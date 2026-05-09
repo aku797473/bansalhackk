@@ -10,14 +10,25 @@ const SEASONS    = ['Kharif', 'Rabi', 'Zaid'];
 const STATES     = ['Punjab','Haryana','Uttar Pradesh','Bihar','Madhya Pradesh','Maharashtra','Gujarat','Rajasthan','Karnataka','Andhra Pradesh','Telangana','West Bengal','Odisha','Assam','Tamil Nadu'];
 const LEVELS     = ['Low', 'Medium', 'High'];
 
+const DISTRICTS_DATA = {
+  'Punjab': ['Amritsar', 'Barnala', 'Bathinda', 'Faridkot', 'Fatehgarh Sahib', 'Fazilka', 'Ferozepur', 'Gurdaspur', 'Hoshiarpur', 'Jalandhar', 'Kapurthala', 'Ludhiana', 'Mansa', 'Moga', 'Muktsar', 'Pathankot', 'Patiala', 'Rupnagar', 'Sahibzada Ajit Singh Nagar', 'Sangrur', 'Shahid Bhagat Singh Nagar', 'Tarn Taran'],
+  'Haryana': ['Ambala', 'Bhiwani', 'Charkhi Dadri', 'Faridabad', 'Fatehabad', 'Gurugram', 'Hisar', 'Jhajjar', 'Jind', 'Kaithal', 'Karnal', 'Kurukshetra', 'Mahendragarh', 'Nuh', 'Palwal', 'Panchkula', 'Panipat', 'Rewari', 'Rohtak', 'Sirsa', 'Sonipat', 'Yamunanagar'],
+  'Uttar Pradesh': ['Agra', 'Aligarh', 'Prayagraj', 'Ambedkar Nagar', 'Amethi', 'Amroha', 'Auraiya', 'Ayodhya', 'Azamgarh', 'Baghpat', 'Bahraich', 'Ballia', 'Balrampur', 'Banda', 'Barabanki', 'Bareilly', 'Basti', 'Bhadohi', 'Bijnor', 'Budaun', 'Bulandshahr', 'Chandauli', 'Chitrakoot', 'Deoria', 'Etah', 'Etawah', 'Farrukhabad', 'Fatehpur', 'Firozabad', 'Gautam Buddh Nagar', 'Ghaziabad', 'Ghazipur', 'Gonda', 'Gorakhpur', 'Hamirpur', 'Hapur', 'Hardoi', 'Hathras', 'Jalaun', 'Jaunpur', 'Jhansi', 'Kannauj', 'Kanpur Dehat', 'Kanpur Nagar', 'Kasganj', 'Kaushambi', 'Kushinagar', 'Lakhimpur Kheri', 'Lalitpur', 'Lucknow', 'Maharajganj', 'Mahoba', 'Mainpuri', 'Mathura', 'Mau', 'Meerut', 'Mirzapur', 'Moradabad', 'Muzaffarnagar', 'Pilibhit', 'Pratapgarh', 'Raebareli', 'Rampur', 'Saharanpur', 'Sambhal', 'Sant Kabir Nagar', 'Shahjahanpur', 'Shamli', 'Shravasti', 'Siddharthnagar', 'Sitapur', 'Sonbhadra', 'Sultanpur', 'Unnao', 'Varanasi'],
+  'Bihar': ['Araria', 'Arwal', 'Aurangabad', 'Banka', 'Begusarai', 'Bhagalpur', 'Bhojpur', 'Buxar', 'Darbhanga', 'East Champaran', 'Gaya', 'Gopalganj', 'Jamui', 'Jehanabad', 'Kaimur', 'Katihar', 'Khagaria', 'Kishanganj', 'Lakhisarai', 'Madhepura', 'Madhubani', 'Munger', 'Muzaffarpur', 'Nalanda', 'Nawada', 'Patna', 'Purnia', 'Rohtas', 'Saharsa', 'Samastipur', 'Saran', 'Sheikhpura', 'Sheohar', 'Sitamarhi', 'Siwan', 'Supaul', 'Vaishali', 'West Champaran'],
+  'Madhya Pradesh': ['Agar Malwa', 'Alirajpur', 'Anuppur', 'Ashoknagar', 'Balaghat', 'Barwani', 'Betul', 'Bhind', 'Bhopal', 'Burhanpur', 'Chhatarpur', 'Chhindwara', 'Damoh', 'Datia', 'Dewas', 'Dhar', 'Dindori', 'Guna', 'Gwalior', 'Harda', 'Hoshangabad', 'Indore', 'Jabalpur', 'Jhabua', 'Katni', 'Khandwa', 'Khargone', 'Mandla', 'Mandsaur', 'Morena', 'Narsinghpur', 'Neemuch', 'Panna', 'Raisen', 'Rajgarh', 'Ratlam', 'Rewa', 'Sagar', 'Satna', 'Sehore', 'Seoni', 'Shahdol', 'Shajapur', 'Sheopur', 'Shivpuri', 'Sidhi', 'Singrauli', 'Tikamgarh', 'Ujjain', 'Umaria', 'Vidisha'],
+  'Maharashtra': ['Ahmednagar', 'Akola', 'Amravati', 'Aurangabad', 'Beed', 'Bhandara', 'Buldhana', 'Chandrapur', 'Dhule', 'Gadchiroli', 'Gondia', 'Hingoli', 'Jalgaon', 'Jalna', 'Kolhapur', 'Latur', 'Mumbai City', 'Mumbai Suburban', 'Nagpur', 'Nanded', 'Nandurbar', 'Nashik', 'Osmanabad', 'Palghar', 'Parbhani', 'Pune', 'Raigad', 'Ratnagiri', 'Sangli', 'Satara', 'Sindhudurg', 'Solapur', 'Thane', 'Wardha', 'Washim', 'Yavatmal'],
+  'Gujarat': ['Ahmedabad', 'Amreli', 'Anand', 'Aravalli', 'Banaskantha', 'Bharuch', 'Bhavnagar', 'Botad', 'Chhota Udaipur', 'Dahod', 'Dang', 'Devbhoomi Dwarka', 'Gandhinagar', 'Gir Somnath', 'Jamnagar', 'Junagadh', 'Kheda', 'Kutch', 'Mahisagar', 'Mehsana', 'Morbi', 'Narmada', 'Navsari', 'Panchmahal', 'Patan', 'Porbandar', 'Rajkot', 'Sabarkantha', 'Surat', 'Surendranagar', 'Tapi', 'Vadodara', 'Valsad'],
+  'Rajasthan': ['Ajmer', 'Alwar', 'Banswara', 'Baran', 'Barmer', 'Bharatpur', 'Bhilwara', 'Bikaner', 'Bundi', 'Chittorgarh', 'Churu', 'Dausa', 'Dholpur', 'Dungarpur', 'Hanumangarh', 'Jaipur', 'Jaisalmer', 'Jalore', 'Jhalawar', 'Jhunjhunu', 'Jodhpur', 'Karauli', 'Kota', 'Nagaur', 'Pali', 'Pratapgarh', 'Rajsamand', 'Sawai Madhopur', 'Sikar', 'Sirohi', 'Sri Ganganagar', 'Tonk', 'Udaipur'],
+};
+
 export default function CropAdvisor() {
   const { t, i18n } = useTranslation();
   const isHi = i18n.language === 'hi';
 
   const translateOption = (opt, ns = 'crop') => {
-    // Attempt to find in specific namespaces
     const keys = [
       `${ns}.states.${opt}`,
+      `${ns}.districts.${opt}`,
       `${ns}.items.${opt}`,
       `${ns}.soil_types.${opt}`,
       `${ns}.seasons.${opt}`,
@@ -36,7 +47,7 @@ export default function CropAdvisor() {
 
   const [form, setForm] = useState({
     soilType: 'loamy', soilPH: 6.5, nitrogen: 'Medium', phosphorus: 'Medium', potassium: 'Medium',
-    temperature: 28, humidity: 65, rainfall: 800, season: 'Kharif', state: 'Punjab', district: '',
+    temperature: 28, humidity: 65, rainfall: 800, season: 'Kharif', state: 'Punjab', district: 'Amritsar',
   });
   const [result, setResult]   = useState(null);
   const [loading, setLoading] = useState(false);
@@ -67,7 +78,14 @@ export default function CropAdvisor() {
     else localStorage.removeItem('sk_crop_calendar');
   }, [calendar]);
 
-  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+  const set = (k, v) => {
+    if (k === 'state') {
+      const firstDistrict = DISTRICTS_DATA[v]?.[0] || '';
+      setForm(f => ({ ...f, [k]: v, district: firstDistrict }));
+    } else {
+      setForm(f => ({ ...f, [k]: v }));
+    }
+  };
 
   const clear = () => {
     if (window.confirm('Clear all data?')) {
@@ -100,19 +118,26 @@ export default function CropAdvisor() {
   const Select = ({ label, value, onChange, options }) => (
     <div>
       <label className="label">{label}</label>
-      <select className="input dark:bg-slate-900 border-2" value={value} onChange={e => onChange(e.target.value)}>
-        {options.map(o => <option key={o} value={o}>{translateOption(o)}</option>)}
-      </select>
+      <div className="relative group">
+        <select className="input dark:bg-slate-900 border-2 appearance-none cursor-pointer hover:border-emerald-500 transition-colors" value={value} onChange={e => onChange(e.target.value)}>
+          {options.map(o => <option key={o} value={o}>{translateOption(o)}</option>)}
+        </select>
+        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 group-hover:text-emerald-500 transition-colors">
+          <Droplets size={14} className="rotate-180" />
+        </div>
+      </div>
     </div>
   );
 
   const NumberInput = ({ label, value, onChange, min, max, unit }) => (
     <div>
       <label className="label">{label} {unit && <span className="text-gray-400 font-medium">({unit})</span>}</label>
-      <input type="number" className="input dark:bg-slate-900 border-2" value={value} min={min} max={max}
+      <input type="number" className="input dark:bg-slate-900 border-2 hover:border-emerald-500 transition-colors" value={value} min={min} max={max}
         onChange={e => onChange(Number(e.target.value))} />
     </div>
   );
+
+  const districts = DISTRICTS_DATA[form.state] || [];
 
   return (
     <div className="page-wrapper max-w-7xl mx-auto px-4 sm:px-6">
@@ -154,11 +179,12 @@ export default function CropAdvisor() {
               <Select label={t('crop.soil_type')} value={form.soilType} onChange={v => set('soilType', v)} options={SOIL_TYPES} />
               <Select label={t('crop.season')}    value={form.season}   onChange={v => set('season', v)}   options={SEASONS} />
             </div>
-            <Select label={t('crop.state')} value={form.state} onChange={v => set('state', v)} options={STATES} />
-            <div>
-              <label className="label">{t('crop.district_label')}</label>
-              <input className="input dark:bg-slate-900 border-2" placeholder={t('crop.district_placeholder')} value={form.district} onChange={e => set('district', e.target.value)} />
+            
+            <div className="grid grid-cols-2 gap-4">
+              <Select label={t('crop.state')} value={form.state} onChange={v => set('state', v)} options={STATES} />
+              <Select label={t('crop.district_label')} value={form.district} onChange={v => set('district', v)} options={districts} />
             </div>
+
             <div className="grid grid-cols-2 gap-4">
               <NumberInput label={t('crop.temperature')} value={form.temperature} onChange={v => set('temperature', v)} min={5} max={50} unit="°C" />
               <NumberInput label={t('weather.humidity')} value={form.humidity} onChange={v => set('humidity', v)} min={0} max={100} unit="%" />

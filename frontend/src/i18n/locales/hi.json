@@ -251,6 +251,23 @@
       "Assam": "असम",
       "Tamil Nadu": "तमिलनाडु"
     },
+    "districts": {
+      "Amritsar": "अमृतसर", "Barnala": "बरनाला", "Bathinda": "बठिंडा", "Faridkot": "फरीदकोट", "Fatehgarh Sahib": "फतेहगढ़ साहिब",
+      "Fazilka": "फाजिल्का", "Ferozepur": "फ़िरोज़पुर", "Gurdaspur": "गुरदासपुर", "Hoshiarpur": "होशियारपुर", "Jalandhar": "जालंधर",
+      "Kapurthala": "कपूरथला", "Ludhiana": "लुधियाना", "Mansa": "मानसा", "Moga": "मोगा", "Muktsar": "मुक्तसर", "Pathankot": "पठानकोट",
+      "Patiala": "पटियाला", "Rupnagar": "रूपनगर", "Sangrur": "संगरूर", "Tarn Taran": "तरनतारन",
+      "Ambala": "अंबाला", "Bhiwani": "भिवानी", "Faridabad": "फरीदाबाद", "Fatehabad": "फतेहाबाद", "Gurugram": "गुरुग्राम",
+      "Hisar": "हिसार", "Jhajjar": "झज्जर", "Jind": "जींद", "Kaithal": "कैथल", "Karnal": "करनाल", "Kurukshetra": "कुरुक्षेत्र",
+      "Rohtak": "रोहतक", "Sirsa": "सिरसा", "Sonipat": "सोनीपत", "Yamunanagar": "यमुनानगर",
+      "Agra": "आगरा", "Aligarh": "अलीगढ़", "Prayagraj": "प्रयागराज", "Ayodhya": "अयोध्या", "Azamgarh": "आजमगढ़",
+      "Bareilly": "बरेली", "Ghaziabad": "गाजियाबाद", "Gorakhpur": "गोरखपुर", "Jhansi": "झांसी", "Kanpur Nagar": "कानपुर नगर",
+      "Lucknow": "लखनऊ", "Mathura": "मथुरा", "Meerut": "मेरठ", "Moradabad": "मुरादाबाद", "Saharanpur": "सहारनपुर", "Varanasi": "वाराणसी",
+      "Patna": "पटना", "Gaya": "गया", "Muzaffarpur": "मुजफ्फरपुर", "Bhagalpur": "भागलपुर", "Purnia": "पूर्णिया",
+      "Bhopal": "भोपाल", "Indore": "इंदौर", "Gwalior": "ग्वालियर", "Jabalpur": "जबलपुर", "Ujjain": "उज्जैन",
+      "Pune": "पुणे", "Nagpur": "नागपुर", "Nashik": "नाशिक", "Aurangabad": "औरंगाबाद", "Ahmednagar": "अहमदनगर",
+      "Ahmedabad": "अहमदाबाद", "Surat": "सूरत", "Vadodara": "वडोदरा", "Rajkot": "राजकोट", "Bhavnagar": "भावनगर",
+      "Jaipur": "जयपुर", "Jodhpur": "जोधपुर", "Udaipur": "उदयपुर", "Bikaner": "बीकानेर", "Kota": "कोटा"
+    },
     "items": {
       "Onion": "प्याज",
       "Tomato": "टमाटर",

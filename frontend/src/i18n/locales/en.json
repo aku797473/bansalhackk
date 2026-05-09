@@ -251,6 +251,23 @@
       "Assam": "Assam",
       "Tamil Nadu": "Tamil Nadu"
     },
+    "districts": {
+      "Amritsar": "Amritsar", "Barnala": "Barnala", "Bathinda": "Bathinda", "Faridkot": "Faridkot", "Fatehgarh Sahib": "Fatehgarh Sahib",
+      "Fazilka": "Fazilka", "Ferozepur": "Ferozepur", "Gurdaspur": "Gurdaspur", "Hoshiarpur": "Hoshiarpur", "Jalandhar": "Jalandhar",
+      "Kapurthala": "Kapurthala", "Ludhiana": "Ludhiana", "Mansa": "Mansa", "Moga": "Moga", "Muktsar": "Muktsar", "Pathankot": "Pathankot",
+      "Patiala": "Patiala", "Rupnagar": "Rupnagar", "Sangrur": "Sangrur", "Tarn Taran": "Tarn Taran",
+      "Ambala": "Ambala", "Bhiwani": "Bhiwani", "Faridabad": "Faridabad", "Fatehabad": "Fatehabad", "Gurugram": "Gurugram",
+      "Hisar": "Hisar", "Jhajjar": "Jhajjar", "Jind": "Jind", "Kaithal": "Kaithal", "Karnal": "Karnal", "Kurukshetra": "Kurukshetra",
+      "Rohtak": "Rohtak", "Sirsa": "Sirsa", "Sonipat": "Sonipat", "Yamunanagar": "Yamunanagar",
+      "Agra": "Agra", "Aligarh": "Aligarh", "Prayagraj": "Prayagraj", "Ayodhya": "Ayodhya", "Azamgarh": "Azamgarh",
+      "Bareilly": "Bareilly", "Ghaziabad": "Ghaziabad", "Gorakhpur": "Gorakhpur", "Jhansi": "Jhansi", "Kanpur Nagar": "Kanpur Nagar",
+      "Lucknow": "Lucknow", "Mathura": "Mathura", "Meerut": "Meerut", "Moradabad": "Moradabad", "Saharanpur": "Saharanpur", "Varanasi": "Varanasi",
+      "Patna": "Patna", "Gaya": "Gaya", "Muzaffarpur": "Muzaffarpur", "Bhagalpur": "Bhagalpur", "Purnia": "Purnia",
+      "Bhopal": "Bhopal", "Indore": "Indore", "Gwalior": "Gwalior", "Jabalpur": "Jabalpur", "Ujjain": "Ujjain",
+      "Pune": "Pune", "Nagpur": "Nagpur", "Nashik": "Nashik", "Aurangabad": "Aurangabad", "Ahmednagar": "Ahmednagar",
+      "Ahmedabad": "Ahmedabad", "Surat": "Surat", "Vadodara": "Vadodara", "Rajkot": "Rajkot", "Bhavnagar": "Bhavnagar",
+      "Jaipur": "Jaipur", "Jodhpur": "Jodhpur", "Udaipur": "Udaipur", "Bikaner": "Bikaner", "Kota": "Kota"
+    },
     "items": {
       "Wheat": "Wheat",
       "Rice": "Rice",
