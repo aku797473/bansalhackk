@@ -100,7 +100,7 @@
   }
   
   .page-wrapper {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 animate-fade-in;
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 animate-fade-in overflow-x-hidden;
   }
 
   .page-title {
