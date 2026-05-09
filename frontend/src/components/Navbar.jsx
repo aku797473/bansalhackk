@@ -75,7 +75,7 @@ export default function Navbar() {
             </div>
             <div className="flex flex-col">
               <span className="font-bold text-gray-900 dark:text-white text-sm sm:text-base leading-none">Smart Kisan</span>
-              <span className="text-[9px] text-primary dark:text-emerald-400 font-bold uppercase tracking-wider hidden md:block">Farm Smarter</span>
+              <span className="text-[9px] text-primary dark:text-emerald-400 font-bold uppercase tracking-wider hidden md:block">{t('nav.slogan')}</span>
             </div>
           </NavLink>
 
@@ -187,7 +187,7 @@ export default function Navbar() {
                <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
                   <img src={logo} className="w-5 h-5 invert brightness-0" alt="logo" />
                </div>
-               <span className="font-bold text-gray-900 dark:text-white text-lg">Menu</span>
+               <span className="font-bold text-gray-900 dark:text-white text-lg">{t('nav.menu')}</span>
             </div>
             <button onClick={() => setOpen(false)} className="p-2 bg-gray-100 dark:bg-slate-800 rounded-xl text-gray-900 dark:text-white">
               <X size={20} />
@@ -219,7 +219,7 @@ export default function Navbar() {
           <div className="pt-6 mt-6 border-t border-gray-100 dark:border-slate-800 space-y-3">
             <button onClick={toggleTheme} className="flex items-center gap-3 w-full p-4 rounded-2xl bg-gray-50 dark:bg-slate-900 text-gray-700 dark:text-slate-300 font-bold text-sm">
               {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-              {theme === 'dark' ? 'Light Appearance' : 'Dark Appearance'}
+              {theme === 'dark' ? t('nav.light') : t('nav.dark')}
             </button>
             <button onClick={async () => { await logout(); navigate('/'); }} className="flex items-center gap-3 w-full p-4 rounded-2xl bg-red-50 dark:bg-red-950/10 text-red-500 font-bold text-sm shadow-sm active:scale-95 transition-transform">
               <LogOut size={20} />

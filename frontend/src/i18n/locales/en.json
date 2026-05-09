@@ -1,9 +1,20 @@
 {
   "nav": {
-    "home": "Home", "weather": "Weather", "crop": "Crop Advisor",
-    "fertilizer": "Fertilizer", "market": "Market Prices",
-    "labour": "Labour", "map": "Map", "profile": "Profile", "logout": "Logout",
-    "news": "News", "schemes": "Schemes"
+    "home": "Home",
+    "weather": "Weather",
+    "crop": "Crop Advisor",
+    "market": "Market",
+    "fertilizer": "Fertilizer",
+    "labour": "Labour",
+    "map": "Live Map",
+    "news": "News",
+    "schemes": "Schemes",
+    "profile": "Profile",
+    "logout": "Logout",
+    "menu": "Menu",
+    "light": "Light Mode",
+    "dark": "Dark Mode",
+    "slogan": "Farm Smarter"
   },
   "landing": {
     "hero_title": "The Future of Smart Farming",
@@ -515,6 +526,103 @@
       "January": "January", "February": "February", "March": "March", "April": "April",
       "May": "May", "June": "June", "July": "July", "August": "August",
       "September": "September", "October": "October", "November": "November", "December": "December"
+    }
+  },
+  "landing": {
+    "login": "Login",
+    "get_started": "Get Started",
+    "watch_demo": "Watch Demo",
+    "hero_badge": "Next-Gen Agricultural Intelligence",
+    "title": "The Future of Smart Farming",
+    "subtitle": "Experience the world's most advanced AI platform for farmers. Real-time satellite data, predictive crop analytics, and live market intelligence—all in one unified ecosystem.",
+    "nav": {
+      "ecosystem": "Ecosystem",
+      "technology": "Technology",
+      "network": "Network"
+    },
+    "partners": "OFFICIAL PARTNERS:",
+    "mandi_card": "Live Mandi",
+    "weather_card": "Precipitation",
+    "expected": "Expected",
+    "eco_badge": "The Platform Ecosystem",
+    "eco_title": "BUILT FOR HIGH PERFORMANCE",
+    "eco_desc": "A professional suite of data-driven tools designed to eliminate guesswork and maximize farm profitability.",
+    "modules": {
+      "weather": {
+        "label": "Weather Intelligence",
+        "desc": "High-precision satellite forecasts with hyper-local alert systems."
+      },
+      "crop": {
+        "label": "AI Crop Advisor",
+        "desc": "Deep-learning models for soil health and yield optimization."
+      },
+      "market": {
+        "label": "Mandi Precision",
+        "desc": "Real-time price analytics from 500+ global and local markets."
+      }
+    },
+    "init_module": "Initialize Module",
+    "infra_badge": "Verified Infrastructure",
+    "infra_title": "OFFICIAL DATA STREAMING",
+    "infra": {
+      "sat": {
+        "title": "Satellite Precision",
+        "desc": "Direct uplink with Indian Meteorological Department sensors."
+      },
+      "market": {
+        "title": "Real-Time Markets",
+        "desc": "Live API integration with Agmarknet government nodes."
+      },
+      "ai": {
+        "title": "AI Diagnostics",
+        "desc": "Custom-trained neural networks for regional crop types."
+      }
+    },
+    "final_title": "READY TO UPGRADE?",
+    "final_desc": "Join 1,000,000+ farmers in the digital revolution. Start your data-driven journey today.",
+    "init_portal": "Initialize Portal",
+    "footer_text": "© 2025 Smart Kisan AI — Powered by Government Open Data Nodes. Crafted in Bharat for the Future of Humanity."
+  },
+  "dashboard": {
+    "greeting_morning": "Good Morning",
+    "greeting_afternoon": "Good Afternoon",
+    "greeting_evening": "Good Evening",
+    "greeting_night": "Welcome back",
+    "loading": "Loading...",
+    "live_imd": "Live IMD Feed",
+    "crop_system": "AI Soil Health & Crop Prediction System",
+    "ai_ready": "AI Engine Ready",
+    "mandi_desc": "Wheat • Satna Mandi",
+    "map_desc": "Field Survey & GPS Mapping",
+    "command_center": "Command Center v2.4",
+    "live_sync": "Live Sync",
+    "recent_alerts": "Priority Intelligence Alerts",
+    "alerts": {
+      "locust": "Locust Alert in Northern Region - High Risk",
+      "pms": "PM-Kisan 16th Installment Credited",
+      "wheat": "New Wheat Variety (HD 3226) Released"
+    },
+    "kisan_mitra": "Kisan Mitra AI",
+    "expert_advisory": "Instant Expert Advisory 24/7",
+    "active_schemes": "Active Schemes",
+    "available_for_you": "Available for you",
+    "farming_intel": "Today's Farming Intelligence",
+    "sync_status": "Global Sync Status",
+    "view_logs": "View Full System Logs",
+    "nodes": {
+      "sat": "Satellite Uplink",
+      "market": "Market API Nodes",
+      "ai": "AI Core Engine"
+    },
+    "tips": {
+      "soil": {
+        "title": "Soil Restoration",
+        "desc": "Add 50kg/acre Gypsum to neutralize alkalinity after recent rainfall."
+      },
+      "market": {
+        "title": "Market Strategy",
+        "desc": "Wheat prices expected to rise by 5% in next 10 days. Hold stock if possible."
+      }
     }
   }
 }

@@ -66,7 +66,7 @@ export default function Dashboard() {
              <div>
                <div className="text-4xl sm:text-5xl mb-2">{getWeatherEmoji(weather?.icon)}</div>
                <div className="text-3xl sm:text-4xl font-black">{Math.round(weather?.temperature || 0)}°C</div>
-               <div className="text-xs font-bold uppercase tracking-widest opacity-80">{weather?.description || 'Loading...'}</div>
+               <div className="text-xs font-bold uppercase tracking-widest opacity-80">{weather?.description || t('dashboard.loading')}</div>
              </div>
              <div className="text-right">
                 <div className="text-[10px] font-black uppercase tracking-[0.2em] opacity-60 mb-1">{weather?.city || 'Satna'}</div>
@@ -77,7 +77,7 @@ export default function Dashboard() {
              </div>
           </div>
           <div className="mt-4 pt-4 border-t border-white/10 flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
-             <span className="text-emerald-100">Live IMD Feed</span>
+             <span className="text-emerald-100">{t('dashboard.live_imd')}</span>
              <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
           </div>
         </div>
@@ -96,10 +96,10 @@ export default function Dashboard() {
               <Leaf size={24} className="text-emerald-500" />
               <div className="text-sm font-black text-gray-900 dark:text-white uppercase tracking-tight">{t('nav.crop')}</div>
            </div>
-           <p className="text-[10px] text-gray-500 dark:text-slate-400 font-bold leading-tight">AI Soil Health & Crop Prediction System</p>
+           <p className="text-[10px] text-gray-500 dark:text-slate-400 font-bold leading-tight">{t('dashboard.crop_system')}</p>
            <div className="mt-auto flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[8px] font-black uppercase text-emerald-600 dark:text-emerald-400 tracking-widest">AI Engine Ready</span>
+              <span className="text-[8px] font-black uppercase text-emerald-600 dark:text-emerald-400 tracking-widest">{t('dashboard.ai_ready')}</span>
            </div>
         </div>
       )
@@ -125,7 +125,7 @@ export default function Dashboard() {
              </div>
              <div className="mt-auto">
                 <div className="text-2xl font-black text-gray-900 dark:text-white tracking-tighter">₹{latest?.price?.toLocaleString() || '---'}</div>
-                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Wheat • Satna Mandi</p>
+                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">{t('dashboard.mandi_desc')}</p>
              </div>
           </div>
         );
@@ -165,16 +165,16 @@ export default function Dashboard() {
               <Map size={24} className="text-teal-500" />
               <div className="text-sm font-black text-gray-900 dark:text-white uppercase tracking-tight">{t('nav.map')}</div>
            </div>
-           <p className="text-[10px] text-gray-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-auto">Field Survey & GPS Mapping</p>
+           <p className="text-[10px] text-gray-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-auto">{t('dashboard.map_desc')}</p>
         </div>
       )
     },
   ];
 
   const alerts = [
-    { type: 'warning', text: 'Locust Alert in Northern Region - High Risk', icon: '🦗' },
-    { type: 'success', text: 'PM-Kisan 16th Installment Credited', icon: '💰' },
-    { type: 'info', text: 'New Wheat Variety (HD 3226) Released', icon: '🌾' }
+    { type: 'warning', text: t('dashboard.alerts.locust'), icon: '🦗' },
+    { type: 'success', text: t('dashboard.alerts.pms'), icon: '💰' },
+    { type: 'info', text: t('dashboard.alerts.wheat'), icon: '🌾' }
   ];
 
   return (
@@ -187,12 +187,12 @@ export default function Dashboard() {
       {/* ── Header Command Bar ──────────────────────────── */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-12">
         <div>
-           <div className="flex items-center gap-3 mb-3">
+           <div className="flex flex-wrap items-center gap-3 mb-3">
               <span className="px-3 py-1 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-[9px] font-black uppercase tracking-widest rounded-full shadow-lg shadow-emerald-500/20">
-                 Command Center v2.1
+                 {t('dashboard.command_center')}
               </span>
               <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest flex items-center gap-1.5 bg-white dark:bg-slate-900 px-3 py-1 rounded-full border border-gray-100 dark:border-slate-800 shadow-sm">
-                 <RefreshCw size={10} className="text-emerald-500 animate-spin-slow" /> Live Sync
+                 <RefreshCw size={10} className="text-emerald-500 animate-spin-slow" /> {t('dashboard.live_sync')}
               </span>
            </div>
            <h1 className="text-4xl sm:text-5xl font-black tracking-tighter text-gray-900 dark:text-white flex items-center gap-3 leading-none">
@@ -255,9 +255,9 @@ export default function Dashboard() {
                <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center">
                   <Zap size={20} />
                </div>
-               <div className="text-[10px] font-black uppercase tracking-[0.2em]">Kisan Mitra AI</div>
+               <div className="text-[10px] font-black uppercase tracking-[0.2em]">{t('dashboard.kisan_mitra')}</div>
             </div>
-            <h3 className="text-lg font-black tracking-tight leading-tight">Instant Expert Advisory 24/7</h3>
+            <h3 className="text-lg font-black tracking-tight leading-tight">{t('dashboard.expert_advisory')}</h3>
          </div>
 
          {/* Secondary Stats Card */}
@@ -277,12 +277,12 @@ export default function Dashboard() {
       <div className="mt-12 grid lg:grid-cols-3 gap-8">
          <div className="lg:col-span-2">
             <h2 className="text-lg font-black text-gray-900 dark:text-white uppercase tracking-widest mb-6 flex items-center gap-3">
-               <ShieldCheck className="text-emerald-500" size={20} /> Today's Farming Intelligence
+               <ShieldCheck className="text-emerald-500" size={20} /> {t('dashboard.farming_intel')}
             </h2>
             <div className="grid sm:grid-cols-2 gap-4">
                {[
-                 { title: 'Soil Restoration', desc: 'Add 50kg/acre Gypsum to neutralize alkalinity after recent rainfall.', icon: '🧪', color: 'border-indigo-100 dark:border-indigo-900/30' },
-                 { title: 'Market Strategy', desc: 'Wheat prices expected to rise by 5% in next 10 days. Hold stock if possible.', icon: '📉', color: 'border-emerald-100 dark:border-emerald-900/30' }
+                 { title: t('dashboard.tips.soil.title'), desc: t('dashboard.tips.soil.desc'), icon: '🧪', color: 'border-indigo-100 dark:border-indigo-900/30' },
+                 { title: t('dashboard.tips.market.title'), desc: t('dashboard.tips.market.desc'), icon: '📉', color: 'border-emerald-100 dark:border-emerald-900/30' }
                ].map((tip, i) => (
                  <div key={i} className={clsx("p-6 rounded-3xl border bg-white dark:bg-slate-900/50 shadow-sm hover:shadow-md transition-all", tip.color)}>
                     <div className="flex items-start gap-4">
@@ -298,12 +298,12 @@ export default function Dashboard() {
          </div>
 
          <div className="bg-gray-50 dark:bg-slate-900/80 rounded-[2.5rem] p-8 border border-gray-100 dark:border-slate-800">
-            <h3 className="text-xs font-black text-gray-400 uppercase tracking-[0.3em] mb-6">Global Sync Status</h3>
+            <h3 className="text-xs font-black text-gray-400 uppercase tracking-[0.3em] mb-6">{t('dashboard.sync_status')}</h3>
             <div className="space-y-6">
                {[
-                 { label: 'Satellite Uplink', status: 'Optimal', color: 'bg-green-500' },
-                 { label: 'Market API Nodes', status: 'Stable', color: 'bg-green-500' },
-                 { label: 'AI Core Engine', status: 'Active', color: 'bg-emerald-500' }
+                 { label: t('dashboard.nodes.sat'), status: 'Optimal', color: 'bg-green-500' },
+                 { label: t('dashboard.nodes.market'), status: 'Stable', color: 'bg-green-500' },
+                 { label: t('dashboard.nodes.ai'), status: 'Active', color: 'bg-emerald-500' }
                ].map(node => (
                  <div key={node.label} className="flex items-center justify-between">
                     <span className="text-[10px] font-black uppercase tracking-widest text-gray-500">{node.label}</span>
@@ -315,7 +315,7 @@ export default function Dashboard() {
                ))}
             </div>
             <button onClick={() => navigate('/news')} className="w-full mt-10 py-3 bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl text-[9px] font-black uppercase tracking-widest shadow-sm hover:bg-gray-50 transition-all">
-               View Full System Logs
+               {t('dashboard.view_logs')}
             </button>
          </div>
       </div>
