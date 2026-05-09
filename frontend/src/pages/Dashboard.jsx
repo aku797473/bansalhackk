@@ -37,56 +37,71 @@ export default function Dashboard() {
   const container = useRef();
 
   useEffect(() => {
+    const el = container.current;
+    if (!el) return;
+
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) {
+      el.querySelectorAll('.dash-header,.bento-card').forEach(n => (n.style.opacity = '1'));
+      return;
+    }
+
+    const isMobile = window.innerWidth < 768;
+    const yOffset  = isMobile ? 30 : 60;
+
     const ctx = gsap.context(() => {
-      // Set initial hidden states immediately
-      gsap.set('.dash-header', { opacity: 0, y: -40 });
-      gsap.set('.bento-card', { opacity: 0, y: 60 });
+      gsap.set('.dash-header', { opacity: 0, y: -30 });
+      gsap.set('.bento-card',  { opacity: 0, y: yOffset, scale: 0.98 });
 
-      // Master timeline
-      const tl = gsap.timeline();
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-      // 1. Header slides down
-      tl.to('.dash-header', {
-        opacity: 1, y: 0, duration: 0.7, ease: 'power3.out'
+      tl.to('.dash-header', { opacity: 1, y: 0, duration: 0.6 })
+        .to('.bento-card', {
+          opacity: 1, y: 0, scale: 1,
+          duration: isMobile ? 0.45 : 0.6,
+          stagger: { amount: isMobile ? 0.35 : 0.55, from: 'start' },
+        }, '-=0.3');
+
+      // Scroll-triggered (per element for reliability)
+      el.querySelectorAll('.tip-card').forEach(tip => {
+        gsap.fromTo(tip,
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out',
+            scrollTrigger: { trigger: tip, start: 'top 90%', once: true } }
+        );
       });
 
-      // 2. Bento cards stagger up
-      tl.to('.bento-card', {
-        opacity: 1, y: 0, duration: 0.65,
-        stagger: { amount: 0.6, from: 'start' },
-        ease: 'power3.out'
-      }, '-=0.3');
+      el.querySelectorAll('.alert-item').forEach((item, i) => {
+        gsap.fromTo(item,
+          { opacity: 0, x: isMobile ? -15 : -30 },
+          { opacity: 1, x: 0, duration: 0.5, delay: i * 0.08, ease: 'power2.out',
+            scrollTrigger: { trigger: item, start: 'top 92%', once: true } }
+        );
+      });
 
-      // Scroll-triggered: tip cards
-      gsap.fromTo('.tip-card',
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1, y: 0, duration: 0.7, stagger: 0.15, ease: 'power2.out',
-          scrollTrigger: { trigger: '.tips-section', start: 'top 85%', once: true }
-        }
-      );
+      el.querySelectorAll('.sync-item').forEach((item, i) => {
+        gsap.fromTo(item,
+          { opacity: 0, x: isMobile ? 15 : 30 },
+          { opacity: 1, x: 0, duration: 0.5, delay: i * 0.1, ease: 'power2.out',
+            scrollTrigger: { trigger: item, start: 'top 92%', once: true } }
+        );
+      });
+    }, el);
 
-      // Scroll-triggered: alert items
-      gsap.fromTo('.alert-item',
-        { opacity: 0, x: -30 },
-        {
-          opacity: 1, x: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out',
-          scrollTrigger: { trigger: '.alerts-section', start: 'top 85%', once: true }
-        }
-      );
+    let resizeTimer;
+    const onResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => ScrollTrigger.refresh(), 200);
+    };
+    window.addEventListener('resize', onResize);
 
-      // Scroll-triggered: sync items
-      gsap.fromTo('.sync-item',
-        { opacity: 0, x: 30 },
-        {
-          opacity: 1, x: 0, duration: 0.6, stagger: 0.12, ease: 'power2.out',
-          scrollTrigger: { trigger: '.sync-section', start: 'top 90%', once: true }
-        }
-      );
-    }, container);
-
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      window.removeEventListener('resize', onResize);
+      clearTimeout(resizeTimer);
+    };
   }, []);
+
 
 
   // Weather Query

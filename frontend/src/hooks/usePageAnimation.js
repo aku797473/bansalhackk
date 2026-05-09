@@ -5,12 +5,13 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 /**
- * usePageAnimation - Drop this into any page component.
- * It will automatically animate:
- *   .anim-header   → slides down from top
- *   .anim-card     → staggers up from bottom
- *   .anim-item     → staggers in from left (scroll-triggered)
- *   .anim-fade     → simple fade in (scroll-triggered)
+ * usePageAnimation — Responsive-safe GSAP page animation hook.
+ *
+ * Animates:
+ *   .anim-header  → slides down from top
+ *   .anim-card    → staggers up (respects reduced-motion)
+ *   .anim-item    → slides in from left (scroll-triggered)
+ *   .anim-fade    → fades + lifts in (scroll-triggered)
  */
 export function usePageAnimation(deps = []) {
   const ref = useRef(null);
@@ -19,50 +20,91 @@ export function usePageAnimation(deps = []) {
     const el = ref.current;
     if (!el) return;
 
-    const ctx = gsap.context(() => {
-      // ── Initial hidden states ──────────────────────────────
-      gsap.set('.anim-header', { opacity: 0, y: -30 });
-      gsap.set('.anim-card', { opacity: 0, y: 50, scale: 0.97 });
-      gsap.set('.anim-item', { opacity: 0, x: -25 });
-      gsap.set('.anim-fade', { opacity: 0, y: 20 });
+    // ── Respect "prefers-reduced-motion" ───────────────────
+    const prefersReduced =
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      // ── Timeline: header → cards ───────────────────────────
+    if (prefersReduced) {
+      // Just make everything visible, no animation
+      el.querySelectorAll('.anim-header,.anim-card,.anim-item,.anim-fade')
+        .forEach((node) => (node.style.opacity = '1'));
+      return;
+    }
+
+    const ctx = gsap.context(() => {
+      // ── Clamp animation distances for mobile ───────────────
+      const isMobile = window.innerWidth < 768;
+      const yOffset  = isMobile ? 30 : 50;
+      const xOffset  = isMobile ? 15 : 25;
+
+      // ── Initial hidden states ──────────────────────────────
+      const headers = el.querySelectorAll('.anim-header');
+      const cards   = el.querySelectorAll('.anim-card');
+      const items   = el.querySelectorAll('.anim-item');
+      const fades   = el.querySelectorAll('.anim-fade');
+
+      if (headers.length) gsap.set(headers, { opacity: 0, y: -30 });
+      if (cards.length)   gsap.set(cards,   { opacity: 0, y: yOffset, scale: 0.98 });
+      if (items.length)   gsap.set(items,   { opacity: 0, x: -xOffset });
+      if (fades.length)   gsap.set(fades,   { opacity: 0, y: 20 });
+
+      // ── Entry timeline ─────────────────────────────────────
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-      tl.to('.anim-header', { opacity: 1, y: 0, duration: 0.65 })
-        .to('.anim-card', {
-          opacity: 1, y: 0, scale: 1,
-          duration: 0.6,
-          stagger: { amount: 0.55, from: 'start' }
-        }, '-=0.35');
-
-      // ── Scroll-triggered: items ────────────────────────────
-      const itemEls = el.querySelectorAll('.anim-item');
-      if (itemEls.length) {
-        gsap.to('.anim-item', {
-          opacity: 1, x: 0, duration: 0.55,
-          stagger: 0.1,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: itemEls[0].closest('section, div') || itemEls[0],
-            start: 'top 85%',
-            once: true
-          }
-        });
+      if (headers.length) {
+        tl.to(headers, { opacity: 1, y: 0, duration: 0.6 });
       }
 
-      // ── Scroll-triggered: fade ─────────────────────────────
-      const fadeEls = el.querySelectorAll('.anim-fade');
-      fadeEls.forEach((fadeEl) => {
-        gsap.to(fadeEl, {
-          opacity: 1, y: 0, duration: 0.6,
+      if (cards.length) {
+        tl.to(cards, {
+          opacity: 1, y: 0, scale: 1,
+          duration: isMobile ? 0.5 : 0.6,
+          stagger: { amount: isMobile ? 0.35 : 0.55, from: 'start' },
+        }, headers.length ? '-=0.3' : '0');
+      }
+
+      // ── Scroll-triggered: items ────────────────────────────
+      items.forEach((item) => {
+        gsap.to(item, {
+          opacity: 1, x: 0, duration: 0.5,
           ease: 'power2.out',
-          scrollTrigger: { trigger: fadeEl, start: 'top 88%', once: true }
+          scrollTrigger: {
+            trigger: item,
+            start: 'top 90%',
+            once: true,
+          },
+        });
+      });
+
+      // ── Scroll-triggered: fades ────────────────────────────
+      fades.forEach((fade) => {
+        gsap.to(fade, {
+          opacity: 1, y: 0, duration: 0.55,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: fade,
+            start: 'top 90%',
+            once: true,
+          },
         });
       });
     }, el);
 
-    return () => ctx.revert();
+    // ── Refresh ScrollTrigger on resize (debounced) ─────────
+    let resizeTimer;
+    const onResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 200);
+    };
+    window.addEventListener('resize', onResize);
+
+    return () => {
+      ctx.revert();
+      window.removeEventListener('resize', onResize);
+      clearTimeout(resizeTimer);
+    };
   }, deps); // eslint-disable-line react-hooks/exhaustive-deps
 
   return ref;
