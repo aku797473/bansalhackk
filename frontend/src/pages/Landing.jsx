@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import clsx from 'clsx';
 import logo from '../assets/logo.png';
-import premiumHero from '../smart_kisan_hero_bg_1778305723903.png';
+import premiumHero from '../assets/premium-hero.png';
 
 const features = [
   {
