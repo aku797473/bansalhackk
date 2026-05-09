@@ -9,6 +9,12 @@ import {
 import clsx from 'clsx';
 import logo from '../assets/logo.png';
 import ultraHero from '../assets/ultra-hero.png';
+import { useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
+
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const modules = (t) => [
   {
@@ -40,13 +46,118 @@ const modules = (t) => [
 export default function Landing() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const container = useRef();
+
+  useGSAP(() => {
+    // Nav Bar Animation
+    gsap.from('.nav-container', {
+      y: -100,
+      opacity: 0,
+      duration: 1,
+      ease: 'power4.out',
+      delay: 0.2
+    });
+
+    // Hero Content Animation
+    const heroTl = gsap.timeline({ delay: 0.5 });
+    heroTl
+      .from('.hero-badge', { y: 20, opacity: 0, duration: 0.6 })
+      .from('.hero-title', { y: 30, opacity: 0, duration: 0.8 }, '-=0.4')
+      .from('.hero-desc', { y: 20, opacity: 0, duration: 0.8 }, '-=0.6')
+      .from('.hero-btns', { y: 20, opacity: 0, duration: 0.8 }, '-=0.6')
+      .from('.hero-image', { scale: 0.95, opacity: 0, duration: 1, ease: 'power2.out' }, '-=0.8');
+
+    // Scroll Triggered Animations
+    gsap.from('.step-card', {
+      scrollTrigger: {
+        trigger: '.steps-section',
+        start: 'top 80%',
+      },
+      y: 50,
+      opacity: 0,
+      duration: 0.8,
+      stagger: 0.2,
+      ease: 'power3.out'
+    });
+
+    gsap.from('.feature-card', {
+      scrollTrigger: {
+        trigger: '.features-section',
+        start: 'top 80%',
+      },
+      y: 50,
+      opacity: 0,
+      duration: 0.8,
+      stagger: 0.2,
+      ease: 'power3.out'
+    });
+
+    gsap.from('.stat-item', {
+      scrollTrigger: {
+        trigger: '.stats-section',
+        start: 'top 85%',
+      },
+      scale: 0.8,
+      opacity: 0,
+      duration: 0.8,
+      stagger: 0.2,
+      ease: 'back.out(1.7)'
+    });
+
+    gsap.from('.testimonial-card', {
+      scrollTrigger: {
+        trigger: '.testimonials-section',
+        start: 'top 80%',
+      },
+      x: (index) => index % 2 === 0 ? -50 : 50,
+      opacity: 0,
+      duration: 1,
+      stagger: 0.3,
+      ease: 'power2.out'
+    });
+
+    gsap.from('.infra-content > *', {
+      scrollTrigger: {
+        trigger: '.infra-section',
+        start: 'top 80%',
+      },
+      y: 30,
+      opacity: 0,
+      duration: 0.8,
+      stagger: 0.2,
+      ease: 'power3.out'
+    });
+
+    gsap.from('.infra-image', {
+      scrollTrigger: {
+        trigger: '.infra-section',
+        start: 'top 70%',
+      },
+      x: 50,
+      opacity: 0,
+      duration: 1,
+      ease: 'power2.out'
+    });
+
+    gsap.from('.final-cta-content', {
+      scrollTrigger: {
+        trigger: '.final-cta-section',
+        start: 'top 80%',
+      },
+      scale: 0.9,
+      opacity: 0,
+      duration: 1,
+      ease: 'power3.out'
+    });
+
+  }, { scope: container });
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 selection:bg-emerald-500/30 selection:text-emerald-600 font-inter overflow-x-hidden transition-colors duration-300">
+    <div ref={container} className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 selection:bg-emerald-500/30 selection:text-emerald-600 font-inter overflow-x-hidden transition-colors duration-300">
       
       {/* ── Navigation ────────────────────────────────────── */}
       <nav className="fixed top-0 inset-x-0 z-[100] px-4 pt-4">
-        <div className="max-w-5xl mx-auto h-16 border border-slate-100 dark:border-white/5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded-2xl px-6 flex items-center justify-between shadow-sm transition-all">
+        <div className="nav-container max-w-5xl mx-auto h-16 border border-slate-100 dark:border-white/5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded-2xl px-6 flex items-center justify-between shadow-sm transition-all">
           <div className="flex items-center gap-2">
              <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
                 <img src={logo} className="w-5 h-5 invert brightness-0" alt="logo" />
@@ -71,20 +182,20 @@ export default function Landing() {
          <div className="max-w-6xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-12 items-center text-center lg:text-left">
                <div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-800 rounded-full mb-6">
+                  <div className="hero-badge inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-800 rounded-full mb-6">
                      <span className="w-1 h-1 rounded-full bg-emerald-500"></span>
                      <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">{t('landing.hero_badge')}</span>
                   </div>
 
-                  <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight mb-6 text-slate-900 dark:text-white">
+                  <h1 className="hero-title text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight mb-6 text-slate-900 dark:text-white">
                      {t('landing.title')}
                   </h1>
 
-                  <p className="text-base sm:text-lg text-slate-500 dark:text-slate-400 font-medium max-w-xl mx-auto lg:mx-0 mb-10 leading-relaxed">
+                  <p className="hero-desc text-base sm:text-lg text-slate-500 dark:text-slate-400 font-medium max-w-xl mx-auto lg:mx-0 mb-10 leading-relaxed">
                      {t('landing.subtitle')}
                   </p>
 
-                  <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                  <div className="hero-btns flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
                      <button 
                         onClick={() => navigate('/login')}
                         className="h-14 px-8 w-full sm:w-auto bg-slate-900 dark:bg-emerald-600 text-white text-[11px] font-black uppercase tracking-[0.2em] rounded-xl hover:bg-emerald-600 transition-all active:scale-95 flex items-center justify-center gap-3"
@@ -97,7 +208,7 @@ export default function Landing() {
                   </div>
                </div>
 
-               <div className="relative">
+               <div className="hero-image relative">
                   <div className="bg-slate-50 dark:bg-slate-900 rounded-3xl p-3 border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
                      <img src={ultraHero} alt="Smart Kisan" className="w-full rounded-2xl" />
                   </div>
@@ -107,13 +218,13 @@ export default function Landing() {
       </header>
 
       {/* ── Steps Section ─────────────────────────────────── */}
-      <section className="py-20 bg-slate-50/50 dark:bg-slate-900/20 border-y border-slate-100 dark:border-slate-800">
+      <section className="steps-section py-20 bg-slate-50/50 dark:bg-slate-900/20 border-y border-slate-100 dark:border-slate-800">
          <div className="max-w-6xl mx-auto px-4 text-center">
             <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white mb-16">{t('landing.steps_title')}</h2>
             
             <div className="grid md:grid-cols-3 gap-12">
                {['01', '02', '03'].map((step) => (
-                  <div key={step} className="flex flex-col items-center">
+                  <div key={step} className="step-card flex flex-col items-center">
                      <div className="w-12 h-12 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-lg font-black text-emerald-600 mb-6 shadow-sm">
                         {step}
                      </div>
@@ -126,7 +237,7 @@ export default function Landing() {
       </section>
 
       {/* ── Feature Grid ──────────────────────────────────── */}
-      <section className="py-20 px-4">
+      <section className="features-section py-20 px-4">
          <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
                <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest mb-4 block">{t('landing.eco_badge')}</span>
@@ -138,7 +249,7 @@ export default function Landing() {
 
             <div className="grid md:grid-cols-3 gap-6">
                {modules(t).map((m) => (
-                 <div key={m.key} className="group p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:border-emerald-200 dark:hover:border-emerald-900 transition-all cursor-pointer shadow-sm">
+                 <div key={m.key} className="feature-card group p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:border-emerald-200 dark:hover:border-emerald-900 transition-all cursor-pointer shadow-sm">
                     <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-6 bg-slate-50 dark:bg-slate-800 text-emerald-600">
                        <m.icon size={20} />
                     </div>
@@ -154,10 +265,10 @@ export default function Landing() {
       </section>
 
       {/* ── Stats Bar ─────────────────────────────────────── */}
-      <section className="py-16 bg-slate-900 dark:bg-black text-white">
+      <section className="stats-section py-16 bg-slate-900 dark:bg-black text-white">
          <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             {['farmers', 'accuracy', 'savings'].map(key => (
-               <div key={key}>
+               <div key={key} className="stat-item">
                   <span className="block text-3xl font-black mb-1 text-emerald-500">{t(`landing.stats.${key}`).split(' ')[0]}</span>
                   <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">{t(`landing.stats.${key}`).split(' ').slice(1).join(' ')}</span>
                </div>
@@ -166,16 +277,16 @@ export default function Landing() {
       </section>
 
       {/* ── Tech Section ──────────────────────────────────── */}
-      <section className="py-20 bg-white dark:bg-slate-950 px-4">
+      <section className="infra-section py-20 bg-white dark:bg-slate-950 px-4">
          <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-16">
-            <div className="flex-1 text-center lg:text-left">
+            <div className="infra-content flex-1 text-center lg:text-left">
                <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-6 block">{t('landing.infra_badge')}</span>
                <h2 className="text-3xl sm:text-4xl font-black tracking-tight mb-10 text-slate-900 dark:text-white">{t('landing.infra_title')}</h2>
                <div className="space-y-8 text-left max-w-xl mx-auto lg:mx-0">
                   {[
-                    { title: t('landing.infra.sat.title'), desc: t('landing.infra.sat.desc') },
-                    { title: t('landing.infra.market.title'), desc: t('landing.infra.market.desc') },
-                    { title: t('landing.infra.ai.title'), desc: t('landing.infra.ai.desc') }
+                     { title: t('landing.infra.sat.title'), desc: t('landing.infra.sat.desc') },
+                     { title: t('landing.infra.market.title'), desc: t('landing.infra.market.desc') },
+                     { title: t('landing.infra.ai.title'), desc: t('landing.infra.ai.desc') }
                   ].map(item => (
                     <div key={item.title} className="flex gap-4 group">
                        <div className="w-1 h-auto bg-emerald-500 rounded-full" />
@@ -187,7 +298,7 @@ export default function Landing() {
                   ))}
                </div>
             </div>
-            <div className="flex-1">
+            <div className="infra-image flex-1">
                <div className="bg-slate-50 dark:bg-slate-900 rounded-3xl p-3 border border-slate-100 dark:border-slate-800">
                   <img src={ultraHero} alt="Infrastructure" className="w-full rounded-2xl grayscale opacity-80" />
                </div>
@@ -196,12 +307,12 @@ export default function Landing() {
       </section>
 
       {/* ── Testimonials ──────────────────────────────────── */}
-      <section className="py-20 bg-slate-50 dark:bg-slate-900/30 px-4">
+      <section className="testimonials-section py-20 bg-slate-50 dark:bg-slate-900/30 px-4">
          <div className="max-w-6xl mx-auto">
             <h2 className="text-2xl sm:text-3xl font-black text-center text-slate-900 dark:text-white mb-16">{t('landing.testimonials_title')}</h2>
             <div className="grid md:grid-cols-2 gap-8">
                {['t1', 't2'].map(key => (
-                  <div key={key} className="p-8 sm:p-10 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
+                  <div key={key} className="testimonial-card p-8 sm:p-10 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
                      <p className="text-lg text-slate-600 dark:text-slate-300 mb-8 leading-relaxed italic">
                         "{t(`landing.testimonials.${key}.text`)}"
                      </p>
@@ -221,8 +332,8 @@ export default function Landing() {
       </section>
 
       {/* ── Final Call ────────────────────────────────────── */}
-      <section className="py-20 px-4 text-center bg-slate-900 dark:bg-black text-white overflow-hidden relative">
-         <div className="max-w-2xl mx-auto relative z-10">
+      <section className="final-cta-section py-20 px-4 text-center bg-slate-900 dark:bg-black text-white overflow-hidden relative">
+         <div className="final-cta-content max-w-2xl mx-auto relative z-10">
             <h2 className="text-3xl sm:text-4xl font-black tracking-tight mb-8">{t('landing.final_title')}</h2>
             <p className="text-base text-slate-400 mb-10">
                {t('landing.final_desc')}
