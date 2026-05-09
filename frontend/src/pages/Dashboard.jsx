@@ -178,12 +178,7 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="page-wrapper max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in relative">
-      
-      {/* Subtle Premium Background Glow */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 dark:bg-primary/10 blur-[120px] rounded-full pointer-events-none -z-10" />
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-500/5 dark:bg-blue-500/10 blur-[120px] rounded-full pointer-events-none -z-10" />
-
+    <div className="page-wrapper max-w-7xl mx-auto px-4 sm:px-6">
       {/* ── Header Command Bar ──────────────────────────── */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-12">
         <div>

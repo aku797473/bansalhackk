@@ -100,7 +100,7 @@ export default function Fertilizer() {
   };
 
   return (
-    <div className="page-wrapper max-w-6xl">
+    <div className="page-wrapper max-w-7xl mx-auto px-4 sm:px-6">
       <div className="page-header flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
         <div>
           <h1 className="page-title flex items-center gap-3 tracking-tighter">

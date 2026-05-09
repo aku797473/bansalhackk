@@ -65,17 +65,17 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="fixed top-0 inset-x-0 z-[100] bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-b border-gray-200 dark:border-slate-800 shadow-sm transition-all h-16">
-        <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between gap-4">
+      <header className="fixed top-4 inset-x-0 z-[100] px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto h-16 bg-white/70 dark:bg-slate-900/70 backdrop-blur-2xl border border-white/20 dark:border-white/5 rounded-2xl sm:rounded-[2rem] shadow-2xl shadow-slate-200/50 dark:shadow-none px-4 flex items-center justify-between gap-4 transition-all">
           
           {/* Logo Section */}
           <NavLink to="/dashboard" className="flex items-center gap-2.5 shrink-0 group">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-emerald-500 flex items-center justify-center shadow-lg shadow-primary/20 group-hover:scale-105 transition-all">
-              <img src={logo} alt="Logo" className="w-6 h-6 brightness-0 invert object-contain" />
+            <div className="w-9 h-9 rounded-xl bg-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-all">
+              <img src={logo} alt="Logo" className="w-5 h-5 brightness-0 invert object-contain" />
             </div>
             <div className="flex flex-col">
-              <span className="font-bold text-gray-900 dark:text-white text-sm sm:text-base leading-none">Smart Kisan</span>
-              <span className="text-[9px] text-primary dark:text-emerald-400 font-bold uppercase tracking-wider hidden md:block">{t('nav.slogan')}</span>
+              <span className="font-bold text-slate-900 dark:text-white text-sm sm:text-base leading-none">Smart Kisan</span>
+              <span className="text-[9px] text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider hidden md:block">{t('nav.slogan')}</span>
             </div>
           </NavLink>
 
@@ -160,7 +160,7 @@ export default function Navbar() {
             {/* Mobile Hamburger Menu Button */}
             <button 
               onClick={() => setOpen(true)} 
-              className="xl:hidden ml-1 p-2 bg-gray-100 dark:bg-slate-800 text-gray-900 dark:text-white rounded-xl hover:bg-gray-200 transition-all active:scale-95 border border-gray-200 dark:border-slate-700"
+              className="xl:hidden ml-1 p-2 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl hover:bg-slate-200 transition-all active:scale-95 border border-slate-200 dark:border-slate-700"
               aria-label="Open Menu"
             >
               <Menu size={22} strokeWidth={2.5} />
