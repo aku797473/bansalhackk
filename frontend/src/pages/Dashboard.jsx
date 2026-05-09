@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
@@ -11,6 +11,11 @@ import {
 } from 'lucide-react';
 import { weatherAPI, marketAPI, labourAPI } from '../services/api';
 import clsx from 'clsx';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
+
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const WEATHER_EMOJIS = { '01': '☀️', '02': '🌤️', '03': '⛅', '04': '☁️', '09': '🌧️', '10': '🌦️', '11': '⛈️', '13': '❄️', '50': '🌫️' };
 const getWeatherEmoji = (icon) => WEATHER_EMOJIS[icon?.slice(0, 2)] || '🌡️';
@@ -29,6 +34,39 @@ export default function Dashboard() {
   const { t, i18n } = useTranslation();
   const greetingKey = getGreetingKey();
   const locale = i18n.language === 'hi' ? 'hi-IN' : 'en-US';
+  const container = useRef();
+
+  useGSAP(() => {
+    // Header animation
+    gsap.from('.dash-header', {
+      y: -40, opacity: 0, duration: 0.8, ease: 'power3.out'
+    });
+
+    // Bento cards staggered entry
+    gsap.from('.bento-card', {
+      y: 60, opacity: 0, duration: 0.7, stagger: 0.08,
+      ease: 'power3.out', delay: 0.3
+    });
+
+    // Bottom tips section
+    gsap.from('.tip-card', {
+      scrollTrigger: { trigger: '.tips-section', start: 'top 85%' },
+      y: 40, opacity: 0, duration: 0.7, stagger: 0.15, ease: 'power2.out'
+    });
+
+    // Alert items
+    gsap.from('.alert-item', {
+      scrollTrigger: { trigger: '.alerts-section', start: 'top 85%' },
+      x: -30, opacity: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out'
+    });
+
+    // Sync status sidebar
+    gsap.from('.sync-item', {
+      scrollTrigger: { trigger: '.sync-section', start: 'top 90%' },
+      x: 30, opacity: 0, duration: 0.6, stagger: 0.12, ease: 'power2.out'
+    });
+  }, { scope: container });
+
 
   // Weather Query
   const { data: weather, isLoading: weatherLoading } = useQuery({
@@ -177,7 +215,7 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
+    <div ref={container} className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
       <div className="page-wrapper max-w-7xl mx-auto px-4 sm:px-6">
         
         {/* Subtle Background Decoration */}
@@ -187,7 +225,7 @@ export default function Dashboard() {
         </div>
 
         {/* ── Header Command Bar ──────────────────────────── */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-12">
+        <div className="dash-header flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-12">
           <div>
             <div className="flex flex-wrap items-center gap-3 mb-3">
                 <span className="px-3 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-[9px] font-black uppercase tracking-widest rounded-full border border-emerald-200 dark:border-emerald-800">
@@ -223,7 +261,7 @@ export default function Dashboard() {
               key={m.id}
               onClick={() => navigate(m.to)}
               className={clsx(
-                "group relative cursor-pointer overflow-hidden",
+                "bento-card group relative cursor-pointer overflow-hidden",
                 m.size === 'lg' ? 'col-span-1 sm:col-span-2 row-span-1 sm:row-span-2 rounded-[2rem] p-8' : 
                 m.size === 'md' ? 'col-span-1 sm:col-span-1 row-span-1' : 'col-span-1 sm:col-span-1 row-span-1 !p-5',
                 m.id === 'weather' ? 'text-white shadow-xl hover:-translate-y-1 transition-all duration-300' : 'bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 dark:text-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300',
@@ -238,7 +276,7 @@ export default function Dashboard() {
           ))}
 
           {/* Extra Bento Items: Support Card */}
-          <div className="col-span-1 sm:col-span-2 lg:col-span-2 bg-emerald-600 rounded-[2rem] p-6 sm:p-8 text-white relative overflow-hidden group cursor-pointer shadow-xl shadow-emerald-500/20 hover:-translate-y-1 transition-all" onClick={() => navigate('/chat')}>
+          <div className="bento-card col-span-1 sm:col-span-2 lg:col-span-2 bg-emerald-600 rounded-[2rem] p-6 sm:p-8 text-white relative overflow-hidden group cursor-pointer shadow-xl shadow-emerald-500/20 hover:-translate-y-1 transition-all" onClick={() => navigate('/chat')}>
               <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform" />
               <div className="flex items-center gap-4 mb-4 relative z-10">
                 <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center">
@@ -250,7 +288,7 @@ export default function Dashboard() {
           </div>
 
           {/* Secondary Stats Card */}
-          <div className="col-span-1 sm:col-span-2 lg:col-span-2 card bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 flex flex-col justify-between group shadow-sm hover:shadow-xl">
+          <div className="bento-card col-span-1 sm:col-span-2 lg:col-span-2 card bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 flex flex-col justify-between group shadow-sm hover:shadow-xl">
               <div className="flex items-center justify-between mb-4">
                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('dashboard.active_schemes')}</span>
                 <Award className="text-amber-500" size={18} />
@@ -264,7 +302,7 @@ export default function Dashboard() {
 
         {/* ── Bottom Section: Quick Tips & Info ──────────────── */}
         <div className="mt-12 grid lg:grid-cols-12 gap-8">
-          <div className="lg:col-span-8">
+          <div className="tips-section lg:col-span-8">
               <h2 className="text-lg font-black text-slate-900 dark:text-white uppercase tracking-widest mb-6 flex items-center gap-3">
                 <ShieldCheck className="text-emerald-500" size={20} /> {t('dashboard.farming_intel')}
               </h2>
@@ -273,7 +311,7 @@ export default function Dashboard() {
                   { title: t('dashboard.tips.soil.title'), desc: t('dashboard.tips.soil.desc'), icon: '🧪', color: 'border-indigo-100 dark:border-indigo-900/30' },
                   { title: t('dashboard.tips.market.title'), desc: t('dashboard.tips.market.desc'), icon: '📉', color: 'border-emerald-100 dark:border-emerald-900/30' }
                 ].map((tip, i) => (
-                  <div key={i} className={clsx("p-6 rounded-3xl border bg-white dark:bg-slate-900/50 shadow-sm hover:shadow-md transition-all", tip.color)}>
+                  <div key={i} className={clsx("tip-card p-6 rounded-3xl border bg-white dark:bg-slate-900/50 shadow-sm hover:shadow-md transition-all", tip.color)}>
                       <div className="flex items-start gap-4">
                         <span className="text-2xl">{tip.icon}</span>
                         <div>
@@ -286,14 +324,14 @@ export default function Dashboard() {
               </div>
 
               {/* ── Intelligence Feed ─────────────────────────── */}
-              <div className="mt-8 card bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-xl overflow-hidden relative group">
+              <div className="alerts-section mt-8 card bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-xl overflow-hidden relative group">
                 <div className="flex items-center justify-between mb-6 relative z-10">
                   <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">{t('dashboard.recent_alerts')}</h3>
                   <Bell size={16} className="text-slate-400" />
                 </div>
                 <div className="space-y-4 relative z-10">
                   {alerts.map((alert, idx) => (
-                      <div key={idx} className="flex gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 hover:border-emerald-200 dark:hover:border-emerald-900 transition-all cursor-pointer group/alert">
+                      <div key={idx} className="alert-item flex gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 hover:border-emerald-200 dark:hover:border-emerald-900 transition-all cursor-pointer group/alert">
                         <div className="text-xl shrink-0 group-hover/alert:scale-110 transition-transform">{alert.icon}</div>
                         <p className="text-[11px] font-bold leading-relaxed text-slate-600 dark:text-slate-300">{alert.text}</p>
                       </div>
@@ -302,7 +340,7 @@ export default function Dashboard() {
               </div>
           </div>
 
-          <div className="lg:col-span-4">
+          <div className="sync-section lg:col-span-4">
             <div className="bg-white dark:bg-slate-900/80 rounded-[2.5rem] p-8 border border-slate-100 dark:border-slate-800 shadow-sm sticky top-28">
                 <h3 className="text-xs font-black text-slate-400 uppercase tracking-[0.3em] mb-6">{t('dashboard.sync_status')}</h3>
                 <div className="space-y-6">
@@ -311,7 +349,7 @@ export default function Dashboard() {
                     { label: t('dashboard.nodes.market'), status: 'Stable', color: 'bg-emerald-500' },
                     { label: t('dashboard.nodes.ai'), status: 'Active', color: 'bg-emerald-500' }
                   ].map(node => (
-                    <div key={node.label} className="flex items-center justify-between">
+                    <div key={node.label} className="sync-item flex items-center justify-between">
                         <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">{node.label}</span>
                         <div className="flex items-center gap-2">
                           <span className="text-[9px] font-black uppercase text-slate-900 dark:text-white">{node.status}</span>
