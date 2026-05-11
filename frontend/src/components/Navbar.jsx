@@ -74,7 +74,10 @@ export default function Navbar() {
               <img src={logo} alt="Logo" className="w-5 h-5 brightness-0 invert object-contain" />
             </div>
             <div className="flex flex-col">
-              <span className="font-bold text-slate-900 dark:text-white text-sm sm:text-base leading-none">Smart Kisan</span>
+              <div className="flex items-center gap-1.5">
+                <span className="font-bold text-slate-900 dark:text-white text-sm sm:text-base leading-none">Smart Kisan</span>
+                <span className="px-1.5 py-0.5 bg-gray-100 dark:bg-white/5 text-[8px] font-black text-gray-400 dark:text-gray-500 rounded uppercase tracking-tighter">v2.0.4</span>
+              </div>
               <span className="text-[9px] text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider hidden md:block">{t('nav.slogan')}</span>
             </div>
           </NavLink>

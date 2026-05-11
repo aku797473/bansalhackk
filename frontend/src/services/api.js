@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const AUTH_URL     = import.meta.env.VITE_AUTH_API_URL     || '/api';
 const AI_URL       = import.meta.env.VITE_AI_API_URL       || '/api';
-const INFO_URL     = import.meta.env.VITE_INFO_API_URL     || '/api';
+const INFO_URL     = 'https://smart-kisan-weather.onrender.com/api'; // HARDCODED FOR STABILITY
 const BUSINESS_URL = import.meta.env.VITE_BUSINESS_API_URL || '/api';
 
 // Base instances for each hub
