@@ -11,7 +11,6 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const compression = require('compression');
-const rateLimit = require('express-rate-limit');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -20,12 +19,12 @@ const PORT = process.env.PORT || 5000;
 app.use(cors({
   origin: (origin, cb) => cb(null, true),
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-user-id'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-user-id', 'x-user-role', 'x-user-email'],
   credentials: true,
 }));
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 app.use(compression());
-app.use(morgan('short'));
+app.use(morgan('dev'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
@@ -40,17 +39,23 @@ try {
   console.warn('⚠️ Clerk not available');
 }
 
-// Rate limiter
-app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 1000, standardHeaders: true, legacyHeaders: false }));
-
 // ─── Auth middleware ──────────────────────────────
 const { verifyToken } = require('./gateway/src/middleware/auth');
 
 // ─── Route Files ─────────────────────────────────
 const safeRequire = (path, name) => {
   try { return require(path); }
-  catch (e) { console.warn(`⚠️ Could not load ${name}: ${e.message}`); return null; }
+  catch (e) { 
+    console.error(`❌ FAILED TO LOAD ${name}:`, e.message); 
+    return null; 
+  }
 };
+
+// PRE-LOAD ALL MODELS to avoid "MissingSchemaError"
+safeRequire('./services/auth-service/src/models/User', 'Model:User');
+safeRequire('./services/labour-service/src/models/Job', 'Model:Job');
+safeRequire('./services/chatbot-service/src/models/ChatHistory', 'Model:ChatHistory');
+safeRequire('./services/weather-service/src/models/WeatherHistory', 'Model:WeatherHistory');
 
 const authRoutes       = safeRequire('./services/auth-service/src/routes/auth', 'auth');
 const userRoutes       = safeRequire('./services/user-service/src/routes/user', 'user');
@@ -68,7 +73,12 @@ const newsRoutes       = safeRequire('./services/news-service/src/routes/news', 
 if (authRoutes) app.use('/api/auth', authRoutes);
 
 app.get('/api/wake', (req, res) => {
-  res.json({ status: 'ok', mode: 'unified', timestamp: new Date().toISOString() });
+  res.json({ 
+    status: 'ok', 
+    mode: 'unified', 
+    mongo: mongoose.connection.readyState === 1 ? 'connected' : 'connecting',
+    timestamp: new Date().toISOString() 
+  });
 });
 
 app.get('/health', (req, res) => {
@@ -87,13 +97,28 @@ if (paymentRoutes)    app.use('/api/payment',     verifyToken, paymentRoutes);
 if (schemesRoutes)    app.use('/api/schemes',     verifyToken, schemesRoutes);
 if (newsRoutes)       app.use('/api/news',        verifyToken, newsRoutes);
 
+// ─── Global Error Handler ────────────────────────
+app.use((err, req, res, next) => {
+  console.error('🔥 [GLOBAL ERROR]:', err);
+  res.status(500).json({ 
+    success: false, 
+    message: 'Internal Server Error', 
+    error: err.message,
+    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+  });
+});
+
 app.use('*', (req, res) => {
   res.status(404).json({ success: false, message: 'Route not found' });
 });
 
 // ─── MongoDB ──────────────────────────────────────
 async function connectMongo() {
-  const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/smart-kisan';
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    console.error('❌ MONGODB_URI is not set in environment variables!');
+    return;
+  }
   try {
     await mongoose.connect(uri, { serverSelectionTimeoutMS: 10000 });
     console.log('✅ MongoDB connected');

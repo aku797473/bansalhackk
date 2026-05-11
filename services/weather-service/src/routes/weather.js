@@ -86,6 +86,7 @@ router.get('/current', async (req, res) => {
     }
 
     if (!OWM_KEY || OWM_KEY === 'demo' || OWM_KEY.includes('your_')) {
+      console.log('☁️ Weather: Using Mock Data (No API Key)');
       const mock = getMockWeather(lat, lon);
       await rSet(cacheKey, CACHE_TTL, JSON.stringify(mock));
       WeatherHistory.create({ userId, lat, lon, city: mock.city, temperature: mock.temperature, description: mock.description, searchType: 'current' }).catch(console.error);
@@ -93,6 +94,7 @@ router.get('/current', async (req, res) => {
     }
 
     // Real OpenWeatherMap API (5s timeout)
+    console.log(`📡 Weather: Fetching REAL data for ${lat}, ${lon}...`);
     const [current, forecast] = await Promise.all([
       owmAxios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OWM_KEY}&units=metric`),
       owmAxios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${OWM_KEY}&units=metric&cnt=56`),
