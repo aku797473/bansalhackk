@@ -43,19 +43,35 @@ export default function Market() {
     queryFn: async () => {
       try {
         const res = await marketAPI.getPrices(selState, selCommodity, selDistrict);
+        const fetchedPrices = res.data?.data?.prices || FALLBACK_PRICES;
+        
+        // Auto-discover districts and commodities from the fetched data
+        const uniqueDistricts = [...new Set(fetchedPrices.map(p => p.district))].filter(Boolean).sort();
+        const uniqueCommodities = [...new Set(fetchedPrices.map(p => p.commodity))].filter(Boolean).sort();
+
         return {
-          prices: res.data?.data?.prices || FALLBACK_PRICES,
+          prices: fetchedPrices,
           source: res.data?.data?.source || 'Government API',
           lastSync: res.data?.data?.lastUpdated || new Date().toISOString(),
           totalRecords: res.data?.data?.totalRecords || 0,
+          districts: uniqueDistricts,
+          commodities: uniqueCommodities
         };
       } catch (err) {
-        return { prices: FALLBACK_PRICES, source: 'Fallback System', lastSync: new Date().toISOString() };
+        return { 
+          prices: FALLBACK_PRICES, 
+          source: 'Fallback System', 
+          lastSync: new Date().toISOString(),
+          districts: [...new Set(FALLBACK_PRICES.map(p => p.district))],
+          commodities: [...new Set(FALLBACK_PRICES.map(p => p.commodity))]
+        };
       }
     }
   });
 
   const prices = marketData?.prices || FALLBACK_PRICES;
+  const availableDistricts = marketData?.districts || [];
+  const availableCommodities = marketData?.commodities || [];
 
   // 2. Filtering
   const filteredPrices = useMemo(() => {
@@ -137,15 +153,15 @@ export default function Market() {
               <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">District</label>
               <select className="w-full h-14 bg-gray-50 dark:bg-slate-800 border-none rounded-2xl px-5 font-bold text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors" value={selDistrict} onChange={(e) => setSelDistrict(e.target.value)}>
                 <option value="">All Districts</option>
-                {currentDistricts.map(d => <option key={d} value={d}>{d}</option>)}
+                {availableDistricts.map(d => <option key={d} value={d}>{d}</option>)}
               </select>
             </div>
             <div className="space-y-3">
-              <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Quick Search</label>
-              <div className="relative">
-                <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
-                <input className="w-full h-14 bg-gray-50 dark:bg-slate-800 border-none rounded-2xl pl-12 pr-5 font-bold text-sm" placeholder="Search Mandi..." value={search} onChange={(e) => setSearch(e.target.value)} />
-              </div>
+              <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Commodity (Crop)</label>
+              <select className="w-full h-14 bg-gray-50 dark:bg-slate-800 border-none rounded-2xl px-5 font-bold text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors" value={selCommodity} onChange={(e) => setSelCommodity(e.target.value)}>
+                <option value="">All Commodities</option>
+                {availableCommodities.map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
             </div>
           </div>
 
