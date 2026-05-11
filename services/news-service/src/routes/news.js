@@ -30,7 +30,7 @@ const parser = new Parser({
   }
 });
 
-router.get('/latest', async (req, res) => {
+const handleLatestNews = async (req, res) => {
   try {
     const lang = req.query.lang || 'en';
     const cacheKey = `news:latest:${lang}`;
@@ -104,6 +104,9 @@ router.get('/latest', async (req, res) => {
     ];
     res.json({ success: true, data: mockNews, fallback: true });
   }
-});
+};
+
+router.get('/', handleLatestNews);
+router.get('/latest', handleLatestNews);
 
 module.exports = router;
