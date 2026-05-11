@@ -93,6 +93,35 @@ app.get('/api/weather/map-markers', createProxyMiddleware(proxyOptions(services.
 app.get('/api/labour/map-markers', createProxyMiddleware(proxyOptions(services.labour)));
 app.get('/api/fertilizer/soil/map-markers', createProxyMiddleware(proxyOptions(services.fertilizer)));
 
+// ─── Wake-up endpoint (Public — no auth) ──────────
+// Pings all backend services to prevent Render cold-start 502s
+const http  = require('http');
+const https = require('https');
+
+function pingService(url) {
+  return new Promise((resolve) => {
+    const mod = url.startsWith('https') ? https : http;
+    const req = mod.get(url + '/health', { timeout: 5000 }, (res) => {
+      resolve({ url, status: res.statusCode });
+    });
+    req.on('error', () => resolve({ url, status: 'down' }));
+    req.on('timeout', () => { req.destroy(); resolve({ url, status: 'timeout' }); });
+  });
+}
+
+app.get('/api/wake', async (req, res) => {
+  const results = await Promise.allSettled(
+    Object.entries(services).map(([name, url]) =>
+      pingService(url).then(r => ({ name, ...r }))
+    )
+  );
+  res.json({
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    services: results.map(r => r.value || r.reason)
+  });
+});
+
 // ─── Protected Routes (JWT required) ─────────────
 app.use('/api/users',       verifyToken, createProxyMiddleware(proxyOptions(services.user)));
 app.use('/api/weather',     verifyToken, createProxyMiddleware(proxyOptions(services.weather)));
