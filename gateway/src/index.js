@@ -101,7 +101,7 @@ const https = require('https');
 function pingService(url) {
   return new Promise((resolve) => {
     const mod = url.startsWith('https') ? https : http;
-    const req = mod.get(url + '/health', { timeout: 5000 }, (res) => {
+    const req = mod.get(url + '/health', { timeout: 25000 }, (res) => {
       resolve({ url, status: res.statusCode });
     });
     req.on('error', () => resolve({ url, status: 'down' }));

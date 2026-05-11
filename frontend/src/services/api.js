@@ -21,7 +21,21 @@ api.interceptors.request.use(async (config) => {
       console.error('Failed to get auth token', err);
     }
   }
+  config.__retryCount = config.__retryCount || 0;
   return config;
+});
+
+// Auto-retry on 502/503 (Render cold-start) — up to 2 retries with 3s delay
+api.interceptors.response.use(null, async (error) => {
+  const config = error.config;
+  const status = error.response?.status;
+  if ((status === 502 || status === 503) && config && config.__retryCount < 2) {
+    config.__retryCount += 1;
+    console.log(`[API] Retry ${config.__retryCount}/2 for ${config.url} (got ${status})`);
+    await new Promise(r => setTimeout(r, 3000)); // wait 3s for service to warm up
+    return api(config);
+  }
+  return Promise.reject(error);
 });
 
 // Auto refresh logic is handled by Clerk SDK automatically
