@@ -37,7 +37,8 @@ router.get('/history/:sessionId', async (req, res) => {
     
     res.json({ success: true, data: chat.messages });
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    console.error('❌ CHATBOT HISTORY ERROR:', err);
+    res.status(500).json({ success: false, message: 'History Fetch Error', error: err.message });
   }
 });
 
@@ -145,11 +146,17 @@ router.post('/message', async (req, res) => {
     }
 
     await chatRecord.save();
+    console.log(`✅ Chatbot: Response saved for session ${sid}`);
 
     res.json({ success: true, data: { reply, sessionId: sid } });
   } catch (err) {
-    console.error('Chatbot Error Details:', err);
-    res.status(500).json({ success: false, message: err.message || 'Error' });
+    console.error('❌ CHATBOT CRITICAL ERROR:', err);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Chatbot Service Error', 
+      error: err.message,
+      details: err.stack?.split('\n')[1] // Send first line of stack for easier debugging
+    });
   }
 });
 
