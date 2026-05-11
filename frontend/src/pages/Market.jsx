@@ -39,18 +39,19 @@ export default function Market() {
 
   // 1. Fetch Prices & Metadata
   const { data: marketData, isLoading, refetch, isFetching } = useQuery({
-    queryKey: ['market-core-data', selState, selCommodity, selDistrict],
+    queryKey: ['market-core-data', selState], // Only depend on state for broad discovery
     queryFn: async () => {
       try {
-        const res = await marketAPI.getPrices(selState, selCommodity, selDistrict);
-        const fetchedPrices = res.data?.data?.prices || FALLBACK_PRICES;
+        // Fetch ALL records for this state (no commodity filter here for discovery)
+        const res = await marketAPI.getPrices(selState, '', '');
+        const allStatePrices = res.data?.data?.prices || FALLBACK_PRICES;
         
-        // Auto-discover districts and commodities from the fetched data
-        const uniqueDistricts = [...new Set(fetchedPrices.map(p => p.district))].filter(Boolean).sort();
-        const uniqueCommodities = [...new Set(fetchedPrices.map(p => p.commodity))].filter(Boolean).sort();
+        // Extract EVERY unique district and commodity available in this state
+        const uniqueDistricts = [...new Set(allStatePrices.map(p => p.district))].filter(Boolean).sort();
+        const uniqueCommodities = [...new Set(allStatePrices.map(p => p.commodity))].filter(Boolean).sort();
 
         return {
-          prices: fetchedPrices,
+          prices: allStatePrices,
           source: res.data?.data?.source || 'Government API',
           lastSync: res.data?.data?.lastUpdated || new Date().toISOString(),
           totalRecords: res.data?.data?.totalRecords || 0,
@@ -66,7 +67,8 @@ export default function Market() {
           commodities: [...new Set(FALLBACK_PRICES.map(p => p.commodity))]
         };
       }
-    }
+    },
+    staleTime: 30000, // Keep for 30s to avoid too many bulk fetches
   });
 
   const prices = marketData?.prices || FALLBACK_PRICES;
@@ -82,9 +84,12 @@ export default function Market() {
       const matchState = !selState || p.state?.toLowerCase().includes(st) || st.includes(p.state?.toLowerCase());
       const dt = (selDistrict || '').toLowerCase();
       const matchDist = !selDistrict || p.market?.toLowerCase().includes(dt) || p.district?.toLowerCase().includes(dt);
-      return matchSearch && matchState && matchDist;
+      const matchComm = !selCommodity || 
+        p.commodity?.toLowerCase().includes(selCommodity.toLowerCase());
+
+      return matchSearch && matchState && matchDist && matchComm;
     });
-  }, [prices, search, selState, selDistrict]);
+  }, [prices, search, selState, selDistrict, selCommodity]);
 
   // 3. Dynamic Analytics
   const analytics = useMemo(() => {
