@@ -138,26 +138,32 @@ export default function Market() {
           </select>
         </div>
         <div className="space-y-4">
-          <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">2. Search District</label>
-          <div className="relative">
-            <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-            <input 
-              list="districts-list"
-              className="w-full h-16 bg-gray-50 dark:bg-slate-800 border-none rounded-2xl pl-14 pr-6 font-bold text-lg focus:ring-2 focus:ring-emerald-500/20 transition-all"
-              placeholder="Start typing district..."
-              value={selDistrict}
-              onChange={(e) => { setSelDistrict(e.target.value); setSelCommodity(''); }}
-            />
-            <datalist id="districts-list">
-              {availableDistricts.map(d => <option key={d} value={d} />)}
-            </datalist>
-          </div>
+          <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">2. Select District</label>
+          <select 
+            className="w-full h-16 bg-gray-50 dark:bg-slate-800 border-none rounded-2xl px-6 font-bold text-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700 transition-all"
+            value={selDistrict}
+            onChange={(e) => { setSelDistrict(e.target.value); setSelCommodity(''); }}
+          >
+            <option value="">-- Scroll to District --</option>
+            {availableDistricts.length > 0 ? (
+              availableDistricts.map(d => <option key={d} value={d}>{d}</option>)
+            ) : (
+              <option disabled>Loading Districts...</option>
+            )}
+          </select>
         </div>
         <div className="space-y-4">
           <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">3. Choose Commodity</label>
-          <select className="w-full h-16 bg-gray-50 dark:bg-slate-800 border-none rounded-2xl px-6 font-bold text-lg cursor-pointer" value={selCommodity} onChange={(e) => setSelCommodity(e.target.value)} disabled={!selDistrict}>
-            <option value="">-- All Crops --</option>
-            {availableCommodities.map(c => <option key={c} value={c}>{c}</option>)}
+          <select 
+            className="w-full h-16 bg-gray-50 dark:bg-slate-800 border-none rounded-2xl px-6 font-bold text-lg cursor-pointer disabled:opacity-30 transition-all" 
+            value={selCommodity} 
+            onChange={(e) => setSelCommodity(e.target.value)} 
+            disabled={!selDistrict}
+          >
+            <option value="">-- Select Crop --</option>
+            {[...new Set([...COMMODITIES_DATABASE, ...availableCommodities])].sort().map(c => (
+              <option key={c} value={c}>{c}</option>
+            ))}
           </select>
         </div>
       </div>
