@@ -52,10 +52,12 @@ const safeRequire = (path, name) => {
 };
 
 // PRE-LOAD ALL MODELS to avoid "MissingSchemaError"
-safeRequire('./services/auth-service/src/models/User', 'Model:User');
+safeRequire('./services/auth-service/src/models/AuthUser', 'Model:AuthUser');
+safeRequire('./services/user-service/src/models/UserProfile', 'Model:UserProfile');
 safeRequire('./services/labour-service/src/models/Job', 'Model:Job');
 safeRequire('./services/chatbot-service/src/models/ChatHistory', 'Model:ChatHistory');
 safeRequire('./services/weather-service/src/models/WeatherHistory', 'Model:WeatherHistory');
+safeRequire('./services/market-service/src/models/MarketHistory', 'Model:MarketHistory');
 
 const authRoutes       = safeRequire('./services/auth-service/src/routes/auth', 'auth');
 const userRoutes       = safeRequire('./services/user-service/src/routes/user', 'user');
