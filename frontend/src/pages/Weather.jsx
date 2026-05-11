@@ -16,12 +16,13 @@ const FALLBACK_WEATHER = {
   lat: 24.6005, lon: 80.8322,
   temperature: 32, feelsLike: 35, humidity: 68, windSpeed: 12,
   description: 'Partly Cloudy', icon: '02d', alerts: [],
-  forecast: Array.from({ length: 5 }, (_, i) => ({
+  forecast: Array.from({ length: 7 }, (_, i) => ({
     date: new Date(Date.now() + i * 86400000).toISOString().split('T')[0],
     tempMax: 30 + i, tempMin: 22 + i,
-    description: ['Sunny','Partly Cloudy','Light Rain','Cloudy','Clear'][i],
-    icon: ['01d','02d','10d','03d','01n'][i],
-    humidity: 60 + i * 3,
+    description: ['Sunny','Partly Cloudy','Light Rain','Cloudy','Clear','Sunny','Partly Cloudy'][i],
+    icon: ['01d','02d','10d','03d','01n','01d','02d'][i],
+    humidity: 60 + i * 2,
+    estimated: i >= 5,
   })),
   isFallback: true,
 };
@@ -193,6 +194,9 @@ export default function Weather() {
                     )}>
                       <Droplets size={10} /> {day.humidity}%
                     </div>
+                    {day.estimated && (
+                      <p className="text-[8px] font-bold text-gray-300 dark:text-slate-600 mt-2 uppercase tracking-widest">Est.</p>
+                    )}
                   </div>
                 ))}
               </div>

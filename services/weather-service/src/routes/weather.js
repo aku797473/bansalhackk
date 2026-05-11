@@ -95,7 +95,7 @@ router.get('/current', async (req, res) => {
     // Real OpenWeatherMap API (5s timeout)
     const [current, forecast] = await Promise.all([
       owmAxios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OWM_KEY}&units=metric`),
-      owmAxios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${OWM_KEY}&units=metric&cnt=40`),
+      owmAxios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${OWM_KEY}&units=metric&cnt=56`),
     ]);
 
     const c = current.data;
@@ -103,7 +103,7 @@ router.get('/current', async (req, res) => {
     const seen = new Set();
     for (const item of forecast.data.list) {
       const date = item.dt_txt.split(' ')[0];
-      if (!seen.has(date) && dailyForecast.length < 5) {
+      if (!seen.has(date) && dailyForecast.length < 7) {
         seen.add(date);
         dailyForecast.push({
           date,
@@ -114,6 +114,23 @@ router.get('/current', async (req, res) => {
           humidity:    item.main.humidity,
         });
       }
+    }
+
+    // OWM free tier gives max 5 days — extrapolate extra days if needed
+    while (dailyForecast.length < 7) {
+      const last = dailyForecast[dailyForecast.length - 1];
+      const prev = dailyForecast[dailyForecast.length - 2] || last;
+      const nextDate = new Date(last.date);
+      nextDate.setDate(nextDate.getDate() + 1);
+      dailyForecast.push({
+        date:        nextDate.toISOString().split('T')[0],
+        tempMax:     Math.round((last.tempMax + prev.tempMax) / 2),
+        tempMin:     Math.round((last.tempMin + prev.tempMin) / 2),
+        description: last.description,
+        icon:        last.icon,
+        humidity:    Math.round((last.humidity + prev.humidity) / 2),
+        estimated:   true,
+      });
     }
 
     const weatherData = {
