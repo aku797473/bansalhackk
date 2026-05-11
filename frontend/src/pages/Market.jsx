@@ -91,6 +91,17 @@ export default function Market() {
     staleTime: 60 * 60 * 1000,
   });
 
+  // Dynamic Districts Query
+  const { data: districtsData } = useQuery({
+    queryKey: ['market-districts', selState],
+    queryFn: async () => {
+      if (!selState) return [];
+      const res = await marketAPI.getDistricts(selState);
+      return res.data.data || [];
+    },
+    enabled: !!selState,
+  });
+
   // Dynamic Prices Query
   const { data: pricesData, isLoading: pricesLoading } = useQuery({
     queryKey: ['market-prices', selState, selDistrict, selCommodity],
@@ -119,6 +130,7 @@ export default function Market() {
   const prices      = pricesData || FALLBACK_PRICES;
   const commodities = metaData?.commodities || FALLBACK_COMMODITIES;
   const availableStates = metaData?.states || STATES;
+  const districts = districtsData || [];
   const loading = pricesLoading;
 
   const filteredPrices = useMemo(() => {
@@ -126,7 +138,8 @@ export default function Market() {
     return prices.filter(p => {
       const matchSearch = !search || 
         p.commodity.toLowerCase().includes(search.toLowerCase()) ||
-        p.market.toLowerCase().includes(search.toLowerCase());
+        p.market.toLowerCase().includes(search.toLowerCase()) ||
+        p.district?.toLowerCase().includes(search.toLowerCase());
       return matchSearch;
     });
   }, [prices, search]);
@@ -228,6 +241,7 @@ export default function Market() {
             <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2 flex items-center gap-1.5"><MapPin size={12} className="text-primary"/> {t('crop.district_label')}</label>
             <div className="relative group">
               <select className="input rounded-2xl bg-white/50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-700/50 font-bold text-sm shadow-sm appearance-none cursor-pointer hover:border-primary transition-colors" value={selDistrict} onChange={e => setSelDistrict(e.target.value)} disabled={!selState}>
+                <option value="">{t('market.all_districts', 'All Districts')}</option>
                 {districts.map(d => <option key={d} value={d}>{translateOption(d, 'crop')}</option>)}
               </select>
               <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 group-hover:text-primary transition-colors">
