@@ -142,11 +142,14 @@ export default function Market() {
         p.market?.toLowerCase().includes(search.toLowerCase()) ||
         p.district?.toLowerCase().includes(search.toLowerCase());
       
-      const matchState = !selState || p.state?.toLowerCase() === selState?.toLowerCase();
+      const matchState = !selState || 
+        p.state?.toLowerCase().includes(selState.toLowerCase()) ||
+        selState.toLowerCase().includes(p.state?.toLowerCase());
+
       // Match either the market name or the district name
       const matchDist = !selDistrict || 
         p.market?.toLowerCase().includes(selDistrict.toLowerCase()) || 
-        p.district?.toLowerCase() === selDistrict.toLowerCase();
+        p.district?.toLowerCase().includes(selDistrict.toLowerCase());
       
       return matchSearch && matchState && matchDist;
     });
@@ -255,6 +258,7 @@ export default function Market() {
         <div className="space-y-1">
           <div>ENDPOINT: <span className="text-white break-all">{import.meta.env.VITE_INFO_API_URL || '/api'}/market/prices</span></div>
           <div>RECORDS: <span className="text-white">{pricesResponse?.totalRecords || 0}</span></div>
+          <div>PREVIEW: <span className="text-white">{prices?.length > 0 ? `${prices[0].state} | ${prices[0].market}` : 'NO DATA'}</span></div>
           <div>SOURCE: <span className="text-white">{pricesResponse?.source || 'N/A'}</span></div>
           <div>FILTER: <span className="text-white">State={selState} | Dist={selDistrict} | Comm={selCommodity}</span></div>
         </div>
