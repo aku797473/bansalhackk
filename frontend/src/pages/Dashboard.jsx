@@ -156,7 +156,7 @@ export default function Dashboard() {
       color: 'bg-gradient-to-br from-primary to-emerald-600',
       icon: Cloud,
       label: t('nav.weather'),
-      isLoading: weatherLoading,
+      isLoading: false,
       render: () => (
         <div className="flex flex-col h-full justify-between">
           <div className="flex justify-between items-start">
