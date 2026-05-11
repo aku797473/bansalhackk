@@ -6,20 +6,32 @@ import { schemesAPI } from '../services/api';
 import * as Icons from 'lucide-react';
 import { usePageAnimation } from '../hooks/usePageAnimation';
 
+const FALLBACK_SCHEMES = [
+  { id: 1, title: 'PM-KISAN Samman Nidhi', titleHi: 'पीएम-किसान सम्मान निधि', description: '₹6,000/year direct income support to small & marginal farmers in 3 installments.', descriptionHi: 'छोटे और सीमांत किसानों को ₹6,000 प्रति वर्ष की सीधी आय सहायता।', benefit: '₹6,000/year', benefitHi: '₹6,000/वर्ष', tags: ['Income', 'Direct Benefit'], tagsHi: ['आय', 'प्रत्यक्ष लाभ'], iconName: 'IndianRupee', color: 'from-emerald-500 to-teal-400', bg: 'bg-emerald-50 dark:bg-emerald-900/20', link: 'https://pmkisan.gov.in' },
+  { id: 2, title: 'Pradhan Mantri Fasal Bima Yojana', titleHi: 'प्रधानमंत्री फसल बीमा योजना', description: 'Crop insurance scheme providing financial support to farmers suffering crop loss/damage.', descriptionHi: 'फसल नुकसान/क्षति से पीड़ित किसानों को वित्तीय सहायता प्रदान करने वाली फसल बीमा योजना।', benefit: 'Up to ₹2L cover', benefitHi: '₹2 लाख तक कवर', tags: ['Insurance', 'Crop Loss'], tagsHi: ['बीमा', 'फसल नुकसान'], iconName: 'ShieldCheck', color: 'from-blue-500 to-cyan-400', bg: 'bg-blue-50 dark:bg-blue-900/20', link: 'https://pmfby.gov.in' },
+  { id: 3, title: 'Kisan Credit Card', titleHi: 'किसान क्रेडिट कार्ड', description: 'Provides farmers with affordable credit for agricultural needs at subsidized interest rates.', descriptionHi: 'किसानों को सब्सिडी वाली ब्याज दरों पर कृषि जरूरतों के लिए सस्ता ऋण प्रदान करता है।', benefit: '4% Interest Rate', benefitHi: '4% ब्याज दर', tags: ['Credit', 'Loan'], tagsHi: ['क्रेडिट', 'ऋण'], iconName: 'CreditCard', color: 'from-purple-500 to-violet-400', bg: 'bg-purple-50 dark:bg-purple-900/20', link: 'https://www.nabard.org/content1.aspx?id=572' },
+  { id: 4, title: 'Soil Health Card Scheme', titleHi: 'मृदा स्वास्थ्य कार्ड योजना', description: 'Provides soil health cards to farmers with crop-wise recommendations for nutrients.', descriptionHi: 'किसानों को पोषक तत्वों की फसल-वार सिफारिशों के साथ मृदा स्वास्थ्य कार्ड प्रदान करता है।', benefit: 'Free Soil Testing', benefitHi: 'मुफ्त मिट्टी परीक्षण', tags: ['Soil', 'Advisory'], tagsHi: ['मिट्टी', 'सलाह'], iconName: 'FlaskConical', color: 'from-amber-500 to-orange-400', bg: 'bg-amber-50 dark:bg-amber-900/20', link: 'https://soilhealth.dac.gov.in' },
+  { id: 5, title: 'PM Krishi Sinchai Yojana', titleHi: 'पीएम कृषि सिंचाई योजना', description: 'Ensures access to protective irrigation to all agricultural farms with water use efficiency.', descriptionHi: 'सभी कृषि खेतों को जल उपयोग दक्षता के साथ संरक्षित सिंचाई तक पहुंच सुनिश्चित करता है।', benefit: 'Irrigation Support', benefitHi: 'सिंचाई सहायता', tags: ['Water', 'Irrigation'], tagsHi: ['पानी', 'सिंचाई'], iconName: 'Droplets', color: 'from-sky-500 to-blue-400', bg: 'bg-sky-50 dark:bg-sky-900/20', link: 'https://pmksy.gov.in' },
+  { id: 6, title: 'e-NAM (National Agriculture Market)', titleHi: 'ई-नाम (राष्ट्रीय कृषि बाजार)', description: 'Online trading platform for agricultural commodities to get better prices for produce.', descriptionHi: 'उपज के लिए बेहतर मूल्य पाने हेतु कृषि वस्तुओं के लिए ऑनलाइन ट्रेडिंग प्लेटफॉर्म।', benefit: 'Better Market Price', benefitHi: 'बेहतर बाजार मूल्य', tags: ['Market', 'Trading'], tagsHi: ['बाजार', 'व्यापार'], iconName: 'TrendingUp', color: 'from-rose-500 to-pink-400', bg: 'bg-rose-50 dark:bg-rose-900/20', link: 'https://enam.gov.in' },
+];
+
 export default function Schemes() {
   const { t, i18n } = useTranslation();
   const ref = usePageAnimation();
   const lang = i18n.language === 'hi' ? 'hi' : 'en';
 
-  const { data: response, isLoading, isError } = useQuery({
+  const { data: response, isLoading } = useQuery({
     queryKey: ['schemes'],
     queryFn: async () => {
       const { data } = await schemesAPI.getSchemes();
       return data;
-    }
+    },
+    retry: 1,
+    staleTime: 15 * 60 * 1000,
   });
 
-  const schemes = response?.data || [];
+  // Always show data — use API data if available, fallback to static
+  const schemes = response?.data?.length ? response.data : FALLBACK_SCHEMES;
 
   return (
     <div ref={ref} className="max-w-6xl mx-auto px-4 py-8">
@@ -34,16 +46,10 @@ export default function Schemes() {
         </p>
       </div>
 
-      {isLoading && (
+      {isLoading && schemes.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20 gap-4">
           <div className="w-12 h-12 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
           <p className="text-gray-500 dark:text-slate-400 animate-pulse">{t('schemes.loading')}</p>
-        </div>
-      )}
-
-      {isError && (
-        <div className="text-center py-20 bg-red-50 dark:bg-red-900/20 rounded-2xl border border-red-100 dark:border-red-900">
-          <p className="text-red-500 font-medium">{t('schemes.error')}</p>
         </div>
       )}
 
