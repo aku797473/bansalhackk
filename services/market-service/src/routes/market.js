@@ -25,27 +25,33 @@ const CACHE_TTL = 60 * 60; // 1 hour
 
 
 async function fetchRealMarketData(state, district, commodity) {
-  // NEW ROBUST API KEY & RESOURCE
   const apiKey = '579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b';
   const resourceId = '9ef84268-d588-465a-a308-a864a43d0070';
   
   try {
-    // Fetch a reliable chunk (1000 records) without fragile Govt filters
-    let url = `https://api.data.gov.in/resource/${resourceId}?api-key=${apiKey}&format=json&limit=1000`;
+    // Increase limit to 2000 to cover more states
+    let url = `https://api.data.gov.in/resource/${resourceId}?api-key=${apiKey}&format=json&limit=2000`;
     
-    console.log(`[MARKET-API] Fetching real data from: ${url}`);
+    console.log(`[MARKET-API] Fetching 2000 records...`);
     const response = await axios.get(url, { timeout: 30000 });
     
-    if (response.data && response.data.records && response.data.records.length > 0) {
+    if (response.data && response.data.records) {
       let records = response.data.records;
+      console.log(`[MARKET-API] Total records from Govt: ${records.length}`);
       
-      // Manual filtering for reliability
+      // Filter for the requested state
       if (state) {
-        const s = state.toLowerCase();
-        records = records.filter(r => r.state.toLowerCase().includes(s) || s.includes(r.state.toLowerCase()));
+        const s = state.toLowerCase().trim();
+        records = records.filter(r => 
+          r.state.toLowerCase().includes(s) || 
+          s.includes(r.state.toLowerCase())
+        );
       }
       
-      if (records.length === 0) return null;
+      if (records.length === 0) {
+        console.log(`[MARKET-API] No records found for ${state}. First record was: ${response.data.records[0]?.state}`);
+        return null;
+      }
 
       return records.map(r => {
         const parsedMin = parseFloat(r.min_price);
