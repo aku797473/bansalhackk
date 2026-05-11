@@ -75,21 +75,44 @@ export default function Market() {
   const availableDistricts = marketData?.districts || [];
   const availableCommodities = marketData?.commodities || [];
 
-  // 2. Filtering
+  // 2. Filtering - STRICT & PRECISE
   const filteredPrices = useMemo(() => {
     return prices.filter(p => {
-      const s = search.toLowerCase();
-      const matchSearch = !search || p.commodity?.toLowerCase().includes(s) || p.market?.toLowerCase().includes(s);
+      // 1. State Match (Always Required)
       const st = selState.toLowerCase();
-      const matchState = !selState || p.state?.toLowerCase().includes(st) || st.includes(p.state?.toLowerCase());
-      const dt = (selDistrict || '').toLowerCase();
-      const matchDist = !selDistrict || p.market?.toLowerCase().includes(dt) || p.district?.toLowerCase().includes(dt);
-      const matchComm = !selCommodity || 
-        p.commodity?.toLowerCase().includes(selCommodity.toLowerCase());
+      const matchState = p.state?.toLowerCase().includes(st) || st.includes(p.state?.toLowerCase());
+      if (!matchState) return false;
 
-      return matchSearch && matchState && matchDist && matchComm;
+      // 2. District Match (Only if selected)
+      if (selDistrict) {
+        const dt = selDistrict.toLowerCase();
+        const matchDist = p.market?.toLowerCase().includes(dt) || p.district?.toLowerCase().includes(dt);
+        if (!matchDist) return false;
+      }
+
+      // 3. Commodity Match (Only if selected)
+      if (selCommodity) {
+        const ct = selCommodity.toLowerCase();
+        const matchComm = p.commodity?.toLowerCase().includes(ct);
+        if (!matchComm) return false;
+      }
+
+      // 4. Search Match
+      if (search) {
+        const s = search.toLowerCase();
+        const matchSearch = p.commodity?.toLowerCase().includes(s) || p.market?.toLowerCase().includes(s);
+        if (!matchSearch) return false;
+      }
+      
+      return true;
     });
   }, [prices, search, selState, selDistrict, selCommodity]);
+
+  const handleStateChange = (val) => {
+    setSelState(val);
+    setSelDistrict(''); // Reset to avoid confusion
+    setSelCommodity(''); // Reset to avoid confusion
+  };
 
   // 3. Dynamic Analytics
   const analytics = useMemo(() => {
