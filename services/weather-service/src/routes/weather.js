@@ -190,16 +190,54 @@ router.get('/by-city', async (req, res) => {
       return res.json({ success: true, data: mock });
     }
 
-    const { data } = await owmAxios.get(
-      `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${OWM_KEY}&units=metric`
-    );
+    const [current, forecast] = await Promise.all([
+      owmAxios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${OWM_KEY}&units=metric`),
+      owmAxios.get(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${OWM_KEY}&units=metric&cnt=56`),
+    ]);
+
+    const c = current.data;
+    const dailyForecast = [];
+    const seen = new Set();
+    for (const item of forecast.data.list) {
+      const date = item.dt_txt.split(' ')[0];
+      if (!seen.has(date) && dailyForecast.length < 7) {
+        seen.add(date);
+        dailyForecast.push({
+          date,
+          tempMax:     item.main.temp_max,
+          tempMin:     item.main.temp_min,
+          description: item.weather[0].description,
+          icon:        item.weather[0].icon,
+          humidity:    item.main.humidity,
+        });
+      }
+    }
+
+    // Extrapolate to 7 days
+    while (dailyForecast.length < 7) {
+      const last = dailyForecast[dailyForecast.length - 1];
+      const prev = dailyForecast[dailyForecast.length - 2] || last;
+      const nextDate = new Date(last.date);
+      nextDate.setDate(nextDate.getDate() + 1);
+      dailyForecast.push({
+        date:        nextDate.toISOString().split('T')[0],
+        tempMax:     Math.round((last.tempMax + (prev ? prev.tempMax : last.tempMax)) / 2),
+        tempMin:     Math.round((last.tempMin + (prev ? prev.tempMin : last.tempMin)) / 2),
+        description: last.description,
+        icon:        last.icon,
+        humidity:    Math.round((last.humidity + (prev ? prev.humidity : last.humidity)) / 2),
+        estimated:   true,
+      });
+    }
+
     const result = {
-      city: data.name, country: data.sys.country,
-      lat: data.coord.lat, lon: data.coord.lon,
-      temperature: data.main.temp, feelsLike: data.main.feels_like,
-      humidity: data.main.humidity, windSpeed: data.wind.speed,
-      description: data.weather[0].description, icon: data.weather[0].icon,
+      city: c.name, country: c.sys.country,
+      lat: c.coord.lat, lon: c.coord.lon,
+      temperature: c.main.temp, feelsLike: c.main.feels_like,
+      humidity: c.main.humidity, windSpeed: c.wind.speed,
+      description: c.weather[0].description, icon: c.weather[0].icon,
       alerts: [],
+      forecast: dailyForecast,
     };
     await rSet(cacheKey, CACHE_TTL, JSON.stringify(result));
     WeatherHistory.create({ userId, lat: result.lat, lon: result.lon, city: result.city, temperature: result.temperature, description: result.description, searchType: 'by-city' }).catch(console.error);
