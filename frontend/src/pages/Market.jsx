@@ -246,6 +246,20 @@ export default function Market() {
          </div>
       </div>
 
+      {/* DEBUG PANEL (Only for fixing) */}
+      <div className="mb-4 p-4 bg-black text-green-400 font-mono text-[10px] rounded-2xl border border-green-500/30 shadow-xl overflow-hidden">
+        <div className="flex justify-between items-center mb-2">
+          <span className="font-black animate-pulse">● SYSTEM DEBUGGER</span>
+          <span className="text-gray-500">API Status: {pricesLoading ? 'FETCHING...' : pricesResponse?.source ? 'CONNECTED' : 'FAIL'}</span>
+        </div>
+        <div className="space-y-1">
+          <div>ENDPOINT: <span className="text-white break-all">{import.meta.env.VITE_INFO_API_URL || '/api'}/market/prices</span></div>
+          <div>RECORDS: <span className="text-white">{pricesResponse?.totalRecords || 0}</span></div>
+          <div>SOURCE: <span className="text-white">{pricesResponse?.source || 'N/A'}</span></div>
+          <div>FILTER: <span className="text-white">State={selState} | Dist={selDistrict} | Comm={selCommodity}</span></div>
+        </div>
+      </div>
+
       {/* ── Filters Strip ─────────────────────────────────────── */}
       <div className="anim-card bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border border-white/20 dark:border-white/5 rounded-[2.5rem] p-5 sm:p-7 mb-8 shadow-premium">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">

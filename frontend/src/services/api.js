@@ -11,6 +11,9 @@ const aiApi       = axios.create({ baseURL: AI_URL,       timeout: 60000 });
 const infoApi     = axios.create({ baseURL: INFO_URL,     timeout: 30000 });
 const businessApi = axios.create({ baseURL: BUSINESS_URL, timeout: 30000 });
 
+// Use Info Hub for Market data by default
+const marketApi = infoApi;
+
 let tokenProvider = null;
 export const setTokenProvider = (fn) => { tokenProvider = fn; };
 
