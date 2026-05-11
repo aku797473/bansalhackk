@@ -102,38 +102,37 @@ router.get('/prices', async (req, res) => {
     // BYPASS CACHE for demo stability
     const cached = null; 
     
-    // Try Real Data First
-    let prices = await fetchRealMarketData(state, district, commodity);
-
-    // Fallback to Smart Mock Data if API fails
-    if (!prices || prices.length === 0) {
-      console.log(`[MARKET-API] Falling back to dynamic mock data for ${state || 'India'}`);
-      prices = generatePriceData();
-      if (state) {
-        prices = prices.filter(p => p.state.toLowerCase().includes(state.toLowerCase()));
-        // If still empty, create specific records for this state
-        if (prices.length === 0) {
-          const basePrice = 2200 + Math.floor(Math.random() * 500);
-          prices = [{
-            state: state,
-            market: district || 'Main Mandi',
-            district: district || state,
-            commodity: commodity || 'Wheat',
-            variety: 'Improved',
-            minPrice: basePrice - 100,
-            maxPrice: basePrice + 100,
-            modalPrice: basePrice,
-            date: new Date().toLocaleDateString('en-GB'),
-            trend: 'stable',
-            changePercent: 0,
-            isReal: false
-          }];
-        }
-      }
+    // TRY REAL DATA with a very short timeout for responsiveness
+    let prices = [];
+    try {
+      prices = await fetchRealMarketData(state, district, commodity);
+    } catch (e) {
+      console.error("Market API Error:", e.message);
     }
 
-    const result = { prices, lastUpdated: new Date().toISOString(), totalRecords: prices.length };
-    res.json({ success: true, data: result });
+    // ALWAYS ensure we have data for the demo
+    if (!prices || prices.length === 0) {
+      console.log(`[MARKET-API] Generating custom demo data for ${state || 'India'}`);
+      const basePrice = 2000 + Math.floor(Math.random() * 1000);
+      const mandiNames = ['Main Mandi', 'Subzi Mandi', 'Grain Market', 'APMC Center', 'Farmers Hub'];
+      
+      prices = Array.from({ length: 8 }, (_, i) => ({
+        state: state || 'Madhya Pradesh',
+        market: `${district || state || 'Local'} ${mandiNames[i % mandiNames.length]}`,
+        district: district || state || 'All Districts',
+        commodity: commodity || 'Wheat',
+        variety: i % 2 === 0 ? 'Regular' : 'Premium',
+        minPrice: basePrice - 200 + (i * 20),
+        maxPrice: basePrice + 300 + (i * 30),
+        modalPrice: basePrice + (i * 10),
+        date: new Date().toLocaleDateString('en-GB'),
+        trend: i % 3 === 0 ? 'up' : i % 3 === 1 ? 'down' : 'stable',
+        changePercent: (Math.random() * 5).toFixed(1),
+        isReal: false
+      }));
+    }
+
+    res.json({ success: true, data: { prices, lastUpdated: new Date().toISOString(), totalRecords: prices.length } });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

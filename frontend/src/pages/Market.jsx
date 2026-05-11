@@ -108,8 +108,15 @@ export default function Market() {
     queryFn: async () => {
       try {
         const res = await marketAPI.getPrices(selState, selCommodity, selDistrict);
-        return res.data.data.prices || [];
-      } catch { return FALLBACK_PRICES; }
+        const fetchedPrices = res.data.data.prices || [];
+        if (fetchedPrices.length > 0) {
+          toast.success(t('market.data_loaded', 'Market data updated!'), { id: 'market-sync' });
+        }
+        return fetchedPrices;
+      } catch { 
+        toast.error(t('market.fetch_error', 'Using demo data...'), { id: 'market-sync' });
+        return FALLBACK_PRICES; 
+      }
     },
     retry: 1,
   });
