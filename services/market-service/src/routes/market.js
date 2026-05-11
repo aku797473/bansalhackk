@@ -98,27 +98,41 @@ router.get('/prices', async (req, res) => {
     // Record history
     MarketHistory.create({ userId, state, district, commodity, searchType: 'prices' }).catch(console.error);
 
-    const cacheKey = `market:prices:${state || 'all'}:${district || 'all'}:${commodity || 'all'}`;
-
     const isRedisReady = redis.status === 'ready';
-    const cached = isRedisReady ? await redis.get(cacheKey) : null;
-    if (cached) return res.json({ success: true, data: JSON.parse(cached), cached: true });
-
+    // BYPASS CACHE for demo stability
+    const cached = null; 
+    
     // Try Real Data First
     let prices = await fetchRealMarketData(state, district, commodity);
 
-    // Fallback to Mock Data if API fails or returns no records
+    // Fallback to Smart Mock Data if API fails
     if (!prices || prices.length === 0) {
+      console.log(`[MARKET-API] Falling back to dynamic mock data for ${state || 'India'}`);
       prices = generatePriceData();
-      if (state) prices = prices.filter(p => p.state.toLowerCase().includes(state.toLowerCase()));
-      if (commodity) prices = prices.filter(p => p.commodity.toLowerCase().includes(commodity.toLowerCase()));
-      if (district) prices = prices.filter(p => p.market.toLowerCase().includes(district.toLowerCase()));
+      if (state) {
+        prices = prices.filter(p => p.state.toLowerCase().includes(state.toLowerCase()));
+        // If still empty, create specific records for this state
+        if (prices.length === 0) {
+          const basePrice = 2200 + Math.floor(Math.random() * 500);
+          prices = [{
+            state: state,
+            market: district || 'Main Mandi',
+            district: district || state,
+            commodity: commodity || 'Wheat',
+            variety: 'Improved',
+            minPrice: basePrice - 100,
+            maxPrice: basePrice + 100,
+            modalPrice: basePrice,
+            date: new Date().toLocaleDateString('en-GB'),
+            trend: 'stable',
+            changePercent: 0,
+            isReal: false
+          }];
+        }
+      }
     }
 
     const result = { prices, lastUpdated: new Date().toISOString(), totalRecords: prices.length };
-    if (isRedisReady) {
-      await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(result)).catch(() => {});
-    }
     res.json({ success: true, data: result });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
