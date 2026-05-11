@@ -119,13 +119,20 @@ export default function Dashboard() {
 
 
   // Weather Query
-  const { data: weather, isLoading: weatherLoading } = useQuery({
+  const { data: weather } = useQuery({
     queryKey: ['weather-current'],
     queryFn: async () => {
-      const { data } = await weatherAPI.getCurrent(24.6005, 80.8322);
-      return data.data;
+      try {
+        const { data } = await weatherAPI.getCurrent(24.6005, 80.8322);
+        return data.data;
+      } catch {
+        return null;
+      }
     },
-    staleTime: 15 * 60 * 1000,
+    staleTime: 10 * 60 * 1000,
+    gcTime: 15 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    retry: 1,
   });
 
   // Market Query

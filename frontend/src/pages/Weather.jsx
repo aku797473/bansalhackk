@@ -47,20 +47,21 @@ export default function Weather() {
         navigator.geolocation.getCurrentPosition(
           pos => { clearTimeout(timer); resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }); },
           () => { clearTimeout(timer); resolve(null); },
-          { timeout: 1500, maximumAge: 600000 } // reuse cached position (10 min)
+          { timeout: 1500, maximumAge: 600000 }
         );
       });
 
       const pos = await getPosition();
-      const lat = pos?.lat || 24.6005; // Fallback to Satna
+      const lat = pos?.lat || 24.6005;
       const lon = pos?.lon || 80.8322;
 
       const res = await weatherAPI.getCurrent(lat, lon);
       return res.data.data;
     },
-    staleTime: 30 * 60 * 1000,      // 30 mins — serve cache instantly
-    placeholderData: FALLBACK_WEATHER, // show fallback immediately while loading
+    staleTime: 10 * 60 * 1000,   // 10 mins
+    gcTime:    15 * 60 * 1000,   // clear cache after 15 mins
     refetchOnWindowFocus: false,
+    retry: 1,
   });
 
   // Show fallback data right away — never show full-page skeleton
