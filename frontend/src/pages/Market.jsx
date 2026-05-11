@@ -76,20 +76,31 @@ export default function Market() {
     return opt;
   };
 
-  // Queries
-  const { data: initData, isLoading: initLoading } = useQuery({
-    queryKey: ['market-init'],
+  // Initial Data (Commodities & States)
+  const { data: metaData } = useQuery({
+    queryKey: ['market-meta'],
     queryFn: async () => {
       try {
-        const [p, c] = await Promise.all([marketAPI.getPrices(), marketAPI.getCommodities()]);
+        const [c, s] = await Promise.all([marketAPI.getCommodities(), marketAPI.getStates()]);
         return {
-          prices: p.data.data.prices || [],
-          commodities: c.data.data || []
+          commodities: c.data.data || [],
+          states: s.data.data || []
         };
-      } catch { return null; }
+      } catch { return { commodities: FALLBACK_COMMODITIES, states: STATES }; }
+    },
+    staleTime: 60 * 60 * 1000,
+  });
+
+  // Dynamic Prices Query
+  const { data: pricesData, isLoading: pricesLoading } = useQuery({
+    queryKey: ['market-prices', selState, selDistrict, selCommodity],
+    queryFn: async () => {
+      try {
+        const res = await marketAPI.getPrices(selState, selCommodity, selDistrict);
+        return res.data.data.prices || [];
+      } catch { return FALLBACK_PRICES; }
     },
     retry: 1,
-    staleTime: 10 * 60 * 1000,
   });
 
   const { data: trends, isLoading: trendsLoading } = useQuery({
@@ -103,20 +114,22 @@ export default function Market() {
     },
     enabled: !!selCommodity,
     retry: 1,
-    staleTime: 10 * 60 * 1000,
   });
 
-  const prices      = initData?.prices?.length      ? initData.prices      : FALLBACK_PRICES;
-  const commodities = initData?.commodities?.length  ? initData.commodities : FALLBACK_COMMODITIES;
-  const loading = initLoading;
+  const prices      = pricesData || FALLBACK_PRICES;
+  const commodities = metaData?.commodities || FALLBACK_COMMODITIES;
+  const availableStates = metaData?.states || STATES;
+  const loading = pricesLoading;
 
-  const filteredPrices = useMemo(() => prices.filter(p => {
-    const matchSearch = !search || p.commodity.toLowerCase().includes(search.toLowerCase());
-    const matchState  = !selState || p.state === selState;
-    const matchDist   = !selDistrict || p.market === selDistrict;
-    if (selDistrict) return matchSearch && matchState && matchDist;
-    return matchSearch && matchState;
-  }), [prices, search, selState, selDistrict]);
+  const filteredPrices = useMemo(() => {
+    if (!prices) return [];
+    return prices.filter(p => {
+      const matchSearch = !search || 
+        p.commodity.toLowerCase().includes(search.toLowerCase()) ||
+        p.market.toLowerCase().includes(search.toLowerCase());
+      return matchSearch;
+    });
+  }, [prices, search]);
 
   // Analytics derived from trends
   const analytics = useMemo(() => {
@@ -204,7 +217,7 @@ export default function Market() {
             <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2 flex items-center gap-1.5"><MapPin size={12} className="text-primary"/> {t('crop.state')}</label>
             <div className="relative group">
               <select className="input rounded-2xl bg-white/50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-700/50 font-bold text-sm shadow-sm appearance-none cursor-pointer hover:border-primary transition-colors" value={selState} onChange={e => handleStateChange(e.target.value)}>
-                {STATES.map(s => <option key={s} value={s}>{translateOption(s, 'crop')}</option>)}
+                {availableStates.map(s => <option key={s} value={s}>{translateOption(s, 'crop')}</option>)}
               </select>
               <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 group-hover:text-primary transition-colors">
                 <RefreshCw size={12} />
