@@ -129,13 +129,16 @@ export default function Dashboard() {
   });
 
   // Market Query
-  const { data: marketData, isLoading: marketLoading } = useQuery({
+  const { data: marketData } = useQuery({
     queryKey: ['market-trends-dashboard'],
     queryFn: async () => {
-       const { data } = await marketAPI.getTrends('Wheat', '', 'Satna');
+       const { data } = await marketAPI.getTrends('Wheat', 'Madhya Pradesh', 'Satna');
        return data.data;
     },
     staleTime: 30 * 60 * 1000,
+    retry: false,
+    // Never crash the dashboard if market API is down
+    onError: () => null,
   });
 
   const modules = [
