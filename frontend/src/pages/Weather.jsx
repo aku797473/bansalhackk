@@ -57,10 +57,29 @@ export default function Weather() {
       const lon = pos?.lon || 80.8322;
 
       const res = await weatherAPI.getCurrent(lat, lon);
-      return res.data.data;
+      const d = res.data.data;
+      // Pad forecast to 7 days on the frontend (backend may return 5 from free tier cache)
+      if (d?.forecast) {
+        while (d.forecast.length < 7) {
+          const last = d.forecast[d.forecast.length - 1];
+          const prev = d.forecast[d.forecast.length - 2] || last;
+          const nextDate = new Date(last.date);
+          nextDate.setDate(nextDate.getDate() + 1);
+          d.forecast.push({
+            date:      nextDate.toISOString().split('T')[0],
+            tempMax:   Math.round((last.tempMax + prev.tempMax) / 2),
+            tempMin:   Math.round((last.tempMin + prev.tempMin) / 2),
+            description: last.description,
+            icon:      last.icon,
+            humidity:  Math.round((last.humidity + prev.humidity) / 2),
+            estimated: true,
+          });
+        }
+      }
+      return d;
     },
-    staleTime: 10 * 60 * 1000,   // 10 mins
-    gcTime:    15 * 60 * 1000,   // clear cache after 15 mins
+    staleTime: 10 * 60 * 1000,
+    gcTime:    15 * 60 * 1000,
     refetchOnWindowFocus: false,
     retry: 1,
   });
