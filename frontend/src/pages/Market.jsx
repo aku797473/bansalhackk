@@ -130,7 +130,6 @@ export default function Market() {
   const prices      = pricesData || FALLBACK_PRICES;
   const commodities = metaData?.commodities || FALLBACK_COMMODITIES;
   const availableStates = metaData?.states || STATES;
-  const districts = districtsData || [];
   const loading = pricesLoading;
 
   const filteredPrices = useMemo(() => {
