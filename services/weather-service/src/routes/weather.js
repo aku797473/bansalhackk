@@ -8,13 +8,27 @@ const redisUrl = process.env.REDIS_URL || 'rediss://default:gQAAAAAAAcH_AAIgcDFm
 const redis = new Redis(redisUrl, {
   maxRetriesPerRequest: 1,
   retryStrategy: () => null,
+  connectTimeout: 3000,
+  commandTimeout: 2000,
   tls: redisUrl.startsWith('rediss://') ? { rejectUnauthorized: false } : undefined
 });
 redis.on('connect', () => {
   console.log('✅ Redis Connected to Upstash (Weather Service)');
 });
-
 redis.on('error', (err) => console.warn('⚠️  Redis not available:', err.message));
+
+// Safe Redis get — never throws, returns null on error/timeout
+const rGet = (key) => {
+  if (redis.status !== 'ready') return Promise.resolve(null);
+  return redis.get(key).catch(() => null);
+};
+const rSet = (key, ttl, val) => {
+  if (redis.status !== 'ready') return Promise.resolve();
+  return redis.setex(key, ttl, val).catch(() => {});
+};
+
+// Axios instance with 5-second timeout — never hangs the response
+const owmAxios = axios.create({ timeout: 5000 });
 
 const OWM_KEY = process.env.OPENWEATHER_API_KEY || 'demo';
 const CACHE_TTL = 30 * 60; // 30 minutes
@@ -64,8 +78,7 @@ router.get('/current', async (req, res) => {
     const userId = req.headers['x-user-id'] || 'anonymous';
 
     const cacheKey = `weather:current:${parseFloat(lat).toFixed(2)}:${parseFloat(lon).toFixed(2)}`;
-    const isRedisReady = redis.status === 'ready';
-    const cached = isRedisReady ? await redis.get(cacheKey) : null;
+    const cached = await rGet(cacheKey);
     if (cached) {
       const data = JSON.parse(cached);
       WeatherHistory.create({ userId, lat, lon, city: data.city, temperature: data.temperature, description: data.description, searchType: 'current' }).catch(console.error);
@@ -74,15 +87,15 @@ router.get('/current', async (req, res) => {
 
     if (!OWM_KEY || OWM_KEY === 'demo' || OWM_KEY.includes('your_')) {
       const mock = getMockWeather(lat, lon);
-      if (isRedisReady) await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(mock)).catch(() => {});
+      await rSet(cacheKey, CACHE_TTL, JSON.stringify(mock));
       WeatherHistory.create({ userId, lat, lon, city: mock.city, temperature: mock.temperature, description: mock.description, searchType: 'current' }).catch(console.error);
       return res.json({ success: true, data: mock });
     }
 
-    // Real OpenWeatherMap API
+    // Real OpenWeatherMap API (5s timeout)
     const [current, forecast] = await Promise.all([
-      axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OWM_KEY}&units=metric`),
-      axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${OWM_KEY}&units=metric&cnt=40`),
+      owmAxios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OWM_KEY}&units=metric`),
+      owmAxios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${OWM_KEY}&units=metric&cnt=40`),
     ]);
 
     const c = current.data;
@@ -124,7 +137,7 @@ router.get('/current', async (req, res) => {
       weatherData.alerts = [{ type: 'severe', message: `Severe weather: ${c.weather[0].description}` }];
     }
 
-    if (isRedisReady) await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(weatherData)).catch(() => {});
+    await rSet(cacheKey, CACHE_TTL, JSON.stringify(weatherData));
     WeatherHistory.create({ userId, lat, lon, city: weatherData.city, temperature: weatherData.temperature, description: weatherData.description, searchType: 'current' }).catch(console.error);
     res.json({ success: true, data: weatherData });
   } catch (err) {
@@ -144,8 +157,7 @@ router.get('/by-city', async (req, res) => {
     const userId = req.headers['x-user-id'] || 'anonymous';
 
     const cacheKey = `weather:city:${city.toLowerCase()}`;
-    const isRedisReady = redis.status === 'ready';
-    const cached = isRedisReady ? await redis.get(cacheKey) : null;
+    const cached = await rGet(cacheKey);
     if (cached) {
        const data = JSON.parse(cached);
        WeatherHistory.create({ userId, lat: data.lat, lon: data.lon, city: data.city, temperature: data.temperature, description: data.description, searchType: 'by-city' }).catch(console.error);
@@ -154,12 +166,12 @@ router.get('/by-city', async (req, res) => {
 
     if (!OWM_KEY || OWM_KEY === 'demo' || OWM_KEY.includes('your_')) {
       const mock = { ...getMockWeather(28.6, 77.2), city };
-      if (isRedisReady) await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(mock)).catch(() => {});
+      await rSet(cacheKey, CACHE_TTL, JSON.stringify(mock));
       WeatherHistory.create({ userId, lat: mock.lat, lon: mock.lon, city: mock.city, temperature: mock.temperature, description: mock.description, searchType: 'by-city' }).catch(console.error);
       return res.json({ success: true, data: mock });
     }
 
-    const { data } = await axios.get(
+    const { data } = await owmAxios.get(
       `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${OWM_KEY}&units=metric`
     );
     const result = {
@@ -170,7 +182,7 @@ router.get('/by-city', async (req, res) => {
       description: data.weather[0].description, icon: data.weather[0].icon,
       alerts: [],
     };
-    if (isRedisReady) await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(result)).catch(() => {});
+    await rSet(cacheKey, CACHE_TTL, JSON.stringify(result));
     WeatherHistory.create({ userId, lat: result.lat, lon: result.lon, city: result.city, temperature: result.temperature, description: result.description, searchType: 'by-city' }).catch(console.error);
     res.json({ success: true, data: result });
   } catch (err) {

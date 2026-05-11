@@ -10,6 +10,22 @@ import { usePageAnimation } from '../hooks/usePageAnimation';
 const WEATHER_EMOJIS = { '01': '☀️', '02': '🌤️', '03': '⛅', '04': '☁️', '09': '🌧️', '10': '🌦️', '11': '⛈️', '13': '❄️', '50': '🌫️' };
 const getEmoji = (icon) => WEATHER_EMOJIS[icon?.slice(0, 2)] || '🌡️';
 
+// Instant fallback so the UI never blocks
+const FALLBACK_WEATHER = {
+  city: 'Satna', country: 'IN',
+  lat: 24.6005, lon: 80.8322,
+  temperature: 32, feelsLike: 35, humidity: 68, windSpeed: 12,
+  description: 'Partly Cloudy', icon: '02d', alerts: [],
+  forecast: Array.from({ length: 5 }, (_, i) => ({
+    date: new Date(Date.now() + i * 86400000).toISOString().split('T')[0],
+    tempMax: 30 + i, tempMin: 22 + i,
+    description: ['Sunny','Partly Cloudy','Light Rain','Cloudy','Clear'][i],
+    icon: ['01d','02d','10d','03d','01n'][i],
+    humidity: 60 + i * 3,
+  })),
+  isFallback: true,
+};
+
 export default function Weather() {
   const { t, i18n } = useTranslation();
   const ref = usePageAnimation();
@@ -23,26 +39,33 @@ export default function Weather() {
         const res = await weatherAPI.getByCity(searchQuery);
         return res.data.data;
       }
-      
-      // Use React Query to handle geolocation state seamlessly
+
+      // Fast geo: 1.5s timeout, then immediately fall back
       const getPosition = () => new Promise((resolve) => {
         if (!navigator.geolocation) return resolve(null);
+        const timer = setTimeout(() => resolve(null), 1500);
         navigator.geolocation.getCurrentPosition(
-          pos => resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
-          err => resolve(null),
-          { timeout: 3000 } // Don't hang forever
+          pos => { clearTimeout(timer); resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }); },
+          () => { clearTimeout(timer); resolve(null); },
+          { timeout: 1500, maximumAge: 600000 } // reuse cached position (10 min)
         );
       });
 
       const pos = await getPosition();
       const lat = pos?.lat || 24.6005; // Fallback to Satna
       const lon = pos?.lon || 80.8322;
-      
-      const res = await weatherAPI.getCurrent(lat, lon); 
+
+      const res = await weatherAPI.getCurrent(lat, lon);
       return res.data.data;
     },
-    staleTime: 30 * 60 * 1000, // 30 mins
+    staleTime: 30 * 60 * 1000,      // 30 mins — serve cache instantly
+    placeholderData: FALLBACK_WEATHER, // show fallback immediately while loading
+    refetchOnWindowFocus: false,
   });
+
+  // Show fallback data right away — never show full-page skeleton
+  const displayData = data || FALLBACK_WEATHER;
+  const isRealData = data && !data.isFallback;
 
   const fetchByLocation = () => {
     setSearchQuery('');
@@ -54,7 +77,8 @@ export default function Weather() {
     setSearchQuery(citySearch.trim());
   };
 
-  if (loading) return (
+  // Only show skeleton on the very first cold load (no fallback yet rendered)
+  if (loading && !displayData) return (
     <div className="max-w-4xl mx-auto px-4 py-6">
       <div className="skeleton h-48 mb-4" />
       <div className="grid grid-cols-5 gap-3">{[...Array(5)].map((_, i) => <div key={i} className="skeleton h-28" />)}</div>
@@ -66,9 +90,13 @@ export default function Weather() {
       <div className="anim-header page-header flex items-center justify-between">
         <div>
           <h1 className="page-title">{t('weather.title')}</h1>
-          <p className="page-subtitle">{t('weather.current')}</p>
+          <p className="page-subtitle">
+            {t('weather.current')}
+            {searching && <span className="ml-2 text-xs text-primary animate-pulse">{t('common.updating', 'Updating…')}</span>}
+            {displayData?.isFallback && !searching && <span className="ml-2 text-xs text-amber-500">{t('weather.fallback_notice', 'Showing estimate — fetching live data…')}</span>}
+          </p>
         </div>
-        <button onClick={fetchByLocation} className="btn-ghost p-2"><RefreshCw size={16} /></button>
+        <button onClick={fetchByLocation} className={`btn-ghost p-2 ${searching ? 'animate-spin' : ''}`}><RefreshCw size={16} /></button>
       </div>
 
       {/* Search */}
@@ -81,15 +109,15 @@ export default function Weather() {
         </button>
       </div>
 
-      {data && (
+      {displayData && (
         <>
           {/* Alerts */}
-          {data.alerts?.length > 0 && (
+          {displayData.alerts?.length > 0 && (
             <div className="mb-5 p-4 bg-red-50 border border-red-200 rounded-2xl flex items-start gap-3">
               <AlertTriangle size={18} className="text-red-500 shrink-0 mt-0.5" />
               <div>
                 <p className="font-semibold text-red-700 text-sm">{t('weather.alerts')}</p>
-                {data.alerts.map((a, i) => <p key={i} className="text-sm text-red-600">{a.message}</p>)}
+                {displayData.alerts.map((a, i) => <p key={i} className="text-sm text-red-600">{a.message}</p>)}
               </div>
             </div>
           )}
@@ -102,16 +130,16 @@ export default function Weather() {
               <div className="text-center md:text-left">
                 <div className="flex items-center justify-center md:justify-start gap-2 mb-4 text-sky-50 font-bold tracking-wide">
                   <MapPin size={18} />
-                  <span className="text-lg">{data.city}, {data.country}</span>
+                  <span className="text-lg">{displayData.city}, {displayData.country}</span>
                 </div>
                 <div className="flex flex-col md:flex-row items-center gap-6">
-                  <span className="text-8xl drop-shadow-lg animate-bounce-sm">{getEmoji(data.icon)}</span>
+                  <span className="text-8xl drop-shadow-lg animate-bounce-sm">{getEmoji(displayData.icon)}</span>
                   <div>
-                    <h2 className="text-8xl font-black tracking-tighter drop-shadow-md leading-none">{Math.round(data.temperature)}°</h2>
+                    <h2 className="text-8xl font-black tracking-tighter drop-shadow-md leading-none">{Math.round(displayData.temperature)}°</h2>
                     <p className="text-xl font-bold text-sky-100 capitalize mt-2 flex items-center gap-2">
-                       {data.description} 
+                       {displayData.description} 
                        <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                       <span className="text-xs uppercase tracking-widest opacity-70">{t('weather.real_time')}</span>
+                       <span className="text-xs uppercase tracking-widest opacity-70">{isRealData ? t('weather.real_time') : t('weather.estimate', 'Estimate')}</span>
                     </p>
                   </div>
                 </div>
@@ -119,9 +147,9 @@ export default function Weather() {
               
               <div className="grid grid-cols-3 md:flex md:flex-col gap-2 sm:gap-6 bg-white/10 backdrop-blur-md rounded-3xl p-4 sm:p-6 border border-white/20 w-full md:w-auto">
                 {[
-                  { icon: Thermometer, label: t('weather.feels_like'), val: `${Math.round(data.feelsLike)}°C` },
-                  { icon: Droplets,    label: t('weather.humidity'),   val: `${data.humidity}%` },
-                  { icon: Wind,        label: t('weather.wind'),       val: `${data.windSpeed} km/h` },
+                  { icon: Thermometer, label: t('weather.feels_like'), val: `${Math.round(displayData.feelsLike)}°C` },
+                  { icon: Droplets,    label: t('weather.humidity'),   val: `${displayData.humidity}%` },
+                  { icon: Wind,        label: t('weather.wind'),       val: `${displayData.windSpeed} km/h` },
                 ].map(({ icon: Icon, label, val }) => (
                   <div key={label} className="flex flex-col sm:flex-row items-center sm:items-start gap-2 sm:gap-3 text-center sm:text-left">
                     <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0">
@@ -138,13 +166,13 @@ export default function Weather() {
           </div>
 
           {/* 5-day forecast */}
-          {data.forecast?.length > 0 && (
+          {displayData.forecast?.length > 0 && (
             <div className="anim-fade mb-8">
               <h2 className="text-xl font-black text-gray-900 dark:text-white mb-5 flex items-center gap-2">
                 {t('weather.outlook')} <Calendar className="text-primary" />
               </h2>
               <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-none snap-x">
-                {data.forecast.map((day, i) => (
+                {displayData.forecast.map((day, i) => (
                   <div key={i} className={clsx(
                     'min-w-[140px] snap-start border rounded-3xl p-5 text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl relative overflow-hidden group',
                     i === 0 
@@ -181,8 +209,8 @@ export default function Weather() {
             
             <div className="p-6 grid sm:grid-cols-2 gap-4">
                {[
-                 { label: t('weather.irrigation_req', 'Irrigation Required'), check: data.temperature > 35, desc: t('weather.temp_tip', 'High evapotranspiration') },
-                 { label: t('weather.fungal_risk', 'Risk of Fungal Attack'), check: data.humidity > 85, desc: t('weather.pest_tip', 'Watch for pests') }
+                 { label: t('weather.irrigation_req', 'Irrigation Required'), check: displayData.temperature > 35, desc: t('weather.temp_tip', 'High evapotranspiration') },
+                 { label: t('weather.fungal_risk', 'Risk of Fungal Attack'), check: displayData.humidity > 85, desc: t('weather.pest_tip', 'Watch for pests') }
                ].map((item, idx) => (
                  <div key={idx} className={clsx(
                    'p-4 rounded-2xl border flex items-center gap-4 transition-all',
