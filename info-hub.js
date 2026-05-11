@@ -29,10 +29,10 @@ const weatherRoutes = require('./services/weather-service/src/routes/weather');
 const newsRoutes = require('./services/news-service/src/routes/news');
 const schemesRoutes = require('./services/schemes-service/src/routes/schemes');
 
-app.use('/api/market', verifyToken, marketRoutes);
-app.use('/api/weather', verifyToken, weatherRoutes);
-app.use('/api/news', verifyToken, newsRoutes);
-app.use('/api/schemes', verifyToken, schemesRoutes);
+app.use('/api/market', marketRoutes);
+app.use('/api/weather', weatherRoutes);
+app.use('/api/news', newsRoutes);
+app.use('/api/schemes', schemesRoutes);
 
 app.get('/health', (req, res) => res.json({ status: 'ok', hub: 'info' }));
 
