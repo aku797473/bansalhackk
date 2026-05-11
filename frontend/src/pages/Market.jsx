@@ -141,7 +141,10 @@ export default function Market() {
         p.district?.toLowerCase().includes(search.toLowerCase());
       
       const matchState = !selState || p.state === selState;
-      const matchDist = !selDistrict || p.market === selDistrict;
+      // Match either the market name or the district name
+      const matchDist = !selDistrict || 
+        p.market.toLowerCase().includes(selDistrict.toLowerCase()) || 
+        p.district?.toLowerCase() === selDistrict.toLowerCase();
       
       return matchSearch && matchState && matchDist;
     });
