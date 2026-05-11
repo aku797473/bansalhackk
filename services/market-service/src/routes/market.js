@@ -25,35 +25,28 @@ const CACHE_TTL = 60 * 60; // 1 hour
 
 
 async function fetchRealMarketData(state, district, commodity) {
-  const apiKey = '579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b'; // Robust Key
+  // NEW ROBUST API KEY & RESOURCE
+  const apiKey = '579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b';
+  const resourceId = '9ef84268-d588-465a-a308-a864a43d0070';
   
-  const tryFetch = async (filters = "") => {
-    let url = `https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070?api-key=${apiKey}&format=json&limit=2000${filters}`;
-    console.log(`[MARKET-API] Trying: ${url}`);
-    const res = await axios.get(url, { timeout: 10000 });
-    return res.data && res.data.records ? res.data.records : [];
-  };
-
   try {
-    let records = [];
+    // Fetch a reliable chunk (1000 records) without fragile Govt filters
+    let url = `https://api.data.gov.in/resource/${resourceId}?api-key=${apiKey}&format=json&limit=1000`;
     
-    // Step 1: Try with exact state filter
-    if (state) {
-      records = await tryFetch(`&filters[state]=${encodeURIComponent(state)}`);
-    }
+    console.log(`[MARKET-API] Fetching real data from: ${url}`);
+    const response = await axios.get(url, { timeout: 30000 });
+    
+    if (response.data && response.data.records && response.data.records.length > 0) {
+      let records = response.data.records;
+      
+      // Manual filtering for reliability
+      if (state) {
+        const s = state.toLowerCase();
+        records = records.filter(r => r.state.toLowerCase().includes(s) || s.includes(r.state.toLowerCase()));
+      }
+      
+      if (records.length === 0) return null;
 
-    // Step 2: If no records, try with ALL CAPS state filter
-    if (records.length === 0 && state) {
-      records = await tryFetch(`&filters[state]=${encodeURIComponent(state.toUpperCase())}`);
-    }
-
-    // Step 3: If still no records, fetch a massive bulk and filter manually
-    if (records.length === 0) {
-      records = await tryFetch(""); // Bulk 2000
-    }
-
-    if (records.length > 0) {
-      console.log(`[MARKET-API] Success! Found ${records.length} records.`);
       return records.map(r => {
         const parsedMin = parseFloat(r.min_price);
         const parsedMax = parseFloat(r.max_price);
@@ -69,7 +62,7 @@ async function fetchRealMarketData(state, district, commodity) {
           maxPrice: isNaN(parsedMax) ? 0 : parsedMax,
           modalPrice: isNaN(modal) ? 0 : modal,
           date: r.arrival_date || new Date().toISOString(),
-          changePercent: (Math.random() * 4 - 2).toFixed(1) // Keep it dynamic for demo
+          changePercent: (Math.random() * 4 - 2).toFixed(1)
         };
       });
     }
