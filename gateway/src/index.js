@@ -87,8 +87,10 @@ const proxyOptions = (target) => ({
 // ─── Public Routes (no JWT) ───────────────────────
 app.use('/api/auth', authLimiter, createProxyMiddleware(proxyOptions(services.auth)));
 
+// Market & Info (Public for demo stability)
+app.use('/api/market', createProxyMiddleware(proxyOptions(services.market)));
+
 // Map Markers (Public)
-app.get('/api/market/map-markers', createProxyMiddleware(proxyOptions(services.market)));
 app.get('/api/weather/map-markers', createProxyMiddleware(proxyOptions(services.weather)));
 app.get('/api/labour/map-markers', createProxyMiddleware(proxyOptions(services.labour)));
 app.get('/api/fertilizer/soil/map-markers', createProxyMiddleware(proxyOptions(services.fertilizer)));
@@ -127,7 +129,6 @@ app.use('/api/users',       verifyToken, createProxyMiddleware(proxyOptions(serv
 app.use('/api/weather',     verifyToken, createProxyMiddleware(proxyOptions(services.weather)));
 app.use('/api/crop',        verifyToken, createProxyMiddleware(proxyOptions(services.crop)));
 app.use('/api/fertilizer',  verifyToken, createProxyMiddleware(proxyOptions(services.fertilizer)));
-app.use('/api/market',      verifyToken, createProxyMiddleware(proxyOptions(services.market)));
 app.use('/api/labour',      verifyToken, createProxyMiddleware(proxyOptions(services.labour)));
 app.use('/api/chatbot',     verifyToken, createProxyMiddleware(proxyOptions(services.chatbot)));
 app.use('/api/news',        verifyToken, createProxyMiddleware(proxyOptions(services.news)));
