@@ -58,10 +58,39 @@ function PublicRoute({ children }) {
   return !isAuth ? children : <Navigate to="/dashboard" replace />;
 }
 
+import { useEffect } from 'react';
+import axios from 'axios';
+
+function KeepAlive() {
+  const { isAuth } = useAuth();
+  
+  useEffect(() => {
+    if (!isAuth) return;
+    
+    // Ping the wake endpoint immediately on load
+    const infoUrl = import.meta.env.VITE_INFO_API_URL || '/api';
+    const gatewayUrl = infoUrl.replace('/weather', '').replace('/api/weather', '/api');
+    
+    const wakeUp = () => {
+      console.log('--- Waking up backend services ---');
+      axios.get(`${gatewayUrl}/wake`).catch(() => {});
+    };
+
+    wakeUp();
+    
+    // Ping every 10 minutes to prevent Render from sleeping (15min timeout)
+    const interval = setInterval(wakeUp, 10 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [isAuth]);
+
+  return null;
+}
+
 function AppLayout({ children }) {
   const { isAuth } = useAuth();
   return (
     <div className="min-h-screen bg-surface dark:bg-slate-900 transition-colors duration-200">
+      <KeepAlive />
       {isAuth && <Navbar />}
       <main className={clsx("transition-all duration-200", isAuth ? 'pt-16' : '')}>
         <Suspense fallback={<LoadingScreen />}>
