@@ -74,7 +74,7 @@ export const weatherAPI = {
 };
 
 export const marketAPI = {
-  getPrices:     (state, commodity) => infoApi.get('/market/prices', { params: { state, commodity } }),
+  getPrices:     (state, commodity, district) => infoApi.get('/market/prices', { params: { state, commodity, district } }),
   getCommodities:() => infoApi.get('/market/commodities'),
   getStates:     () => infoApi.get('/market/states'),
   getDistricts:  (state) => infoApi.get('/market/districts', { params: { state } }),
