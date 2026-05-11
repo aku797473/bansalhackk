@@ -1,131 +1,101 @@
 import axios from 'axios';
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_GATEWAY_URL || '/api';
+const AUTH_URL     = import.meta.env.VITE_AUTH_API_URL     || '/api';
+const AI_URL       = import.meta.env.VITE_AI_API_URL       || '/api';
+const INFO_URL     = import.meta.env.VITE_INFO_API_URL     || '/api';
+const BUSINESS_URL = import.meta.env.VITE_BUSINESS_API_URL || '/api';
 
-const api = axios.create({
-  baseURL: BASE_URL,
-  timeout: 30000,
-  headers: { 'Content-Type': 'application/json' },
-});
+// Base instances for each hub
+const authApi     = axios.create({ baseURL: AUTH_URL,     timeout: 30000 });
+const aiApi       = axios.create({ baseURL: AI_URL,       timeout: 60000 });
+const infoApi     = axios.create({ baseURL: INFO_URL,     timeout: 30000 });
+const businessApi = axios.create({ baseURL: BUSINESS_URL, timeout: 30000 });
 
 let tokenProvider = null;
 export const setTokenProvider = (fn) => { tokenProvider = fn; };
 
-// Attach JWT from Clerk
-api.interceptors.request.use(async (config) => {
-  if (tokenProvider) {
-    try {
-      const token = await tokenProvider();
-      if (token) config.headers.Authorization = `Bearer ${token}`;
-    } catch (err) {
-      console.error('Failed to get auth token', err);
+// Interceptor to attach Clerk token to all 4 hub instances
+[authApi, aiApi, infoApi, businessApi].forEach(instance => {
+  instance.interceptors.request.use(async (config) => {
+    if (tokenProvider) {
+      try {
+        const token = await tokenProvider();
+        if (token) config.headers.Authorization = `Bearer ${token}`;
+      } catch (err) { console.error('Token Error', err); }
     }
-  }
-  config.__retryCount = config.__retryCount || 0;
-  return config;
+    return config;
+  });
 });
 
-// Auto-retry on 502/503 (Render cold-start) — up to 2 retries with 3s delay
-api.interceptors.response.use(null, async (error) => {
-  const config = error.config;
-  const status = error.response?.status;
-  if ((status === 502 || status === 503) && config && config.__retryCount < 2) {
-    config.__retryCount += 1;
-    console.log(`[API] Retry ${config.__retryCount}/2 for ${config.url} (got ${status})`);
-    await new Promise(r => setTimeout(r, 3000)); // wait 3s for service to warm up
-    return api(config);
-  }
-  return Promise.reject(error);
-});
-
-// Auto refresh logic is handled by Clerk SDK automatically
-
-
-// ─── Auth ─────────────────────────────────────────
+// ─── Auth Hub ─────────────────────────────────────
 export const authAPI = {
-  login:      (email, password) => api.post('/auth/login', { email, password }),
-  register:   (name, email, password, role) => api.post('/auth/register', { name, email, password, role }),
-  refresh:    (refreshToken) => api.post('/auth/refresh', { refreshToken }),
-  logout:     (refreshToken) => api.post('/auth/logout', { refreshToken }),
-  me:         () => api.get('/auth/me'),
+  login:      (email, password) => authApi.post('/auth/login', { email, password }),
+  register:   (name, email, password, role) => authApi.post('/auth/register', { name, email, password, role }),
+  refresh:    (refreshToken) => authApi.post('/auth/refresh', { refreshToken }),
+  logout:     (refreshToken) => authApi.post('/auth/logout', { refreshToken }),
+  me:         () => authApi.get('/auth/me'),
 };
 
-// ─── User ──────────────────────────────────────────
 export const userAPI = {
-  getProfile:     () => api.get('/users/profile'),
-  saveProfile:    (data) => api.post('/users/profile', data),
-  updateLanguage: (language) => api.patch('/users/language', { language }),
-  updateLocation: (loc) => api.patch('/users/location', loc),
+  getProfile:     () => authApi.get('/users/profile'),
+  saveProfile:    (data) => authApi.post('/users/profile', data),
+  updateLanguage: (language) => authApi.patch('/users/language', { language }),
+  updateLocation: (loc) => authApi.patch('/users/location', loc),
 };
 
-// ─── Weather ───────────────────────────────────────
-export const weatherAPI = {
-  getCurrent: (lat, lon) => api.get(`/weather/current?lat=${lat}&lon=${lon}`),
-  getByCity:  (city) => api.get(`/weather/by-city?city=${encodeURIComponent(city)}`),
-  getMarkers: () => api.get('/weather/map-markers'),
-};
-
-// ─── Crop ──────────────────────────────────────────
-export const cropAPI = {
-  recommend: (data) => api.post('/crop/recommend', data),
-  calendar:  (crop, state, lang) => api.get(`/crop/calendar?crop=${crop}&state=${state}&lang=${lang}`),
-};
-
-// ─── Fertilizer ────────────────────────────────────
-export const fertilizerAPI = {
-  analyze: (formData) => api.post('/fertilizer/analyze', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-    timeout: 60000,
-  }),
-  getMarkers: () => api.get('/fertilizer/soil/map-markers'),
-};
-
-// ─── Market ────────────────────────────────────────
-export const marketAPI = {
-  getPrices:     (state, commodity) => api.get('/market/prices', { params: { state, commodity } }),
-  getCommodities:() => api.get('/market/commodities'),
-  getStates:     () => api.get('/market/states'),
-  getDistricts:  (state) => api.get('/market/districts', { params: { state } }),
-  getTrends:     (commodity, state, market) => api.get('/market/trends', { params: { commodity, state, market } }),
-  getMarkers:    () => api.get('/market/map-markers'),
-};
-
-// ─── Labour ────────────────────────────────────────
-export const labourAPI = {
-  getJobs:    (params) => api.get('/labour/jobs', { params }),
-  postJob:    (data) => api.post('/labour/jobs', data),
-  getJob:     (id) => api.get(`/labour/jobs/${id}`),
-  applyJob:   (id, data) => api.post(`/labour/jobs/${id}/apply`, data),
-  myJobs:     () => api.get('/labour/my-jobs'),
-  updateStatus:(id, status) => api.patch(`/labour/jobs/${id}/status`, { status }),
-  getMarkers: () => api.get('/labour/map-markers'),
-};
-
-// ─── Chatbot ───────────────────────────────────────
+// ─── AI Hub ───────────────────────────────────────
 export const chatAPI = {
   sendMessage: (message, sessionId, language) =>
-    api.post('/chatbot/message', { message, sessionId, language }),
-  getHistory:  (sessionId) => api.get(`/chatbot/history/${sessionId}`),
-  clearHistory:(sessionId) => api.delete(`/chatbot/history/${sessionId}`),
+    aiApi.post('/chatbot/message', { message, sessionId, language }),
+  getHistory:  (sessionId) => aiApi.get(`/chatbot/history/${sessionId}`),
+  clearHistory:(sessionId) => aiApi.delete(`/chatbot/history/${sessionId}`),
 };
 
-// ─── News ──────────────────────────────────────────
+export const cropAPI = {
+  recommend: (data) => aiApi.post('/crop/recommend', data),
+  calendar:  (crop, state, lang) => aiApi.get(`/crop/calendar?crop=${crop}&state=${state}&lang=${lang}`),
+};
+
+export const fertilizerAPI = {
+  analyze: (formData) => aiApi.post('/fertilizer/analyze', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  }),
+};
+
+// ─── Info Hub ──────────────────────────────────────
+export const weatherAPI = {
+  getCurrent: (lat, lon) => infoApi.get(`/weather/current?lat=${lat}&lon=${lon}`),
+  getByCity:  (city) => infoApi.get(`/weather/by-city?city=${encodeURIComponent(city)}`),
+};
+
+export const marketAPI = {
+  getPrices:     (state, commodity) => infoApi.get('/market/prices', { params: { state, commodity } }),
+  getCommodities:() => infoApi.get('/market/commodities'),
+  getStates:     () => infoApi.get('/market/states'),
+  getDistricts:  (state) => infoApi.get('/market/districts', { params: { state } }),
+};
+
 export const newsAPI = {
-  // We use axios directly to ensure it hits Vercel (/api/news) 
-  // instead of trying to find news on the Render gateway.
-  getLatest: (lang) => axios.get(`/api/news?lang=${lang}`),
+  getLatest: (lang) => infoApi.get(`/news?lang=${lang}`),
 };
 
-// ─── Payment ───────────────────────────────────────
-export const paymentAPI = {
-  createOrder: (amount) => api.post('/payment/order', { amount }),
-  verifyPayment: (data) => api.post('/payment/verify', data),
-};
-
-// ─── Schemes ───────────────────────────────────────
 export const schemesAPI = {
-  getSchemes: () => api.get('/schemes'),
+  getSchemes: () => infoApi.get('/schemes'),
 };
 
-export default api;
+// ─── Business Hub ──────────────────────────────────
+export const labourAPI = {
+  getJobs:    (params) => businessApi.get('/labour/jobs', { params }),
+  postJob:    (data) => businessApi.post('/labour/jobs', data),
+  getJob:     (id) => businessApi.get(`/labour/jobs/${id}`),
+  applyJob:   (id, data) => businessApi.post(`/labour/jobs/${id}/apply`, data),
+  myJobs:     () => businessApi.get('/labour/my-jobs'),
+};
+
+export const paymentAPI = {
+  createOrder: (amount) => businessApi.post('/payment/order', { amount }),
+  verifyPayment: (data) => businessApi.post('/payment/verify', data),
+};
+
+export default authApi; // Default
 
