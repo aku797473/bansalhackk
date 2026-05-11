@@ -1,7 +1,6 @@
 /**
  * unified-server.js
  * Runs ALL microservices in a SINGLE process.
- * Deploy this as ONE Render web service → zero cold-start 502s.
  */
 require('dotenv').config({ path: '.env.runtime' });
 require('dotenv').config();
@@ -21,7 +20,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors({
   origin: (origin, cb) => cb(null, true),
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-user-id'],
   credentials: true,
 }));
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
@@ -31,20 +30,18 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 // Clerk
-let clerkLoaded = false;
 try {
   const { clerkMiddleware } = require('@clerk/express');
   app.use(clerkMiddleware({
     publishableKey: process.env.CLERK_PUBLISHABLE_KEY || process.env.VITE_CLERK_PUBLISHABLE_KEY,
     secretKey: process.env.CLERK_SECRET_KEY,
   }));
-  clerkLoaded = true;
 } catch (e) {
-  console.warn('⚠️ Clerk not available, skipping auth middleware init');
+  console.warn('⚠️ Clerk not available');
 }
 
 // Rate limiter
-app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 500, standardHeaders: true, legacyHeaders: false }));
+app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 1000, standardHeaders: true, legacyHeaders: false }));
 
 // ─── Auth middleware ──────────────────────────────
 const { verifyToken } = require('./gateway/src/middleware/auth');
@@ -70,27 +67,12 @@ const newsRoutes       = safeRequire('./services/news-service/src/routes/news', 
 // ─── Public Routes ───────────────────────────────
 if (authRoutes) app.use('/api/auth', authRoutes);
 
-// Wake endpoint — public, no auth
 app.get('/api/wake', (req, res) => {
-  const loaded = [
-    authRoutes, userRoutes, weatherRoutes, cropRoutes, fertilizerRoutes,
-    marketRoutes, labourRoutes, chatRoutes, paymentRoutes, schemesRoutes, newsRoutes
-  ].filter(Boolean).length;
-  res.json({
-    status: 'ok',
-    mode: 'unified',
-    timestamp: new Date().toISOString(),
-    services: `${loaded}/11 loaded`,
-    mongo: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
-  });
+  res.json({ status: 'ok', mode: 'unified', timestamp: new Date().toISOString() });
 });
 
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok', service: 'unified-server', timestamp: new Date().toISOString() });
-});
-
-app.get('/', (req, res) => {
-  res.json({ message: 'Smart Kisan Unified Server' });
+  res.json({ status: 'ok', service: 'unified-server' });
 });
 
 // ─── Protected Routes ────────────────────────────
@@ -113,16 +95,15 @@ app.use('*', (req, res) => {
 async function connectMongo() {
   const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/smart-kisan';
   try {
-    await mongoose.connect(uri, { serverSelectionTimeoutMS: 5000 });
+    await mongoose.connect(uri, { serverSelectionTimeoutMS: 10000 });
     console.log('✅ MongoDB connected');
   } catch (err) {
-    console.warn('⚠️  MongoDB unavailable:', err.message, '— running without DB');
+    console.error('❌ MongoDB Connection Error:', err.message);
   }
 }
 
 connectMongo().then(() => {
   app.listen(PORT, () => {
     console.log(`🚀 Unified Smart Kisan Server on port ${PORT}`);
-    console.log(`📡 All services loaded in single process — no cold starts!`);
   });
 });
