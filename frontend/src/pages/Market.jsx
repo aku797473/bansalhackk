@@ -166,11 +166,10 @@ export default function Market() {
 
   const handleStateChange = (val) => {
     setSelState(val);
-    const firstDist = DISTRICTS_DATA[val]?.[0] || '';
-    setSelDistrict(firstDist);
+    setSelDistrict(''); // Reset district when state changes
   };
 
-  const districts = DISTRICTS_DATA[selState] || [];
+  const districts = districtsData || DISTRICTS_DATA[selState] || [];
 
   // Custom Tooltip for the chart
   const CustomTooltip = ({ active, payload, label }) => {
