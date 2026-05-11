@@ -58,8 +58,11 @@ export default function Weather() {
 
       const res = await weatherAPI.getCurrent(lat, lon);
       const d = res.data.data;
-      // Pad forecast to 7 days on the frontend (backend may return 5 from free tier cache)
-      if (d?.forecast) {
+      
+      // Ensure forecast exists and has at least 1 item before padding
+      if (d && (!d.forecast || d.forecast.length === 0)) {
+        d.forecast = FALLBACK_WEATHER.forecast; // Use fallback outlook if backend fails to provide it
+      } else if (d && d.forecast && d.forecast.length < 7) {
         while (d.forecast.length < 7) {
           const last = d.forecast[d.forecast.length - 1];
           const prev = d.forecast[d.forecast.length - 2] || last;
@@ -70,8 +73,8 @@ export default function Weather() {
             tempMax:   Math.round((last.tempMax + prev.tempMax) / 2),
             tempMin:   Math.round((last.tempMin + prev.tempMin) / 2),
             description: last.description,
-            icon:      last.icon,
-            humidity:  Math.round((last.humidity + prev.humidity) / 2),
+            icon:        last.icon,
+            humidity:    Math.round((last.humidity + prev.humidity) / 2),
             estimated: true,
           });
         }

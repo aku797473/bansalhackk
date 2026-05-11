@@ -103,19 +103,14 @@ export default function Market() {
   });
 
   // Dynamic Prices Query
-  const { data: pricesData, isLoading: pricesLoading } = useQuery({
+  const { data: pricesResponse, isLoading: pricesLoading } = useQuery({
     queryKey: ['market-prices', selState, selDistrict, selCommodity],
     queryFn: async () => {
       try {
         const res = await marketAPI.getPrices(selState, selCommodity, selDistrict);
-        const fetchedPrices = res.data.data.prices || [];
-        if (fetchedPrices.length > 0) {
-          toast.success(t('market.data_loaded', 'Market data updated!'), { id: 'market-sync' });
-        }
-        return fetchedPrices;
+        return res.data.data;
       } catch { 
-        toast.error(t('market.fetch_error', 'Using demo data...'), { id: 'market-sync' });
-        return FALLBACK_PRICES; 
+        return { prices: FALLBACK_PRICES, lastUpdated: new Date().toISOString(), source: 'Fallback' }; 
       }
     },
     retry: 1,
@@ -134,7 +129,7 @@ export default function Market() {
     retry: 1,
   });
 
-  const prices      = pricesData || FALLBACK_PRICES;
+  const prices      = pricesResponse?.prices || FALLBACK_PRICES;
   const commodities = metaData?.commodities || FALLBACK_COMMODITIES;
   const availableStates = metaData?.states || STATES;
   const loading = pricesLoading;
@@ -143,14 +138,14 @@ export default function Market() {
     if (!prices) return [];
     return prices.filter(p => {
       const matchSearch = !search || 
-        p.commodity.toLowerCase().includes(search.toLowerCase()) ||
-        p.market.toLowerCase().includes(search.toLowerCase()) ||
+        p.commodity?.toLowerCase().includes(search.toLowerCase()) ||
+        p.market?.toLowerCase().includes(search.toLowerCase()) ||
         p.district?.toLowerCase().includes(search.toLowerCase());
       
-      const matchState = !selState || p.state === selState;
+      const matchState = !selState || p.state?.toLowerCase() === selState?.toLowerCase();
       // Match either the market name or the district name
       const matchDist = !selDistrict || 
-        p.market.toLowerCase().includes(selDistrict.toLowerCase()) || 
+        p.market?.toLowerCase().includes(selDistrict.toLowerCase()) || 
         p.district?.toLowerCase() === selDistrict.toLowerCase();
       
       return matchSearch && matchState && matchDist;
@@ -530,6 +525,16 @@ export default function Market() {
               ))}
             </tbody>
           </table>
+        </div>
+        <div className="p-4 bg-gray-50 dark:bg-slate-900 flex justify-between items-center text-[10px] font-bold text-gray-400 uppercase tracking-widest relative z-10 border-t border-gray-100 dark:border-white/5">
+           <div className="flex items-center gap-2">
+             <Calendar size={12} />
+             {t('market.last_sync', 'Last Synced')}: {pricesResponse?.lastUpdated ? new Date(pricesResponse.lastUpdated).toLocaleTimeString() : 'N/A'}
+           </div>
+           <div className="flex items-center gap-2">
+             <div className={clsx("w-1.5 h-1.5 rounded-full", pricesResponse?.source === 'Government API' ? "bg-green-500" : "bg-orange-500")} />
+             Source: {pricesResponse?.source || 'Auto'}
+           </div>
         </div>
       </div>
     </div>

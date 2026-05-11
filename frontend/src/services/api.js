@@ -17,6 +17,11 @@ export const setTokenProvider = (fn) => { tokenProvider = fn; };
 // Interceptor to attach Clerk token to all 4 hub instances
 [authApi, aiApi, infoApi, businessApi].forEach(instance => {
   instance.interceptors.request.use(async (config) => {
+    // Cache Buster for Info Hub
+    if (instance === infoApi) {
+      config.params = { ...config.params, _t: Date.now() };
+    }
+    
     if (tokenProvider) {
       try {
         const token = await tokenProvider();

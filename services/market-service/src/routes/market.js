@@ -137,7 +137,15 @@ router.get('/prices', async (req, res) => {
       }));
     }
 
-    res.json({ success: true, data: { prices, lastUpdated: new Date().toISOString(), totalRecords: prices.length } });
+    const result = { 
+      prices, 
+      lastUpdated: new Date().toISOString(), 
+      totalRecords: prices.length,
+      source: prices.length > 0 && prices[0].isReal ? 'Government API' : 'Fallback System'
+    };
+
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.json({ success: true, data: result });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

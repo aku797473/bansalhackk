@@ -101,6 +101,8 @@ export default function Labour() {
         const data = r.data?.data || [];
         if (data.length > 0) {
           setJobs(data);
+        } else {
+          setJobs(FALLBACK_JOBS); // Ensure it's never empty
         }
       })
       .catch(() => {
