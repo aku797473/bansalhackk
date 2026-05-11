@@ -8,12 +8,6 @@ import { Cloud, Leaf, FlaskConical, TrendingUp, Users, Map,
 import clsx from 'clsx';
 import logo from '../assets/logo.png';
 import ultraHero from '../assets/ultra-hero.png';
-import { useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useGSAP } from '@gsap/react';
-
-gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const modules = (t) => [
   {
@@ -45,114 +39,9 @@ const modules = (t) => [
 export default function Landing() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const container = useRef();
-
-  useGSAP(() => {
-    // Nav Bar Animation
-    gsap.from('.nav-container', {
-      y: -50,
-      opacity: 0,
-      duration: 0.8,
-      ease: 'power3.out',
-      clearProps: 'all'
-    });
-
-    // Hero Content Animation
-    const heroTl = gsap.timeline({ delay: 0.5 });
-    heroTl
-      .from('.hero-badge', { y: 20, opacity: 0, duration: 0.6 })
-      .from('.hero-title', { y: 30, opacity: 0, duration: 0.8 }, '-=0.4')
-      .from('.hero-desc', { y: 20, opacity: 0, duration: 0.8 }, '-=0.6')
-      .from('.hero-btns', { y: 20, opacity: 0, duration: 0.8 }, '-=0.6')
-      .from('.hero-image', { scale: 0.95, opacity: 0, duration: 1, ease: 'power2.out' }, '-=0.8');
-
-    // Scroll Triggered Animations
-    gsap.from('.step-card', {
-      scrollTrigger: {
-        trigger: '.steps-section',
-        start: 'top 80%',
-      },
-      y: 50,
-      opacity: 0,
-      duration: 0.8,
-      stagger: 0.2,
-      ease: 'power3.out'
-    });
-
-    gsap.from('.feature-card', {
-      scrollTrigger: {
-        trigger: '.features-section',
-        start: 'top 80%',
-      },
-      y: 50,
-      opacity: 0,
-      duration: 0.8,
-      stagger: 0.2,
-      ease: 'power3.out'
-    });
-
-    gsap.from('.stat-item', {
-      scrollTrigger: {
-        trigger: '.stats-section',
-        start: 'top 85%',
-      },
-      scale: 0.8,
-      opacity: 0,
-      duration: 0.8,
-      stagger: 0.2,
-      ease: 'back.out(1.7)'
-    });
-
-    gsap.from('.testimonial-card', {
-      scrollTrigger: {
-        trigger: '.testimonials-section',
-        start: 'top 80%',
-      },
-      x: (index) => index % 2 === 0 ? -50 : 50,
-      opacity: 0,
-      duration: 1,
-      stagger: 0.3,
-      ease: 'power2.out'
-    });
-
-    gsap.from('.infra-content > *', {
-      scrollTrigger: {
-        trigger: '.infra-section',
-        start: 'top 80%',
-      },
-      y: 30,
-      opacity: 0,
-      duration: 0.8,
-      stagger: 0.2,
-      ease: 'power3.out'
-    });
-
-    gsap.from('.infra-image', {
-      scrollTrigger: {
-        trigger: '.infra-section',
-        start: 'top 70%',
-      },
-      x: 50,
-      opacity: 0,
-      duration: 1,
-      ease: 'power2.out'
-    });
-
-    gsap.from('.final-cta-content', {
-      scrollTrigger: {
-        trigger: '.final-cta-section',
-        start: 'top 80%',
-      },
-      scale: 0.9,
-      opacity: 0,
-      duration: 1,
-      ease: 'power3.out'
-    });
-
-  }, { scope: container });
 
   return (
-    <div ref={container} className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 selection:bg-emerald-500/30 selection:text-emerald-600 font-inter overflow-x-hidden transition-colors duration-300">
+    <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 selection:bg-emerald-500/30 selection:text-emerald-600 font-inter overflow-x-hidden transition-colors duration-300">
       
       {/* ── Navigation ────────────────────────────────────── */}
       <nav className="fixed top-0 inset-x-0 z-[100] px-4 pt-4">
