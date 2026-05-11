@@ -37,20 +37,7 @@ async function fetchRealMarketData(state, district, commodity) {
     
     if (response.data && response.data.records) {
       let records = response.data.records;
-      console.log(`[MARKET-API] Total records fetched: ${records.length}`);
-
-      // LOCAL FILTERING (Much more reliable)
-      if (state) {
-        records = records.filter(r => r.state.toLowerCase() === state.toLowerCase());
-      }
-      if (commodity) {
-        records = records.filter(r => r.commodity.toLowerCase().includes(commodity.toLowerCase()));
-      }
-      if (district) {
-        records = records.filter(r => r.district.toLowerCase() === district.toLowerCase() || r.market.toLowerCase().includes(district.toLowerCase()));
-      }
-
-      console.log(`[MARKET-API] Filtered records for ${state || 'all'}: ${records.length}`);
+      console.log(`[MARKET-API] Total records fetched from Govt: ${records.length}. Sending all to frontend for local filtering.`);
 
       return records.map(r => {
         const parsedMin = parseFloat(r.min_price);
