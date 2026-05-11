@@ -28,30 +28,37 @@ const CACHE_TTL = 60 * 60; // 1 hour
 async function fetchRealMarketData(state, district, commodity) {
   try {
     const apiKey = process.env.DATA_GOV_API_KEY || '579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b';
-    let url = `https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070?api-key=${apiKey}&format=json&limit=100`;
-    if (state) url += `&filters[state]=${encodeURIComponent(state)}`;
-    if (district) url += `&filters[district]=${encodeURIComponent(district)}`;
-    if (commodity) url += `&filters[commodity]=${encodeURIComponent(commodity)}`;
+    // Fetch a large batch without filters to avoid Govt API filter bugs
+    let url = `https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070?api-key=${apiKey}&format=json&limit=1000`;
 
-    console.log(`[MARKET-API] Fetching from Govt API: ${state || 'all'} - ${commodity || 'all'}`);
+    console.log(`[MARKET-API] Fetching latest 1000 records from India...`);
     
-    const startTime = Date.now();
-    const response = await axios.get(url, { timeout: 10000 }); // Increased to 10s
-    const duration = Date.now() - startTime;
+    const response = await axios.get(url, { timeout: 15000 });
     
     if (response.data && response.data.records) {
-      console.log(`[MARKET-API] Success! Found ${response.data.records.length} records in ${duration}ms`);
-      return response.data.records.map(r => {
+      let records = response.data.records;
+      console.log(`[MARKET-API] Total records fetched: ${records.length}`);
+
+      // LOCAL FILTERING (Much more reliable)
+      if (state) {
+        records = records.filter(r => r.state.toLowerCase() === state.toLowerCase());
+      }
+      if (commodity) {
+        records = records.filter(r => r.commodity.toLowerCase().includes(commodity.toLowerCase()));
+      }
+      if (district) {
+        records = records.filter(r => r.district.toLowerCase() === district.toLowerCase() || r.market.toLowerCase().includes(district.toLowerCase()));
+      }
+
+      console.log(`[MARKET-API] Filtered records for ${state || 'all'}: ${records.length}`);
+
+      return records.map(r => {
         const parsedMin = parseFloat(r.min_price);
         const parsedMax = parseFloat(r.max_price);
         let parsedModal = parseFloat(r.modal_price);
         
         if (isNaN(parsedModal)) {
-          if (!isNaN(parsedMin) && !isNaN(parsedMax)) {
-            parsedModal = Math.round((parsedMin + parsedMax) / 2);
-          } else {
-            parsedModal = parsedMax || parsedMin || 0;
-          }
+          parsedModal = !isNaN(parsedMin) && !isNaN(parsedMax) ? Math.round((parsedMin + parsedMax) / 2) : (parsedMax || parsedMin || 0);
         }
 
         return {
@@ -69,8 +76,6 @@ async function fetchRealMarketData(state, district, commodity) {
           isReal: true
         };
       });
-    } else {
-      console.warn(`[MARKET-API] Govt API returned no records for this filter.`);
     }
   } catch (e) {
     console.error(`[MARKET-API] Govt API fetch failed: ${e.message}`);
