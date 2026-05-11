@@ -34,7 +34,7 @@ export default function Weather() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const { data, isLoading: loading, refetch, isFetching: searching } = useQuery({
-    queryKey: ['weather', searchQuery],
+    queryKey: ['weather', searchQuery, 'v7'],
     queryFn: async () => {
       if (searchQuery) {
         const res = await weatherAPI.getByCity(searchQuery);
