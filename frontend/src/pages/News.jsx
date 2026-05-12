@@ -60,8 +60,6 @@ function useSpeech() {
     }
   }, []);
 
-  // Read a sequence of texts one by one
-  const isMounted = useRef(true);
   useEffect(() => {
     isMounted.current = true;
     return () => {
