@@ -24,7 +24,9 @@ services:
         sync: false
       - key: GEMINI_API_KEY
         sync: false
-      - key: GROQ_API_KEY
+      - key: CLERK_SECRET_KEY
+        sync: false
+      - key: CLERK_PUBLISHABLE_KEY
         sync: false
 
   # 📊 Info Hub
@@ -37,6 +39,10 @@ services:
       - key: MONGODB_URI
         sync: false
       - key: OPENWEATHER_API_KEY
+        sync: false
+      - key: CLERK_SECRET_KEY
+        sync: false
+      - key: CLERK_PUBLISHABLE_KEY
         sync: false
 
   # 💼 Business Hub
@@ -51,4 +57,8 @@ services:
       - key: RAZORPAY_KEY_ID
         sync: false
       - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: CLERK_SECRET_KEY
+        sync: false
+      - key: CLERK_PUBLISHABLE_KEY
         sync: false
