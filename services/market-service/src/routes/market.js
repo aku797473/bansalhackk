@@ -95,27 +95,47 @@ router.get('/prices', async (req, res) => {
 
     // ALWAYS ensure we have data for the demo
     if (!prices || prices.length === 0) {
-      console.log(`[MARKET-API] Generating contextual demo data for ${commodity || 'Crop'} in ${district || state || 'Local'}`);
+      console.log(`[MARKET-API] Generating realistic contextual data for ${state || 'Local'}`);
       
-      // Try to find a base price for the commodity to make it realistic
-      const baseline = BASE_PRICES.find(b => b.commodity.toLowerCase() === (commodity || 'Wheat').toLowerCase())?.base || 2000;
-      const basePrice = baseline + Math.floor(Math.random() * 200);
-      const mandiNames = ['Main Mandi', 'Subzi Mandi', 'Grain Market', 'APMC Center', 'Farmers Hub'];
+      const mandiNames = ['Main Mandi', 'Subzi Mandi', 'Grain Market', 'APMC Center', 'Farmers Hub', 'Krishi Upaj Mandi', 'Nai Mandi', 'District Mandi'];
       
-      prices = Array.from({ length: 8 }, (_, i) => ({
-        state: state || 'Madhya Pradesh',
-        market: `${district || state || 'Local'} ${mandiNames[i % mandiNames.length]}`,
-        district: district || state || 'Local District',
-        commodity: commodity || 'Wheat',
-        variety: i % 2 === 0 ? 'Regular' : 'Premium',
-        minPrice: Math.round(basePrice * 0.9),
-        maxPrice: Math.round(basePrice * 1.1),
-        modalPrice: basePrice + (i * 10),
-        date: new Date().toLocaleDateString('en-GB'),
-        trend: i % 3 === 0 ? 'up' : i % 3 === 1 ? 'down' : 'stable',
-        changePercent: (Math.random() * 5).toFixed(1),
-        isReal: false
-      }));
+      // If a specific commodity is searched, generate variations for that one
+      if (commodity) {
+        const baseline = BASE_PRICES.find(b => b.commodity.toLowerCase() === commodity.toLowerCase())?.base || 2000;
+        prices = Array.from({ length: 8 }, (_, i) => {
+          const varPrice = baseline + (i * 15); // Consistent step instead of random
+          return {
+            state: state || 'Madhya Pradesh',
+            market: `${district || state || 'Local'} ${mandiNames[i % mandiNames.length]}`,
+            district: district || state || 'Local District',
+            commodity: commodity,
+            variety: i % 2 === 0 ? 'Regular' : 'Premium',
+            minPrice: Math.round(varPrice * 0.98),
+            maxPrice: Math.round(varPrice * 1.02),
+            modalPrice: varPrice,
+            date: new Date().toLocaleDateString('en-GB'),
+            trend: i % 3 === 0 ? 'up' : i % 3 === 1 ? 'down' : 'stable',
+            changePercent: (1.2 + (i * 0.3)).toFixed(1),
+            isReal: false
+          };
+        });
+      } else {
+        // If no specific commodity, show a mix of common commodities for that state
+        const statePrices = BASE_PRICES.filter(p => !state || p.state.toLowerCase() === state.toLowerCase());
+        const sourceList = statePrices.length > 0 ? statePrices : BASE_PRICES.slice(0, 10);
+        
+        prices = sourceList.slice(0, 10).map((p, i) => ({
+          ...p,
+          market: `${p.market} Mandi`,
+          minPrice: Math.round(p.base * 0.98),
+          maxPrice: Math.round(p.base * 1.02),
+          modalPrice: p.base,
+          date: new Date().toLocaleDateString('en-GB'),
+          trend: i % 2 === 0 ? 'up' : 'stable',
+          changePercent: (1.0 + (i * 0.2)).toFixed(1),
+          isReal: false
+        }));
+      }
     }
 
     const result = { 
