@@ -71,7 +71,7 @@ export default function Navbar() {
           {/* Logo Section */}
           <NavLink to="/dashboard" className="flex items-center gap-2 shrink-0 group">
             <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-all">
-              <img src={logo} alt="Logo" className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
+              <img src={logo} alt="Logo" className="w-10 h-10 sm:w-12 sm:h-12 object-contain scale-110" />
             </div>
             <div className="flex flex-col overflow-hidden">
               <div className="flex items-center gap-1.5">

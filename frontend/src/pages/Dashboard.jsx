@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { weatherAPI, marketAPI, labourAPI } from '../services/api';
 import clsx from 'clsx';
+import logo from '../assets/logo.png';
 
 const WEATHER_EMOJIS = { '01': '☀️', '02': '🌤️', '03': '⛅', '04': '☁️', '09': '🌧️', '10': '🌦️', '11': '⛈️', '13': '❄️', '50': '🌫️' };
 const getWeatherEmoji = (icon) => WEATHER_EMOJIS[icon?.slice(0, 2)] || '🌡️';
@@ -209,8 +210,11 @@ export default function Dashboard() {
                   <RefreshCw size={10} className="text-emerald-500 animate-spin-slow" /> {t('dashboard.live_sync')}
                 </span>
             </div>
-            <h1 className="text-4xl sm:text-5xl font-black tracking-tighter text-slate-900 dark:text-white flex items-center gap-3 leading-none">
-                {t(greetingKey)}, {user?.name?.split(' ')[0] || t('auth.farmer')} <Sparkles className="text-amber-400" size={28} />
+            <h1 className="text-4xl sm:text-6xl font-black tracking-tighter text-slate-900 dark:text-white flex items-center gap-6 leading-none">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-[2rem] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-xl flex items-center justify-center p-3 animate-fade-in">
+                   <img src={logo} alt="Smart Kisan" className="w-full h-full object-contain scale-110" />
+                </div>
+                <span>{t(greetingKey)}, {user?.name?.split(' ')[0] || t('auth.farmer')}</span>
             </h1>
             <p className="text-sm text-gray-500 dark:text-slate-400 font-medium mt-3 flex items-center gap-2">
                 <Calendar size={14} className="text-primary" /> {new Date().toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' })}

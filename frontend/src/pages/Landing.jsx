@@ -47,10 +47,10 @@ export default function Landing() {
       <nav className="fixed top-0 inset-x-0 z-[100] px-4 pt-4">
         <div className="nav-container max-w-5xl mx-auto h-16 border border-slate-100 dark:border-white/5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded-2xl px-6 flex items-center justify-between shadow-sm transition-all">
           <div className="flex items-center gap-2">
-             <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
-                <img src={logo} className="w-5 h-5 invert brightness-0" alt="logo" />
+             <div className="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                <img src={logo} className="w-7 h-7 object-contain" alt="logo" />
              </div>
-             <span className="text-base font-bold tracking-tight text-slate-900 dark:text-white">Smart Kisan <span className="text-emerald-600">AI</span></span>
+             <span className="text-lg font-bold tracking-tight text-slate-900 dark:text-white">Smart Kisan</span>
           </div>
 
           <div className="flex items-center gap-4">
