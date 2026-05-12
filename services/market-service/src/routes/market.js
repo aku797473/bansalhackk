@@ -13,7 +13,13 @@ const redis = new Redis(redisUrl, {
   tls: redisUrl.startsWith('rediss://') ? { rejectUnauthorized: false } : undefined
 });
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+const groqKey = process.env.GROQ_API_KEY || process.env.VITE_GROQ_API_KEY;
+if (!groqKey) {
+  console.warn('❌ GROQ_API_KEY is missing! Market AI will not work.');
+} else {
+  console.log('✅ GROQ_API_KEY found. Market AI initialized.');
+}
+const groq = new Groq({ apiKey: groqKey || 'missing' });
 
 // Function to fetch highly realistic AI prices
 async function fetchAIMarketData(state, district, commodity) {
