@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mic, MicOff, X, Volume2, Languages } from 'lucide-react';
 import clsx from 'clsx';
+import toast from 'react-hot-toast';
 
 // ─── Command Maps ─────────────────────────────────────────────────────────────
 // NOTE: hi arrays include BOTH romanized AND Devanagari script because
@@ -111,6 +112,7 @@ export default function VoiceAssistant() {
     const r = new SR();
     r.continuous      = false;
     r.interimResults  = true;
+    r.maxAlternatives = 1;
     r.lang            = lang === 'hi' ? 'hi-IN' : 'en-IN';
     return r;
   }, [lang]);
@@ -163,11 +165,20 @@ export default function VoiceAssistant() {
     }
 
     const r = buildRecognition();
-    if (!r) { alert('Speech recognition is not supported in this browser.'); return; }
+    if (!r) { 
+      toast.error('Voice search is not supported in this browser. Try Chrome or Safari.', { id: 'no-sr' });
+      return; 
+    }
 
     setTranscript('');
     setStatus('listening');
     recognitionRef.current = r;
+
+    r.onstart = () => {
+      setIsListening(true);
+      setStatus('listening');
+      if ('vibrate' in navigator) navigator.vibrate(50); // Subtle haptic feedback
+    };
 
     r.onresult = (event) => {
       const current = event.resultIndex;
@@ -176,11 +187,38 @@ export default function VoiceAssistant() {
       if (event.results[current].isFinal) processCommand(text);
     };
 
-    r.onend  = () => { setIsListening(false); if (status === 'listening') setStatus('idle'); };
-    r.onerror = () => { setIsListening(false); setStatus('idle'); };
+    r.onend = () => {
+      setIsListening(false);
+      if (status === 'listening') setStatus('idle');
+      console.log('Speech recognition ended');
+    };
 
-    r.start();
-    setIsListening(true);
+    r.onerror = (event) => {
+      console.error('Speech Recognition Error:', event.error);
+      setIsListening(false);
+      setStatus('idle');
+      
+      const errorMessages = {
+        'network': 'Network error. Please check your connection.',
+        'not-allowed': 'Microphone permission denied.',
+        'no-speech': 'No speech detected. Please try again.',
+        'aborted': 'Listening stopped.',
+        'language-not-supported': 'Selected language is not supported.',
+      };
+
+      const msg = errorMessages[event.error] || `Error: ${event.error}`;
+      toast.error(msg, { id: 'voice-error' });
+    };
+
+    try {
+      r.start();
+      // Status will be set to 'listening' in r.onstart for better sync
+    } catch (err) {
+      console.error('Recognition start error:', err);
+      toast.error('Microphone failed. Try refreshing the page.');
+      setIsListening(false);
+      setStatus('idle');
+    }
   };
 
   // Rebuild recognition when language changes

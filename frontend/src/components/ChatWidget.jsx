@@ -5,6 +5,7 @@ import { chatAPI } from '../services/api';
 import { MessageCircle, X, Send, Trash2, ChevronDown, Bot, Mic, MicOff } from 'lucide-react';
 import { v4 as uuid } from 'uuid';
 import clsx from 'clsx';
+import toast from 'react-hot-toast';
 
 export default function ChatWidget() {
   const { t, i18n } = useTranslation();
@@ -37,6 +38,11 @@ export default function ChatWidget() {
       recognition.current.interimResults = false;
       recognition.current.lang = i18n.language === 'hi' ? 'hi-IN' : 'en-IN';
 
+      recognition.current.onstart = () => {
+        setIsListening(true);
+        if ('vibrate' in navigator) navigator.vibrate(40);
+      };
+
       recognition.current.onresult = (event) => {
         const transcript = event.results[0][0].transcript;
         setInput(transcript);
@@ -46,6 +52,13 @@ export default function ChatWidget() {
       recognition.current.onerror = (event) => {
         console.error('Speech recognition error:', event.error);
         setIsListening(false);
+        const errorMessages = {
+          'network': 'Network error. Check connection.',
+          'not-allowed': 'Mic permission denied.',
+          'no-speech': 'No speech detected.',
+          'aborted': 'Stopped.',
+        };
+        toast.error(errorMessages[event.error] || `Error: ${event.error}`, { id: 'chat-voice-error' });
       };
 
       recognition.current.onend = () => setIsListening(false);
@@ -53,12 +66,21 @@ export default function ChatWidget() {
   }, [i18n.language]);
 
   const toggleListening = () => {
-    if (!recognition.current) return alert('Speech recognition not supported in this browser.');
+    if (!recognition.current) {
+      toast.error('Voice input not supported in this browser.', { id: 'no-sr-chat' });
+      return;
+    }
     if (isListening) {
       recognition.current.stop();
     } else {
-      setIsListening(true);
-      recognition.current.start();
+      try {
+        recognition.current.start();
+        // State updated in onstart
+      } catch (err) {
+        console.error('Failed to start chat recognition:', err);
+        setIsListening(false);
+        toast.error('Could not start microphone.');
+      }
     }
   };
 
