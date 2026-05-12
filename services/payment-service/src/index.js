@@ -15,8 +15,14 @@ const PORT = process.env.PORT || 5010;
 app.use(express.json());
 app.use(cors());
 
+const labourRoutes = require('../../labour-service/src/routes/labour');
+
 // Routes
 app.use('/payment', paymentRoutes);
+app.use('/api/labour', labourRoutes);
+
+app.get('/test-payment-direct', (req, res) => res.send('Payment Service Direct Test Working!'));
+app.get('/api/labour/test', (req, res) => res.send('Labour via Payment Service working!'));
 
 
 // Health Check
