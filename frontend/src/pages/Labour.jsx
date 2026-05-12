@@ -6,6 +6,7 @@ import { labourAPI, paymentAPI } from '../services/api';
 import { Users, Plus, MapPin, Banknote, X, Briefcase, Phone, User, Camera, WifiOff, ShieldCheck, Star, Clock, CheckCircle2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
+import { usePageAnimation } from '../hooks/usePageAnimation';
 
 // ─── Fallback seed data shown when API is unreachable ─────────────────────────
 const FALLBACK_JOBS = [
@@ -60,6 +61,7 @@ const CATEGORY_GRADIENTS = {
 
 export default function Labour() {
   const { t } = useTranslation();
+  const ref = usePageAnimation();
   const { user } = useAuth();
   const [tab, setTab]       = useState('browse');
   const [jobs, setJobs]       = useState(FALLBACK_JOBS);
@@ -236,8 +238,8 @@ export default function Labour() {
 
 
   return (
-    <div className="page-wrapper px-2 sm:px-4">
-      <div className="page-header flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6 mb-6 sm:mb-10">
+    <div ref={ref} className="page-wrapper px-2 sm:px-4">
+      <div className="anim-header page-header flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6 mb-6 sm:mb-10">
         <div>
           <h1 className="page-title flex items-center gap-3 tracking-tighter">
             <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-2xl shadow-inner">
@@ -454,7 +456,7 @@ export default function Labour() {
 
       {/* My Jobs List */}
       {tab === 'my-jobs' && (
-        <div ref={ref} className="page-wrapper">
+        <div className="page-wrapper">
           {myJobs.length === 0
             ? <div className="card text-center py-24 text-gray-400 dark:text-slate-600 italic font-bold border-dashed border-2">{t('common.no_data')}</div>
             : myJobs.map(job => (

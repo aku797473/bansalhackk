@@ -158,7 +158,7 @@ export default function Market() {
   }, [filteredPrices, selDistrict, selCommodity]);
 
   return (
-    <div ref={ref} className="page-wrapper max-w-7xl pb-20">
+    <div ref={ref} className="page-wrapper px-2 sm:px-4">
       
       {/* ── Header ────────────────────────────────────────────── */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
@@ -284,10 +284,10 @@ export default function Market() {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] md:rounded-[4rem] shadow-premium overflow-hidden border border-white/20 dark:border-white/5">
-            <div className="p-8 md:p-12 border-b border-gray-50 dark:border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-8">
-               <h3 className="text-2xl md:text-4xl font-black text-gray-900 dark:text-white tracking-tighter">Mandi Board Details</h3>
-               <div className="px-6 py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-blue-100 dark:border-blue-900/20 w-fit">
+          <div className="bg-white dark:bg-slate-900 rounded-[2rem] md:rounded-[4rem] shadow-premium overflow-hidden border border-white/20 dark:border-white/5">
+            <div className="p-6 md:p-12 border-b border-gray-50 dark:border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-8">
+               <h3 className="text-2xl md:text-4xl font-black text-gray-900 dark:text-white tracking-tighter text-center md:text-left">Mandi Board Details</h3>
+               <div className="px-6 py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-blue-100 dark:border-blue-900/20 w-fit mx-auto md:mx-0">
                  Updated: {new Date(marketData?.lastSync).toLocaleTimeString()}
                </div>
             </div>
