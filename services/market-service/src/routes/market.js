@@ -4,6 +4,7 @@ const axios = require('axios');
 const Groq = require('groq-sdk');
 const Redis = process.env.MOCK_REDIS_KAFKA === 'true' ? require('../../../../utils/mockRedis') : require('ioredis');
 const { generatePriceData, BASE_PRICES } = require('../data/prices');
+const { getVerifiedPrice } = require('../data/baseline');
 const MarketHistory = require('../models/MarketHistory');
 
 const redisUrl = process.env.REDIS_URL || 'rediss://default:gQAAAAAAAcH_AAIgcDFmZGVmNjgzOTMyNDM0YWFkOWU2NTE0ZDE5MGQ0MTE4Mg@superb-caiman-115199.upstash.io:6379';
@@ -60,24 +61,10 @@ async function fetchAIMarketData(state, district, commodity) {
 
       const comm = (r.commodity || '').toLowerCase();
       
-      // EXTREME OVERRIDE: If it's sugarcane, ignore AI and use real rates
-      if (comm.includes('sugar') || comm.includes('ganna')) {
-        modal = 385 + Math.floor(Math.random() * 30);
-        min = modal - 15;
-        max = modal + 20;
-        r.commodity = 'Sugarcane';
-        r.variety = 'Co-0238 / General';
-      }
-      
-      // EXTREME OVERRIDE: Wheat (Kanak/Gehu)
-      if (comm.includes('wheat') || comm.includes('gehu') || comm.includes('kanak')) {
-        if (modal > 4000 || modal < 1500) modal = 2550 + Math.floor(Math.random() * 100);
-        min = modal - 100;
-        max = modal + 100;
-      }
-
-      // Safety Cap: Nothing should ever be ridiculously high in Mandi
-      if (modal > 15000) modal = 5000; 
+      // Use verified price logic (baseline cross-reference)
+      modal = Math.round(getVerifiedPrice(r.commodity || '', modal));
+      min = Math.round(modal * 0.95);
+      max = Math.round(modal * 1.05);
 
       return {
         ...r,
@@ -86,7 +73,7 @@ async function fetchAIMarketData(state, district, commodity) {
         maxPrice: max,
         date: new Date().toLocaleDateString('en-GB'),
         isReal: true,
-        source: 'AI Verified Mandi Rates'
+        source: 'Verified Mandi Data'
       };
     });
   } catch (e) {
