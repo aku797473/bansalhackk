@@ -229,17 +229,17 @@ export default function Dashboard() {
         </div>
 
         {/* ── The Bento Grid ───────────────────────────────── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 auto-rows-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 auto-rows-auto">
           {modules.map((m) => (
             <div
               key={m.id}
               onClick={() => navigate(m.to)}
               className={clsx(
-                "bento-card group relative cursor-pointer overflow-hidden",
-                m.size === 'lg' ? 'col-span-1 sm:col-span-2 row-span-1 sm:row-span-2 rounded-[2rem] p-8' : 
-                m.size === 'md' ? 'col-span-1 sm:col-span-1 row-span-1' : 'col-span-1 sm:col-span-1 row-span-1 !p-5',
-                m.id === 'weather' ? 'text-white shadow-xl hover:-translate-y-1 transition-all duration-300' : 'bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 dark:text-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300',
-                m.color
+                "bento-card group relative cursor-pointer overflow-hidden transition-all duration-300",
+                m.size === 'lg' ? 'col-span-1 sm:col-span-2 row-span-1 sm:row-span-2 rounded-[2rem] p-6 sm:p-10' : 
+                m.size === 'md' ? 'col-span-1 sm:col-span-1 row-span-1 p-6' : 'col-span-1 sm:col-span-1 row-span-1 p-5',
+                m.id === 'weather' ? 'text-white shadow-xl bg-gradient-to-br from-primary to-emerald-600' : 'bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 dark:text-white hover:shadow-xl',
+                "hover:-translate-y-1 active:scale-[0.98]"
               )}
             >
               {m.id === 'weather' && (
@@ -248,6 +248,7 @@ export default function Dashboard() {
               {m.render()}
             </div>
           ))}
+
 
           {/* Extra Bento Items: Support Card */}
           <div className="bento-card col-span-1 sm:col-span-2 lg:col-span-2 bg-emerald-600 rounded-[2rem] p-6 sm:p-8 text-white relative overflow-hidden group cursor-pointer shadow-xl shadow-emerald-500/20 hover:-translate-y-1 transition-all" onClick={() => navigate('/chat')}>
