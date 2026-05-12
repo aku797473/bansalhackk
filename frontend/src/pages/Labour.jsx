@@ -499,39 +499,39 @@ export default function Labour() {
                </div>
             </div>
 
-            <div className="p-10">
-               <div className="flex gap-5 mb-8">
-                  <div className="bg-emerald-50 dark:bg-emerald-900/10 p-5 rounded-[1.5rem] flex-1 text-center border border-emerald-100 dark:border-emerald-900/20 relative overflow-hidden group">
+            <div className="p-5 sm:p-10">
+               <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 mb-6 sm:mb-8">
+                  <div className="bg-emerald-50 dark:bg-emerald-900/10 p-4 sm:p-5 rounded-2xl sm:rounded-[1.5rem] flex-1 text-center border border-emerald-100 dark:border-emerald-900/20 relative overflow-hidden group">
                      <div className="absolute top-0 right-0 p-1.5 bg-emerald-500 text-white rounded-bl-xl shadow-md">
                         <CheckCircle2 size={12} />
                      </div>
-                     <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-black uppercase tracking-widest mb-1">{t('labour.guaranteed_wage')}</p>
-                     <p className="text-2xl font-black text-emerald-700 dark:text-emerald-300">₹{showModal.wage}</p>
+                     <p className="text-[9px] sm:text-[10px] text-emerald-600 dark:text-emerald-400 font-black uppercase tracking-widest mb-1">{t('labour.guaranteed_wage')}</p>
+                     <p className="text-xl sm:text-2xl font-black text-emerald-700 dark:text-emerald-300">₹{showModal.wage}</p>
                   </div>
-                  <div className="bg-blue-50 dark:bg-blue-900/10 p-5 rounded-[1.5rem] flex-1 text-center border border-blue-100 dark:border-blue-900/20">
-                     <p className="text-[10px] text-blue-600 dark:text-blue-400 font-black uppercase tracking-widest mb-1">{t('labour.open_positions')}</p>
-                     <p className="text-2xl font-black text-blue-700 dark:text-blue-300">{showModal.workersNeeded}</p>
+                  <div className="bg-blue-50 dark:bg-blue-900/10 p-4 sm:p-5 rounded-2xl sm:rounded-[1.5rem] flex-1 text-center border border-blue-100 dark:border-blue-900/20">
+                     <p className="text-[9px] sm:text-[10px] text-blue-600 dark:text-blue-400 font-black uppercase tracking-widest mb-1">{t('labour.open_positions')}</p>
+                     <p className="text-xl sm:text-2xl font-black text-blue-700 dark:text-blue-300">{showModal.workersNeeded}</p>
                   </div>
                </div>
 
-               <div className="mb-8">
-                  <p className="text-[10px] text-gray-400 font-black uppercase mb-3 tracking-widest">{t('labour.job_description')}</p>
-                  <p className="text-gray-700 dark:text-slate-300 leading-relaxed bg-gray-50 dark:bg-black/20 p-5 rounded-2xl border border-gray-100 dark:border-white/5 font-medium italic">
+               <div className="mb-6 sm:mb-8">
+                  <p className="text-[9px] sm:text-[10px] text-gray-400 font-black uppercase mb-2 tracking-widest">{t('labour.job_description')}</p>
+                  <p className="text-xs sm:text-sm text-gray-700 dark:text-slate-300 leading-relaxed bg-gray-50 dark:bg-black/20 p-4 sm:p-5 rounded-xl sm:rounded-2xl border border-gray-100 dark:border-white/5 font-medium italic">
                     "{showModal.key ? t(`labour.fallback.${showModal.key}.desc`) : showModal.description}"
                   </p>
                </div>
 
-               <div className="flex flex-col gap-4">
+               <div className="flex flex-col gap-3 sm:gap-4">
                   <button 
                     onClick={() => handlePayment(showModal)}
                     disabled={processingPayment}
-                    className="btn-primary w-full justify-center h-16 rounded-2xl text-lg font-black shadow-xl shadow-primary/30 group active:scale-95 transition-all bg-indigo-600 hover:bg-indigo-700"
+                    className="btn-primary w-full justify-center h-14 sm:h-16 rounded-xl sm:rounded-2xl text-base sm:text-lg font-black shadow-xl shadow-primary/30 group active:scale-95 transition-all bg-indigo-600 hover:bg-indigo-700"
                   >
-                    <Banknote size={20} className="mr-2" /> 
+                    <Banknote size={18} className="mr-2" /> 
                     <span>{processingPayment ? t('labour.processing') : t('labour.pay_book', { amount: showModal.wage })}</span>
                   </button>
-                  <a href={`tel:${showModal.contactNumber}`} className="flex items-center justify-center h-12 rounded-xl text-gray-500 font-bold hover:bg-gray-50 dark:hover:bg-slate-800 transition-all">
-                     <Phone size={16} className="mr-2" /> <span>{t('labour.call_details')}</span>
+                  <a href={`tel:${showModal.contactNumber}`} className="flex items-center justify-center h-10 sm:h-12 rounded-xl text-gray-500 font-bold hover:bg-gray-50 dark:hover:bg-slate-800 transition-all text-xs sm:text-sm">
+                     <Phone size={14} className="mr-2" /> <span>{t('labour.call_details')}</span>
                   </a>
                </div>
 

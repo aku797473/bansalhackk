@@ -285,34 +285,34 @@ export default function Fertilizer() {
                       </button>
                     </div>
 
-                    <div className="p-5 sm:p-10">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 mb-8">
-                        <div className="space-y-6">
+                    <div className="p-4 sm:p-8">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 mb-6 sm:mb-8">
+                        <div className="space-y-5 sm:space-y-6">
                           <div>
-                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{t('fertilizer.diagnosis', 'Diagnosis')}</p>
-                            <div className="flex items-center gap-3">
-                              <span className="text-3xl font-black text-gray-900 dark:text-white">{t(`fertilizer.results.${result.primaryIssue?.deficiency}`, result.primaryIssue?.deficiency)}</span>
-                              <span className={clsx('badge-verified px-3 py-1 text-[10px]', SEVERITY_COLOR[result.primaryIssue?.severity] || 'badge-yellow')}>
-                                 {t(`fertilizer.results.${result.primaryIssue?.severity}`, result.primaryIssue?.severity)}
-                              </span>
+                            <p className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{t('fertilizer.diagnosis')}</p>
+                            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                               <span className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white leading-none">{t(`fertilizer.results.${result.primaryIssue?.deficiency}`, result.primaryIssue?.deficiency)}</span>
+                               <span className={clsx('badge-verified px-2 py-0.5 text-[8px] sm:text-[10px]', SEVERITY_COLOR[result.primaryIssue?.severity] || 'badge-yellow')}>
+                                  {t(`fertilizer.results.${result.primaryIssue?.severity}`, result.primaryIssue?.severity)}
+                               </span>
                             </div>
                           </div>
 
-                          <div className="space-y-4">
-                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{t('fertilizer.npk_levels', 'Estimated NPK Levels')}</p>
+                          <div className="space-y-3 sm:space-y-4">
+                            <p className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{t('fertilizer.npk_levels')}</p>
                             {[
-                              { k: 'N', label: t('fertilizer.nitrogen', 'Nitrogen'), val: result.npkEstimates?.N || 'Low', color: 'from-emerald-400 to-teal-500' },
-                              { k: 'P', label: t('fertilizer.phosphorus', 'Phosphorus'), val: result.npkEstimates?.P || 'Medium', color: 'from-blue-400 to-indigo-500' },
-                              { k: 'K', label: t('fertilizer.potassium', 'Potassium'), val: result.npkEstimates?.K || 'High', color: 'from-amber-400 to-orange-500' },
+                              { k: 'N', label: t('fertilizer.nitrogen'), val: result.npkEstimates?.N || 'Low', color: 'from-emerald-400 to-teal-500' },
+                              { k: 'P', label: t('fertilizer.phosphorus'), val: result.npkEstimates?.P || 'Medium', color: 'from-blue-400 to-indigo-500' },
+                              { k: 'K', label: t('fertilizer.potassium'), val: result.npkEstimates?.K || 'High', color: 'from-amber-400 to-orange-500' },
                             ].map(n => (
-                              <div key={n.k} className="flex items-center gap-3">
-                                <div className={`w-8 h-8 rounded-xl bg-gradient-to-br ${n.color} text-white flex items-center justify-center font-black text-xs shadow-sm shrink-0`}>{n.k}</div>
+                              <div key={n.k} className="flex items-center gap-2.5 sm:gap-3">
+                                <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-gradient-to-br ${n.color} text-white flex items-center justify-center font-black text-[10px] sm:text-xs shadow-sm shrink-0`}>{n.k}</div>
                                 <div className="flex-1">
                                   <div className="flex justify-between items-end mb-1">
-                                    <span className="text-[10px] font-bold text-gray-500 uppercase">{n.label}</span>
-                                    <span className="text-[10px] font-black text-gray-800 dark:text-white uppercase">{t(`fertilizer.results.${n.val}`, n.val)}</span>
+                                    <span className="text-[8px] sm:text-[10px] font-bold text-gray-500 uppercase">{n.label}</span>
+                                    <span className="text-[8px] sm:text-[10px] font-black text-gray-800 dark:text-white uppercase">{t(`fertilizer.results.${n.val}`, n.val)}</span>
                                   </div>
-                                  <div className="h-1.5 bg-gray-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                  <div className="h-1 sm:h-1.5 bg-gray-100 dark:bg-slate-800 rounded-full overflow-hidden">
                                     <div className={`h-full bg-gradient-to-r ${n.color} rounded-full transition-all duration-1000`} style={{ width: `${n.val === 'Low' ? 30 : n.val === 'Medium' ? 60 : 90}%` }} />
                                   </div>
                                 </div>
@@ -321,20 +321,23 @@ export default function Fertilizer() {
                           </div>
                         </div>
 
-                        <div className="space-y-6">
-                          <div className="p-5 bg-amber-50/50 dark:bg-amber-900/10 rounded-2xl border border-amber-100 dark:border-amber-900/30">
-                            <p className="text-[10px] font-black text-amber-600 dark:text-amber-400 uppercase tracking-widest mb-2">{t('fertilizer.symptoms', 'Symptoms')}</p>
-                            <p className="text-sm text-gray-700 dark:text-slate-300 italic leading-relaxed">"{result.primaryIssue?.symptoms}"</p>
+                        <div className="space-y-5 sm:space-y-6">
+                          <div className="p-4 sm:p-5 bg-amber-50/50 dark:bg-amber-900/10 rounded-xl sm:rounded-2xl border border-amber-100 dark:border-amber-900/30">
+                            <p className="text-[9px] sm:text-[10px] font-black text-amber-600 dark:text-amber-400 uppercase tracking-widest mb-1.5 sm:mb-2">{t('fertilizer.symptoms')}</p>
+                            <p className="text-xs sm:text-sm text-gray-700 dark:text-slate-300 italic leading-relaxed">"{result.primaryIssue?.symptoms}"</p>
                           </div>
 
-                          <div className="flex flex-col items-center justify-center bg-amber-500/5 rounded-[2.5rem] p-6 border border-amber-500/10">
-                             <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest mb-2">{t('fertilizer.confidence_score', 'Confidence Score')}</p>
-                             <div className="relative w-24 h-24 flex items-center justify-center">
+                          <div className="flex flex-col items-center justify-center bg-amber-500/5 rounded-2xl sm:rounded-[2.5rem] p-4 sm:p-6 border border-amber-500/10">
+                             <p className="text-[9px] sm:text-[10px] font-black text-amber-600 uppercase tracking-widest mb-2">{t('fertilizer.confidence_score')}</p>
+                             <div className="relative w-16 h-16 sm:w-24 sm:h-24 flex items-center justify-center">
                                 <svg className="w-full h-full -rotate-90">
-                                  <circle cx="48" cy="48" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-gray-100 dark:text-slate-800" />
-                                  <circle cx="48" cy="48" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" strokeDasharray={251} strokeDashoffset={251 - (251 * (result.primaryIssue?.confidence || 85)) / 100} className="text-amber-500 transition-all duration-1000" />
+                                  <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-gray-100 dark:text-slate-800 sm:hidden" />
+                                  <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="4" fill="transparent" strokeDasharray={175} strokeDashoffset={175 - (175 * (result.primaryIssue?.confidence || 85)) / 100} className="text-amber-500 transition-all duration-1000 sm:hidden" />
+                                  
+                                  <circle cx="48" cy="48" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-gray-100 dark:text-slate-800 hidden sm:block" />
+                                  <circle cx="48" cy="48" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" strokeDasharray={251} strokeDashoffset={251 - (251 * (result.primaryIssue?.confidence || 85)) / 100} className="text-amber-500 transition-all duration-1000 hidden sm:block" />
                                 </svg>
-                                <span className="absolute inset-0 flex items-center justify-center text-xl font-black text-amber-600">{result.primaryIssue?.confidence || 85}%</span>
+                                <span className="absolute inset-0 flex items-center justify-center text-sm sm:text-xl font-black text-amber-600">{result.primaryIssue?.confidence || 85}%</span>
                              </div>
                           </div>
                         </div>

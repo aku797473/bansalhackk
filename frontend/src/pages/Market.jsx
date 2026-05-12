@@ -219,16 +219,16 @@ export default function Market() {
       ) : (
         <>
           <div className="grid lg:grid-cols-3 gap-10 mb-10">
-            <div className="lg:col-span-2 space-y-8">
-              <div className="card rounded-[3rem] p-12 border-none shadow-premium bg-white dark:bg-slate-900 relative overflow-hidden">
-                <div className="flex items-center justify-between mb-12">
-                  <h3 className="text-3xl font-black text-gray-900 dark:text-white tracking-tighter">{selDistrict} {selCommodity} Trend</h3>
-                  <div className="flex items-center gap-6">
-                    <div className="flex items-center gap-2 text-[10px] font-black text-gray-400 uppercase tracking-widest"><div className="w-3 h-3 rounded-full bg-blue-500 shadow-lg" /> Historical</div>
-                    <div className="flex items-center gap-2 text-[10px] font-black text-gray-400 uppercase tracking-widest"><div className="w-3 h-3 rounded-full border-2 border-purple-500 border-dashed" /> Forecast</div>
+            <div className="lg:col-span-2 space-y-6 sm:space-y-8">
+              <div className="card rounded-[2rem] sm:rounded-[3rem] p-6 sm:p-12 border-none shadow-premium bg-white dark:bg-slate-900 relative overflow-hidden">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 sm:mb-12">
+                  <h3 className="text-xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tighter">{selDistrict} {selCommodity} Trend</h3>
+                  <div className="flex items-center gap-4 sm:gap-6">
+                    <div className="flex items-center gap-2 text-[8px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest"><div className="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-lg" /> Historical</div>
+                    <div className="flex items-center gap-2 text-[8px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest"><div className="w-2.5 h-2.5 rounded-full border-2 border-purple-500 border-dashed" /> Forecast</div>
                   </div>
                 </div>
-                <div className="h-[380px] w-full">
+                <div className="h-[280px] sm:h-[380px] w-full">
                   {analytics && (
                     <ResponsiveContainer width="100%" height="100%">
                       <ComposedChart data={analytics.chartData}>

@@ -34,16 +34,18 @@ export default function Schemes() {
   const schemes = response?.data?.length ? response.data : FALLBACK_SCHEMES;
 
   return (
-    <div ref={ref} className="max-w-6xl mx-auto px-4 py-8">
-      {/* Header */}
-      <div className="anim-header mb-10 text-center sm:text-left">
-        <h1 className="text-3xl font-black tracking-tight text-gray-900 dark:text-white flex items-center justify-center sm:justify-start gap-3 mb-2">
-          <Landmark className="text-emerald-500" size={32} />
-          {t('schemes.title')}
-        </h1>
-        <p className="text-gray-500 dark:text-slate-400 text-sm font-medium">
-          {t('schemes.subtitle')}
-        </p>
+    <div ref={ref} className="page-wrapper pb-20">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+        <div>
+          <span className="px-3 py-1 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-full text-[10px] font-black uppercase tracking-widest border border-amber-100 mb-4 inline-block tracking-tighter">Government Portal</span>
+          <h1 className="page-title flex items-center gap-2">
+            <Landmark className="text-emerald-500" size={32} />
+            <span>{t('schemes.title')}</span>
+          </h1>
+          <p className="page-subtitle">
+            {t('schemes.subtitle')}
+          </p>
+        </div>
       </div>
 
       {isLoading && schemes.length === 0 && (

@@ -31,19 +31,21 @@ export default function News() {
   const fetchNews = () => refetch();
 
   return (
-    <div ref={ref} className="max-w-7xl mx-auto px-4 py-6">
-      <div className="anim-header page-header flex items-center justify-between mb-8">
+    <div ref={ref} className="page-wrapper pb-20">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
         <div>
-          <h1 className="page-title flex items-center gap-2 tracking-tighter text-3xl font-black text-gray-900 dark:text-white">
-            <Newspaper className="text-primary" size={28} />
+          <span className="px-3 py-1 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full text-[10px] font-black uppercase tracking-widest border border-green-100 mb-4 inline-block tracking-tighter">Bharat News Hub</span>
+          <h1 className="page-title flex items-center gap-2">
+            <Newspaper className="text-primary" size={32} />
             <span>{t('news.title')}</span>
           </h1>
-          <p className="page-subtitle text-gray-500 font-medium mt-1">
+          <p className="page-subtitle">
             {t('news.subtitle')}
           </p>
         </div>
-        <button onClick={fetchNews} className="btn-icon bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-sm" title={t('dashboard.labels.refresh')}>
-          <RefreshCw size={18} className={`text-gray-600 dark:text-slate-400 ${loading ? 'animate-spin' : ''}`} />
+        <button onClick={fetchNews} className="btn-secondary w-full md:w-auto h-12 px-6 flex items-center justify-center md:justify-start gap-2 rounded-2xl shadow-sm transition-all active:scale-95" title={t('dashboard.labels.refresh')}>
+          <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
+          <span className="text-xs font-black uppercase tracking-widest text-primary">Refresh Feed</span>
         </button>
       </div>
 
