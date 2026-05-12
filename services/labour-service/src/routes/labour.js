@@ -47,28 +47,38 @@ router.get('/jobs', async (req, res) => {
 // POST /labour/jobs
 router.post('/jobs', async (req, res) => {
   try {
-    const userId = req.headers['x-user-id'];
+    const userId = req.headers['x-user-id'] || req.headers['user-id'];
+    if (!userId) {
+      console.warn('⚠️ No userId provided in headers for job post');
+    }
+
     const { district, state, village, lat, lng, ...rest } = req.body;
     
     // Support flat location from frontend mapping to nested schema
     const jobData = {
       ...rest,
-      postedBy: userId,
+      postedBy: userId || 'anonymous', // Fallback for stability during testing
       location: {
-        district: district || req.body.location?.district,
-        state:    state    || req.body.location?.state,
-        village:  village  || req.body.location?.village,
+        district: district || req.body.location?.district || 'Unknown',
+        state:    state    || req.body.location?.state    || 'Unknown',
+        village:  village  || req.body.location?.village  || '',
         lat:      lat      || req.body.location?.lat,
         lng:      lng      || req.body.location?.lng,
       }
     };
     
+    console.log('📝 Creating Job with data:', JSON.stringify(jobData, null, 2));
+    
     const job = new Job(jobData);
     await job.save();
     res.status(201).json({ success: true, data: job });
   } catch (err) {
-    console.error('Job post error:', err);
-    res.status(500).json({ success: false, message: err.message });
+    console.error('💥 [JOB POST ERROR]:', err);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Failed to post job: ' + err.message,
+      stack: err.stack 
+    });
   }
 });
 
