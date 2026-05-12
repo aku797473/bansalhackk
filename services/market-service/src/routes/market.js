@@ -30,11 +30,14 @@ async function fetchRealMarketData(state, district, commodity) {
   
   try {
     // Build URL with server-side filters for speed and accuracy
-    let url = `https://api.data.gov.in/resource/${resourceId}?api-key=${apiKey}&format=json&limit=100`;
+    let url = `https://api.data.gov.in/resource/${resourceId}?api-key=${apiKey}&format=json&limit=500`;
     
-    if (state)     url += `&filters[state]=${encodeURIComponent(state)}`;
-    if (district)  url += `&filters[district]=${encodeURIComponent(district)}`;
-    if (commodity) url += `&filters[commodity]=${encodeURIComponent(commodity)}`;
+    // Normalize names to Title Case as Govt API is often case-sensitive (e.g. "Madhya Pradesh")
+    const toTitleCase = (str) => str.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+
+    if (state)     url += `&filters[state]=${encodeURIComponent(toTitleCase(state))}`;
+    if (district)  url += `&filters[district]=${encodeURIComponent(toTitleCase(district))}`;
+    if (commodity) url += `&filters[commodity]=${encodeURIComponent(toTitleCase(commodity))}`;
     
     console.log(`[MARKET-API] Syncing live: ${url}`);
     const response = await axios.get(url, { timeout: 15000 });
