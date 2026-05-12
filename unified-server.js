@@ -92,7 +92,12 @@ if (userRoutes)       app.use('/api/users',      verifyToken, userRoutes);
 if (weatherRoutes)    app.use('/api/weather',     verifyToken, weatherRoutes);
 if (cropRoutes)       app.use('/api/crop',        verifyToken, cropRoutes);
 if (fertilizerRoutes) app.use('/api/fertilizer',  verifyToken, fertilizerRoutes);
-if (marketRoutes)     app.use('/api/market',      verifyToken, marketRoutes);
+if (marketRoutes) {
+  app.use('/api/market', (req, res, next) => {
+    if (req.method === 'GET') return next();
+    return verifyToken(req, res, next);
+  }, marketRoutes);
+}
 
 if (labourRoutes) {
   app.use('/api/labour', (req, res, next) => {
