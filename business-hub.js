@@ -21,10 +21,19 @@ app.use(clerkMiddleware({
 
 // Load Models
 require('./services/labour-service/src/models/Job');
+require('./services/market-service/src/models/MarketHistory');
 
 // Routes
+const marketRoutes = require('./services/market-service/src/routes/market');
 const labourRoutes = require('./services/labour-service/src/routes/labour');
 const paymentRoutes = require('./services/payment-service/src/routes/payment');
+
+app.use('/api/market', (req, res, next) => {
+  if (req.method === 'GET') return next();
+  return verifyToken(req, res, next);
+}, marketRoutes);
+return verifyToken(req, res, next);
+}, marketRoutes);
 
 app.use('/api/labour', (req, res, next) => {
   if (req.method === 'GET') return next();
@@ -39,8 +48,8 @@ app.get('/health', (req, res) => res.json({ status: 'ok', hub: 'business' }));
 // Global Error Handler
 app.use((err, req, res, next) => {
   console.error('💥 [BUSINESS-HUB ERROR]:', err);
-  res.status(500).json({ 
-    success: false, 
+  res.status(500).json({
+    success: false,
     message: err.message,
     stack: err.stack
   });
