@@ -242,46 +242,46 @@ export default function CropAdvisor() {
 
         </div>
 
-        {/* Result Column */}
+          {/* Result Column */}
         <div className="lg:col-span-7 space-y-6">
           {result && (
             <>
               {/* Primary crop */}
               <div className="anim-card card border-2 border-primary/20 shadow-2xl overflow-hidden relative group p-0">
-                <div className="h-40 relative overflow-hidden">
+                <div className="h-32 sm:h-40 relative overflow-hidden">
                    <img src={cropsImg} alt="Healthy crops" className="w-full h-full object-cover" />
                    <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-slate-900 via-transparent to-transparent" />
                    <div className="absolute top-4 left-4">
-                      <div className="badge-verified bg-white/20 text-white border-white/30 backdrop-blur-md">{t('crop.scientific_rec', 'Scientific Recommendation')}</div>
+                      <div className="badge-verified bg-white/20 text-white border-white/30 backdrop-blur-md text-[10px] sm:text-xs">{t('crop.scientific_rec')}</div>
                    </div>
                 </div>
 
-                <div className="p-8 pt-0 relative z-10">
-                  <div className="flex items-center justify-between mb-4">
+                <div className="p-5 sm:p-8 pt-0 relative z-10">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                     <div>
                       <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">{t('crop.primary_crop_title')}</p>
-                      <h3 className="text-5xl font-black text-primary tracking-tighter leading-none">{translateOption(result.primaryCrop)}</h3>
+                      <h3 className="text-4xl sm:text-6xl font-black text-primary tracking-tighter leading-none truncate max-w-[280px] sm:max-w-none">{translateOption(result.primaryCrop)}</h3>
                     </div>
-                    {result.isFallback && <span className="badge badge-yellow">{t('crop.historical_model', 'Historical Model')}</span>}
+                    {result.isFallback && <span className="badge badge-yellow self-start sm:self-center">{t('crop.historical_model')}</span>}
                   </div>
                   
                   <div className="flex flex-wrap gap-2 mb-8">
-                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest mr-2 py-1">{t('crop.alternatives_label')}</span>
+                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest w-full sm:w-auto mb-1 sm:mb-0">{t('crop.alternatives_label')}</span>
                     {result.alternativeCrops?.map(c => (
                       <span key={c} className="px-3 py-1 bg-gray-50 dark:bg-slate-800 rounded-full text-[10px] font-black text-gray-600 dark:text-slate-400 border border-gray-200 dark:border-white/5">{translateOption(c)}</span>
                     ))}
                   </div>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                     {[
                       { icon: '🌱', label: t('crop.sowing_time'), val: result.sowingTime },
                       { icon: '🌾', label: t('crop.harvest_time'), val: result.harvestTime },
                       { icon: '💧', label: t('crop.water_req'), val: result.waterRequirement },
-                      { icon: '📦', label: t('crop.expected_yield'), val: result.expectedYield || t('crop.high', 'High') }
+                      { icon: '📦', label: t('crop.expected_yield'), val: result.expectedYield || t('crop.high') }
                     ].map((item, idx) => (
                       <div key={idx} className="bg-gray-50 dark:bg-black/20 p-4 rounded-2xl border border-gray-100 dark:border-white/5">
-                        <p className="text-gray-400 text-[9px] font-black uppercase mb-1 tracking-widest whitespace-nowrap">{item.icon} {item.label}</p>
-                        <p className="font-black text-gray-800 dark:text-white text-sm">{translateOption(item.val)}</p>
+                        <p className="text-gray-400 text-[9px] font-black uppercase mb-1 tracking-widest truncate">{item.icon} {item.label}</p>
+                        <p className="font-black text-gray-800 dark:text-white text-xs sm:text-sm">{translateOption(item.val)}</p>
                       </div>
                     ))}
                   </div>
