@@ -36,6 +36,15 @@ function useSpeech() {
   }, []);
 
   // Read a sequence of texts one by one
+  const isMounted = useRef(true);
+  useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+      window.speechSynthesis.cancel();
+    };
+  }, []);
+
   const readAll = useCallback((texts, lang = 'en') => {
     window.speechSynthesis.cancel();
     if (!texts || texts.length === 0) return;
@@ -44,7 +53,7 @@ function useSpeech() {
     let idx = 0;
 
     const speakNext = () => {
-      if (idx >= texts.length) {
+      if (!isMounted.current || idx >= texts.length) {
         setSpeaking(false);
         setPaused(false);
         setCurrentIdx(-1);
@@ -62,9 +71,9 @@ function useSpeech() {
       ) || voices.find(v => v.lang.startsWith(lang === 'hi' ? 'hi' : 'en'));
       if (preferred) utt.voice = preferred;
 
-      utt.onstart = () => { setSpeaking(true); setPaused(false); setCurrentIdx(idx); };
-      utt.onend = () => { idx++; speakNext(); };
-      utt.onerror = () => { idx++; speakNext(); };
+      utt.onstart = () => { if (isMounted.current) { setSpeaking(true); setPaused(false); setCurrentIdx(idx); } };
+      utt.onend = () => { if (isMounted.current) { idx++; speakNext(); } };
+      utt.onerror = () => { if (isMounted.current) { idx++; speakNext(); } };
 
       utterRef.current = utt;
       window.speechSynthesis.speak(utt);
@@ -88,9 +97,9 @@ function useSpeech() {
     ) || voices.find(v => v.lang.startsWith(lang === 'hi' ? 'hi' : 'en'));
     if (preferred) utt.voice = preferred;
 
-    utt.onstart = () => { setSpeaking(true); setPaused(false); setCurrentIdx(idx); };
-    utt.onend = () => { setSpeaking(false); setCurrentIdx(-1); };
-    utt.onerror = () => { setSpeaking(false); setCurrentIdx(-1); };
+    utt.onstart = () => { if (isMounted.current) { setSpeaking(true); setPaused(false); setCurrentIdx(idx); } };
+    utt.onend = () => { if (isMounted.current) { setSpeaking(false); setCurrentIdx(-1); } };
+    utt.onerror = () => { if (isMounted.current) { setSpeaking(false); setCurrentIdx(-1); } };
 
     utterRef.current = utt;
     window.speechSynthesis.speak(utt);
@@ -151,12 +160,7 @@ export default function News() {
     onError: () => toast.error('Failed to fetch latest news')
   });
 
-  // ── CRITICAL FIX: Stop speech when navigating away ──────────
-  useEffect(() => {
-    return () => {
-      window.speechSynthesis.cancel();
-    };
-  }, [location.pathname]);
+  // ── Handled by hook cleanup ──────────
 
   // Auto-read: only fires ONCE per manual toggle, not on remount
   useEffect(() => {
