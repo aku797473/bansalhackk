@@ -9,14 +9,16 @@ const weatherRoutes = require('./routes/weather');
 const app = express();
 const PORT = process.env.PORT || 5003;
 
+// KeepAlive routes (Must be at the top)
+app.get('/api/wake', (req, res) => res.json({ status: 'ok', service: 'weather-api' }));
+app.get('/wake', (req, res) => res.json({ status: 'ok', service: 'weather-root' }));
+
 app.use(helmet());
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 
 app.use('/weather', weatherRoutes);
-app.get('/api/wake', (req, res) => res.json({ status: 'ok', service: 'weather-api' }));
-app.get('/wake', (req, res) => res.json({ status: 'ok', service: 'weather-root' }));
 app.get('/health', (req, res) => res.json({ status: 'ok', service: 'weather-service', mongo: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected' }));
 
 async function connectMongo() {
