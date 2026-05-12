@@ -81,6 +81,7 @@ app.get('/api/wake', (req, res) => {
     mongo: mongoose.connection.readyState === 1 ? 'connected' : 'connecting',
     timestamp: new Date().toISOString() 
   });
+});
 // ─── Diagnostic Routes ─────────────────────────────
 app.get('/health', (req, res) => res.json({ status: 'ok', time: new Date() }));
 app.get('/wake', (req, res) => res.json({ status: 'waking', services: 'all' }));
