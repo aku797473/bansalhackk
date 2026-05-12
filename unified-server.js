@@ -93,7 +93,14 @@ if (weatherRoutes)    app.use('/api/weather',     verifyToken, weatherRoutes);
 if (cropRoutes)       app.use('/api/crop',        verifyToken, cropRoutes);
 if (fertilizerRoutes) app.use('/api/fertilizer',  verifyToken, fertilizerRoutes);
 if (marketRoutes)     app.use('/api/market',      verifyToken, marketRoutes);
-if (labourRoutes)     app.use('/api/labour',      verifyToken, labourRoutes);
+
+if (labourRoutes) {
+  app.use('/api/labour', (req, res, next) => {
+    if (req.method === 'GET') return next();
+    return verifyToken(req, res, next);
+  }, labourRoutes);
+}
+
 if (chatRoutes)       app.use('/api/chatbot',     verifyToken, chatRoutes);
 if (paymentRoutes)    app.use('/api/payment',     verifyToken, paymentRoutes);
 if (schemesRoutes)    app.use('/api/schemes',     verifyToken, schemesRoutes);
@@ -104,9 +111,8 @@ app.use((err, req, res, next) => {
   console.error('🔥 [GLOBAL ERROR]:', err);
   res.status(500).json({ 
     success: false, 
-    message: 'Internal Server Error', 
-    error: err.message,
-    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+    message: err.message, 
+    stack: err.stack
   });
 });
 
