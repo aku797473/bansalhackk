@@ -2,9 +2,14 @@ const express = require('express');
 const router = express.Router();
 const Job = require('../models/Job');
 
+// GET /labour/test
+router.get('/test', (req, res) => res.send('Labour service is working!'));
+
 // GET /labour/jobs
 router.get('/jobs', async (req, res) => {
   try {
+    if (!Job) throw new Error('Job model is not defined');
+    
     const { district, state, category, page = 1, limit = 20 } = req.query;
     const filter = { status: 'open' };
     if (district) filter['location.district'] = new RegExp(district, 'i');
