@@ -81,13 +81,12 @@ app.get('/api/wake', (req, res) => {
     mongo: mongoose.connection.readyState === 1 ? 'connected' : 'connecting',
     timestamp: new Date().toISOString() 
   });
-});
+// ─── Diagnostic Routes ─────────────────────────────
+app.get('/health', (req, res) => res.json({ status: 'ok', time: new Date() }));
+app.get('/wake', (req, res) => res.json({ status: 'waking', services: 'all' }));
+app.get('/api/wake', (req, res) => res.json({ status: 'waking', services: 'all' }));
 
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok', service: 'unified-server' });
-});
-
-// ─── Protected Routes ────────────────────────────
+// ─── Microservice Routes ────────────────────────────
 if (userRoutes)       app.use('/api/users',      verifyToken, userRoutes);
 if (weatherRoutes)    app.use('/api/weather',     verifyToken, weatherRoutes);
 if (cropRoutes)       app.use('/api/crop',        verifyToken, cropRoutes);
