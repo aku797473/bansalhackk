@@ -193,7 +193,21 @@ router.get('/districts', async (req, res) => {
   res.json({ success: true, data: districts });
 });
 
-// GET /market/trends?commodity=Wheat
+// GET /market/debug-sync
+router.get('/debug-sync', async (req, res) => {
+  const { state } = req.query;
+  const apiKey = '579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b';
+  const resourceId = '9ef84268-d588-465a-a308-a864a43d0070';
+  try {
+    let url = `https://api.data.gov.in/resource/${resourceId}?api-key=${apiKey}&format=json&limit=10`;
+    if (state) url += `&filters[state]=${encodeURIComponent(state)}`;
+    const response = await axios.get(url);
+    res.json({ success: true, url, raw: response.data });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 router.get('/trends', async (req, res) => {
   try {
     const { commodity = 'Wheat', state, market } = req.query;
