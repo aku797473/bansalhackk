@@ -20,13 +20,27 @@ router.get('/jobs', async (req, res) => {
     const l = Math.max(1, Number(limit) || 20);
     const skip = (p - 1) * l;
     const [jobs, total] = await Promise.all([
-      Job.find(filter).sort({ createdAt: -1 }).skip(skip).limit(l).select('-applications'),
+      Job.find(filter).sort({ createdAt: -1 }).skip(skip).limit(l).select('-applications').lean(),
       Job.countDocuments(filter),
     ]);
 
-    res.json({ success: true, data: jobs, pagination: { page: Number(page), limit: Number(limit), total, pages: Math.ceil(total / limit) } });
+    res.json({ 
+      success: true, 
+      data: jobs, 
+      pagination: { 
+        page: p, 
+        limit: l, 
+        total, 
+        pages: Math.ceil(total / l) || 0 
+      } 
+    });
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    console.error('💥 [JOBS ROUTE ERROR]:', err);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Database error: ' + err.message,
+      stack: err.stack
+    });
   }
 });
 
