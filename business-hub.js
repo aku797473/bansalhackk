@@ -34,6 +34,16 @@ app.use('/api/payment', verifyToken, paymentRoutes);
 
 app.get('/health', (req, res) => res.json({ status: 'ok', hub: 'business' }));
 
+// Global Error Handler
+app.use((err, req, res, next) => {
+  console.error('💥 [BUSINESS-HUB ERROR]:', err);
+  res.status(500).json({ 
+    success: false, 
+    message: err.message,
+    stack: err.stack
+  });
+});
+
 mongoose.connect(process.env.MONGODB_URI).then(() => {
   app.listen(process.env.PORT || 5004, () => console.log('💼 Business Hub running on 5004'));
 });
