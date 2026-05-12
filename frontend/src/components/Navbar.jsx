@@ -83,7 +83,7 @@ export default function Navbar() {
           </NavLink>
 
           {/* Desktop Navigation */}
-          <nav className="hidden xl:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-1">
             {primaryLinks.map(({ to, icon: Icon, label }) => (
               <NavLink key={to} to={to}
                 className={({ isActive }) => clsx(
@@ -163,7 +163,7 @@ export default function Navbar() {
             {/* Mobile Hamburger Menu Button */}
             <button 
               onClick={() => setOpen(true)} 
-              className="xl:hidden ml-1 p-2 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl hover:bg-slate-200 transition-all active:scale-95 border border-slate-200 dark:border-slate-700"
+              className="lg:hidden ml-1 p-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-all active:scale-95 border border-blue-100 dark:border-blue-900/20"
               aria-label="Open Menu"
             >
               <Menu size={22} strokeWidth={2.5} />
