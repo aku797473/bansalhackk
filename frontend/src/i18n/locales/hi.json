@@ -452,6 +452,8 @@
     },
     "wage_units": {
       "per_day": "प्रति दिन",
+      "per_week": "प्रति सप्ताह",
+      "per_month": "प्रति माह",
       "fixed": "फिक्स्ड"
     },
     "tips_list": {

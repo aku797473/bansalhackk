@@ -132,8 +132,8 @@ export default function Labour() {
   };
 
   const postJob = async () => {
-    if (!form.title || !form.district || !form.contactNumber) { 
-      toast.error(t('common.error_required', 'Title, District and Mobile Number are required')); 
+    if (!form.title || !form.description || !form.district || !form.contactNumber) { 
+      toast.error(t('common.error_required', 'Title, Description, District and Mobile Number are required')); 
       return; 
     }
     try {
@@ -377,7 +377,7 @@ export default function Labour() {
               </div>
 
               <div>
-                <label className="label">{t('labour.description')}</label>
+                <label className="label">{t('labour.description')} *</label>
                 <textarea className="input min-h-[120px] dark:bg-slate-800 border-2" placeholder={t('labour.placeholders.description')}
                   value={form.description} onChange={e => setForm(f => ({...f, description: e.target.value}))} />
               </div>
@@ -397,7 +397,7 @@ export default function Labour() {
                 <div>
                   <label className="label">{t('labour.wage_unit', 'Unit')}</label>
                   <select className="input dark:bg-slate-800 border-2" value={form.wageUnit} onChange={e => setForm(f => ({...f, wageUnit: e.target.value}))}>
-                    {['per_day','fixed'].map(u => <option key={u} value={u}>{t(`labour.wage_units.${u}`)}</option>)}
+                    {['per_day', 'per_week', 'per_month', 'fixed'].map(u => <option key={u} value={u}>{t(`labour.wage_units.${u}`)}</option>)}
                   </select>
                 </div>
               </div>

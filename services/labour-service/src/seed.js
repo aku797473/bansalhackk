@@ -10,7 +10,7 @@ const seedJobs = [
     category: 'harvesting',
     location: { village: 'Pipariya', district: 'Rewa', state: 'Madhya Pradesh', lat: 24.5373, lng: 81.3039 },
     wage: 500,
-    wageUnit: 'per day',
+    wageUnit: 'per_day',
     workersNeeded: 10,
     contactNumber: '9876543210',
     status: 'open'
@@ -22,7 +22,7 @@ const seedJobs = [
     category: 'sowing',
     location: { village: 'Dewas Naka', district: 'Indore', state: 'Madhya Pradesh', lat: 22.7500, lng: 75.9000 },
     wage: 450,
-    wageUnit: 'per day',
+    wageUnit: 'per_day',
     workersNeeded: 5,
     contactNumber: '9988776655',
     status: 'open'
@@ -34,7 +34,7 @@ const seedJobs = [
     category: 'harvesting',
     location: { village: 'Hadapsar', district: 'Pune', state: 'Maharashtra', lat: 18.5000, lng: 73.9000 },
     wage: 600,
-    wageUnit: 'per day',
+    wageUnit: 'per_day',
     workersNeeded: 20,
     contactNumber: '8877665544',
     status: 'open'
@@ -46,7 +46,7 @@ const seedJobs = [
     category: 'irrigation',
     location: { village: 'Ambala Cantt', district: 'Ambala', state: 'Haryana', lat: 30.3300, lng: 76.8300 },
     wage: 550,
-    wageUnit: 'per day',
+    wageUnit: 'per_day',
     workersNeeded: 3,
     contactNumber: '7766554433',
     status: 'open'
@@ -58,7 +58,7 @@ const seedJobs = [
     category: 'storage',
     location: { village: 'Jalandhar City', district: 'Jalandhar', state: 'Punjab', lat: 31.3200, lng: 75.5700 },
     wage: 400,
-    wageUnit: 'per day',
+    wageUnit: 'per_day',
     workersNeeded: 15,
     contactNumber: '6655443322',
     status: 'open'

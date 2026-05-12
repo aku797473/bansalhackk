@@ -17,7 +17,7 @@ const jobSchema = new mongoose.Schema({
     lng:      { type: Number },
   },
   wage:       { type: Number, required: true },
-  wageUnit:   { type: String, enum: ['per day', 'per week', 'per month', 'fixed'], default: 'per day' },
+  wageUnit:   { type: String, enum: ['per_day', 'per_week', 'per_month', 'fixed'], default: 'per_day' },
   workersNeeded: { type: Number, default: 1 },
   duration:   { type: String },
   startDate:  { type: Date },

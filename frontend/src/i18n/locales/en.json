@@ -452,6 +452,8 @@
     },
     "wage_units": {
       "per_day": "per day",
+      "per_week": "per week",
+      "per_month": "per month",
       "fixed": "fixed"
     },
     "tips_list": {
