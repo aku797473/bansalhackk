@@ -128,8 +128,8 @@ export default function Fertilizer() {
   };
 
   return (
-    <div ref={ref} className="page-wrapper max-w-7xl mx-auto px-4 sm:px-6">
-      <div className="anim-header page-header flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+    <div ref={ref} className="page-wrapper px-2 sm:px-4">
+      <div className="anim-header page-header flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6 mb-6 sm:mb-10">
         <div>
           <h1 className="page-title flex items-center gap-3 tracking-tighter">
             <div className="p-3 bg-amber-100 dark:bg-amber-900/30 rounded-2xl shadow-inner">

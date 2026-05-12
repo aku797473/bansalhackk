@@ -107,6 +107,10 @@
     @apply max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-24 sm:pt-32 pb-12 animate-fade-in overflow-x-hidden;
   }
 
+  * {
+    max-width: 100vw;
+  }
+
   .page-title {
     @apply text-2xl sm:text-4xl md:text-5xl font-black tracking-tighter text-gray-900 dark:text-white mb-2 leading-tight;
   }
@@ -165,9 +169,6 @@
   }
 
   /* Page structure */
-  .page-wrapper {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10 page-enter;
-  }
   .page-wrapper-sm {
     @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 page-enter;
   }

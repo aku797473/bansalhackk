@@ -236,8 +236,8 @@ export default function Labour() {
 
 
   return (
-    <div className="page-wrapper max-w-6xl">
-      <div className="page-header flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+    <div className="page-wrapper px-2 sm:px-4">
+      <div className="page-header flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6 mb-6 sm:mb-10">
         <div>
           <h1 className="page-title flex items-center gap-3 tracking-tighter">
             <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-2xl shadow-inner">
@@ -297,7 +297,7 @@ export default function Labour() {
                 onClick={() => setShowModal(job)}>
                 
                 {job.image && (
-                  <div className="absolute top-4 right-4 w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl border-2 border-white dark:border-slate-800 shadow-md overflow-hidden z-10 hidden xs:block">
+                  <div className="absolute top-3 right-3 w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-2xl border-2 border-white dark:border-slate-800 shadow-md overflow-hidden z-10">
                      <img src={job.image} alt="Poster" className="w-full h-full object-cover" />
                   </div>
                 )}
@@ -454,7 +454,7 @@ export default function Labour() {
 
       {/* My Jobs List */}
       {tab === 'my-jobs' && (
-        <div className="max-w-2xl mx-auto space-y-5">
+        <div ref={ref} className="page-wrapper">
           {myJobs.length === 0
             ? <div className="card text-center py-24 text-gray-400 dark:text-slate-600 italic font-bold border-dashed border-2">{t('common.no_data')}</div>
             : myJobs.map(job => (
@@ -480,21 +480,21 @@ export default function Labour() {
 
       {/* Detail Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-xl flex items-center justify-center z-[2000] p-4">
-          <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] w-full max-w-lg overflow-hidden shadow-2xl animate-scale-up border border-white/10">
-            <div className="relative h-56 bg-purple-600 dark:bg-purple-900/50 p-10 flex items-end">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-xl flex items-center justify-center z-[2000] p-3 sm:p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-[1.5rem] sm:rounded-[2.5rem] w-full max-w-lg overflow-hidden shadow-2xl animate-scale-up border border-white/10 max-h-[90vh] overflow-y-auto">
+            <div className="relative h-40 sm:h-56 bg-purple-600 dark:bg-purple-900/50 p-6 sm:p-10 flex items-end">
                <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
                <button onClick={() => setShowModal(null)} className="absolute top-6 right-6 p-2.5 bg-white/20 text-white hover:bg-white/40 rounded-2xl transition-all active:scale-95"><X size={24} /></button>
                
-               <div className="flex items-center gap-6 relative z-10">
-                  <div className="w-24 h-24 rounded-3xl bg-white dark:bg-slate-800 shadow-2xl flex items-center justify-center overflow-hidden border-4 border-white dark:border-slate-700">
+               <div className="flex items-center gap-4 sm:gap-6 relative z-10">
+                  <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-2xl sm:rounded-3xl bg-white dark:bg-slate-800 shadow-2xl flex items-center justify-center overflow-hidden border-2 sm:border-4 border-white dark:border-slate-700">
                      {showModal.image ? <img src={showModal.image} alt="Identity" className="w-full h-full object-cover" /> : <span className="text-5xl">{CATEGORY_EMOJI[showModal.category]}</span>}
                   </div>
                   <div>
-                     <h3 className="text-2xl font-black text-white tracking-tight leading-none mb-2">
+                     <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight leading-none mb-1 sm:mb-2">
                         {showModal.key ? t(`labour.fallback.${showModal.key}.title`) : showModal.title}
                      </h3>
-                     <p className="text-white/70 font-bold uppercase tracking-widest text-[10px]">{showModal.location?.district}, {t(`crop.states.${showModal.location?.state}`, showModal.location?.state)}</p>
+                     <p className="text-white/70 font-bold uppercase tracking-widest text-[8px] sm:text-[10px]">{showModal.location?.district}, {t(`crop.states.${showModal.location?.state}`, showModal.location?.state)}</p>
                   </div>
                </div>
             </div>
