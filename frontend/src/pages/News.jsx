@@ -35,6 +35,28 @@ function useSpeech() {
     setPaused(false);
   }, []);
 
+  // Helper to get the best voice for a language
+  const getBestVoice = useCallback((langCode) => {
+    const voices = window.speechSynthesis.getVoices();
+    if (!voices.length) return null;
+
+    // Prioritize high quality voices (Google, Microsoft, etc.)
+    return (
+      voices.find(v => v.lang.toLowerCase() === langCode.toLowerCase() && v.name.includes('Google')) ||
+      voices.find(v => v.lang.toLowerCase() === langCode.toLowerCase()) ||
+      voices.find(v => v.lang.startsWith(langCode.split('-')[0]))
+    );
+  }, []);
+
+  // Ensure voices are loaded
+  useEffect(() => {
+    const loadVoices = () => { window.speechSynthesis.getVoices(); };
+    loadVoices();
+    if (window.speechSynthesis.onvoiceschanged !== undefined) {
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+  }, []);
+
   // Read a sequence of texts one by one
   const isMounted = useRef(true);
   useEffect(() => {
@@ -61,15 +83,11 @@ function useSpeech() {
       }
       const utt = new SpeechSynthesisUtterance(texts[idx]);
       utt.lang = langCode;
-      utt.rate = 0.92;
-      utt.pitch = 1.05;
+      utt.rate = 0.95;
+      utt.pitch = 1.0;
 
-      // Pick a good voice if available
-      const voices = window.speechSynthesis.getVoices();
-      const preferred = voices.find(v =>
-        v.lang.startsWith(lang === 'hi' ? 'hi' : 'en') && v.localService
-      ) || voices.find(v => v.lang.startsWith(lang === 'hi' ? 'hi' : 'en'));
-      if (preferred) utt.voice = preferred;
+      const voice = getBestVoice(langCode);
+      if (voice) utt.voice = voice;
 
       utt.onstart = () => { if (isMounted.current) { setSpeaking(true); setPaused(false); setCurrentIdx(idx); } };
       utt.onend = () => { if (isMounted.current) { idx++; speakNext(); } };
@@ -88,14 +106,11 @@ function useSpeech() {
     const langCode = lang === 'hi' ? 'hi-IN' : 'en-IN';
     const utt = new SpeechSynthesisUtterance(text);
     utt.lang = langCode;
-    utt.rate = 0.92;
-    utt.pitch = 1.05;
+    utt.rate = 0.95;
+    utt.pitch = 1.0;
 
-    const voices = window.speechSynthesis.getVoices();
-    const preferred = voices.find(v =>
-      v.lang.startsWith(lang === 'hi' ? 'hi' : 'en') && v.localService
-    ) || voices.find(v => v.lang.startsWith(lang === 'hi' ? 'hi' : 'en'));
-    if (preferred) utt.voice = preferred;
+    const voice = getBestVoice(langCode);
+    if (voice) utt.voice = voice;
 
     utt.onstart = () => { if (isMounted.current) { setSpeaking(true); setPaused(false); setCurrentIdx(idx); } };
     utt.onend = () => { if (isMounted.current) { setSpeaking(false); setCurrentIdx(-1); } };
