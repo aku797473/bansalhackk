@@ -1,0 +1,24 @@
+{
+  "short_name": "Smart Kisan",
+  "name": "Smart Kisan — किसान का डिजिटल साथी",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    },
+    {
+      "src": "/logo.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#15803d",
+  "background_color": "#f8fafc",
+  "description": "AI-powered agricultural platform for Indian farmers. Get crop recommendations, weather alerts, and market prices even in low network areas.",
+  "orientation": "portrait-primary",
+  "categories": ["agriculture", "productivity", "utilities"]
+}
