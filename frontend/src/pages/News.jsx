@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { newsAPI } from '../services/api';
 import { useQuery } from '@tanstack/react-query';
@@ -127,9 +128,12 @@ function Waveform({ active }) {
 export default function News() {
   const { t, i18n } = useTranslation();
   const ref = usePageAnimation();
+  const location = useLocation();
   const lang = i18n.language === 'hi' ? 'hi' : 'en';
   const [voiceLang, setVoiceLang] = useState(lang);
   const [autoRead, setAutoRead] = useState(false);
+  // Prevent autoRead from re-firing on every remount/refetch
+  const hasTriggeredAutoRead = useRef(false);
 
   const { speaking, paused, currentIdx, readAll, readOne, stop, pause, resume } = useSpeech();
 
@@ -147,14 +151,24 @@ export default function News() {
     onError: () => toast.error('Failed to fetch latest news')
   });
 
-  // Auto-read on page open if toggled
+  // ── CRITICAL FIX: Stop speech when navigating away ──────────
   useEffect(() => {
-    if (autoRead && news.length > 0 && !speaking) {
+    return () => {
+      window.speechSynthesis.cancel();
+    };
+  }, [location.pathname]);
+
+  // Auto-read: only fires ONCE per manual toggle, not on remount
+  useEffect(() => {
+    if (autoRead && news.length > 0 && !hasTriggeredAutoRead.current) {
+      hasTriggeredAutoRead.current = true;
       const texts = news.map((item, i) =>
         `${voiceLang === 'hi' ? 'समाचार' : 'News'} ${i + 1}. ${item.title}. ${item.description || ''}`
       );
-      // Small delay to let voices load
       setTimeout(() => readAll(texts, voiceLang), 600);
+    }
+    if (!autoRead) {
+      hasTriggeredAutoRead.current = false;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoRead, news]);
