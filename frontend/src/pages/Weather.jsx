@@ -147,41 +147,41 @@ export default function Weather() {
           )}
 
           {/* Current */}
-          <div className="anim-card bg-gradient-to-br from-sky-400 to-blue-600 rounded-[2.5rem] p-8 text-white shadow-premium mb-8 relative overflow-hidden group">
+          <div className="anim-card bg-gradient-to-br from-sky-400 to-blue-600 rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 text-white shadow-premium mb-8 relative overflow-hidden group">
             <div className="absolute -top-20 -right-20 w-80 h-80 bg-white/20 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-1000" />
             
-            <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-8 relative z-10">
-              <div className="text-center md:text-left">
-                <div className="flex items-center justify-center md:justify-start gap-2 mb-4 text-sky-50 font-bold tracking-wide">
+            <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-6 sm:gap-10 relative z-10">
+              <div className="text-center lg:text-left w-full lg:w-auto">
+                <div className="flex items-center justify-center lg:justify-start gap-2 mb-4 text-sky-50 font-bold tracking-wide">
                   <MapPin size={18} />
-                  <span className="text-lg">{displayData.city}, {displayData.country}</span>
+                  <span className="text-base sm:text-lg truncate max-w-[200px] sm:max-w-none">{displayData.city}, {displayData.country}</span>
                 </div>
-                <div className="flex flex-col md:flex-row items-center gap-6">
-                  <span className="text-8xl drop-shadow-lg animate-bounce-sm">{getEmoji(displayData.icon)}</span>
+                <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
+                  <span className="text-7xl sm:text-8xl drop-shadow-lg animate-bounce-sm">{getEmoji(displayData.icon)}</span>
                   <div>
-                    <h2 className="text-8xl font-black tracking-tighter drop-shadow-md leading-none">{Math.round(displayData.temperature)}°</h2>
-                    <p className="text-xl font-bold text-sky-100 capitalize mt-2 flex items-center gap-2">
+                    <h2 className="text-7xl sm:text-9xl font-black tracking-tighter drop-shadow-md leading-none">{Math.round(displayData.temperature)}°</h2>
+                    <p className="text-lg sm:text-xl font-bold text-sky-100 capitalize mt-2 flex items-center justify-center lg:justify-start gap-2">
                        {displayData.description} 
                        <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                       <span className="text-xs uppercase tracking-widest opacity-70">{isRealData ? t('weather.real_time') : t('weather.estimate', 'Estimate')}</span>
+                       <span className="text-[10px] uppercase tracking-widest opacity-70">{isRealData ? t('weather.real_time') : t('weather.estimate')}</span>
                     </p>
                   </div>
                 </div>
               </div>
               
-              <div className="grid grid-cols-3 md:flex md:flex-col gap-2 sm:gap-6 bg-white/10 backdrop-blur-md rounded-3xl p-4 sm:p-6 border border-white/20 w-full md:w-auto">
+              <div className="grid grid-cols-3 lg:flex lg:flex-col gap-4 sm:gap-6 bg-white/10 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-8 border border-white/20 w-full lg:w-auto">
                 {[
                   { icon: Thermometer, label: t('weather.feels_like'), val: `${Math.round(displayData.feelsLike)}°C` },
                   { icon: Droplets,    label: t('weather.humidity'),   val: `${displayData.humidity}%` },
                   { icon: Wind,        label: t('weather.wind'),       val: `${displayData.windSpeed} km/h` },
                 ].map(({ icon: Icon, label, val }) => (
-                  <div key={label} className="flex flex-col sm:flex-row items-center sm:items-start gap-2 sm:gap-3 text-center sm:text-left">
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0">
-                      <Icon size={18} className="text-white sm:w-5 sm:h-5" />
+                  <div key={label} className="flex flex-col sm:flex-row items-center sm:items-start gap-1 sm:gap-4 text-center sm:text-left">
+                    <div className="w-8 h-8 sm:w-12 sm:h-12 bg-white/20 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0">
+                      <Icon size={18} className="text-white sm:w-6 sm:h-6" />
                     </div>
                     <div>
-                      <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-sky-100/70 leading-tight">{label}</p>
-                      <p className="text-sm sm:text-lg font-black">{val}</p>
+                      <p className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-sky-100/70 leading-tight mb-0.5">{label}</p>
+                      <p className="text-xs sm:text-xl font-black">{val}</p>
                     </div>
                   </div>
                 ))}
