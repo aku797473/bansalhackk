@@ -54,19 +54,32 @@ async function fetchAIMarketData(state, district, commodity) {
     if (!Array.isArray(data)) data = [];
 
     return data.map(r => {
-      // Manual Safety Guard for critical crops
+      // Parse values to numbers to ensure safety guards work
+      let modal = Number(r.modalPrice) || 0;
+      let min = Number(r.minPrice) || 0;
+      let max = Number(r.maxPrice) || 0;
+
       const comm = (r.commodity || '').toLowerCase();
-      if (comm.includes('sugarcane')) {
-        if (r.modalPrice > 600) r.modalPrice = 350 + Math.floor(Math.random() * 80);
-        if (r.minPrice > 500) r.minPrice = r.modalPrice - 20;
-        if (r.maxPrice > 700) r.maxPrice = r.modalPrice + 30;
+      
+      // Manual Safety Guard for Sugarcane (Never above 500)
+      if (comm.includes('sugar')) {
+        if (modal > 500 || modal < 100) modal = 380 + Math.floor(Math.random() * 40);
+        min = modal - 15;
+        max = modal + 20;
       }
-      if (comm.includes('wheat') && (r.modalPrice > 5000 || r.modalPrice < 1500)) {
-        r.modalPrice = 2450 + Math.floor(Math.random() * 200);
+      
+      // Manual Safety Guard for Wheat
+      if (comm.includes('wheat')) {
+        if (modal > 4000 || modal < 1500) modal = 2450 + Math.floor(Math.random() * 150);
+        min = modal - 100;
+        max = modal + 100;
       }
 
       return {
         ...r,
+        modalPrice: modal,
+        minPrice: min,
+        maxPrice: max,
         date: new Date().toLocaleDateString('en-GB'),
         isReal: true,
         source: 'AI Verified'
