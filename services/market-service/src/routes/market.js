@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
+const Groq = require('groq-sdk');
 const Redis = process.env.MOCK_REDIS_KAFKA === 'true' ? require('../../../../utils/mockRedis') : require('ioredis');
 const { generatePriceData, BASE_PRICES } = require('../data/prices');
 const MarketHistory = require('../models/MarketHistory');
@@ -11,6 +12,8 @@ const redis = new Redis(redisUrl, {
   retryStrategy: () => null,
   tls: redisUrl.startsWith('rediss://') ? { rejectUnauthorized: false } : undefined
 });
+
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || 'gsk_Z1p3Hk9W9k1p3Hk9W9k1p3Hk9W9k1p3Hk9W9k1p3Hk9W9k1' });
 
 redis.on('connect', () => {
   console.log('✅ Redis Connected to Upstash (Market Service)');
@@ -64,6 +67,38 @@ async function fetchRealMarketData(state, district, commodity) {
     return null;
   }
 }
+async function fetchAIMarketPrediction(state, district, commodity) {
+  try {
+    const prompt = `Act as an Indian Agriculture Market Expert. Provide realistic current wholesale market prices (Mandi rates) for ${commodity || 'common crops'} in ${district || state || 'India'}. 
+    Return ONLY a JSON array of 5 objects with fields: commodity, variety, market, minPrice, maxPrice, modalPrice, trend (up/down/stable), reason (short note).
+    Prices should be in INR per Quintal (100kg). Ensure realistic values (e.g., Wheat ~2300-2600, Sugarcane ~350, Soybean ~4500-5000).`;
+
+    const chatCompletion = await groq.chat.completions.create({
+      messages: [{ role: 'user', content: prompt }],
+      model: 'llama3-8b-8192',
+      response_format: { type: 'json_object' }
+    });
+
+    const resObj = JSON.parse(chatCompletion.choices[0].message.content);
+    const records = resObj.prices || resObj.data || Object.values(resObj)[0];
+    
+    if (Array.isArray(records)) {
+      return records.map(r => ({
+        ...r,
+        state: state || 'N/A',
+        district: district || r.market || 'Local',
+        date: new Date().toLocaleDateString('en-GB'),
+        changePercent: (Math.random() * 3).toFixed(1),
+        isAI: true
+      }));
+    }
+    return null;
+  } catch (e) {
+    console.error("Groq Market Prediction Error:", e.message);
+    return null;
+  }
+}
+
 // GET /market/history
 router.get('/history', async (req, res) => {
   try {
@@ -93,37 +128,27 @@ router.get('/prices', async (req, res) => {
       console.error("Market API Timeout/Error:", e.message);
     }
 
-    // 2. SMART REDUNDANCY: If Govt API fails or is empty, use our High-Fidelity Dataset
+    // 2. SMART REDUNDANCY: If Govt API fails, try Groq AI for realistic prediction
     if (!prices || prices.length === 0) {
-      console.log(`[MARKET-API] Failover: Using Agmarknet Backup Dataset for ${commodity || 'all'} in ${state || 'India'}`);
-      
-      // Filter our rich BASE_PRICES dataset
+      console.log(`[MARKET-API] Using Groq AI Predictor for ${commodity || 'all'} in ${state || 'India'}`);
+      prices = await fetchAIMarketPrediction(state, district, commodity);
+    }
+
+    // 3. FINAL FALLBACK: If even AI fails, use Verified Dataset
+    if (!prices || prices.length === 0) {
+      console.log(`[MARKET-API] Final Failover: Using Agmarknet Backup Dataset`);
+      // ... (existing backup logic)
       let filtered = BASE_PRICES;
       if (state)     filtered = filtered.filter(p => p.state.toLowerCase().includes(state.toLowerCase()));
       if (commodity) filtered = filtered.filter(p => p.commodity.toLowerCase() === commodity.toLowerCase());
-      
-      // If we still have nothing, just take a general slice
       const source = filtered.length > 0 ? filtered : BASE_PRICES.slice(0, 15);
-      
       prices = source.map((p, i) => {
-        // Add slight daily variation to keep it fresh but realistic
-        const daySeed = new Date().getDate();
-        const variation = 1 + (Math.sin(daySeed + i) * 0.02); 
-        const modal = Math.round(p.base * variation);
-        
+        const modal = Math.round(p.base * (1 + (Math.sin(new Date().getDate() + i) * 0.02)));
         return {
-          state: p.state,
-          district: p.district || p.market,
-          market: `${p.market} Mandi`,
-          commodity: p.commodity,
-          variety: p.variety || 'Regular',
-          minPrice: Math.round(modal * 0.96),
-          maxPrice: Math.round(modal * 1.04),
-          modalPrice: modal,
-          date: new Date().toLocaleDateString('en-GB'),
-          trend: variation > 1 ? 'up' : 'stable',
-          changePercent: (variation > 1 ? (variation-1)*100 : 0.5).toFixed(1),
-          isReal: false
+          state: p.state, district: p.district || p.market, market: `${p.market} Mandi`,
+          commodity: p.commodity, variety: p.variety || 'Regular',
+          minPrice: Math.round(modal * 0.96), maxPrice: Math.round(modal * 1.04), modalPrice: modal,
+          date: new Date().toLocaleDateString('en-GB'), trend: 'stable', changePercent: '0.5', isReal: false
         };
       });
     }
@@ -132,7 +157,7 @@ router.get('/prices', async (req, res) => {
       prices, 
       lastUpdated: new Date().toISOString(), 
       totalRecords: prices.length,
-      source: prices[0]?.isReal ? 'Government API (Live)' : 'Market Insight System (Verified)'
+      source: prices[0]?.isReal ? 'Government API (Live)' : prices[0]?.isAI ? 'Groq AI Predictor' : 'Market Insight System'
     };
 
     res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
