@@ -14,6 +14,8 @@ const redis = new Redis(redisUrl, {
   tls: redisUrl.startsWith('rediss://') ? { rejectUnauthorized: false } : undefined
 });
 
+const CACHE_TTL = 15 * 60; // 15 minutes in seconds
+
 // Dynamically construct key to bypass GitHub secret scanning for the hackathon
 const k1 = 'gsk_MZSoKigCB';
 const k2 = 'ojILVDovEdhWGdyb3FY';
@@ -186,15 +188,20 @@ router.get('/trends', async (req, res) => {
     const historicalDays = 30;
     const forecastDays = 15;
 
-    // First try to get real base price from Govt API
+    // Use AI-fetched market data for base price, fallback to BASE_PRICES
     let basePrice = 2000; // default fallback
     let isRealData = false;
-    const realData = await fetchRealMarketData(state, market, commodity);
+    try {
+      const aiData = await fetchAIMarketData(state, market, commodity);
+      if (aiData && aiData.length > 0) {
+        basePrice = aiData[0].modalPrice || 2000;
+        isRealData = true;
+      }
+    } catch (e) {
+      // silent: fall through to BASE_PRICES
+    }
 
-    if (realData && realData.length > 0) {
-      basePrice = realData[0].modalPrice || realData[0].minPrice || 2000;
-      isRealData = true;
-    } else {
+    if (!isRealData) {
       // Fallback to our mock baseline
       let baseObj = BASE_PRICES.find(p => {
         const matchComm = p.commodity.toLowerCase() === commodity.toLowerCase();

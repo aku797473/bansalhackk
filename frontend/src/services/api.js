@@ -2,23 +2,22 @@ import axios from 'axios';
 
 const AUTH_URL     = import.meta.env.VITE_AUTH_API_URL     || '/api';
 const AI_URL       = import.meta.env.VITE_AI_API_URL       || '/api';
-const INFO_URL     = 'https://smart-kisan-weather.onrender.com/api'; // HARDCODED FOR STABILITY
+const INFO_URL     = import.meta.env.VITE_INFO_API_URL     || 'https://smart-kisan-weather.onrender.com/api';
+const MARKET_URL   = import.meta.env.VITE_MARKET_API_URL   || import.meta.env.VITE_INFO_API_URL || 'https://smart-kisan-weather.onrender.com/api';
 const BUSINESS_URL = import.meta.env.VITE_BUSINESS_API_URL || '/api';
 
 // Base instances for each hub
 const authApi     = axios.create({ baseURL: AUTH_URL,     timeout: 30000 });
 const aiApi       = axios.create({ baseURL: AI_URL,       timeout: 60000 });
 const infoApi     = axios.create({ baseURL: INFO_URL,     timeout: 30000 });
+const marketApi   = axios.create({ baseURL: MARKET_URL,   timeout: 30000 });
 const businessApi = axios.create({ baseURL: BUSINESS_URL, timeout: 30000 });
-
-// Use Info Hub for Market data by default
-const marketApi = infoApi;
 
 let tokenProvider = null;
 export const setTokenProvider = (fn) => { tokenProvider = fn; };
 
-// Interceptor to attach Clerk token to all 4 hub instances
-[authApi, aiApi, infoApi, businessApi].forEach(instance => {
+// Interceptor to attach Clerk token to all hub instances
+[authApi, aiApi, infoApi, marketApi, businessApi].forEach(instance => {
   instance.interceptors.request.use(async (config) => {
     // Cache Buster for Info Hub
     if (instance === infoApi) {
@@ -77,10 +76,11 @@ export const weatherAPI = {
 };
 
 export const marketAPI = {
-  getPrices:     (state, commodity, district) => infoApi.get('/market/prices', { params: { state, commodity, district } }),
-  getCommodities:() => infoApi.get('/market/commodities'),
-  getStates:     () => infoApi.get('/market/states'),
-  getDistricts:  (state) => infoApi.get('/market/districts', { params: { state } }),
+  getPrices:     (state, commodity, district) => marketApi.get('/market/prices', { params: { state, commodity, district } }),
+  getTrends:     (commodity, state, market) => marketApi.get('/market/trends', { params: { commodity, state, market } }),
+  getCommodities:() => marketApi.get('/market/commodities'),
+  getStates:     () => marketApi.get('/market/states'),
+  getDistricts:  (state) => marketApi.get('/market/districts', { params: { state } }),
 };
 
 export const newsAPI = {

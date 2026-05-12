@@ -66,14 +66,21 @@ const getEstimatedPrice = (crop) => {
 export default function Market() {
   const { t } = useTranslation();
   const ref = usePageAnimation();
-  
-  const [selState, setSelState] = useState('Madhya Pradesh');
-  const [selDistrict, setSelDistrict] = useState('');
-  const [selCommodity, setSelCommodity] = useState('');
+
+  // Persist selections across navigation using sessionStorage
+  const [selState, setSelState] = useState(
+    () => sessionStorage.getItem('mkt_state') || 'Madhya Pradesh'
+  );
+  const [selDistrict, setSelDistrict] = useState(
+    () => sessionStorage.getItem('mkt_district') || ''
+  );
+  const [selCommodity, setSelCommodity] = useState(
+    () => sessionStorage.getItem('mkt_commodity') || ''
+  );
 
   // 1. Fetch Data
   const { data: marketData, isLoading, refetch, isFetching } = useQuery({
-    queryKey: ['market-core-data', selState],
+    queryKey: ['market-core-data', selState, selDistrict, selCommodity],
     queryFn: async () => {
       try {
         const res = await marketAPI.getPrices(selState, '', '');
@@ -141,8 +148,11 @@ export default function Market() {
 
   const handleStateChange = (val) => {
     setSelState(val);
-    setSelDistrict(''); 
-    setSelCommodity(''); 
+    setSelDistrict('');
+    setSelCommodity('');
+    sessionStorage.setItem('mkt_state', val);
+    sessionStorage.removeItem('mkt_district');
+    sessionStorage.removeItem('mkt_commodity');
   };
 
   const analytics = useMemo(() => {
@@ -187,7 +197,13 @@ export default function Market() {
           <select 
             className="w-full h-12 sm:h-14 bg-gray-50 dark:bg-slate-800 border-none rounded-2xl px-4 sm:px-5 font-bold text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700 transition-all"
             value={selDistrict}
-            onChange={(e) => { setSelDistrict(e.target.value); setSelCommodity(''); }}
+            onChange={(e) => {
+              const d = e.target.value;
+              setSelDistrict(d);
+              setSelCommodity('');
+              sessionStorage.setItem('mkt_district', d);
+              sessionStorage.removeItem('mkt_commodity');
+            }}
           >
             <option value="">-- Choose District --</option>
             {availableDistricts.map(d => <option key={d} value={d}>{d}</option>)}
@@ -197,8 +213,12 @@ export default function Market() {
           <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">3. Select Commodity</label>
           <select 
             className="w-full h-12 sm:h-14 bg-gray-50 dark:bg-slate-800 border-none rounded-2xl px-4 sm:px-5 font-bold text-sm cursor-pointer disabled:opacity-30 transition-all" 
-            value={selCommodity} 
-            onChange={(e) => setSelCommodity(e.target.value)} 
+            value={selCommodity}
+            onChange={(e) => {
+              const c = e.target.value;
+              setSelCommodity(c);
+              sessionStorage.setItem('mkt_commodity', c);
+            }}
             disabled={!selDistrict}
           >
             <option value="">-- Choose Crop --</option>
@@ -327,9 +347,9 @@ export default function Market() {
                       <td className="px-8 md:px-12 py-8 md:py-10 text-right">
                         <div className={clsx(
                           "inline-flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 rounded-2xl font-black text-xs md:text-sm shadow-xl",
-                          p.changePercent > 0 ? "bg-emerald-500 text-white" : "bg-red-500 text-white"
+                          Number(p.changePercent) > 0 ? "bg-emerald-500 text-white" : "bg-red-500 text-white"
                         )}>
-                          {p.changePercent > 0 ? <TrendingUp size={16} /> : <TrendingDown size={16} />} {p.changePercent}%
+                          {Number(p.changePercent) > 0 ? <TrendingUp size={16} /> : <TrendingDown size={16} />} {Number(p.changePercent) > 0 ? '+' : ''}{parseFloat(p.changePercent).toFixed(1)}%
                         </div>
                       </td>
                     </tr>
