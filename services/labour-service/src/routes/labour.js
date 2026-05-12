@@ -11,9 +11,11 @@ router.get('/jobs', async (req, res) => {
     if (state)    filter['location.state']    = new RegExp(state, 'i');
     if (category) filter.category             = category;
 
-    const skip = (page - 1) * limit;
+    const p = Math.max(1, Number(page) || 1);
+    const l = Math.max(1, Number(limit) || 20);
+    const skip = (p - 1) * l;
     const [jobs, total] = await Promise.all([
-      Job.find(filter).sort({ createdAt: -1 }).skip(skip).limit(Number(limit)).select('-applications'),
+      Job.find(filter).sort({ createdAt: -1 }).skip(skip).limit(l).select('-applications'),
       Job.countDocuments(filter),
     ]);
 

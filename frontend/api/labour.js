@@ -50,12 +50,16 @@ module.exports = async (req, res) => {
 
     // GET /labour/jobs
     if (req.method === 'GET' && endpoint === 'jobs') {
-      const { district, state, category } = req.query;
+      const { district, state, category, page, limit } = req.query;
       const filter = { status: 'open' };
       if (district) filter['location.district'] = new RegExp(district, 'i');
       if (state) filter['location.state'] = new RegExp(state, 'i');
       if (category) filter.category = category;
-      const jobs = await Job.find(filter).sort({ createdAt: -1 }).limit(20);
+      
+      const p = Math.max(1, Number(page) || 1);
+      const l = Math.max(1, Number(limit) || 20);
+      const skip = (p - 1) * l;
+      const jobs = await Job.find(filter).sort({ createdAt: -1 }).skip(skip).limit(l);
       return res.json({ success: true, data: jobs });
     }
 
