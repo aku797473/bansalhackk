@@ -38,4 +38,4 @@ const jobSchema = new mongoose.Schema({
 jobSchema.index({ 'location.district': 1, status: 1 });
 jobSchema.index({ category: 1, status: 1 });
 
-module.exports = mongoose.model('Job', jobSchema);
+module.exports = mongoose.models.Job || mongoose.model('Job', jobSchema);
