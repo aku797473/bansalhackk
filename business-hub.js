@@ -26,7 +26,10 @@ require('./services/labour-service/src/models/Job');
 const labourRoutes = require('./services/labour-service/src/routes/labour');
 const paymentRoutes = require('./services/payment-service/src/routes/payment');
 
-app.use('/api/labour', verifyToken, labourRoutes);
+app.use('/api/labour', (req, res, next) => {
+  if (req.method === 'GET') return next();
+  return verifyToken(req, res, next);
+}, labourRoutes);
 app.use('/api/payment', verifyToken, paymentRoutes);
 
 app.get('/health', (req, res) => res.json({ status: 'ok', hub: 'business' }));
