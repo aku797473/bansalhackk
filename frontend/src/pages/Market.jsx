@@ -175,28 +175,28 @@ export default function Market() {
       </div>
 
       {/* ── Search Selectors ──────────────────────────────────── */}
-      <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-3xl p-10 rounded-[3rem] border border-white/20 dark:border-white/5 shadow-premium grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+      <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-3xl p-6 sm:p-10 rounded-[2rem] sm:rounded-[3.5rem] border border-white/20 dark:border-white/5 shadow-premium grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-10 mb-10">
         <div className="space-y-3">
           <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">1. Select State</label>
-          <select className="w-full h-14 bg-gray-50 dark:bg-slate-800 border-none rounded-2xl px-5 font-bold text-sm cursor-pointer" value={selState} onChange={(e) => handleStateChange(e.target.value)}>
+          <select className="w-full h-12 sm:h-14 bg-gray-50 dark:bg-slate-800 border-none rounded-2xl px-4 sm:px-5 font-bold text-sm cursor-pointer" value={selState} onChange={(e) => handleStateChange(e.target.value)}>
             {ALL_STATES.map(s => <option key={s} value={s}>{s}</option>)}
           </select>
         </div>
         <div className="space-y-3">
           <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">2. Choose District</label>
           <select 
-            className="w-full h-14 bg-gray-50 dark:bg-slate-800 border-none rounded-2xl px-5 font-bold text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700 transition-all"
+            className="w-full h-12 sm:h-14 bg-gray-50 dark:bg-slate-800 border-none rounded-2xl px-4 sm:px-5 font-bold text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700 transition-all"
             value={selDistrict}
             onChange={(e) => { setSelDistrict(e.target.value); setSelCommodity(''); }}
           >
-            <option value="">-- Click to Select District --</option>
+            <option value="">-- Choose District --</option>
             {availableDistricts.map(d => <option key={d} value={d}>{d}</option>)}
           </select>
         </div>
         <div className="space-y-3">
           <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">3. Select Commodity</label>
           <select 
-            className="w-full h-14 bg-gray-50 dark:bg-slate-800 border-none rounded-2xl px-5 font-bold text-sm cursor-pointer disabled:opacity-30 transition-all" 
+            className="w-full h-12 sm:h-14 bg-gray-50 dark:bg-slate-800 border-none rounded-2xl px-4 sm:px-5 font-bold text-sm cursor-pointer disabled:opacity-30 transition-all" 
             value={selCommodity} 
             onChange={(e) => setSelCommodity(e.target.value)} 
             disabled={!selDistrict}
