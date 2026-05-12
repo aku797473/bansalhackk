@@ -69,21 +69,21 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto h-16 bg-white/70 dark:bg-slate-900/70 backdrop-blur-2xl border border-white/20 dark:border-white/5 rounded-2xl sm:rounded-[2rem] shadow-2xl shadow-slate-200/50 dark:shadow-none px-4 flex items-center justify-between gap-4 transition-all">
           
           {/* Logo Section */}
-          <NavLink to="/dashboard" className="flex items-center gap-2.5 shrink-0 group">
-            <div className="w-9 h-9 rounded-xl bg-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-all">
-              <img src={logo} alt="Logo" className="w-5 h-5 brightness-0 invert object-contain" />
+          <NavLink to="/dashboard" className="flex items-center gap-2 shrink-0 group">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-all">
+              <img src={logo} alt="Logo" className="w-4 h-4 sm:w-5 sm:h-5 brightness-0 invert object-contain" />
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col overflow-hidden">
               <div className="flex items-center gap-1.5">
-                <span className="font-bold text-slate-900 dark:text-white text-sm sm:text-base leading-none">Smart Kisan</span>
-                <span className="px-1.5 py-0.5 bg-gray-100 dark:bg-white/5 text-[8px] font-black text-gray-400 dark:text-gray-500 rounded uppercase tracking-tighter">v2.0.5</span>
+                <span className="font-bold text-slate-900 dark:text-white text-xs sm:text-base leading-none truncate max-w-[80px] sm:max-w-none">Smart Kisan</span>
+                <span className="px-1 py-0.5 bg-gray-100 dark:bg-white/5 text-[7px] font-black text-gray-400 dark:text-gray-500 rounded uppercase tracking-tighter hidden xs:block">v2.0.5</span>
               </div>
               <span className="text-[9px] text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider hidden md:block">{t('nav.slogan')}</span>
             </div>
           </NavLink>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-1">
+          {/* Desktop Navigation - Hidden earlier to save space */}
+          <nav className="hidden xl:flex items-center gap-1">
             {primaryLinks.map(({ to, icon: Icon, label }) => (
               <NavLink key={to} to={to}
                 className={({ isActive }) => clsx(
@@ -132,8 +132,8 @@ export default function Navbar() {
           </nav>
 
           {/* Right Actions */}
-          <div className="flex items-center gap-1 sm:gap-3 shrink-0">
-            <div className="hidden md:flex items-center gap-1">
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+            <div className="hidden sm:flex items-center gap-1">
               <button onClick={toggleTheme} className="p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-xl transition-all" title="Toggle Theme">
                 {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
               </button>
@@ -143,27 +143,18 @@ export default function Navbar() {
               </button>
             </div>
             
-            <div className="h-6 w-px bg-gray-100 dark:bg-slate-800 hidden md:block mx-1" />
+            <div className="h-6 w-px bg-gray-100 dark:bg-slate-800 hidden sm:block mx-1" />
             
             <LanguageSelector showLabel={false} />
             
             <div className="flex items-center gap-2 pl-1 sm:pl-2">
-               <UserButton appearance={{ elements: { userButtonAvatarBox: "w-8 h-8 rounded-xl border-2 border-primary/10" } }} />
-               
-               {/* Quick Logout for Desktop - High Visibility */}
-               <button 
-                 onClick={async () => { await logout(); navigate('/'); }}
-                 className="hidden lg:flex items-center gap-2 px-3 py-2 bg-red-50 dark:bg-red-950/20 text-red-500 hover:bg-red-100 dark:hover:bg-red-950/40 rounded-xl transition-all text-[10px] font-black uppercase tracking-wider"
-               >
-                 <LogOut size={14} />
-                 <span className="hidden xl:inline">{t('nav.logout')}</span>
-               </button>
+               <UserButton appearance={{ elements: { userButtonAvatarBox: "w-7 h-7 sm:w-8 sm:h-8 rounded-xl" } }} />
             </div>
 
-            {/* Mobile Hamburger Menu Button */}
+            {/* Mobile Hamburger Menu Button - Shown Earlier (at XL) */}
             <button 
               onClick={() => setOpen(true)} 
-              className="lg:hidden ml-1 p-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-all active:scale-95 border border-blue-100 dark:border-blue-900/20"
+              className="xl:hidden ml-1 p-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-all active:scale-95 border border-blue-100 dark:border-blue-900/20"
               aria-label="Open Menu"
             >
               <Menu size={22} strokeWidth={2.5} />
