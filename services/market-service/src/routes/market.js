@@ -61,8 +61,8 @@ async function fetchAIMarketData(state, district, commodity) {
 
       const comm = (r.commodity || '').toLowerCase();
       
-      // Use verified price logic (baseline cross-reference)
-      modal = Math.round(getVerifiedPrice(r.commodity || '', modal));
+      // Use verified price logic (baseline cross-reference with state awareness)
+      modal = Math.round(getVerifiedPrice(r.commodity || '', modal, r.state || ''));
       min = Math.round(modal * 0.95);
       max = Math.round(modal * 1.05);
 
