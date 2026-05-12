@@ -40,6 +40,7 @@ app.use('/api/weather', weatherRoutes);
 app.use('/api/news', newsRoutes);
 app.use('/api/schemes', schemesRoutes);
 
+app.get('/api/wake', (req, res) => res.json({ status: 'ok', service: 'info-hub' }));
 app.get('/health', (req, res) => res.json({ status: 'ok', hub: 'info' }));
 
 mongoose.connect(process.env.MONGODB_URI).then(() => {
