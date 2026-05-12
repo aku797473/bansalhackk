@@ -291,56 +291,56 @@ export default function Labour() {
             <p className="text-gray-500 dark:text-slate-400 font-bold">{t('common.no_data')}</p>
           </div>
         ) : (
-          <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             {jobs.map(job => (
-              <div key={job._id} className="card cursor-pointer group relative p-6 sm:p-7"
+              <div key={job._id} className="card cursor-pointer group relative p-5 sm:p-7"
                 onClick={() => setShowModal(job)}>
                 
                 {job.image && (
-                  <div className="absolute top-4 right-4 w-12 h-12 rounded-2xl border-2 border-white dark:border-slate-800 shadow-md overflow-hidden z-10 hidden xs:block">
+                  <div className="absolute top-4 right-4 w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl border-2 border-white dark:border-slate-800 shadow-md overflow-hidden z-10 hidden xs:block">
                      <img src={job.image} alt="Poster" className="w-full h-full object-cover" />
                   </div>
                 )}
 
-                <div className="flex items-start gap-4 mb-5">
-                  <div className={clsx("w-14 h-14 rounded-2xl flex items-center justify-center text-3xl shrink-0 shadow-lg border transition-transform group-hover:scale-110 duration-500", CATEGORY_COLORS[job.category] || CATEGORY_COLORS.other)}>
+                <div className="flex items-start gap-4 mb-4 sm:mb-5">
+                  <div className={clsx("w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl flex items-center justify-center text-2xl sm:text-3xl shrink-0 shadow-lg border transition-transform group-hover:scale-110 duration-500", CATEGORY_COLORS[job.category] || CATEGORY_COLORS.other)}>
                     {CATEGORY_EMOJI[job.category] || '💼'}
                   </div>
-                  <div className="pr-12 xs:pr-0">
-                    <h3 className="font-black text-gray-900 dark:text-white leading-tight text-base sm:text-lg group-hover:text-primary transition-colors line-clamp-1">
+                  <div className="pr-2 xs:pr-0 overflow-hidden">
+                    <h3 className="font-black text-gray-900 dark:text-white leading-tight text-base sm:text-lg group-hover:text-primary transition-colors truncate">
                       {job.key ? t(`labour.fallback.${job.key}.title`) : job.title}
                     </h3>
-                    <div className="flex items-center gap-2 mt-1.5">
-                       <div className={clsx("badge py-0.5 px-2 border font-black uppercase tracking-widest text-[9px]", CATEGORY_COLORS[job.category] || CATEGORY_COLORS.other)}>
+                    <div className="flex flex-wrap items-center gap-2 mt-1">
+                       <div className={clsx("badge py-0.5 px-2 border font-black uppercase tracking-widest text-[8px] sm:text-[9px]", CATEGORY_COLORS[job.category] || CATEGORY_COLORS.other)}>
                           {t(`labour.categories.${job.category}`)}
                        </div>
-                       <span className="text-[10px] text-gray-400 font-bold flex items-center gap-1"><Clock size={10} /> {new Date(job.createdAt).toLocaleDateString(t('common.locale'))}</span>
+                       <span className="text-[9px] sm:text-[10px] text-gray-400 font-bold flex items-center gap-1"><Clock size={10} /> {new Date(job.createdAt).toLocaleDateString(t('common.locale'))}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="mb-5 p-4 bg-gray-50 dark:bg-black/20 rounded-2xl border border-gray-100 dark:border-white/5">
-                   <p className="text-xs text-gray-600 dark:text-slate-400 line-clamp-2 font-medium leading-relaxed italic">
+                <div className="mb-4 sm:mb-5 p-3 sm:p-4 bg-gray-50 dark:bg-black/20 rounded-xl sm:rounded-2xl border border-gray-100 dark:border-white/5">
+                   <p className="text-[11px] sm:text-xs text-gray-600 dark:text-slate-400 line-clamp-2 font-medium leading-relaxed italic">
                       "{job.key ? t(`labour.fallback.${job.key}.desc`) : job.description}"
                     </p>
                 </div>
                 
-                <div className="grid grid-cols-2 gap-x-4 gap-y-4 text-xs">
-                  <div className="flex items-center gap-2.5 text-gray-600 dark:text-slate-400 font-bold bg-gray-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-gray-100 dark:border-white/5">
-                    <MapPin size={16} className="text-red-400" />
-                    <span>{job.location?.district}</span>
+                <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 sm:gap-4 text-xs">
+                  <div className="flex items-center gap-2.5 text-gray-600 dark:text-slate-400 font-bold bg-gray-50 dark:bg-slate-800/50 p-2 sm:p-2.5 rounded-xl border border-gray-100 dark:border-white/5">
+                    <MapPin size={14} className="text-red-400 shrink-0" />
+                    <span className="truncate">{job.location?.district}</span>
                   </div>
-                  <div className="flex items-center gap-2.5 text-green-600 dark:text-green-400 font-black bg-green-50 dark:bg-green-900/10 p-2.5 rounded-xl border border-green-100 dark:border-green-900/20">
-                    <Banknote size={16} />
-                    <span>₹{job.wage} / {t(`labour.wage_units.${job.wageUnit}`)}</span>
+                  <div className="flex items-center gap-2.5 text-green-600 dark:text-green-400 font-black bg-green-50 dark:bg-green-900/10 p-2 sm:p-2.5 rounded-xl border border-green-100 dark:border-green-900/20">
+                    <Banknote size={14} className="shrink-0" />
+                    <span className="truncate">₹{job.wage} / {t(`labour.wage_units.${job.wageUnit}`)}</span>
                   </div>
                 </div>
                 
-                <div className="mt-5 pt-5 border-t border-gray-50 dark:border-white/5 flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-primary font-black">
+                <div className="mt-4 sm:mt-5 pt-4 sm:pt-5 border-t border-gray-50 dark:border-white/5 flex flex-col xs:flex-row xs:items-center justify-between gap-3">
+                  <div className="flex items-center gap-2 text-primary font-black text-xs sm:text-sm">
                     <Phone size={14} /> <span>{job.contactNumber}</span>
                   </div>
-                  <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-1.5">
+                  <div className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-1.5">
                     <Users size={12} /> <span>{job.workersNeeded} {t('labour.needed')}</span>
                   </div>
                 </div>
