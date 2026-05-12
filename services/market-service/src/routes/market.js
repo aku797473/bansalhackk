@@ -27,11 +27,15 @@ const groq = new Groq({ apiKey: groqKey });
 // Function to fetch highly realistic AI prices
 async function fetchAIMarketData(state, district, commodity) {
   try {
-    const prompt = `Act as an Indian Agriculture Mandi Expert. Provide the current wholesale market prices for ${commodity || 'major crops'} in ${district || state || 'India'}.
-    Return ONLY a JSON array of 8 objects with fields: 
-    - state, district, market (realistic mandi name in that area), commodity, variety, minPrice, maxPrice, modalPrice, trend (up/down/stable), changePercent.
-    Ensure prices are realistic: Sugarcane ~350, Wheat ~2300-2600, Soybean ~4500-5200, Mustard ~5000+.
-    Prices must be in INR per Quintal (100kg).`;
+    const prompt = `Act as an Indian Agmarknet Market Intelligence Expert. Provide the LATEST wholesale market prices (Mandi rates) for ${commodity || 'common crops'} in ${district || state || 'India'}.
+    Return ONLY a JSON array of 8 objects with these fields: 
+    - state, district, market (MUST be a real mandi name like 'Indore Mandi', 'Khanna Mandi', etc.), commodity, variety, minPrice, maxPrice, modalPrice, trend (up/down/stable), changePercent.
+    CRITICAL: 
+    - Sugarcane prices should be around ₹350-₹450 per quintal.
+    - Wheat prices should be ₹2300-₹2750 per quintal.
+    - Soybean prices should be ₹4600-₹5300 per quintal.
+    - Use actual varieties like 'Lok-1', 'Sharbati', 'Yellow', etc.
+    - Prices must be in INR per Quintal.`;
 
     const completion = await groq.chat.completions.create({
       messages: [{ role: 'user', content: prompt }],
