@@ -32,6 +32,8 @@ app.use('/api/labour', (req, res, next) => {
 }, labourRoutes);
 app.use('/api/payment', verifyToken, paymentRoutes);
 
+app.get('/test-direct', (req, res) => res.send('Direct test working!'));
+app.get('/api/labour/test-direct', (req, res) => res.send('API Labour test direct working!'));
 app.get('/health', (req, res) => res.json({ status: 'ok', hub: 'business' }));
 
 // Global Error Handler
