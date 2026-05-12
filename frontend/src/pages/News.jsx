@@ -17,12 +17,15 @@ function useSpeech() {
   const [paused, setPaused] = useState(false);
   const [currentIdx, setCurrentIdx] = useState(-1);
   const utterRef = useRef(null);
+  const sessionRef = useRef(0); // Tracking reading sessions
+  const isMounted = useRef(true);
 
   const stop = useCallback(() => {
     window.speechSynthesis.cancel();
     setSpeaking(false);
     setPaused(false);
     setCurrentIdx(-1);
+    sessionRef.current++; // Invalidate session
   }, []);
 
   const pause = useCallback(() => {
@@ -69,18 +72,29 @@ function useSpeech() {
 
   const readAll = useCallback((texts, lang = 'en') => {
     window.speechSynthesis.cancel();
-    if (!texts || texts.length === 0) return;
+    const sessionId = ++sessionRef.current; // New session ID
+    
+    if (!texts || texts.length === 0) {
+      setSpeaking(false);
+      setPaused(false);
+      setCurrentIdx(-1);
+      return;
+    }
 
     const langCode = lang === 'hi' ? 'hi-IN' : 'en-IN';
     let idx = 0;
 
     const speakNext = () => {
-      if (!isMounted.current || idx >= texts.length) {
-        setSpeaking(false);
-        setPaused(false);
-        setCurrentIdx(-1);
+      // If session changed or unmounted, stop immediately
+      if (!isMounted.current || sessionId !== sessionRef.current || idx >= texts.length) {
+        if (sessionId === sessionRef.current) {
+          setSpeaking(false);
+          setPaused(false);
+          setCurrentIdx(-1);
+        }
         return;
       }
+
       const utt = new SpeechSynthesisUtterance(texts[idx]);
       utt.lang = langCode;
       utt.rate = 0.95;
@@ -89,20 +103,35 @@ function useSpeech() {
       const voice = getBestVoice(langCode);
       if (voice) utt.voice = voice;
 
-      utt.onstart = () => { if (isMounted.current) { setSpeaking(true); setPaused(false); setCurrentIdx(idx); } };
-      utt.onend = () => { if (isMounted.current) { idx++; speakNext(); } };
-      utt.onerror = () => { if (isMounted.current) { idx++; speakNext(); } };
+      utt.onstart = () => { 
+        if (isMounted.current && sessionId === sessionRef.current) { 
+          setSpeaking(true); setPaused(false); setCurrentIdx(idx); 
+        } 
+      };
+      utt.onend = () => { 
+        if (isMounted.current && sessionId === sessionRef.current) { 
+          idx++; speakNext(); 
+        } 
+      };
+      utt.onerror = () => { 
+        if (isMounted.current && sessionId === sessionRef.current) { 
+          idx++; speakNext(); 
+        } 
+      };
 
       utterRef.current = utt;
       window.speechSynthesis.speak(utt);
     };
 
-    speakNext();
-  }, []);
+    // Small timeout to let cancel() finish in some browsers
+    setTimeout(speakNext, 50);
+  }, [getBestVoice]);
 
   // Read a single item
   const readOne = useCallback((text, lang = 'en', idx = 0) => {
     window.speechSynthesis.cancel();
+    const sessionId = ++sessionRef.current; // New session ID
+    
     const langCode = lang === 'hi' ? 'hi-IN' : 'en-IN';
     const utt = new SpeechSynthesisUtterance(text);
     utt.lang = langCode;
@@ -112,13 +141,29 @@ function useSpeech() {
     const voice = getBestVoice(langCode);
     if (voice) utt.voice = voice;
 
-    utt.onstart = () => { if (isMounted.current) { setSpeaking(true); setPaused(false); setCurrentIdx(idx); } };
-    utt.onend = () => { if (isMounted.current) { setSpeaking(false); setCurrentIdx(-1); } };
-    utt.onerror = () => { if (isMounted.current) { setSpeaking(false); setCurrentIdx(-1); } };
+    utt.onstart = () => { 
+      if (isMounted.current && sessionId === sessionRef.current) { 
+        setSpeaking(true); setPaused(false); setCurrentIdx(idx); 
+      } 
+    };
+    utt.onend = () => { 
+      if (isMounted.current && sessionId === sessionRef.current) { 
+        setSpeaking(false); setCurrentIdx(-1); 
+      } 
+    };
+    utt.onerror = () => { 
+      if (isMounted.current && sessionId === sessionRef.current) { 
+        setSpeaking(false); setCurrentIdx(-1); 
+      } 
+    };
 
     utterRef.current = utt;
-    window.speechSynthesis.speak(utt);
-  }, []);
+    setTimeout(() => {
+      if (isMounted.current && sessionId === sessionRef.current) {
+        window.speechSynthesis.speak(utt);
+      }
+    }, 50);
+  }, [getBestVoice]);
 
   // Cleanup on unmount
   useEffect(() => () => window.speechSynthesis.cancel(), []);
