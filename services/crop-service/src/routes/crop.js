@@ -1,30 +1,26 @@
 const express = require('express');
 const router = express.Router();
 const Redis = process.env.MOCK_REDIS_KAFKA === 'true' ? require('../../../../utils/mockRedis') : require('ioredis');
-const { OpenAI } = require('openai');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-const redisUrl = process.env.REDIS_URL || 'rediss://default:gQAAAAAAAcH_AAIgcDFmZGVmNjgzOTMyNDM0YWFkOWU2NTE0ZDE5MGQ0MTE4Mg@superb-caiman-115199.upstash.io:6379';
+// Redis Connection Logic - Prioritize local Docker network
+const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
 const redis = new Redis(redisUrl, {
   maxRetriesPerRequest: 1,
-  retryStrategy: () => null,
-  tls: redisUrl.startsWith('rediss://') ? { rejectUnauthorized: false } : undefined
+  retryStrategy: (times) => {
+    if (times > 1) return null; 
+    return 100;
+  },
+  connectTimeout: 2000, 
 });
 
-redis.on('connect', () => {
-  console.log('✅ Redis Connected to Upstash (Crop Service)');
-});
+redis.on('connect', () => console.log('✅ Redis Connected (Crop Service)'));
+redis.on('error', (err) => console.warn('⚠️ Redis not available in Crop Service:', err.message));
 
-redis.on('error', (err) => {
-  const safeUrl = redisUrl.replace(/:[^:@]+@/, ':***@');
-  console.warn(`⚠️  Redis (${safeUrl}) not available, caching disabled:`, err.message);
-});
+const CACHE_TTL = 60 * 60 * 12; // 12 hours
 
-const CACHE_TTL = 60 * 60 * 6; // 6 hours
-
-// Gemini AI
-const openai = (process.env.OPENAI_API_KEY && !process.env.OPENAI_API_KEY.includes('your_'))
-  ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
-  : null;
+// Gemini AI Setup - Using GEMINI_API_KEY as per docker-compose
+const genAI = process.env.GEMINI_API_KEY ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY) : null;
 
 // Rule-based fallback crop recommendation
 const getRuleBasedRecommendation = ({ soilType, rainfall, temperature, season, state, language = 'en' }) => {
@@ -85,70 +81,65 @@ router.post('/recommend', async (req, res) => {
     const {
       soilType, soilPH, nitrogen, phosphorus, potassium,
       temperature, humidity, rainfall, season, state, district,
+      language = 'en'
     } = req.body;
 
-    const lang = req.body.language || 'en';
-    const cacheKey = `crop:rec:${soilType}:${season}:${state}:${Math.round(temperature)}:${lang}`;
-    const isRedisReady = redis.status === 'ready';
-    const cached = isRedisReady ? await redis.get(cacheKey) : null;
-    if (cached) return res.json({ success: true, data: JSON.parse(cached), cached: true });
+    const cacheKey = `crop:rec:${soilType}:${season}:${state}:${Math.round(temperature)}:${language}`;
+    
+    // Attempt cache lookup
+    if (redis.status === 'ready') {
+      try {
+        const cached = await redis.get(cacheKey);
+        if (cached) return res.json({ success: true, data: JSON.parse(cached), cached: true });
+      } catch (err) {
+        console.warn('Cache lookup failed:', err.message);
+      }
+    }
 
     let recommendation;
 
-    if (openai) {
-      const isHi = req.body.language?.startsWith('hi');
+    if (genAI) {
+      const isHi = language.startsWith('hi');
       const langName = isHi ? 'Hindi (in Devanagari script)' : 'English';
-      const prompt = `You are an expert agricultural advisor for Indian farmers.
-Given the following soil and climate data, recommend the best crops to grow.
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      
+      const prompt = `You are a professional Indian agricultural advisor.
+Given this data:
+Soil: ${soilType}, pH: ${soilPH}, N-P-K: ${nitrogen}-${phosphorus}-${potassium}
+Climate: ${temperature}°C, ${humidity}% Humidity, ${rainfall}mm Rainfall
+Season: ${season}, Location: ${district}, ${state}
 
-Soil Type: ${soilType || 'Loamy'}
-Soil pH: ${soilPH || 6.5}
-Nitrogen (N): ${nitrogen || 'Medium'} kg/ha
-Phosphorus (P): ${phosphorus || 'Medium'} kg/ha
-Potassium (K): ${potassium || 'Medium'} kg/ha
-Temperature: ${temperature || 28}°C
-Humidity: ${humidity || 65}%
-Annual Rainfall: ${rainfall || 800} mm
-Season: ${season || 'Kharif'}
-State: ${state || 'Punjab'}
-District: ${district || ''}
-
-Respond with a valid JSON object with these exact fields (JSON KEYS MUST REMAIN IN ENGLISH):
+Recommend crops in valid JSON (KEYS MUST BE ENGLISH, VALUES IN ${langName}):
 {
   "primaryCrop": "string",
-  "alternativeCrops": ["string", "string", "string"],
+  "alternativeCrops": ["string"],
   "season": "string",
   "sowingTime": "string",
   "harvestTime": "string",
   "waterRequirement": "${isHi ? 'कम|मध्यम|उच्च' : 'Low|Medium|High'}",
   "fertilizers": ["string"],
-  "tips": ["string", "string", "string"],
+  "tips": ["string"],
   "expectedYield": "string",
-  "marketDemand": "Low|Medium|High"
+  "confidence": 0.95
 }
-
-CRITICAL REQUIREMENT: 
-You MUST provide all string VALUES for all fields (primaryCrop, alternativeCrops, sowingTime, harvestTime, fertilizers, tips, expectedYield, waterRequirement) STRICTLY AND ONLY in ${langName}. 
-Do NOT mix languages. Do NOT use English words in the values if Hindi is requested. Translate everything fully into ${langName}.
-`;
+Return ONLY the JSON object.`;
 
       try {
-        const completion = await openai.chat.completions.create({
-          model: "gpt-4o-mini",
-          messages: [{ role: "user", content: prompt }],
-          response_format: { type: "json_object" },
-        });
-
-        recommendation = JSON.parse(completion.choices[0].message.content);
+        const result = await model.generateContent(prompt);
+        const text = result.response.text();
+        const jsonMatch = text.match(/\{[\s\S]*\}/);
+        recommendation = JSON.parse(jsonMatch ? jsonMatch[0] : text);
       } catch (err) {
-        console.warn('OpenAI crop advice failed, using fallback:', err.message);
+        console.warn('Gemini API failed, using rule-based fallback:', err.message);
         recommendation = getRuleBasedRecommendation(req.body);
       }
     } else {
+      console.warn('GEMINI_API_KEY missing, using rule-based fallback.');
       recommendation = getRuleBasedRecommendation(req.body);
     }
 
-    if (isRedisReady) {
+    // Cache the result
+    if (redis.status === 'ready') {
       await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(recommendation)).catch(() => {});
     }
 
@@ -158,6 +149,7 @@ Do NOT mix languages. Do NOT use English words in the values if Hindi is request
     res.status(500).json({ success: false, message: 'Recommendation failed' });
   }
 });
+
 
 // GET /crop/calendar?crop=Wheat&state=Punjab
 router.get('/calendar', async (req, res) => {
