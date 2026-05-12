@@ -41,7 +41,7 @@ async function fetchAIMarketData(state, district, commodity) {
 
     const res = JSON.parse(completion.choices[0].message.content);
     const data = res.prices || res.data || Object.values(res)[0];
-    
+
     return data.map(r => ({
       ...r,
       date: new Date().toLocaleDateString('en-GB'),
@@ -67,7 +67,7 @@ router.get('/prices', async (req, res) => {
     // Final fallback to verified dataset if AI fails
     if (!prices || prices.length === 0) {
       let filtered = BASE_PRICES;
-      if (state)     filtered = filtered.filter(p => p.state.toLowerCase().includes(state.toLowerCase()));
+      if (state) filtered = filtered.filter(p => p.state.toLowerCase().includes(state.toLowerCase()));
       if (commodity) filtered = filtered.filter(p => p.commodity.toLowerCase() === commodity.toLowerCase());
       const source = filtered.length > 0 ? filtered : BASE_PRICES.slice(0, 10);
       prices = source.map(p => ({
@@ -81,9 +81,9 @@ router.get('/prices', async (req, res) => {
       }));
     }
 
-    res.json({ 
-      success: true, 
-      data: { prices, lastUpdated: new Date().toISOString(), source: 'Smart AI Insight' } 
+    res.json({
+      success: true,
+      data: { prices, lastUpdated: new Date().toISOString(), source: 'Smart AI Insight' }
     });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -143,13 +143,13 @@ router.get('/trends', async (req, res) => {
   try {
     const { commodity = 'Wheat', state, market } = req.query;
     const userId = req.headers['x-user-id'] || 'anonymous';
-    
+
     // Record history (Fire and forget)
     MarketHistory.create({ userId, state, district: market, commodity, searchType: 'trends' }).catch(console.error);
 
     const cacheKey = `market:trends:${commodity}:${state || 'all'}:${market || 'all'}`;
     const isRedisReady = redis.status === 'ready';
-    
+
     if (isRedisReady) {
       const cached = await redis.get(cacheKey);
       if (cached) return res.json({ success: true, data: JSON.parse(cached), cached: true });
@@ -157,12 +157,12 @@ router.get('/trends', async (req, res) => {
 
     const historicalDays = 30;
     const forecastDays = 15;
-    
+
     // First try to get real base price from Govt API
     let basePrice = 2000; // default fallback
     let isRealData = false;
     const realData = await fetchRealMarketData(state, market, commodity);
-    
+
     if (realData && realData.length > 0) {
       basePrice = realData[0].modalPrice || realData[0].minPrice || 2000;
       isRealData = true;
@@ -219,9 +219,9 @@ router.get('/trends', async (req, res) => {
     }
 
     const result = { commodity, state: state || 'India', market: market || 'All Markets', trends: allTrends, isRealData };
-    
+
     if (isRedisReady) {
-      await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(result)).catch(() => {});
+      await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(result)).catch(() => { });
     }
 
     res.json({ success: true, data: result });
@@ -266,7 +266,7 @@ router.get('/map-markers', async (req, res) => {
       }));
 
     if (isRedisReady) {
-      await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(markers)).catch(() => {});
+      await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(markers)).catch(() => { });
     }
 
     res.json({ success: true, data: markers });

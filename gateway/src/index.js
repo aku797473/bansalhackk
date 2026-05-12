@@ -13,6 +13,10 @@ const { verifyToken } = require('./middleware/auth');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Global Wake Route (Must be at the very top)
+app.get('/api/wake', (req, res) => res.json({ status: 'ok', service: 'gateway-api' }));
+app.get('/wake', (req, res) => res.json({ status: 'ok', service: 'gateway-root' }));
+
 // ─── Security & Middleware ────────────────────────
 app.use(cors({
   origin: (origin, callback) => {
