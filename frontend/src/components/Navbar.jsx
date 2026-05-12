@@ -69,9 +69,9 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto h-16 bg-white/70 dark:bg-slate-900/70 backdrop-blur-2xl border border-white/20 dark:border-white/5 rounded-2xl sm:rounded-[2rem] shadow-2xl shadow-slate-200/50 dark:shadow-none px-4 flex items-center justify-between gap-4 transition-all">
           
           {/* Logo Section */}
-          <NavLink to="/dashboard" className="flex items-center gap-2 shrink-0 group">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-all">
-              <img src={logo} alt="Logo" className="w-10 h-10 sm:w-12 sm:h-12 object-contain scale-110" />
+          <NavLink to="/dashboard" className="flex items-center gap-3 shrink-0 group">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-emerald-600 flex items-center justify-center shadow-xl shadow-emerald-500/20 group-hover:scale-110 transition-all border-2 border-white/20">
+              <img src={logo} alt="Logo" className="w-10 h-10 sm:w-12 sm:h-12 object-contain scale-125" />
             </div>
             <div className="flex flex-col overflow-hidden">
               <div className="flex items-center gap-1.5">

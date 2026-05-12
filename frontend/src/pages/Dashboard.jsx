@@ -210,9 +210,9 @@ export default function Dashboard() {
                   <RefreshCw size={10} className="text-emerald-500 animate-spin-slow" /> {t('dashboard.live_sync')}
                 </span>
             </div>
-            <h1 className="text-4xl sm:text-6xl font-black tracking-tighter text-slate-900 dark:text-white flex items-center gap-6 leading-none">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-[2rem] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-xl flex items-center justify-center p-3 animate-fade-in">
-                   <img src={logo} alt="Smart Kisan" className="w-full h-full object-contain scale-110" />
+            <h1 className="text-5xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white flex items-center gap-8 leading-none">
+                <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-[2.5rem] bg-white dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 shadow-2xl flex items-center justify-center p-5 animate-scale-up">
+                   <img src={logo} alt="Smart Kisan" className="w-full h-full object-contain scale-125" />
                 </div>
                 <span>{t(greetingKey)}, {user?.name?.split(' ')[0] || t('auth.farmer')}</span>
             </h1>
