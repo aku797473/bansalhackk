@@ -309,4 +309,9 @@ router.get('/map-markers', async (req, res) => {
   }
 });
 
+// Wake route for KeepAlive
+router.get('/wake', (req, res) => {
+  res.json({ status: 'ok', service: 'weather', timestamp: new Date().toISOString() });
+});
+
 module.exports = router;

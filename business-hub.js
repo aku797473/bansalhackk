@@ -32,8 +32,6 @@ app.use('/api/market', (req, res, next) => {
   if (req.method === 'GET') return next();
   return verifyToken(req, res, next);
 }, marketRoutes);
-return verifyToken(req, res, next);
-}, marketRoutes);
 
 app.use('/api/labour', (req, res, next) => {
   if (req.method === 'GET') return next();
