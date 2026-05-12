@@ -211,11 +211,11 @@ export default function Market() {
             </div>
 
             <div className="flex flex-col gap-6">
-              <div className="bg-harvest-sunset rounded-[3rem] p-12 text-white shadow-2xl relative overflow-hidden group">
+              <div className="bg-harvest-sunset rounded-[2.5rem] md:rounded-[3rem] p-8 md:p-12 text-white shadow-2xl relative overflow-hidden group">
                 <p className="text-[10px] font-black uppercase tracking-widest text-white/70 mb-2">Live Modal Price</p>
                 <div className="flex items-end gap-3 mb-8">
-                  <h2 className="text-7xl font-black tracking-tighter drop-shadow-2xl">₹{analytics?.current.toLocaleString() || '0'}</h2>
-                  <span className="text-xl font-bold text-white/50 mb-3">/ Qntl</span>
+                  <h2 className="text-5xl md:text-7xl font-black tracking-tighter drop-shadow-2xl">₹{analytics?.current.toLocaleString() || '0'}</h2>
+                  <span className="text-lg md:text-xl font-bold text-white/50 mb-3 md:mb-4">/ Qntl</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="px-4 py-1.5 bg-white/20 rounded-2xl text-[10px] font-black uppercase tracking-widest backdrop-blur-md">Real Data</div>
@@ -223,72 +223,72 @@ export default function Market() {
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-slate-900 rounded-[3rem] p-10 shadow-premium border border-white/20 dark:border-white/5">
+              <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] md:rounded-[3rem] p-8 md:p-10 shadow-premium border border-white/20 dark:border-white/5">
                 <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-8">30-Day Market Range</p>
                 <div className="flex items-center justify-between">
-                  <div><p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Low</p><p className="text-4xl font-black text-red-500 tracking-tighter">₹{analytics?.low.toLocaleString() || '0'}</p></div>
+                  <div><p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Low</p><p className="text-3xl md:text-4xl font-black text-red-500 tracking-tighter">₹{analytics?.low.toLocaleString() || '0'}</p></div>
                   <div className="h-12 w-px bg-gray-100 dark:bg-slate-800" />
-                  <div className="text-right"><p className="text-[10px] font-bold text-gray-400 uppercase mb-1">High</p><p className="text-4xl font-black text-emerald-500 tracking-tighter">₹{analytics?.high.toLocaleString() || '0'}</p></div>
+                  <div className="text-right"><p className="text-[10px] font-bold text-gray-400 uppercase mb-1">High</p><p className="text-3xl md:text-4xl font-black text-emerald-500 tracking-tighter">₹{analytics?.high.toLocaleString() || '0'}</p></div>
                 </div>
               </div>
 
-              <div className="bg-blue-600 rounded-[3rem] p-12 text-white shadow-2xl relative overflow-hidden group">
+              <div className="bg-blue-600 rounded-[2.5rem] md:rounded-[3rem] p-8 md:p-12 text-white shadow-2xl relative overflow-hidden group">
                 <p className="text-[10px] font-black uppercase tracking-widest text-white/70 mb-4">AI Price Forecast</p>
                 <div className="flex items-center gap-6 mb-6">
-                  <h3 className="text-6xl font-black text-white">+{analytics?.change || '0'}%</h3>
-                  <TrendingUp size={48} className="text-white/30" />
+                  <h3 className="text-5xl md:text-6xl font-black text-white">+{analytics?.change || '0'}%</h3>
+                  <TrendingUp size={40} className="text-white/30" />
                 </div>
                 <p className="text-sm font-medium text-white/60 leading-relaxed italic">Smart analysis predicts growth for {selCommodity} in {selDistrict} market.</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-900 rounded-[4rem] shadow-premium overflow-hidden border border-white/20 dark:border-white/5">
-            <div className="p-10 border-b border-gray-50 dark:border-white/5 flex items-center justify-between">
-               <h3 className="text-3xl font-black text-gray-900 dark:text-white tracking-tighter">Mandi Board Details</h3>
-               <div className="px-6 py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-blue-100 dark:border-blue-900/20">
+          <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] md:rounded-[4rem] shadow-premium overflow-hidden border border-white/20 dark:border-white/5">
+            <div className="p-8 md:p-12 border-b border-gray-50 dark:border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-8">
+               <h3 className="text-2xl md:text-4xl font-black text-gray-900 dark:text-white tracking-tighter">Mandi Board Details</h3>
+               <div className="px-6 py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-blue-100 dark:border-blue-900/20 w-fit">
                  Updated: {new Date(marketData?.lastSync).toLocaleTimeString()}
                </div>
             </div>
             <div className="overflow-x-auto scrollbar-none">
-              <table className="w-full text-left">
+              <table className="w-full text-left min-w-[700px]">
                 <thead>
                   <tr className="bg-gray-50/50 dark:bg-slate-800/50">
-                    <th className="px-10 py-6 text-[10px] font-black uppercase text-gray-400">Commodity Info</th>
-                    <th className="px-10 py-6 text-[10px] font-black uppercase text-gray-400">Market</th>
-                    <th className="px-10 py-6 text-[10px] font-black uppercase text-gray-400 text-center">Modal Rate</th>
-                    <th className="px-10 py-6 text-[10px] font-black uppercase text-gray-400 text-right">Trend</th>
+                    <th className="px-8 md:px-12 py-6 md:py-8 text-[10px] md:text-[11px] font-black uppercase text-gray-400">Commodity Info</th>
+                    <th className="px-8 md:px-12 py-6 md:py-8 text-[10px] md:text-[11px] font-black uppercase text-gray-400">Market</th>
+                    <th className="px-8 md:px-12 py-6 md:py-8 text-[10px] md:text-[11px] font-black uppercase text-gray-400 text-center">Modal Rate</th>
+                    <th className="px-8 md:px-12 py-6 md:py-8 text-[10px] md:text-[11px] font-black uppercase text-gray-400 text-right">Trend</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-50 dark:divide-white/5">
                   {filteredPrices.map((p, i) => (
                     <tr key={i} className="hover:bg-blue-50/20 dark:hover:bg-blue-900/10 transition-colors">
-                      <td className="px-10 py-8">
+                      <td className="px-8 md:px-12 py-8 md:py-10">
                         <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-2xl bg-white dark:bg-slate-800 shadow-lg flex items-center justify-center text-2xl">
+                          <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-white dark:bg-slate-800 shadow-lg flex items-center justify-center text-xl md:text-2xl">
                              {p.commodity === 'Wheat' ? '🌾' : p.commodity === 'Soybean' ? '🫘' : p.commodity === 'Rice' ? '🍚' : '📦'}
                           </div>
                           <div>
-                            <p className="font-black text-gray-900 dark:text-white text-lg leading-tight mb-1">{p.commodity}</p>
+                            <p className="font-black text-gray-900 dark:text-white text-base md:text-lg leading-tight mb-1">{p.commodity}</p>
                             <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{p.variety}</p>
                           </div>
                         </div>
                       </td>
-                      <td className="px-10 py-8">
+                      <td className="px-8 md:px-12 py-8 md:py-10">
                         <div className="flex items-center gap-2">
                           <MapPin size={14} className="text-blue-500" />
-                          <span className="font-black text-gray-900 dark:text-white text-lg">{p.market}</span>
+                          <span className="font-black text-gray-900 dark:text-white text-base md:text-lg">{p.market}</span>
                         </div>
                       </td>
-                      <td className="px-10 py-8 text-center">
-                        <p className="text-4xl font-black text-blue-600 dark:text-blue-400 tracking-tighter leading-none">₹{p.modalPrice.toLocaleString()}</p>
+                      <td className="px-8 md:px-12 py-8 md:py-10 text-center">
+                        <p className="text-3xl md:text-4xl font-black text-blue-600 dark:text-blue-400 tracking-tighter leading-none">₹{p.modalPrice.toLocaleString()}</p>
                       </td>
-                      <td className="px-10 py-8 text-right">
+                      <td className="px-8 md:px-12 py-8 md:py-10 text-right">
                         <div className={clsx(
-                          "inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl font-black text-sm shadow-xl",
+                          "inline-flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 rounded-2xl font-black text-xs md:text-sm shadow-xl",
                           p.changePercent > 0 ? "bg-emerald-500 text-white" : "bg-red-500 text-white"
                         )}>
-                          {p.changePercent > 0 ? <TrendingUp size={18} /> : <TrendingDown size={18} />} {p.changePercent}%
+                          {p.changePercent > 0 ? <TrendingUp size={16} /> : <TrendingDown size={16} />} {p.changePercent}%
                         </div>
                       </td>
                     </tr>
