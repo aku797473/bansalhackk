@@ -109,7 +109,17 @@ export default function MapView() {
     }
 
     // Fetch and display markers
-    fetchMarkers();
+    fetchMarkers().then(() => {
+      // Check for URL parameters to auto-center
+      const params = new URLSearchParams(window.location.search);
+      const lat = parseFloat(params.get('lat'));
+      const lng = parseFloat(params.get('lng'));
+      if (lat && lng && mapRef.current) {
+        setTimeout(() => {
+          mapRef.current.flyTo([lat, lng], 16, { animate: true, duration: 1.5 });
+        }, 1000);
+      }
+    });
 
     return () => {
       if (watchIdRef.current) navigator.geolocation.clearWatch(watchIdRef.current);

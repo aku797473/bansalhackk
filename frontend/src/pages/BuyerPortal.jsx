@@ -307,8 +307,19 @@ export default function BuyerPortal() {
                     <div className="flex items-center gap-3 pt-4 border-t border-gray-50 dark:border-white/5">
                       <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-xs font-black text-gray-500">{buyer.ownerName.charAt(0)}</div>
                       <span className="text-xs font-bold text-gray-600 dark:text-slate-400">{buyer.ownerName}</span>
-                      <div className="ml-auto flex items-center gap-1 text-[10px] font-black text-green-600 uppercase tracking-widest">
-                        <ShieldCheck size={14} /> Verified
+                      <div className="ml-auto flex items-center gap-3">
+                        {buyer.location?.lat && (
+                          <button 
+                            onClick={() => window.open(`/map?lat=${buyer.location.lat}&lng=${buyer.location.lng}&name=${encodeURIComponent(buyer.shopName)}`, '_blank')}
+                            className="p-2 bg-green-50 dark:bg-green-900/30 text-green-600 rounded-lg hover:bg-green-100 transition-colors"
+                            title="View on Map"
+                          >
+                            <MapIcon size={16} />
+                          </button>
+                        )}
+                        <div className="flex items-center gap-1 text-[10px] font-black text-green-600 uppercase tracking-widest">
+                          <ShieldCheck size={14} /> Verified
+                        </div>
                       </div>
                     </div>
                   </div>
