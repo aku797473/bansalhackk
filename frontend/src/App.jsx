@@ -98,7 +98,7 @@ function AppLayout({ children }) {
           {children}
         </Suspense>
       </main>
-      {isAuth && <TourGuide />}
+      {/* {isAuth && <TourGuide />} */}
       {isAuth && <ChatWidget />}
       {isAuth && <VoiceAssistant />}
     </div>
