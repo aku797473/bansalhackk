@@ -39,6 +39,9 @@ self.addEventListener('activate', (event) => {
 // Fetch Event - Strategic caching
 self.addEventListener('fetch', (event) => {
   const { request } = event;
+  
+  // Only cache GET requests
+  if (request.method !== 'GET') return;
 
   // Skip cross-origin requests (like Clerk or Gemini API)
   // unless they are for images/fonts

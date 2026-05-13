@@ -294,6 +294,20 @@ export default function BuyerPortal() {
                     </div>
                   </div>
                   <div className="p-6">
+                    {/* Inline Map Preview */}
+                    {buyer.location?.lat && (
+                      <div className="w-full h-32 rounded-xl mb-4 overflow-hidden border border-gray-100 dark:border-white/5 shadow-inner">
+                        <iframe
+                          title={`Map ${buyer.shopName}`}
+                          width="100%"
+                          height="100%"
+                          style={{ border: 0 }}
+                          loading="lazy"
+                          src={`https://www.openstreetmap.org/export/embed.html?bbox=${buyer.location.lng-0.005},${buyer.location.lat-0.005},${buyer.location.lng+0.005},${buyer.location.lat+0.005}&layer=mapnik&marker=${buyer.location.lat},${buyer.location.lng}`}
+                        />
+                      </div>
+                    )}
+                    
                     <div className="flex justify-between items-start mb-4">
                       <div>
                         <h3 className="text-xl font-black text-gray-900 dark:text-white group-hover:text-green-600 transition-colors">{buyer.shopName}</h3>
