@@ -226,7 +226,7 @@ export default function BuyerPortal() {
               <Store className="text-green-600 dark:text-green-400" size={32} />
             </div>
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-400 dark:to-emerald-400">
-              {t('buyer.marketplace_title', 'Agri Marketplace')}
+              {t('buyer.marketplace_title', 'Agri Marketplace v5')}
             </span>
           </h1>
           <p className="text-gray-500 dark:text-slate-400 mt-2 font-medium">
