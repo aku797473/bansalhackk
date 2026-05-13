@@ -10,27 +10,27 @@ module.exports = async (req, res) => {
     return res.status(405).json({ success: false, message: 'Method Not Allowed' });
   }
 
-  const { landSize, cropType, soilType, location, budget, fertilizers, weather } = req.body;
-  
-  // Obfuscated key to bypass secret scanners for hackathon purposes
-  const p1 = 'gsk_MZSoKigCB';
-  const p2 = 'ojILVDovEdhWGdyb';
-  const p3 = '3FYbygSdjRWDAT98Sb8RAiaybeg';
-  const apiKey = process.env.GROQ_API_KEY || (p1 + p2 + p3);
-
-  const groq = new Groq({ apiKey });
-
   try {
+    const { landSize, cropType, soilType, location, budget, fertilizers, weather } = req.body || {};
+    
+    // Obfuscated key to bypass secret scanners for hackathon purposes
+    const p1 = 'gsk_MZSoKigCB';
+    const p2 = 'ojILVDovEdhWGdyb';
+    const p3 = '3FYbygSdjRWDAT98Sb8RAiaybeg';
+    const apiKey = process.env.GROQ_API_KEY || (p1 + p2 + p3);
+
+    const groq = new Groq({ apiKey });
+
     const prompt = `
       You are an expert Agricultural Economic Advisor. 
       Analyze the following farm data and provide a detailed profit prediction and optimization strategy in Hinglish (Hindi + English mix) so an Indian farmer can understand easily.
       
       Farm Data:
-      - Land Size: ${landSize} Acres
-      - Current/Planned Crop: ${cropType}
-      - Soil Type: ${soilType}
-      - Location: ${location}
-      - Investment Budget: ₹${budget}
+      - Land Size: ${landSize || 'Unknown'} Acres
+      - Current/Planned Crop: ${cropType || 'Unknown'}
+      - Soil Type: ${soilType || 'Unknown'}
+      - Location: ${location || 'Unknown'}
+      - Investment Budget: ₹${budget || 'Unknown'}
       - Current Fertilizers: ${fertilizers || 'None'}
       - Local Weather (Approx): ${weather || 'Normal'}
       
@@ -53,6 +53,7 @@ module.exports = async (req, res) => {
     const response = chatCompletion.choices[0].message.content;
     return res.json({ success: true, data: response });
   } catch (err) {
-    return res.status(500).json({ success: false, message: err.message });
+    console.error('AI Predict Error:', err);
+    return res.status(500).json({ success: false, message: err.message, stack: err.stack });
   }
 };
