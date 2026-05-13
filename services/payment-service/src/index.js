@@ -22,6 +22,8 @@ const buyerRoutes = require('./routes/buyer');
 app.use('/payment', paymentRoutes);
 app.use('/api/labour', labourRoutes);
 app.use('/api/buyer', buyerRoutes);
+app.use('/buyer', buyerRoutes); // Alias for direct access
+app.use('/labour', labourRoutes); // Alias
 
 app.get('/test-payment-direct', (req, res) => res.send('Payment Service Direct Test Working!'));
 app.get('/api/labour/test', (req, res) => res.send('Labour via Payment Service working!'));

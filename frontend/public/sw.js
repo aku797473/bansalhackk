@@ -7,6 +7,7 @@ const ASSETS_TO_CACHE = [
   '/manifest.json'
 ];
 
+
 // Install Event - Caching basic assets
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -71,6 +72,11 @@ self.addEventListener('fetch', (event) => {
         if (request.mode === 'navigate') {
           return caches.match('/index.html');
         }
+        return new Response('Offline or Network Error', { 
+          status: 503, 
+          statusText: 'Service Unavailable',
+          headers: new Headers({ 'Content-Type': 'text/plain' }) 
+        });
       });
     })
   );

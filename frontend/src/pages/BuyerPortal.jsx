@@ -302,6 +302,34 @@ export default function BuyerPortal() {
                   </div>
                 </div>
 
+                <div className="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-800">
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h4 className="font-black text-sm">Precise Location (Map)</h4>
+                      <p className="text-[10px] text-gray-400">Helps farmers find you on the map.</p>
+                    </div>
+                    <button 
+                      onClick={() => {
+                        if (navigator.geolocation) {
+                          navigator.geolocation.getCurrentPosition(({coords}) => {
+                            setForm({...form, lat: coords.latitude, lng: coords.longitude});
+                            toast.success('Location Captured!');
+                          });
+                        }
+                      }}
+                      className="px-4 py-2 bg-green-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-green-600/20"
+                    >
+                      Get Current Location
+                    </button>
+                  </div>
+                  {form.lat && (
+                    <div className="flex gap-4 text-[10px] font-black text-green-600">
+                      <span>LAT: {form.lat.toFixed(4)}</span>
+                      <span>LNG: {form.lng.toFixed(4)}</span>
+                    </div>
+                  )}
+                </div>
+
                 <button onClick={handleRegister} className="btn-primary w-full h-16 rounded-2xl text-lg font-black shadow-xl shadow-green-600/20 mt-6">
                   Create Shop Profile
                 </button>
