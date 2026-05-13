@@ -36,7 +36,9 @@ export default function ProfitPredictor() {
     cropType: 'Wheat (गेंहू)',
     soilType: 'Alluvial (जलोढ़)',
     location: '',
-    budget: ''
+    budget: '',
+    fertilizers: '',
+    weather: 'Clear Sky, 28°C' // Default or fetched
   });
 
   const [loading, setLoading] = useState(false);
@@ -131,30 +133,58 @@ export default function ProfitPredictor() {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-xs font-black uppercase text-gray-400 flex items-center gap-2">
-                  <MapPin size={14} /> Location (State/District)
-                </label>
-                <input 
-                  type="text" 
-                  className="input h-14 border-2 rounded-2xl focus:border-green-500" 
-                  placeholder="e.g. Punjab, Ludhiana"
-                  value={form.location}
-                  onChange={e => setForm({...form, location: e.target.value})}
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-xs font-black uppercase text-gray-400 flex items-center gap-2">
+                    <MapPin size={14} /> Location
+                  </label>
+                  <input 
+                    type="text" 
+                    className="input h-14 border-2 rounded-2xl focus:border-green-500" 
+                    placeholder="Punjab"
+                    value={form.location}
+                    onChange={e => setForm({...form, location: e.target.value})}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-black uppercase text-gray-400 flex items-center gap-2">
+                    <FlaskConical size={14} /> Fertilizer
+                  </label>
+                  <input 
+                    type="text" 
+                    className="input h-14 border-2 rounded-2xl focus:border-green-500" 
+                    placeholder="Urea"
+                    value={form.fertilizers}
+                    onChange={e => setForm({...form, fertilizers: e.target.value})}
+                  />
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-xs font-black uppercase text-gray-400 flex items-center gap-2">
-                  <Wallet size={14} /> Investment Budget (₹)
-                </label>
-                <input 
-                  type="number" 
-                  className="input h-14 border-2 rounded-2xl focus:border-green-500" 
-                  placeholder="e.g. 50000"
-                  value={form.budget}
-                  onChange={e => setForm({...form, budget: e.target.value})}
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-xs font-black uppercase text-gray-400 flex items-center gap-2">
+                    <Cloud size={14} /> Weather Context
+                  </label>
+                  <input 
+                    type="text" 
+                    className="input h-14 border-2 rounded-2xl" 
+                    placeholder="e.g. Rainy"
+                    value={form.weather}
+                    onChange={e => setForm({...form, weather: e.target.value})}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-black uppercase text-gray-400 flex items-center gap-2">
+                    <Wallet size={14} /> Budget (₹)
+                  </label>
+                  <input 
+                    type="number" 
+                    className="input h-14 border-2 rounded-2xl focus:border-green-500" 
+                    placeholder="50000"
+                    value={form.budget}
+                    onChange={e => setForm({...form, budget: e.target.value})}
+                  />
+                </div>
               </div>
 
               <button 
