@@ -436,38 +436,57 @@ export default function BuyerPortal() {
                     </button>
                   </div>
                   {form.lat ? (
-                    <div className="space-y-3">
-                      <div className="flex gap-3">
-                        <div className="flex-1">
-                          <label className="text-[10px] font-black uppercase text-gray-400">Lat</label>
-                          <input type="number" step="any" className="input h-10 text-xs rounded-lg" value={form.lat} onChange={e => setForm({...form, lat: Number(e.target.value)})} />
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="bg-white dark:bg-slate-800 p-3 rounded-xl border border-green-100 dark:border-green-900/30">
+                          <label className="text-[9px] font-black uppercase text-gray-400 block mb-1">Latitude</label>
+                          <input 
+                            type="number" step="any" 
+                            className="w-full bg-transparent text-sm font-bold text-green-600 focus:outline-none" 
+                            value={form.lat} 
+                            onChange={e => setForm(prev => ({...prev, lat: Number(e.target.value)}))} 
+                          />
                         </div>
-                        <div className="flex-1">
-                          <label className="text-[10px] font-black uppercase text-gray-400">Lng</label>
-                          <input type="number" step="any" className="input h-10 text-xs rounded-lg" value={form.lng} onChange={e => setForm({...form, lng: Number(e.target.value)})} />
+                        <div className="bg-white dark:bg-slate-800 p-3 rounded-xl border border-green-100 dark:border-green-900/30">
+                          <label className="text-[9px] font-black uppercase text-gray-400 block mb-1">Longitude</label>
+                          <input 
+                            type="number" step="any" 
+                            className="w-full bg-transparent text-sm font-bold text-green-600 focus:outline-none" 
+                            value={form.lng} 
+                            onChange={e => setForm(prev => ({...prev, lng: Number(e.target.value)}))} 
+                          />
                         </div>
                       </div>
-                      <iframe
-                        title="Shop Location"
-                        width="100%"
-                        height="200"
-                        style={{ border: 0, borderRadius: '12px' }}
-                        loading="lazy"
-                        src={`https://www.google.com/maps/embed/v1/place?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''}&q=${form.lat},${form.lng}`}
-                        // Fallback to simple embed if no key
-                        onError={(e) => { e.target.src = `https://maps.google.com/maps?q=${form.lat},${form.lng}&z=15&output=embed` }}
-                      />
+                      
+                      <div className="relative rounded-2xl overflow-hidden border-2 border-green-500/20 shadow-xl">
+                        <iframe
+                          title="Shop Location"
+                          width="100%"
+                          height="220"
+                          style={{ border: 0 }}
+                          loading="lazy"
+                          allow="geolocation"
+                          src={`https://www.openstreetmap.org/export/embed.html?bbox=${form.lng-0.01},${form.lat-0.01},${form.lng+0.01},${form.lat+0.01}&layer=mapnik&marker=${form.lat},${form.lng}`}
+                        />
+                        <div className="absolute top-3 right-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-[10px] font-black text-green-600 shadow-lg border border-green-100 dark:border-green-800">
+                          LIVE PREVIEW
+                        </div>
+                      </div>
                     </div>
                   ) : (
                     <div className="space-y-4">
-                      <div className="flex items-center justify-center h-24 text-gray-300 dark:text-slate-700 text-sm font-bold gap-2 bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-800">
-                        <MapPin size={20} /> No location captured yet
+                      <div className="flex flex-col items-center justify-center h-32 text-gray-300 dark:text-slate-700 text-sm font-bold gap-3 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-800">
+                        <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-full">
+                          <MapPin size={24} className="text-slate-400" />
+                        </div>
+                        <span>GPS Coordinates Required</span>
                       </div>
                       <button 
-                        onClick={() => setForm({...form, lat: 28.6139, lng: 77.2090})} // Default to Delhi as placeholder
-                        className="w-full py-2 text-[10px] font-black text-gray-400 hover:text-green-600 transition-colors"
+                        type="button"
+                        onClick={() => setForm(prev => ({...prev, lat: 28.6139, lng: 77.2090}))} 
+                        className="w-full py-2 text-[10px] font-black text-gray-400 hover:text-green-600 transition-colors uppercase tracking-widest"
                       >
-                        Add Coordinates Manually
+                        Enter Manually (Delhi Default)
                       </button>
                     </div>
                   )}
