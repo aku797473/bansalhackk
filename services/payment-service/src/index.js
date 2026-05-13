@@ -15,6 +15,18 @@ const PORT = process.env.PORT || 5010;
 app.use(express.json());
 app.use(cors());
 
+// Test route at root for easy debugging
+app.get('/api/buyer/test', (req, res) => res.json({ success: true, message: 'Buyer Hub v2 is LIVE and READY!' }));
+app.get('/api/buyer/list', async (req, res) => {
+  try {
+    const Buyer = require('./models/Buyer');
+    const buyers = await Buyer.find();
+    res.json({ success: true, data: buyers });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 const labourRoutes = require('./routes/labour');
 const buyerRoutes = require('./routes/buyer');
 
@@ -22,8 +34,8 @@ const buyerRoutes = require('./routes/buyer');
 app.use('/payment', paymentRoutes);
 app.use('/api/labour', labourRoutes);
 app.use('/api/buyer', buyerRoutes);
-app.use('/buyer', buyerRoutes); // Alias for direct access
-app.use('/labour', labourRoutes); // Alias
+app.use('/buyer', buyerRoutes);
+app.use('/labour', labourRoutes);
 
 app.get('/test-payment-direct', (req, res) => res.send('Payment Service Direct Test Working!'));
 app.get('/api/labour/test', (req, res) => res.send('Labour via Payment Service working!'));

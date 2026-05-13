@@ -89,17 +89,57 @@ export default function BuyerPortal() {
       toast.error('Please fill all required fields');
       return;
     }
+    setLoading(true);
     try {
-      await buyerAPI.registerBuyer({
+      const payload = {
         ...form,
-        location: { district: form.district, state: form.state, address: form.address }
-      });
+        location: { 
+          district: form.district, 
+          state: form.state, 
+          lat: form.lat, 
+          lng: form.lng,
+          village: form.address 
+        }
+      };
+      await buyerAPI.registerBuyer(payload);
       toast.success('Shop Registered Successfully!');
       setTab('browse');
       fetchBuyers();
     } catch (err) {
-      toast.error('Registration failed');
+      toast.error('Registration failed: ' + (err.response?.data?.message || err.message));
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setForm({ ...form, image: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const captureLocation = () => {
+    if (!navigator.geolocation) {
+      toast.error('Geolocation is not supported by your browser');
+      return;
+    }
+
+    const toastId = toast.loading('Capturing precise location...');
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setForm({ ...form, lat: pos.coords.latitude, lng: pos.coords.longitude });
+        toast.success('Exact Location Captured!', { id: toastId });
+      },
+      (err) => {
+        toast.error('Location Access Denied. Please enable GPS.', { id: toastId });
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
   };
 
   const loadRazorpay = () => {
@@ -309,14 +349,7 @@ export default function BuyerPortal() {
                       <p className="text-[10px] text-gray-400">Helps farmers find you on the map.</p>
                     </div>
                     <button 
-                      onClick={() => {
-                        if (navigator.geolocation) {
-                          navigator.geolocation.getCurrentPosition(({coords}) => {
-                            setForm({...form, lat: coords.latitude, lng: coords.longitude});
-                            toast.success('Location Captured!');
-                          });
-                        }
-                      }}
+                      onClick={captureLocation}
                       className="px-4 py-2 bg-green-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-green-600/20"
                     >
                       Get Current Location
@@ -330,20 +363,23 @@ export default function BuyerPortal() {
                   )}
                 </div>
 
-                <button onClick={handleRegister} className="btn-primary w-full h-16 rounded-2xl text-lg font-black shadow-xl shadow-green-600/20 mt-6">
-                  Create Shop Profile
+                <button onClick={handleRegister} disabled={loading} className="btn-primary w-full h-16 rounded-2xl text-lg font-black shadow-xl shadow-green-600/20 mt-6 disabled:opacity-50">
+                  {loading ? 'Registering...' : 'Create Shop Profile'}
                 </button>
               </div>
            </div>
 
            <div className="lg:col-span-4 space-y-6">
-              <div className="card bg-green-50 dark:bg-green-900/10 border-green-100 dark:border-green-900/20 p-8 text-center">
-                 <div className="w-20 h-20 bg-white dark:bg-slate-800 rounded-3xl shadow-xl mx-auto mb-6 flex items-center justify-center">
-                    <Camera className="text-green-600" size={32} />
+              <div className="card bg-green-50 dark:bg-green-900/10 border-green-100 dark:border-green-900/20 p-8 text-center overflow-hidden">
+                 <div className="w-20 h-20 bg-white dark:bg-slate-800 rounded-3xl shadow-xl mx-auto mb-6 flex items-center justify-center overflow-hidden">
+                    {form.image ? <img src={form.image} className="w-full h-full object-cover" /> : <Camera className="text-green-600" size={32} />}
                  </div>
                  <h3 className="font-black text-gray-900 dark:text-white mb-2">Upload Shop Photo</h3>
                  <p className="text-xs text-gray-500 mb-6">Visible to all farmers in your area.</p>
-                 <button className="px-6 py-2 bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 rounded-xl text-xs font-black shadow-sm border border-gray-100 dark:border-slate-700">Browse Files</button>
+                 <input type="file" id="shop-photo" hidden accept="image/*" onChange={handlePhotoChange} />
+                 <label htmlFor="shop-photo" className="cursor-pointer px-6 py-2 bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 rounded-xl text-xs font-black shadow-sm border border-gray-100 dark:border-slate-700">
+                   {form.image ? 'Change Photo' : 'Browse Files'}
+                 </label>
               </div>
 
               <div className="card bg-slate-900 text-white p-8">
