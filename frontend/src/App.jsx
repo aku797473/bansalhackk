@@ -12,6 +12,8 @@ import TourGuide from './components/TourGuide';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { ClerkProvider } from '@clerk/clerk-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { HeartPulse } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 
 const queryClient = new QueryClient({
@@ -47,6 +49,7 @@ const News        = lazy(() => import('./pages/News'));
 const Schemes     = lazy(() => import('./pages/Schemes'));
 const Buyer       = lazy(() => import('./pages/BuyerPortal'));
 const ProfitPredictor = lazy(() => import('./pages/ProfitPredictor'));
+const SOS         = lazy(() => import('./pages/SOS'));
 
 function ProtectedRoute({ children }) {
   const { isAuth, loading } = useAuth();
@@ -102,6 +105,15 @@ function AppLayout({ children }) {
       {/* {isAuth && <TourGuide />} */}
       {isAuth && <ChatWidget />}
       {isAuth && <VoiceAssistant />}
+      {isAuth && (
+        <Link 
+          to="/sos"
+          className="fixed bottom-24 right-6 md:right-8 z-40 w-14 h-14 bg-red-600 rounded-full flex items-center justify-center text-white shadow-lg shadow-red-600/30 hover:scale-110 active:scale-95 transition-all animate-bounce"
+          title="Emergency SOS"
+        >
+          <HeartPulse size={28} className="animate-pulse" />
+        </Link>
+      )}
     </div>
   );
 }
@@ -144,6 +156,7 @@ export default function App() {
                 <Route path="/schemes"    element={<ProtectedRoute><Schemes /></ProtectedRoute>} />
                 <Route path="/buyer"      element={<ProtectedRoute><Buyer /></ProtectedRoute>} />
                 <Route path="/profit-predictor" element={<ProtectedRoute><ProfitPredictor /></ProtectedRoute>} />
+                <Route path="/sos"        element={<ProtectedRoute><SOS /></ProtectedRoute>} />
                 <Route path="/profile"    element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                 <Route path="*"           element={<Navigate to="/" replace />} />
               </Routes>
