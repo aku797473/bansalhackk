@@ -12,8 +12,17 @@ const app = express();
 const PORT = process.env.PORT || 5010;
 
 // Middleware
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(cors());
+
+// Root route to verify deployment
+app.get('/', (req, res) => res.json({ 
+  service: 'Smart Kisan Business Hub', 
+  version: '2.1', 
+  status: 'operational',
+  endpoints: ['/api/buyer/test', '/api/buyer/list', '/api/buyer/register']
+}));
 
 // Test route at root for easy debugging
 app.get('/api/buyer/test', (req, res) => res.json({ success: true, message: 'Buyer Hub v2 is LIVE and READY!' }));
