@@ -10,7 +10,9 @@ import {
   ArrowRight,
   Info,
   ChevronRight,
-  AlertCircle
+  AlertCircle,
+  Cloud,
+  FlaskConical
 } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
