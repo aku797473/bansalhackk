@@ -15,8 +15,8 @@ const PORT = process.env.PORT || 5010;
 app.use(express.json());
 app.use(cors());
 
-const labourRoutes = require('../../labour-service/src/routes/labour');
-const buyerRoutes = require('../../buyer-service/src/routes/buyer');
+const labourRoutes = require('./routes/labour');
+const buyerRoutes = require('./routes/buyer');
 
 // Routes
 app.use('/payment', paymentRoutes);
