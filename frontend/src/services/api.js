@@ -115,4 +115,3 @@ export const buyerAPI = {
 };
 
 export default authApi; // Default
-

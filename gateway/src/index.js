@@ -8,6 +8,11 @@ const morgan = require('morgan');
 const compression = require('compression');
 const { clerkMiddleware } = require('@clerk/express');
 const { verifyToken } = require('./middleware/auth');
+const mongoose = require('mongoose');
+
+// Connect to MongoDB directly in Gateway for reliability
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/smart-kisan';
+mongoose.connect(MONGODB_URI).then(() => console.log('✅ Gateway connected to MongoDB'));
 
 
 const app = express();
@@ -139,7 +144,7 @@ app.use('/api/chatbot',     verifyToken, createProxyMiddleware(proxyOptions(serv
 app.use('/api/news',        verifyToken, createProxyMiddleware(proxyOptions(services.news)));
 app.use('/api/payment',     verifyToken, createProxyMiddleware(proxyOptions(services.payment)));
 app.use('/api/schemes',     verifyToken, createProxyMiddleware(proxyOptions(services.schemes)));
-app.use('/api/buyer',       verifyToken, createProxyMiddleware(proxyOptions(services.buyer)));
+app.use('/api/buyer', verifyToken, express.json({ limit: '50mb' }), require('./routes/buyer'));
 
 
 app.get('/', (req, res) => {
