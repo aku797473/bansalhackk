@@ -423,20 +423,34 @@ export default function BuyerPortal() {
                 <div className="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-800">
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <h4 className="font-black text-sm">Precise Location (Map)</h4>
-                      <p className="text-[10px] text-gray-400">Helps farmers find you on the map.</p>
+                      <h4 className="font-black text-sm flex items-center gap-2"><MapIcon size={16} className="text-green-600" /> Precise Location (Map)</h4>
+                      <p className="text-[10px] text-gray-400 mt-1">Farmers will see your shop pinned on the map.</p>
                     </div>
                     <button 
                       onClick={captureLocation}
-                      className="px-4 py-2 bg-green-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-green-600/20"
+                      className="px-4 py-2 bg-green-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-green-600/20 hover:bg-green-700 transition-all"
                     >
-                      Get Current Location
+                      📍 Get Location
                     </button>
                   </div>
-                  {form.lat && (
-                    <div className="flex gap-4 text-[10px] font-black text-green-600">
-                      <span>LAT: {form.lat.toFixed(4)}</span>
-                      <span>LNG: {form.lng.toFixed(4)}</span>
+                  {form.lat ? (
+                    <div className="space-y-3">
+                      <div className="flex gap-6 text-xs font-black text-green-600 bg-green-50 dark:bg-green-900/20 px-4 py-2 rounded-xl">
+                        <span>📍 LAT: {form.lat.toFixed(5)}</span>
+                        <span>📍 LNG: {form.lng.toFixed(5)}</span>
+                      </div>
+                      <iframe
+                        title="Shop Location"
+                        width="100%"
+                        height="200"
+                        style={{ border: 0, borderRadius: '12px' }}
+                        loading="lazy"
+                        src={`https://maps.google.com/maps?q=${form.lat},${form.lng}&z=15&output=embed`}
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center h-24 text-gray-300 dark:text-slate-700 text-sm font-bold gap-2">
+                      <MapPin size={20} /> No location captured yet
                     </div>
                   )}
                 </div>
