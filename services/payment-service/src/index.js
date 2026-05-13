@@ -66,9 +66,19 @@ app.get('/health', (req, res) => res.json({ status: 'Payment Service is healthy'
 
 // Database Connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/smart-kisan-payment';
-mongoose.connect(MONGODB_URI)
+mongoose.connect(MONGODB_URI, { serverSelectionTimeoutMS: 5000 })
   .then(() => console.log('✅ Payment Service: Connected to MongoDB'))
   .catch(err => console.error('❌ Payment Service: MongoDB connection error:', err));
+
+// Final Catch-all for debugging
+app.use((req, res) => {
+  res.status(404).json({ 
+    error: 'Not Found', 
+    url: req.url, 
+    method: req.method,
+    available_routes: ['/api/buyer/test', '/api/buyer/register', '/api/buyer/list']
+  });
+});
 
 app.listen(PORT, () => {
   console.log(`🚀 Payment Service running on port ${PORT}`);
