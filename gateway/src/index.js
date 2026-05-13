@@ -144,7 +144,7 @@ app.use('/api/chatbot',     verifyToken, createProxyMiddleware(proxyOptions(serv
 app.use('/api/news',        verifyToken, createProxyMiddleware(proxyOptions(services.news)));
 app.use('/api/payment',     verifyToken, createProxyMiddleware(proxyOptions(services.payment)));
 app.use('/api/schemes',     verifyToken, createProxyMiddleware(proxyOptions(services.schemes)));
-app.use('/api/buyer', verifyToken, express.json({ limit: '50mb' }), require('./routes/buyer'));
+app.use('/api/buyer', express.json({ limit: '50mb' }), require('./routes/buyer'));
 
 
 app.get('/', (req, res) => {
