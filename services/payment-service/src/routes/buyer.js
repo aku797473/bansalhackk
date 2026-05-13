@@ -1,64 +1,79 @@
 const express = require('express');
 const router = express.Router();
-const Listing = require('../models/Listing');
+const Buyer = require('../models/Buyer');
 const Order = require('../models/Order');
 
 // Test route
-router.get('/test', (req, res) => res.json({ success: true, message: 'Buyer routes are live!' }));
+router.get('/test', (req, res) => res.json({ success: true, message: 'Buyer Hub is live!' }));
 
-// Get all listings (Marketplace)
-router.get('/listings', async (req, res) => {
+// Get all buyers/shops
+router.get('/list', async (req, res) => {
   try {
     const { category, state, district } = req.query;
-    const filter = { status: 'available' };
-    if (category) filter.category = category;
-    if (state) filter['location.state'] = state;
-    if (district) filter['location.district'] = district;
+    const filter = {};
+    if (category && category !== 'all') filter.category = category;
+    if (state) filter['location.state'] = new RegExp(state, 'i');
+    if (district) filter['location.district'] = new RegExp(district, 'i');
 
-    const listings = await Listing.find(filter).sort({ createdAt: -1 });
-    res.json({ success: true, data: listings });
+    const buyers = await Buyer.find(filter).sort({ createdAt: -1 });
+    res.json({ success: true, data: buyers });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 });
 
-// Create a listing (Farmer side)
-router.post('/listings', async (req, res) => {
+// Register as a Buyer/Shop
+router.post('/register', async (req, res) => {
   try {
     const userId = req.headers['x-user-id'] || 'anonymous';
-    const listing = new Listing({ ...req.body, farmerId: userId });
-    await listing.save();
-    res.status(201).json({ success: true, data: listing });
+    const buyer = new Buyer({ ...req.body, userId });
+    await buyer.save();
+    res.status(201).json({ success: true, data: buyer });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 });
 
-// Get listing details
-router.get('/listings/:id', async (req, res) => {
+// Get buyer details
+router.get('/:id', async (req, res) => {
   try {
-    const listing = await Listing.findById(req.params.id);
-    if (!listing) return res.status(404).json({ success: false, message: 'Listing not found' });
-    res.json({ success: true, data: listing });
+    const buyer = await Buyer.findById(req.params.id);
+    if (!buyer) return res.status(404).json({ success: false, message: 'Buyer not found' });
+    res.json({ success: true, data: buyer });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 });
 
-// Create an order (Buyer side)
+// Get Map Markers for Buyers
+router.get('/map-markers', async (req, res) => {
+  try {
+    const buyers = await Buyer.find({ 'location.lat': { $exists: true } });
+    const markers = buyers.map(b => ({
+      lat: b.location.lat,
+      lng: b.location.lng,
+      type: 'buyer',
+      title: b.shopName,
+      info: `${b.category} · ${b.location.district}`,
+      detail: `Owner: ${b.ownerName} · Phone: ${b.phone}`
+    }));
+    res.json({ success: true, data: markers });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// Create an order/purchase from a shop
 router.post('/orders', async (req, res) => {
   try {
     const buyerId = req.headers['x-user-id'] || 'anonymous';
-    const { listingId, quantity, totalAmount, razorpayOrderId } = req.body;
+    const { shopId, items, totalAmount, razorpayOrderId } = req.body;
     
-    const listing = await Listing.findById(listingId);
-    if (!listing) return res.status(404).json({ success: false, message: 'Listing not found' });
-
+    // items is array of { itemName, quantity, price }
     const order = new Order({
-      listingId,
       buyerId,
-      farmerId: listing.farmerId,
-      quantity,
+      shopId,
+      items,
       totalAmount,
       razorpayOrderId,
       paymentStatus: 'pending'
@@ -66,34 +81,6 @@ router.post('/orders', async (req, res) => {
 
     await order.save();
     res.status(201).json({ success: true, data: order });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-});
-
-// Update order payment status
-router.patch('/orders/:id/payment', async (req, res) => {
-  try {
-    const { paymentStatus, razorpayPaymentId } = req.body;
-    const order = await Order.findByIdAndUpdate(
-      req.params.id,
-      { paymentStatus, razorpayPaymentId },
-      { new: true }
-    );
-    
-    if (paymentStatus === 'paid') {
-      // Logic to reduce listing quantity or mark as sold out
-      const listing = await Listing.findById(order.listingId);
-      if (listing) {
-        listing.quantity -= order.quantity;
-        if (listing.quantity <= 0) {
-          listing.status = 'sold_out';
-        }
-        await listing.save();
-      }
-    }
-
-    res.json({ success: true, data: order });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

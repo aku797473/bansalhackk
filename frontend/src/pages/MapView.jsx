@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMap } from '../contexts/MapContext';
+import { buyerAPI } from '../services/api';
 
 import {
   MapPin, Navigation, Map, Ruler, Trash2, StopCircle, PlayCircle, Focus
@@ -45,6 +46,7 @@ export default function MapView() {
   };
 
   const [currentLoc, setCurrentLoc] = useState(null);
+  const [markers, setMarkers] = useState([]);
 
 
   /* ─── Initialize Map ──────────────────────────────────── */
@@ -105,6 +107,9 @@ export default function MapView() {
         mapRef.current.flyTo(initialLoc, 16, { duration: 1.5 });
       }, () => {}, { enableHighAccuracy: true });
     }
+
+    // Fetch and display markers
+    fetchMarkers();
 
     return () => {
       if (watchIdRef.current) navigator.geolocation.clearWatch(watchIdRef.current);
@@ -232,6 +237,29 @@ export default function MapView() {
       setArea({ sqm: 0, acres: 0, hectares: 0 });
     }
   }, [fieldPoints]);
+
+  const fetchMarkers = async () => {
+    try {
+      const { data } = await buyerAPI.getMarkers();
+      if (data.success && mapRef.current) {
+        data.data.forEach(m => {
+          const icon = L.divIcon({
+            html: `<div class="marker-pin" style="background: ${m.type === 'buyer' ? '#16a34a' : '#3b82f6'}; border: 2px solid white; width: 30px; height: 30px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); display: flex; items-center; justify-center; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"><div style="transform: rotate(45deg); color: white; font-size: 14px;">${m.type === 'buyer' ? '🏪' : '💼'}</div></div>`,
+            className: '', iconSize: [30, 30], iconAnchor: [15, 30]
+          });
+          L.marker([m.lat, m.lng], { icon })
+            .bindPopup(`<div style="font-family: Inter, sans-serif; padding: 10px;">
+              <h3 style="margin: 0 0 5px; font-weight: 800; color: #1e293b;">${m.title}</h3>
+              <p style="margin: 0; font-size: 12px; font-weight: 600; color: #64748b;">${m.info}</p>
+              <p style="margin: 5px 0 0; font-size: 11px; color: #94a3b8; font-style: italic;">${m.detail}</p>
+            </div>`)
+            .addTo(mapRef.current);
+        });
+      }
+    } catch (err) {
+      console.error('Failed to fetch markers', err);
+    }
+  };
 
   /* ─── Handlers ────────────────────────────────────────── */
   const toggleTracking = () => setIsTracking(!isTracking);

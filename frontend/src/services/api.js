@@ -106,10 +106,11 @@ export const paymentAPI = {
 };
 
 export const buyerAPI = {
-  getListings: (params) => businessApi.get('/buyer/listings', { params }),
-  createListing: (data) => businessApi.post('/buyer/listings', data),
-  getListing: (id) => businessApi.get(`/buyer/listings/${id}`),
-  createOrder: (data) => businessApi.post('/buyer/orders', data),
+  getBuyers:    (params) => businessApi.get('/buyer/list', { params }),
+  registerBuyer: (data) => businessApi.post('/buyer/register', data),
+  getBuyer:     (id) => businessApi.get(`/buyer/${id}`),
+  getMarkers:   () => businessApi.get('/buyer/map-markers'),
+  createOrder:  (data) => businessApi.post('/buyer/orders', data),
   updatePayment: (id, data) => businessApi.patch(`/buyer/orders/${id}/payment`, data),
 };
 
