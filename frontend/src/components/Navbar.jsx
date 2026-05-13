@@ -49,6 +49,7 @@ export default function Navbar() {
   const moreLinks = [
     { to: '/labour',     icon: Users,         label: t('nav.labour') },
     { to: '/buyer',      icon: ShoppingBag,   label: t('nav.buyer', 'Marketplace') },
+    { to: '/profit-predictor', icon: TrendingUp, label: 'Profit Predictor' },
     { to: '/map',        icon: Map,           label: t('nav.map') },
     { to: '/news',       icon: Newspaper,     label: t('nav.news') },
     { to: '/schemes',    icon: Landmark,      label: t('nav.schemes') },
