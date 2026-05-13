@@ -16,10 +16,12 @@ app.use(express.json());
 app.use(cors());
 
 const labourRoutes = require('../../labour-service/src/routes/labour');
+const buyerRoutes = require('../../buyer-service/src/routes/buyer');
 
 // Routes
 app.use('/payment', paymentRoutes);
 app.use('/api/labour', labourRoutes);
+app.use('/api/buyer', buyerRoutes);
 
 app.get('/test-payment-direct', (req, res) => res.send('Payment Service Direct Test Working!'));
 app.get('/api/labour/test', (req, res) => res.send('Labour via Payment Service working!'));
