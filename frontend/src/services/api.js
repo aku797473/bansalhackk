@@ -4,7 +4,7 @@ const AUTH_URL     = import.meta.env.VITE_AUTH_API_URL     || '/api';
 const AI_URL       = import.meta.env.VITE_AI_API_URL       || '/api';
 const INFO_URL     = import.meta.env.VITE_INFO_API_URL     || 'https://smart-kisan-weather.onrender.com/api';
 const MARKET_URL   = import.meta.env.VITE_MARKET_API_URL   || import.meta.env.VITE_INFO_API_URL || 'https://smart-kisan-weather.onrender.com/api';
-const BUSINESS_URL = import.meta.env.VITE_BUSINESS_API_URL || '/api';
+const BUSINESS_URL = '/api';
 
 // Base instances for each hub
 const authApi     = axios.create({ baseURL: AUTH_URL,     timeout: 30000 });
