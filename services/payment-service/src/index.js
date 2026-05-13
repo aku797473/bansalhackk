@@ -27,6 +27,17 @@ app.get('/api/buyer/list', async (req, res) => {
   }
 });
 
+app.post('/api/buyer/register', async (req, res) => {
+  try {
+    const Buyer = require('./models/Buyer');
+    const buyer = new Buyer(req.body);
+    await buyer.save();
+    res.status(201).json({ success: true, data: buyer });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 const labourRoutes = require('./routes/labour');
 const buyerRoutes = require('./routes/buyer');
 

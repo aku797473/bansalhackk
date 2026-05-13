@@ -12,6 +12,7 @@ import {
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { usePageAnimation } from '../hooks/usePageAnimation';
+import { STATES_DATA } from '../data/regions';
 
 const CATEGORIES = [
   { id: 'all', name: 'All Shops', icon: '🏪' },
@@ -60,8 +61,30 @@ export default function BuyerPortal() {
   const [form, setForm] = useState({
     shopName: '', ownerName: user?.name || '', phone: user?.phone || '', 
     category: 'trader', address: '', district: '', state: 'Madhya Pradesh',
-    description: '', image: null, inventory: []
+    description: '', image: null, inventory: [], lat: null, lng: null
   });
+
+  const [newItem, setNewItem] = useState({ itemName: '', price: '', unit: 'kg', description: '' });
+
+  const addInventoryItem = () => {
+    if (!newItem.itemName || !newItem.price) {
+      toast.error('Item name and price are required');
+      return;
+    }
+    setForm(prev => ({
+      ...prev,
+      inventory: [...prev.inventory, { ...newItem, price: Number(newItem.price) }]
+    }));
+    setNewItem({ itemName: '', price: '', unit: 'kg', description: '' });
+    toast.success('Item added to shop inventory!');
+  };
+
+  const removeInventoryItem = (index) => {
+    setForm(prev => ({
+      ...prev,
+      inventory: prev.inventory.filter((_, i) => i !== index)
+    }));
+  };
 
   useEffect(() => {
     fetchBuyers();
@@ -326,20 +349,75 @@ export default function BuyerPortal() {
                   </div>
                 </div>
 
-                <div>
-                  <label className="label">Full Address *</label>
-                  <textarea className="input border-2 min-h-[100px] rounded-xl pt-4" placeholder="Street, Village, Near Landmark..." value={form.address} onChange={e => setForm({...form, address: e.target.value})} />
-                </div>
-
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div>
-                    <label className="label">District *</label>
-                    <input className="input border-2 h-14 rounded-xl" placeholder="e.g. Rewa" value={form.district} onChange={e => setForm({...form, district: e.target.value})} />
+                    <label className="label">Full Address *</label>
+                    <textarea className="input border-2 min-h-[100px] rounded-xl pt-4" placeholder="Street, Village, Near Landmark..." value={form.address} onChange={e => setForm({...form, address: e.target.value})} />
                   </div>
-                  <div>
-                    <label className="label">State *</label>
-                    <input className="input border-2 h-14 rounded-xl" value={form.state} onChange={e => setForm({...form, state: e.target.value})} />
+                  <div className="space-y-4">
+                    <div>
+                      <label className="label">State *</label>
+                      <select className="input border-2 h-14 rounded-xl" value={form.state} onChange={e => setForm({...form, state: e.target.value, district: STATES_DATA[e.target.value][0]})}>
+                        {Object.keys(STATES_DATA).map(s => <option key={s} value={s}>{s}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="label">District *</label>
+                      <select className="input border-2 h-14 rounded-xl" value={form.district} onChange={e => setForm({...form, district: e.target.value})}>
+                        {STATES_DATA[form.state]?.map(d => <option key={d} value={d}>{d}</option>)}
+                      </select>
+                    </div>
                   </div>
+                </div>
+
+                {/* Inventory Builder */}
+                <div className="card bg-slate-50 dark:bg-slate-900/50 p-6 rounded-[2rem] border-2 border-slate-100 dark:border-slate-800">
+                  <h3 className="font-black text-lg mb-6 flex items-center gap-3">
+                    <Package className="text-green-600" /> Manage Shop Inventory
+                  </h3>
+                  
+                  <div className="grid sm:grid-cols-12 gap-4 mb-6">
+                    <div className="sm:col-span-4">
+                      <input className="input h-12 rounded-xl text-sm" placeholder="Item Name (e.g. Wheat)" value={newItem.itemName} onChange={e => setNewItem({...newItem, itemName: e.target.value})} />
+                    </div>
+                    <div className="sm:col-span-3">
+                      <input type="number" className="input h-12 rounded-xl text-sm" placeholder="Price" value={newItem.price} onChange={e => setNewItem({...newItem, price: e.target.value})} />
+                    </div>
+                    <div className="sm:col-span-3">
+                      <select className="input h-12 rounded-xl text-sm" value={newItem.unit} onChange={e => setNewItem({...newItem, unit: e.target.value})}>
+                        <option value="kg">per kg</option>
+                        <option value="quintal">per quintal</option>
+                        <option value="bag">per bag</option>
+                        <option value="piece">per piece</option>
+                      </select>
+                    </div>
+                    <div className="sm:col-span-2">
+                      <button onClick={addInventoryItem} className="w-full h-12 bg-green-600 text-white rounded-xl flex items-center justify-center hover:bg-green-700 transition-all">
+                        <Plus size={20} />
+                      </button>
+                    </div>
+                  </div>
+
+                  {form.inventory.length > 0 && (
+                    <div className="space-y-2">
+                      {form.inventory.map((item, idx) => (
+                        <div key={idx} className="flex items-center justify-between p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 bg-green-50 dark:bg-green-900/30 rounded-lg flex items-center justify-center text-xs font-black text-green-600">
+                              {idx + 1}
+                            </div>
+                            <div>
+                              <p className="font-bold text-sm">{item.itemName}</p>
+                              <p className="text-[10px] text-gray-400">₹{item.price} / {item.unit}</p>
+                            </div>
+                          </div>
+                          <button onClick={() => removeInventoryItem(idx)} className="p-2 text-red-400 hover:text-red-600 transition-colors">
+                            <X size={16} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 <div className="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-800">
