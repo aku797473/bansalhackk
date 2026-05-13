@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react';
-import * as JoyridePkg from 'react-joyride';
+import Joyride, { STATUS } from 'react-joyride';
 import { useTranslation } from 'react-i18next';
-
-const Joyride = JoyridePkg.default || JoyridePkg.Joyride || JoyridePkg;
-const STATUS = JoyridePkg.STATUS;
 
 export default function TourGuide() {
   const { t, i18n } = useTranslation();
