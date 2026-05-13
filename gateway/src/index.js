@@ -71,6 +71,7 @@ const services = {
   news:       process.env.NEWS_SERVICE_URL       || 'http://localhost:5009',
   payment:    process.env.PAYMENT_SERVICE_URL    || 'http://localhost:5010',
   schemes:    process.env.SCHEMES_SERVICE_URL    || 'http://localhost:5011',
+  buyer:      process.env.BUYER_SERVICE_URL      || 'http://localhost:5012',
 };
 
 
@@ -138,6 +139,7 @@ app.use('/api/chatbot',     verifyToken, createProxyMiddleware(proxyOptions(serv
 app.use('/api/news',        verifyToken, createProxyMiddleware(proxyOptions(services.news)));
 app.use('/api/payment',     verifyToken, createProxyMiddleware(proxyOptions(services.payment)));
 app.use('/api/schemes',     verifyToken, createProxyMiddleware(proxyOptions(services.schemes)));
+app.use('/api/buyer',       verifyToken, createProxyMiddleware(proxyOptions(services.buyer)));
 
 
 app.get('/', (req, res) => {

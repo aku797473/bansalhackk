@@ -16,6 +16,8 @@ async function writeEnvFile(uri) {
     `REDIS_URL=rediss://default:gQAAAAAAAcH_AAIgcDFmZGVmNjgzOTMyNDM0YWFkOWU2NTE0ZDE5MGQ0MTE4Mg@superb-caiman-115199.upstash.io:6379`,
     `OPENWEATHER_API_KEY=${process.env.OPENWEATHER_API_KEY || ''}`,
     `GEMINI_API_KEY=${process.env.GEMINI_API_KEY || ''}`,
+    `RAZORPAY_KEY_ID=${process.env.RAZORPAY_KEY_ID || ''}`,
+    `RAZORPAY_KEY_SECRET=${process.env.RAZORPAY_KEY_SECRET || ''}`,
   ];
   fs.writeFileSync(envPath, lines.join('\n'), 'utf8');
   console.log(`✅ Runtime env written to ${envPath}`);
@@ -64,6 +66,8 @@ async function start() {
       JWT_SECRET:         process.env.JWT_SECRET,
       JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
       JWT_EXPIRES_IN:     process.env.JWT_EXPIRES_IN,
+      RAZORPAY_KEY_ID:     process.env.RAZORPAY_KEY_ID,
+      RAZORPAY_KEY_SECRET: process.env.RAZORPAY_KEY_SECRET,
     },
     shell: true,
   });

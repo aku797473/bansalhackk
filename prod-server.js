@@ -15,6 +15,7 @@ const services = [
   { name: 'news',       port: 5009, path: 'services/news-service' },
   { name: 'payment',    port: 5010, path: 'services/payment-service' },
   { name: 'schemes',    port: 5011, path: 'services/schemes-service' },
+  { name: 'buyer',      port: 5012, path: 'services/buyer-service' },
   { name: 'frontend',   port: 5173, path: 'frontend', command: 'npm', args: ['run', 'dev'] }
 
 ];

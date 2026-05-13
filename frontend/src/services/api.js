@@ -105,5 +105,13 @@ export const paymentAPI = {
   verifyPayment: (data) => businessApi.post('/payment/verify', data),
 };
 
+export const buyerAPI = {
+  getListings: (params) => businessApi.get('/buyer/listings', { params }),
+  createListing: (data) => businessApi.post('/buyer/listings', data),
+  getListing: (id) => businessApi.get(`/buyer/listings/${id}`),
+  createOrder: (data) => businessApi.post('/buyer/orders', data),
+  updatePayment: (id, data) => businessApi.patch(`/buyer/orders/${id}/payment`, data),
+};
+
 export default authApi; // Default
 

@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import LanguageSelector from './LanguageSelector';
 import {
-  Home, Cloud, Leaf, FlaskConical, TrendingUp,
+  Home, Cloud, Leaf, FlaskConical, TrendingUp, ShoppingBag,
   Users, Map, Newspaper, Bell, Landmark, Menu, X, LogOut, Sun, Moon, ChevronRight
 } from 'lucide-react';
 import { UserButton } from '@clerk/clerk-react';
@@ -48,6 +48,7 @@ export default function Navbar() {
 
   const moreLinks = [
     { to: '/labour',     icon: Users,         label: t('nav.labour') },
+    { to: '/buyer',      icon: ShoppingBag,   label: t('nav.buyer', 'Marketplace') },
     { to: '/map',        icon: Map,           label: t('nav.map') },
     { to: '/news',       icon: Newspaper,     label: t('nav.news') },
     { to: '/schemes',    icon: Landmark,      label: t('nav.schemes') },

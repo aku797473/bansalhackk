@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { marketAPI } from '../services/api';
 import { useQuery } from '@tanstack/react-query';
-import { 
+import {
   ComposedChart, Area, Line, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, CartesianGrid
 } from 'recharts';
 import { TrendingUp, TrendingDown, Minus, RefreshCw, MapPin, Package } from 'lucide-react';
@@ -38,9 +38,9 @@ const ALL_STATES = Object.keys(DISTRICT_DATABASE).concat([
 const COMMODITIES_DATABASE = ['Wheat', 'Mustard', 'Soybean', 'Rice', 'Maize', 'Cotton', 'Gram', 'Onion', 'Potato', 'Tomato', 'Garlic', 'Ginger', 'Bajra', 'Jowar', 'Barley', 'Moong', 'Arhar', 'Urad', 'Masur', 'Groundnut', 'Sunflower', 'Sesamum', 'Sugarcane', 'Chilli', 'Turmeric', 'Coriander', 'Apple', 'Banana', 'Orange', 'Grapes', 'Mango', 'Papaya', 'Lemon', 'Guava', 'Peas', 'Cabbage', 'Cauliflower', 'Brinjal', 'Bhindi'].sort();
 
 const FALLBACK_PRICES = [
-  { commodity:'Wheat', variety:'Dara', state:'Punjab', market:'Amritsar', modalPrice:2350, minPrice:2200, maxPrice:2500, changePercent:1.2, district: 'Amritsar' },
-  { commodity:'Soybean', variety:'Yellow', state:'Madhya Pradesh', market:'Indore', modalPrice:4400, minPrice:4200, maxPrice:4600, changePercent:2.1, district: 'Indore' },
-  { commodity:'Mustard', variety:'Black', state:'Madhya Pradesh', market:'Satna', modalPrice:5200, minPrice:5000, maxPrice:5400, changePercent:1.8, district: 'Satna' }
+  { commodity: 'Wheat', variety: 'Dara', state: 'Punjab', market: 'Amritsar', modalPrice: 2350, minPrice: 2200, maxPrice: 2500, changePercent: 1.2, district: 'Amritsar' },
+  { commodity: 'Soybean', variety: 'Yellow', state: 'Madhya Pradesh', market: 'Indore', modalPrice: 4400, minPrice: 4200, maxPrice: 4600, changePercent: 2.1, district: 'Indore' },
+  { commodity: 'Mustard', variety: 'Black', state: 'Madhya Pradesh', market: 'Satna', modalPrice: 5200, minPrice: 5000, maxPrice: 5400, changePercent: 1.8, district: 'Satna' }
 ];
 
 // --- REAL-FEEL PRICING ENGINE ---
@@ -85,7 +85,7 @@ export default function Market() {
       try {
         const res = await marketAPI.getPrices(selState, '', '');
         let raw = res.data?.data?.prices || [];
-        
+
         // --- CLIENT-SIDE PRICE NORMALIZATION (FAILSAFE) ---
         raw = raw.map(p => {
           const comm = (p.commodity || '').toLowerCase();
@@ -101,7 +101,7 @@ export default function Market() {
         });
 
         const statePrices = raw.filter(p => p.state?.toLowerCase().includes(selState.toLowerCase()) || selState.toLowerCase().includes(p.state?.toLowerCase()));
-        
+
         const apiDistricts = [...new Set(statePrices.map(p => p.district || p.market))].filter(Boolean);
         const apiCommodities = [...new Set(statePrices.map(p => p.commodity))].filter(Boolean);
 
@@ -116,8 +116,8 @@ export default function Market() {
           commodities: finalCommodities
         };
       } catch (err) {
-        return { 
-          prices: FALLBACK_PRICES.filter(p => p.state === selState), 
+        return {
+          prices: FALLBACK_PRICES.filter(p => p.state === selState),
           source: 'Fallback System', lastSync: new Date().toISOString(),
           districts: DISTRICT_DATABASE[selState] || [],
           commodities: COMMODITIES_DATABASE
@@ -138,10 +138,10 @@ export default function Market() {
       const matchComm = p.commodity === selCommodity;
       return matchDist && matchComm;
     });
-    
+
     if (results.length === 0 && selDistrict && selCommodity) {
-       const est = getEstimatedPrice(selCommodity);
-       return [{ commodity: selCommodity, variety: 'Main', state: selState, market: selDistrict, modalPrice: est.modal, minPrice: est.min, maxPrice: est.max, changePercent: est.change, district: selDistrict }];
+      const est = getEstimatedPrice(selCommodity);
+      return [{ commodity: selCommodity, variety: 'Main', state: selState, market: selDistrict, modalPrice: est.modal, minPrice: est.min, maxPrice: est.max, changePercent: est.change, district: selDistrict }];
     }
     return results;
   }, [prices, selState, selDistrict, selCommodity]);
@@ -160,16 +160,18 @@ export default function Market() {
     const activeData = filteredPrices.length > 0 ? filteredPrices : [{ modalPrice: 2800 }];
     const vals = activeData.map(p => p.modalPrice);
     const current = Math.round(vals.reduce((a, b) => a + b, 0) / vals.length);
-    return { current, high: current * 1.05, low: current * 0.95, chartData: Array.from({ length: 12 }, (_, i) => ({
-      date: new Date(Date.now() - (11 - i) * 3 * 24 * 60 * 60 * 1000).toISOString(),
-      price: Math.round(current * (0.95 + Math.random() * 0.1)),
-      type: i > 8 ? 'forecast' : 'historical'
-    })), change: (Math.random() * 5 + 1).toFixed(1) };
+    return {
+      current, high: current * 1.05, low: current * 0.95, chartData: Array.from({ length: 12 }, (_, i) => ({
+        date: new Date(Date.now() - (11 - i) * 3 * 24 * 60 * 60 * 1000).toISOString(),
+        price: Math.round(current * (0.95 + Math.random() * 0.1)),
+        type: i > 8 ? 'forecast' : 'historical'
+      })), change: (Math.random() * 5 + 1).toFixed(1)
+    };
   }, [filteredPrices, selDistrict, selCommodity]);
 
   return (
     <div ref={ref} className="page-wrapper px-2 sm:px-4">
-      
+
       {/* ── Header ────────────────────────────────────────────── */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
         <div>
@@ -194,7 +196,7 @@ export default function Market() {
         </div>
         <div className="space-y-3">
           <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">2. Choose District</label>
-          <select 
+          <select
             className="w-full h-12 sm:h-14 bg-gray-50 dark:bg-slate-800 border-none rounded-2xl px-4 sm:px-5 font-bold text-sm cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700 transition-all"
             value={selDistrict}
             onChange={(e) => {
@@ -211,8 +213,8 @@ export default function Market() {
         </div>
         <div className="space-y-3">
           <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">3. Select Commodity</label>
-          <select 
-            className="w-full h-12 sm:h-14 bg-gray-50 dark:bg-slate-800 border-none rounded-2xl px-4 sm:px-5 font-bold text-sm cursor-pointer disabled:opacity-30 transition-all" 
+          <select
+            className="w-full h-12 sm:h-14 bg-gray-50 dark:bg-slate-800 border-none rounded-2xl px-4 sm:px-5 font-bold text-sm cursor-pointer disabled:opacity-30 transition-all"
             value={selCommodity}
             onChange={(e) => {
               const c = e.target.value;
@@ -254,13 +256,13 @@ export default function Market() {
                       <ComposedChart data={analytics.chartData}>
                         <defs>
                           <linearGradient id="colorTrend" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.2}/>
-                            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                            <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.2} />
+                            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
                           </linearGradient>
                         </defs>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" opacity={0.3} />
-                        <XAxis dataKey="date" tick={{fontSize: 10, fontWeight: 800, fill: '#94a3b8'}} axisLine={false} tickLine={false} tickFormatter={d => new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })} />
-                        <YAxis tick={{fontSize: 10, fontWeight: 800, fill: '#94a3b8'}} axisLine={false} tickLine={false} tickFormatter={v => `₹${v}`} domain={['auto', 'auto']} />
+                        <XAxis dataKey="date" tick={{ fontSize: 10, fontWeight: 800, fill: '#94a3b8' }} axisLine={false} tickLine={false} tickFormatter={d => new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })} />
+                        <YAxis tick={{ fontSize: 10, fontWeight: 800, fill: '#94a3b8' }} axisLine={false} tickLine={false} tickFormatter={v => `₹${v}`} domain={['auto', 'auto']} />
                         <RechartsTooltip />
                         <Area type="monotone" dataKey="price" stroke="#3b82f6" strokeWidth={5} fill="url(#colorTrend)" />
                         <Line type="monotone" dataKey="price" stroke="#a855f7" strokeWidth={3} strokeDasharray="8 8" dot={false} />
@@ -306,10 +308,10 @@ export default function Market() {
 
           <div className="bg-white dark:bg-slate-900 rounded-[2rem] md:rounded-[4rem] shadow-premium overflow-hidden border border-white/20 dark:border-white/5">
             <div className="p-6 md:p-12 border-b border-gray-50 dark:border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-8">
-               <h3 className="text-2xl md:text-4xl font-black text-gray-900 dark:text-white tracking-tighter text-center md:text-left">Mandi Board Details</h3>
-               <div className="px-6 py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-blue-100 dark:border-blue-900/20 w-fit mx-auto md:mx-0">
-                 Updated: {new Date(marketData?.lastSync).toLocaleTimeString()}
-               </div>
+              <h3 className="text-2xl md:text-4xl font-black text-gray-900 dark:text-white tracking-tighter text-center md:text-left">Mandi Board Details</h3>
+              <div className="px-6 py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-blue-100 dark:border-blue-900/20 w-fit mx-auto md:mx-0">
+                Updated: {new Date(marketData?.lastSync).toLocaleTimeString()}
+              </div>
             </div>
             <div className="overflow-x-auto scrollbar-none">
               <table className="w-full text-left min-w-[700px]">
@@ -327,7 +329,32 @@ export default function Market() {
                       <td className="px-8 md:px-12 py-8 md:py-10">
                         <div className="flex items-center gap-4">
                           <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-white dark:bg-slate-800 shadow-lg flex items-center justify-center text-xl md:text-2xl">
-                             {p.commodity === 'Wheat' ? '🌾' : p.commodity === 'Soybean' ? '🫘' : p.commodity === 'Rice' ? '🍚' : '📦'}
+                            {p.commodity === 'Wheat' ? '🌾' : p.commodity === 'Soybean' ? '🫘' : p.commodity === 'Rice' ? '🍚' : '📦'}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                           </div>
                           <div>
                             <p className="font-black text-gray-900 dark:text-white text-base md:text-lg leading-tight mb-1">{p.commodity}</p>
