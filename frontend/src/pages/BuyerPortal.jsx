@@ -152,16 +152,18 @@ export default function BuyerPortal() {
       return;
     }
 
-    const toastId = toast.loading('Capturing precise location...');
+    const toastId = toast.loading('Capturing precise location... Please allow GPS access.');
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        setForm({ ...form, lat: pos.coords.latitude, lng: pos.coords.longitude });
+        const { latitude, longitude } = pos.coords;
+        setForm(prev => ({ ...prev, lat: latitude, lng: longitude }));
         toast.success('Exact Location Captured!', { id: toastId });
       },
       (err) => {
-        toast.error('Location Access Denied. Please enable GPS.', { id: toastId });
+        console.error('GPS Error:', err);
+        toast.error('Location Access Denied or Timeout. Please enable GPS and Refresh.', { id: toastId });
       },
-      { enableHighAccuracy: true, timeout: 10000 }
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     );
   };
 
@@ -435,9 +437,15 @@ export default function BuyerPortal() {
                   </div>
                   {form.lat ? (
                     <div className="space-y-3">
-                      <div className="flex gap-6 text-xs font-black text-green-600 bg-green-50 dark:bg-green-900/20 px-4 py-2 rounded-xl">
-                        <span>📍 LAT: {form.lat.toFixed(5)}</span>
-                        <span>📍 LNG: {form.lng.toFixed(5)}</span>
+                      <div className="flex gap-3">
+                        <div className="flex-1">
+                          <label className="text-[10px] font-black uppercase text-gray-400">Lat</label>
+                          <input type="number" step="any" className="input h-10 text-xs rounded-lg" value={form.lat} onChange={e => setForm({...form, lat: Number(e.target.value)})} />
+                        </div>
+                        <div className="flex-1">
+                          <label className="text-[10px] font-black uppercase text-gray-400">Lng</label>
+                          <input type="number" step="any" className="input h-10 text-xs rounded-lg" value={form.lng} onChange={e => setForm({...form, lng: Number(e.target.value)})} />
+                        </div>
                       </div>
                       <iframe
                         title="Shop Location"
@@ -445,12 +453,22 @@ export default function BuyerPortal() {
                         height="200"
                         style={{ border: 0, borderRadius: '12px' }}
                         loading="lazy"
-                        src={`https://maps.google.com/maps?q=${form.lat},${form.lng}&z=15&output=embed`}
+                        src={`https://www.google.com/maps/embed/v1/place?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''}&q=${form.lat},${form.lng}`}
+                        // Fallback to simple embed if no key
+                        onError={(e) => { e.target.src = `https://maps.google.com/maps?q=${form.lat},${form.lng}&z=15&output=embed` }}
                       />
                     </div>
                   ) : (
-                    <div className="flex items-center justify-center h-24 text-gray-300 dark:text-slate-700 text-sm font-bold gap-2">
-                      <MapPin size={20} /> No location captured yet
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-center h-24 text-gray-300 dark:text-slate-700 text-sm font-bold gap-2 bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-800">
+                        <MapPin size={20} /> No location captured yet
+                      </div>
+                      <button 
+                        onClick={() => setForm({...form, lat: 28.6139, lng: 77.2090})} // Default to Delhi as placeholder
+                        className="w-full py-2 text-[10px] font-black text-gray-400 hover:text-green-600 transition-colors"
+                      >
+                        Add Coordinates Manually
+                      </button>
                     </div>
                   )}
                 </div>
