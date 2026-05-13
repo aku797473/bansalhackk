@@ -25,26 +25,48 @@ app.get('/', (req, res) => res.json({
 }));
 
 // Test route at root for easy debugging
-app.get('/api/buyer/test', (req, res) => res.json({ success: true, message: 'Buyer Hub v2 is LIVE and READY!' }));
-app.get('/api/buyer/list', async (req, res) => {
-  try {
-    const Buyer = require('./models/Buyer');
-    const buyers = await Buyer.find();
-    res.json({ success: true, data: buyers });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+app.get('/api/buyer/test', (req, res) => res.json({ success: true, message: 'Buyer Hub v3 is LIVE and READY!' }));
+app.get('/buyer/test', (req, res) => res.json({ success: true, message: 'Buyer Hub v3 is LIVE and READY!' }));
+
+// ROUTE LISTING FOR DEBUGGING
+app.get('/routes', (req, res) => {
+  const routes = [];
+  app._router.stack.forEach((middleware) => {
+    if (middleware.route) {
+      routes.push(`${Object.keys(middleware.route.methods)} ${middleware.route.path}`);
+    } else if (middleware.name === 'router') {
+      middleware.handle.stack.forEach((handler) => {
+        if (handler.route) {
+          routes.push(`${Object.keys(handler.route.methods)} ${middleware.regexp} ${handler.route.path}`);
+        }
+      });
+    }
+  });
+  res.json({ routes });
 });
 
-app.post('/api/buyer/register', async (req, res) => {
-  try {
-    const Buyer = require('./models/Buyer');
-    const buyer = new Buyer(req.body);
-    await buyer.save();
-    res.status(201).json({ success: true, data: buyer });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+// Direct catchers for common 404s
+const Buyer = require('./models/Buyer');
+app.all('/api/buyer/register', async (req, res) => {
+  if (req.method === 'POST') {
+    try {
+      const buyer = new Buyer(req.body);
+      await buyer.save();
+      return res.status(201).json({ success: true, data: buyer });
+    } catch (err) { return res.status(500).json({ error: err.message }); }
   }
+  res.json({ message: 'Send a POST request to register.' });
+});
+
+app.all('/buyer/register', async (req, res) => {
+  if (req.method === 'POST') {
+    try {
+      const buyer = new Buyer(req.body);
+      await buyer.save();
+      return res.status(201).json({ success: true, data: buyer });
+    } catch (err) { return res.status(500).json({ error: err.message }); }
+  }
+  res.json({ message: 'Send a POST request to register.' });
 });
 
 const labourRoutes = require('./routes/labour');
