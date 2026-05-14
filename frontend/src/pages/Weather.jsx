@@ -6,9 +6,21 @@ import { MapPin, Drop, Wind, Thermometer, Warning, ArrowCounterClockwise, Calend
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { usePageAnimation } from '../hooks/usePageAnimation';
+import { RealisticSun, RealisticCloud } from '../components/WeatherIcons';
 
 const WEATHER_EMOJIS = { '01': '☀️', '02': '🌤️', '03': '⛅', '04': '☁️', '09': '🌧️', '10': '🌦️', '11': '⛈️', '13': '❄️', '50': '🌫️' };
-const getEmoji = (icon) => WEATHER_EMOJIS[icon?.slice(0, 2)] || '🌡️';
+const getEmoji = (icon, size = 48) => {
+  const code = icon?.slice(0, 2);
+  if (code === '01') return <RealisticSun size={size * 1.5} className="animate-bounce-sm mx-auto" />;
+  if (code === '02' || code === '03') return (
+    <div className="relative mx-auto" style={{ width: size * 1.5, height: size * 1.5 }}>
+      <RealisticSun size={size} className="absolute -top-1 -right-1" />
+      <RealisticCloud size={size * 1.2} className="absolute bottom-0 left-0" />
+    </div>
+  );
+  if (code === '04') return <RealisticCloud size={size * 1.5} className="mx-auto" />;
+  return <span style={{ fontSize: size }}>{WEATHER_EMOJIS[code] || '🌡️'}</span>;
+};
 
 // Instant fallback so the UI never blocks
 const FALLBACK_WEATHER = {
@@ -157,7 +169,7 @@ export default function Weather() {
                   <span className="text-base sm:text-lg truncate max-w-[200px] sm:max-w-none">{displayData.city}, {displayData.country}</span>
                 </div>
                 <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
-                  <span className="text-7xl sm:text-8xl drop-shadow-lg animate-bounce-sm">{getEmoji(displayData.icon)}</span>
+                  <div className="drop-shadow-lg">{getEmoji(displayData.icon, 80)}</div>
                   <div>
                     <h2 className="text-7xl sm:text-9xl font-black tracking-tighter drop-shadow-md leading-none">{Math.round(displayData.temperature)}°</h2>
                     <p className="text-lg sm:text-xl font-bold text-sky-100 capitalize mt-2 flex items-center justify-center lg:justify-start gap-2">
@@ -207,7 +219,7 @@ export default function Weather() {
                     <p className={clsx("text-[10px] font-black uppercase tracking-widest mb-3 relative z-10", i === 0 ? "text-primary dark:text-emerald-400" : "text-gray-400")}>
                       {i === 0 ? t('common.today') : new Date(day.date).toLocaleDateString(i18n.language === 'hi' ? 'hi-IN' : 'en-IN', { weekday: 'short', day: 'numeric' })}
                     </p>
-                    <span className="text-4xl block mb-4 drop-shadow-sm group-hover:scale-110 transition-transform relative z-10">{getEmoji(day.icon)}</span>
+                    <div className="block mb-4 drop-shadow-sm group-hover:scale-110 transition-transform relative z-10">{getEmoji(day.icon, 32)}</div>
                     <p className="text-2xl font-black text-gray-900 dark:text-white leading-none mb-1 relative z-10">{day.tempMax}°</p>
                     <p className="text-xs font-bold text-gray-400 mb-4 relative z-10">{day.tempMin}°</p>
                     <div className={clsx(

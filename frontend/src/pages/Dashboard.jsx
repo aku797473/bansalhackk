@@ -14,9 +14,21 @@ import { weatherAPI, marketAPI, labourAPI } from '../services/api';
 import clsx from 'clsx';
 import logo from '../assets/kisan-logo-new.jpg';
 import realisticFarmer from '../assets/realistic-farmer.png';
+import { RealisticSun, RealisticCloud } from '../components/WeatherIcons';
 
 const WEATHER_EMOJIS = { '01': '☀️', '02': '🌤️', '03': '⛅', '04': '☁️', '09': '🌧️', '10': '🌦️', '11': '⛈️', '13': '❄️', '50': '🌫️' };
-const getWeatherEmoji = (icon) => WEATHER_EMOJIS[icon?.slice(0, 2)] || '🌡️';
+const getWeatherEmoji = (icon) => {
+  const code = icon?.slice(0, 2);
+  if (code === '01') return <RealisticSun size={48} className="animate-bounce-sm" />;
+  if (code === '02' || code === '03') return (
+    <div className="relative">
+      <RealisticSun size={40} className="absolute -top-2 -right-2" />
+      <RealisticCloud size={48} />
+    </div>
+  );
+  if (code === '04') return <RealisticCloud size={52} />;
+  return WEATHER_EMOJIS[code] || '🌡️';
+};
 
 function getGreetingKey() {
   const h = new Date().getHours();
