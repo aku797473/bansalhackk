@@ -8,7 +8,7 @@ import {
   ArrowRight, WarningCircle, ArrowCounterClockwise, Drop, Wind,
   Bell, TrendDown, Calendar, FileArrowDown, CheckCircle,
   Newspaper, Bank, ShieldCheck, ChatCircleText, Lightning, Sun, Trophy,
-  CaretRight, Pulse
+  CaretRight, Pulse, Bug, ChartLineUp, TestTube
 } from '@phosphor-icons/react';
 import { weatherAPI, marketAPI, labourAPI } from '../services/api';
 import clsx from 'clsx';
@@ -244,9 +244,9 @@ export default function Dashboard() {
   ];
 
   const alerts = [
-    { type: 'warning', text: t('dashboard.alerts.locust'), icon: '🦗' },
-    { type: 'success', text: t('dashboard.alerts.pms'), icon: '💰' },
-    { type: 'info', text: t('dashboard.alerts.wheat'), icon: '🌾' }
+    { type: 'warning', text: t('dashboard.alerts.locust'), icon: Bug, color: "text-red-500 bg-red-100/50 dark:bg-red-900/20" },
+    { type: 'success', text: t('dashboard.alerts.pms'), icon: Bank, color: "text-emerald-500 bg-emerald-100/50 dark:bg-emerald-900/20" },
+    { type: 'info', text: t('dashboard.alerts.wheat'), icon: Plant, color: "text-indigo-500 bg-indigo-100/50 dark:bg-indigo-900/20" }
   ];
 
   return (
@@ -354,13 +354,13 @@ export default function Dashboard() {
               </h2>
               <div className="grid sm:grid-cols-2 gap-5">
                 {[
-                  { title: t('dashboard.tips.soil.title'), desc: t('dashboard.tips.soil.desc'), icon: '🧪', color: 'bg-white dark:bg-slate-900' },
-                  { title: t('dashboard.tips.market.title'), desc: t('dashboard.tips.market.desc'), icon: '📉', color: 'bg-white dark:bg-slate-900' }
+                  { title: t('dashboard.tips.soil.title'), desc: t('dashboard.tips.soil.desc'), icon: TestTube, color: 'bg-white dark:bg-slate-900', accent: 'text-indigo-600' },
+                  { title: t('dashboard.tips.market.title'), desc: t('dashboard.tips.market.desc'), icon: ChartLineUp, color: 'bg-white dark:bg-slate-900', accent: 'text-emerald-600' }
                 ].map((tip, i) => (
                   <div key={i} className={clsx("p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-all", tip.color)}>
                       <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 rounded-2xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-2xl shrink-0 border border-slate-100 dark:border-slate-700">
-                          {tip.icon}
+                        <div className={clsx("w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border border-slate-100 dark:border-slate-700 shadow-sm", tip.accent || "bg-slate-50 dark:bg-slate-800")}>
+                          <tip.icon size={24} weight="duotone" />
                         </div>
                         <div>
                             <h4 className="font-bold text-slate-900 dark:text-white text-sm mb-1">{tip.title}</h4>
@@ -380,8 +380,10 @@ export default function Dashboard() {
                 <div className="space-y-3 relative z-10">
                   {alerts.map((alert, idx) => (
                       <div key={idx} className="flex gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 hover:border-indigo-200 dark:hover:border-indigo-800 transition-all cursor-pointer group/alert">
-                        <div className="text-xl shrink-0 group-hover/alert:scale-110 transition-transform">{alert.icon}</div>
-                        <p className="text-sm font-medium leading-relaxed text-slate-700 dark:text-slate-300">{alert.text}</p>
+                        <div className={clsx("w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover/alert:scale-110", alert.color)}>
+                          <alert.icon size={20} weight="duotone" />
+                        </div>
+                        <p className="text-sm font-medium leading-relaxed text-slate-700 dark:text-slate-300 self-center">{alert.text}</p>
                       </div>
                   ))}
                 </div>
