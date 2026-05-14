@@ -1,10 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import LanguageSelector from '../components/LanguageSelector';
-import { Cloud, Leaf, FlaskConical, TrendingUp, Users, Map,
-  ArrowRight, ShieldCheck, Zap, ChevronRight, Globe, 
-  Award, Star, Quote, Landmark, PlayCircle, MousePointer2, X
-} from 'lucide-react';
+import { 
+  Cloud, Leaf, Flask, TrendUp, Users, MapTrifold,
+  ArrowRight, ShieldCheck, Lightning, CaretRight, Globe, 
+  Medal, Star, Quotes, Bank, PlayCircle, CursorClick, X
+} from '@phosphor-icons/react';
 import clsx from 'clsx';
 import logo from '../assets/kisan-logo-new.jpg';
 import realisticFarmer from '../assets/realistic-farmer.png';
@@ -27,7 +28,7 @@ const modules = (t) => [
     delay: '100'
   },
   {
-    icon: TrendingUp,
+    icon: TrendUp,
     label: t('landing.modules.market.label'),
     desc: t('landing.modules.market.desc'),
     color: 'from-amber-500 to-orange-400',
@@ -91,7 +92,7 @@ export default function Landing() {
                         {t('landing.get_started')} <ArrowRight size={16} />
                      </button>
                      <button onClick={() => { document.querySelector('.features-section').scrollIntoView({ behavior: 'smooth' }); }} className="h-14 px-8 w-full sm:w-auto bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-[11px] font-black uppercase tracking-[0.2em] rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex items-center justify-center gap-3">
-                        <MousePointer2 size={18} className="text-emerald-600" /> {t('landing.explore_features', 'Explore Features')}
+                        <CursorClick size={18} weight="bold" className="text-emerald-600" /> {t('landing.explore_features', 'Explore Features')}
                      </button>
                   </div>
                </div>

@@ -15,6 +15,7 @@
     { "src": "/api/ai/(.*)", "dest": "/api/ai.js" },
     { "src": "/api/(.*)", "dest": "/api/$1" },
     { "handle": "filesystem" },
+    { "src": "/assets/(.*)", "status": 404 },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
 }

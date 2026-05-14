@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { weatherAPI } from '../services/api';
 import { useQuery } from '@tanstack/react-query';
-import { MapPin, Droplets, Wind, Thermometer, AlertTriangle, RefreshCw, Calendar, CheckCircle2, ShieldCheck, Sun, CloudRain, CloudLightning, CloudFog, Cloud, Info } from 'lucide-react';
+import { MapPin, Drop, Wind, Thermometer, Warning, ArrowCounterClockwise, Calendar, CheckCircle, ShieldCheck, Sun, CloudRain, CloudLightning, CloudFog, Cloud, Info } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { usePageAnimation } from '../hooks/usePageAnimation';
@@ -120,7 +120,7 @@ export default function Weather() {
             {displayData?.isFallback && !searching && <span className="ml-2 text-xs text-amber-500">{t('weather.fallback_notice', 'Showing estimate — fetching live data…')}</span>}
           </p>
         </div>
-        <button onClick={fetchByLocation} className={`btn-ghost p-2 ${searching ? 'animate-spin' : ''}`}><RefreshCw size={16} /></button>
+        <button onClick={fetchByLocation} className={`btn-ghost p-2 ${searching ? 'animate-spin' : ''}`}><ArrowCounterClockwise size={16} /></button>
       </div>
 
       {/* Search */}
@@ -138,7 +138,7 @@ export default function Weather() {
           {/* Alerts */}
           {displayData.alerts?.length > 0 && (
             <div className="mb-5 p-4 bg-red-50 border border-red-200 rounded-2xl flex items-start gap-3">
-              <AlertTriangle size={18} className="text-red-500 shrink-0 mt-0.5" />
+              <Warning size={18} weight="bold" className="text-red-500 shrink-0 mt-0.5" />
               <div>
                 <p className="font-semibold text-red-700 text-sm">{t('weather.alerts')}</p>
                 {displayData.alerts.map((a, i) => <p key={i} className="text-sm text-red-600">{a.message}</p>)}
@@ -172,7 +172,7 @@ export default function Weather() {
               <div className="grid grid-cols-3 lg:flex lg:flex-col gap-4 sm:gap-6 bg-white/10 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-8 border border-white/20 w-full lg:w-auto">
                 {[
                   { icon: Thermometer, label: t('weather.feels_like'), val: `${Math.round(displayData.feelsLike)}°C` },
-                  { icon: Droplets,    label: t('weather.humidity'),   val: `${displayData.humidity}%` },
+                  { icon: Drop,        label: t('weather.humidity'),   val: `${displayData.humidity}%` },
                   { icon: Wind,        label: t('weather.wind'),       val: `${displayData.windSpeed} km/h` },
                 ].map(({ icon: Icon, label, val }) => (
                   <div key={label} className="flex flex-col sm:flex-row items-center sm:items-start gap-1 sm:gap-4 text-center sm:text-left">
@@ -214,7 +214,7 @@ export default function Weather() {
                       "text-[10px] font-black py-1.5 rounded-full uppercase tracking-tighter relative z-10 flex items-center justify-center gap-1",
                       i === 0 ? "bg-primary text-white" : "bg-sky-50 dark:bg-slate-800 text-sky-600 dark:text-sky-400"
                     )}>
-                      <Droplets size={10} /> {day.humidity}%
+                      <Drop size={10} weight="bold" /> {day.humidity}%
                     </div>
                     {day.estimated && (
                       <p className="text-[8px] font-bold text-gray-300 dark:text-slate-600 mt-2 uppercase tracking-widest">Est.</p>
@@ -244,7 +244,7 @@ export default function Weather() {
                    item.check ? 'bg-emerald-50/50 border-emerald-100 dark:bg-emerald-900/10 dark:border-emerald-900/30' : 'bg-amber-50/50 border-amber-100 dark:bg-amber-900/10 dark:border-amber-900/30'
                  )}>
                     <div className={clsx('w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-sm', item.check ? 'bg-emerald-500 text-white' : 'bg-amber-500 text-white')}>
-                       {item.check ? <CheckCircle2 size={20} /> : <AlertTriangle size={20} />}
+                       {item.check ? <CheckCircle size={20} weight="bold" /> : <Warning size={20} weight="bold" />}
                     </div>
                     <div>
                        <p className="text-sm font-black text-gray-900 dark:text-white leading-tight">{item.label}</p>

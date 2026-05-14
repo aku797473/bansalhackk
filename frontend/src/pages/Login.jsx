@@ -3,7 +3,7 @@ import { SignIn, SignUp } from '@clerk/clerk-react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../contexts/ThemeContext';
 import LanguageSelector from '../components/LanguageSelector';
-import { ShieldCheck, Sun, Moon, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, Sun, Moon, CheckCircle, ArrowRight } from '@phosphor-icons/react';
 import clsx from 'clsx';
 
 const BENEFITS = [
@@ -200,7 +200,7 @@ export default function Login() {
 
           <div className="mt-12 flex items-center justify-center gap-6">
             <div className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
-              <CheckCircle2 size={12} className="text-emerald-500" />
+              <CheckCircle size={12} weight="bold" className="text-emerald-500" />
               {t('auth.secure_by_clerk')}
             </div>
             <div className="w-px h-3 bg-slate-200 dark:bg-slate-800" />

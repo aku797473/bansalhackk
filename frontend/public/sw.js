@@ -1,4 +1,4 @@
-const CACHE_NAME = 'smart-kisan-v1';
+const CACHE_NAME = 'smart-kisan-v2';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -75,11 +75,7 @@ self.addEventListener('fetch', (event) => {
         if (request.mode === 'navigate') {
           return caches.match('/index.html');
         }
-        return new Response('Offline or Network Error', { 
-          status: 503, 
-          statusText: 'Service Unavailable',
-          headers: new Headers({ 'Content-Type': 'text/plain' }) 
-        });
+        // Let other requests fail naturally (don't return a 503)
       });
     })
   );
