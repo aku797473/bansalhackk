@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { labourAPI, paymentAPI } from '../services/api';
 
-import { Users, Plus, MapPin, Banknote, X, Briefcase, Phone, User, Camera, WifiOff, ShieldCheck, Star, Clock, CheckCircle2 } from 'lucide-react';
+import { Users, Plus, MapPin, Bank, X, Briefcase, Phone, User, Camera, WifiSlash, ShieldCheck, Star, Clock, CheckCircle, Plant, Drop, Flask, Truck, Warehouse, SpinnerGap } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { usePageAnimation } from '../hooks/usePageAnimation';
@@ -39,7 +39,15 @@ const FALLBACK_JOBS = [
 const CATEGORIES = ['harvesting','sowing','irrigation','pesticide','transport','storage','other'];
 const STATES = ['Punjab','Haryana','Uttar Pradesh','Bihar','Madhya Pradesh','Maharashtra','Gujarat','Rajasthan','Karnataka'];
 
-const CATEGORY_EMOJI = { harvesting:'🌾', sowing:'🌱', irrigation:'💧', pesticide:'🧪', transport:'🚛', storage:'🏪', other:'💼' };
+const CATEGORY_ICON = { 
+  harvesting: Plant, 
+  sowing: Plant, 
+  irrigation: Drop, 
+  pesticide: Flask, 
+  transport: Truck, 
+  storage: Warehouse, 
+  other: Briefcase 
+};
 const CATEGORY_COLORS = {
   harvesting: 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400 border-amber-200 dark:border-amber-900/30',
   sowing: 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/30',
@@ -138,6 +146,7 @@ export default function Labour() {
       toast.error(t('common.error_required', 'Title, Description, District and Mobile Number are required')); 
       return; 
     }
+    setLoading(true);
     try {
       await labourAPI.postJob({ 
         ...form, 
@@ -149,6 +158,8 @@ export default function Labour() {
       fetchJobs();
     } catch (err) { 
       toast.error(t('common.error', 'Failed to post. Check all fields.')); 
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -260,7 +271,7 @@ export default function Labour() {
 
       {apiDown && (
         <div className="mb-6 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl p-4 flex items-center gap-3 text-amber-800 dark:text-amber-300">
-          <WifiOff size={20} className="shrink-0" />
+          <WifiSlash size={20} className="shrink-0" />
           <div className="text-sm">
             <span className="font-bold">{t('labour.service_unavailable')}</span>
           </div>
@@ -306,7 +317,10 @@ export default function Labour() {
 
                 <div className="flex items-start gap-4 mb-4 sm:mb-5">
                   <div className={clsx("w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl flex items-center justify-center text-2xl sm:text-3xl shrink-0 shadow-lg border transition-transform group-hover:scale-110 duration-500", CATEGORY_COLORS[job.category] || CATEGORY_COLORS.other)}>
-                    {CATEGORY_EMOJI[job.category] || '💼'}
+                    {(() => {
+                      const Icon = CATEGORY_ICON[job.category] || CATEGORY_ICON.other;
+                      return <Icon weight="duotone" />;
+                    })()}
                   </div>
                   <div className="pr-2 xs:pr-0 overflow-hidden">
                     <h3 className="font-black text-gray-900 dark:text-white leading-tight text-base sm:text-lg group-hover:text-primary transition-colors truncate">
@@ -333,7 +347,7 @@ export default function Labour() {
                     <span className="truncate">{job.location?.district}</span>
                   </div>
                   <div className="flex items-center gap-2.5 text-green-600 dark:text-green-400 font-black bg-green-50 dark:bg-green-900/10 p-2 sm:p-2.5 rounded-xl border border-green-100 dark:border-green-900/20">
-                    <Banknote size={14} className="shrink-0" />
+                    <Bank size={14} className="shrink-0" />
                     <span className="truncate">₹{job.wage} / {t(`labour.wage_units.${job.wageUnit}`)}</span>
                   </div>
                 </div>
@@ -388,7 +402,7 @@ export default function Labour() {
                 <div className="sm:col-span-2">
                   <label className="label">{t('labour.category')}</label>
                   <select className="input dark:bg-slate-800 border-2" value={form.category} onChange={e => setForm(f => ({...f, category: e.target.value}))}>
-                    {CATEGORIES.map(c => <option key={c} value={c}>{CATEGORY_EMOJI[c]} {t(`labour.categories.${c}`)}</option>)}
+                    {CATEGORIES.map(c => <option key={c} value={c}>{t(`labour.categories.${c}`)}</option>)}
                   </select>
                 </div>
                 <div>
@@ -419,8 +433,11 @@ export default function Labour() {
               </div>
             </div>
             
-            <button onClick={postJob} className="btn-primary w-full h-16 rounded-2xl justify-center mt-10 text-lg font-black shadow-xl shadow-primary/20 active:scale-[0.98]">
-              {t('common.submit')}
+            <button 
+              onClick={postJob} 
+              disabled={loading}
+              className="btn-primary w-full h-16 rounded-2xl justify-center mt-10 text-lg font-black shadow-xl shadow-primary/20 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed">
+              {loading ? <SpinnerGap className="animate-spin" size={24} /> : t('common.submit')}
             </button>
           </div>
 
@@ -462,7 +479,12 @@ export default function Labour() {
             : myJobs.map(job => (
               <div key={job._id} className="card flex items-center justify-between group py-5 px-6">
                 <div className="flex items-center gap-5">
-                   <div className="w-12 h-12 rounded-2xl bg-gray-50 dark:bg-slate-800 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">{CATEGORY_EMOJI[job.category]}</div>
+                   <div className="w-12 h-12 rounded-2xl bg-gray-50 dark:bg-slate-800 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                     {(() => {
+                        const Icon = CATEGORY_ICON[job.category] || CATEGORY_ICON.other;
+                        return <Icon weight="duotone" />;
+                     })()}
+                   </div>
                    <div>
                       <p className="font-black text-gray-900 dark:text-white text-base">{job.title}</p>
                       <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">{job.location?.district} • {job.applications?.length || 0} Applications</p>
@@ -490,7 +512,14 @@ export default function Labour() {
                
                <div className="flex items-center gap-4 sm:gap-6 relative z-10">
                   <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-2xl sm:rounded-3xl bg-white dark:bg-slate-800 shadow-2xl flex items-center justify-center overflow-hidden border-2 sm:border-4 border-white dark:border-slate-700">
-                     {showModal.image ? <img src={showModal.image} alt="Identity" className="w-full h-full object-cover" /> : <span className="text-5xl">{CATEGORY_EMOJI[showModal.category]}</span>}
+                     {showModal.image ? <img src={showModal.image} alt="Identity" className="w-full h-full object-cover" /> : (
+                       <div className="text-4xl text-purple-600">
+                         {(() => {
+                           const Icon = CATEGORY_ICON[showModal.category] || CATEGORY_ICON.other;
+                           return <Icon weight="duotone" />;
+                         })()}
+                       </div>
+                     )}
                   </div>
                   <div>
                      <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight leading-none mb-1 sm:mb-2">
@@ -529,7 +558,7 @@ export default function Labour() {
                     disabled={processingPayment}
                     className="btn-primary w-full justify-center h-14 sm:h-16 rounded-xl sm:rounded-2xl text-base sm:text-lg font-black shadow-xl shadow-primary/30 group active:scale-95 transition-all bg-indigo-600 hover:bg-indigo-700"
                   >
-                    <Banknote size={18} className="mr-2" /> 
+                    <Bank size={18} className="mr-2" /> 
                     <span>{processingPayment ? t('labour.processing') : t('labour.pay_book', { amount: showModal.wage })}</span>
                   </button>
                   <a href={`tel:${showModal.contactNumber}`} className="flex items-center justify-center h-10 sm:h-12 rounded-xl text-gray-500 font-bold hover:bg-gray-50 dark:hover:bg-slate-800 transition-all text-xs sm:text-sm">

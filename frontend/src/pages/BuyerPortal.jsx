@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { buyerAPI, paymentAPI } from '../services/api';
 import { 
-  ShoppingBag, Search, Filter, MapPin, Tag, 
-  ChevronRight, Star, Clock, ShieldCheck, 
-  ShoppingCart, Package, ArrowLeft, CheckCircle2,
-  X, Banknote, IndianRupee, Info, Store, Plus, 
-  Phone, User, Camera, Map as MapIcon, Briefcase
-} from 'lucide-react';
+  X, Bank, CurrencyInr, Info, Storefront, Plus, 
+  Trash, ArrowRight, CheckCircle, Package, 
+  MapPin, Phone, Truck, Calendar, ShoppingCart,
+  ShoppingBag, MagnifyingGlass, Tag, CaretRight, 
+  Star, Clock, ShieldCheck, ArrowLeft, Camera, Briefcase, MapTrifold, User
+} from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { usePageAnimation } from '../hooks/usePageAnimation';
@@ -225,7 +225,7 @@ export default function BuyerPortal() {
         <div>
           <h1 className="text-4xl sm:text-5xl font-black tracking-tight flex items-center gap-4">
             <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-3xl shadow-inner">
-              <Store className="text-green-600 dark:text-green-400" size={32} />
+              <Storefront className="text-green-600 dark:text-green-400" size={32} />
             </div>
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-400 dark:to-emerald-400">
               {t('buyer.marketplace_title', 'Agri Marketplace v5')}
@@ -258,7 +258,7 @@ export default function BuyerPortal() {
           {/* Search & Filter */}
           <div className="flex flex-col md:flex-row gap-4 mb-10">
             <div className="flex-1 relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+              <MagnifyingGlass className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
               <input 
                 type="text" 
                 placeholder="Search shops, districts, or products..."
@@ -328,7 +328,7 @@ export default function BuyerPortal() {
                             className="p-2 bg-green-50 dark:bg-green-900/30 text-green-600 rounded-lg hover:bg-green-100 transition-colors"
                             title="View on Map"
                           >
-                            <MapIcon size={16} />
+                            <MapTrifold size={16} />
                           </button>
                         )}
                         <div className="flex items-center gap-1 text-[10px] font-black text-green-600 uppercase tracking-widest">
@@ -349,7 +349,7 @@ export default function BuyerPortal() {
         <div className="grid lg:grid-cols-12 gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
            <div className="lg:col-span-8 card border-none shadow-premium p-8 sm:p-10">
               <h2 className="text-2xl font-black mb-8 flex items-center gap-3">
-                <Store className="text-green-600" /> Register Your Shop / Business
+                <Storefront className="text-green-600" /> Register Your Shop / Business
               </h2>
               <div className="space-y-6">
                 <div className="grid sm:grid-cols-2 gap-6">
@@ -450,7 +450,7 @@ export default function BuyerPortal() {
                 <div className="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-800">
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <h4 className="font-black text-sm flex items-center gap-2"><MapIcon size={16} className="text-green-600" /> Precise Location (Map)</h4>
+                      <h4 className="font-black text-sm flex items-center gap-2"><MapTrifold className="text-green-600" /> Precise Location (Map)</h4>
                       <p className="text-[10px] text-gray-400 mt-1">Farmers will see your shop pinned on the map.</p>
                     </div>
                     <button 
@@ -538,12 +538,12 @@ export default function BuyerPortal() {
 
               <div className="card bg-slate-900 text-white p-8">
                  <div className="flex items-center gap-3 mb-6">
-                    <MapIcon className="text-green-400" />
+                    <MapTrifold className="text-green-400" />
                     <h3 className="font-black text-lg">Location Search</h3>
                  </div>
                  <p className="text-sm text-slate-400 mb-6">Farmers will see your shop on the map for direct navigation.</p>
                  <button className="w-full py-4 bg-slate-800 rounded-xl border border-slate-700 text-xs font-black flex items-center justify-center gap-2">
-                    <MapPin size={16} /> Mark on Google Maps
+                    <MapTrifold size={16} /> Mark on Google Maps
                  </button>
               </div>
            </div>

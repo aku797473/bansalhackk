@@ -75,7 +75,8 @@ self.addEventListener('fetch', (event) => {
         if (request.mode === 'navigate') {
           return caches.match('/index.html');
         }
-        // Let other requests fail naturally (don't return a 503)
+        // Return a basic error response to satisfy the fetch handler
+        return new Response('Network Error', { status: 404, statusText: 'Not Found' });
       });
     })
   );

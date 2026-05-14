@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import {
   ComposedChart, Area, Line, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, CartesianGrid
 } from 'recharts';
-import { TrendingUp, TrendingDown, Minus, RefreshCw, MapPin, Package } from 'lucide-react';
+import { TrendUp, TrendDown, Minus, ArrowCounterClockwise, MapPin, Package, Plant, Leaf, BowlFood } from '@phosphor-icons/react';
 import clsx from 'clsx';
 import mandiImg from '../assets/mandi-scene.png';
 import { usePageAnimation } from '../hooks/usePageAnimation';
@@ -180,9 +180,12 @@ export default function Market() {
             Market Insights <span className="text-blue-600">.</span>
           </h1>
         </div>
-        <button onClick={() => refetch()} className="btn-secondary h-12 px-6 flex items-center gap-2 rounded-2xl shadow-sm transition-all active:scale-95">
-          <RefreshCw size={14} className={isFetching ? "animate-spin" : ""} />
-          <span className="text-xs font-black uppercase tracking-widest text-blue-600">Sync Live Data</span>
+        <button 
+          onClick={() => refetch()} 
+          disabled={isFetching}
+          className="btn-secondary h-12 px-6 flex items-center gap-2 rounded-2xl shadow-sm transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+          <ArrowCounterClockwise size={14} className={isFetching ? "animate-spin" : ""} />
+          <span className="text-xs font-black uppercase tracking-widest text-blue-600">{isFetching ? 'Syncing...' : 'Sync Live Data'}</span>
         </button>
       </div>
 
@@ -221,7 +224,7 @@ export default function Market() {
               setSelCommodity(c);
               sessionStorage.setItem('mkt_commodity', c);
             }}
-            disabled={!selDistrict}
+            disabled={!selDistrict || isFetching}
           >
             <option value="">-- Choose Crop --</option>
             {availableCommodities.map(c => <option key={c} value={c}>{c}</option>)}
@@ -299,7 +302,7 @@ export default function Market() {
                 <p className="text-[10px] font-black uppercase tracking-widest text-white/70 mb-4">AI Price Forecast</p>
                 <div className="flex items-center gap-6 mb-6">
                   <h3 className="text-5xl md:text-6xl font-black text-white">+{analytics?.change || '0'}%</h3>
-                  <TrendingUp size={40} className="text-white/30" />
+                  <TrendUp size={40} className="text-white/30" />
                 </div>
                 <p className="text-sm font-medium text-white/60 leading-relaxed italic">Smart analysis predicts growth for {selCommodity} in {selDistrict} market.</p>
               </div>
@@ -328,33 +331,8 @@ export default function Market() {
                     <tr key={i} className="hover:bg-blue-50/20 dark:hover:bg-blue-900/10 transition-colors">
                       <td className="px-8 md:px-12 py-8 md:py-10">
                         <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-white dark:bg-slate-800 shadow-lg flex items-center justify-center text-xl md:text-2xl">
-                            {p.commodity === 'Wheat' ? '🌾' : p.commodity === 'Soybean' ? '🫘' : p.commodity === 'Rice' ? '🍚' : '📦'}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                          <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-white dark:bg-slate-800 shadow-lg flex items-center justify-center text-xl md:text-2xl text-blue-600">
+                            {p.commodity === 'Wheat' ? <Plant weight="duotone" /> : p.commodity === 'Soybean' ? <Leaf weight="duotone" /> : p.commodity === 'Rice' ? <BowlFood weight="duotone" /> : <Package weight="duotone" />}
                           </div>
                           <div>
                             <p className="font-black text-gray-900 dark:text-white text-base md:text-lg leading-tight mb-1">{p.commodity}</p>
@@ -376,7 +354,7 @@ export default function Market() {
                           "inline-flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 rounded-2xl font-black text-xs md:text-sm shadow-xl",
                           Number(p.changePercent) > 0 ? "bg-emerald-500 text-white" : "bg-red-500 text-white"
                         )}>
-                          {Number(p.changePercent) > 0 ? <TrendingUp size={16} /> : <TrendingDown size={16} />} {Number(p.changePercent) > 0 ? '+' : ''}{parseFloat(p.changePercent).toFixed(1)}%
+                          {Number(p.changePercent) > 0 ? <TrendUp size={16} /> : <TrendDown size={16} />} {Number(p.changePercent) > 0 ? '+' : ''}{parseFloat(p.changePercent).toFixed(1)}%
                         </div>
                       </td>
                     </tr>
