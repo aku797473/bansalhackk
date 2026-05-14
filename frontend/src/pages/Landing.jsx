@@ -7,7 +7,7 @@ import { Cloud, Leaf, FlaskConical, TrendingUp, Users, Map,
 } from 'lucide-react';
 import clsx from 'clsx';
 import logo from '../assets/logo.png';
-import ultraHero from '../assets/ultra-hero.png';
+import realisticFarmer from '../assets/realistic-farmer.png';
 
 const modules = (t) => [
   {
@@ -98,7 +98,7 @@ export default function Landing() {
 
                <div className="hero-image relative">
                   <div className="bg-slate-50 dark:bg-slate-900 rounded-3xl p-3 border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
-                     <img src={ultraHero} alt="Smart Kisan" className="w-full rounded-2xl" />
+                     <img src={realisticFarmer} alt="Smart Kisan" className="w-full rounded-2xl shadow-2xl" />
                   </div>
                </div>
             </div>
@@ -176,7 +176,7 @@ export default function Landing() {
             </div>
             <div className="infra-image flex-1">
                <div className="bg-slate-50 dark:bg-slate-900 rounded-3xl p-3 border border-slate-100 dark:border-slate-800">
-                  <img src={ultraHero} alt="Infrastructure" className="w-full rounded-2xl grayscale opacity-80" />
+                  <img src={realisticFarmer} alt="Infrastructure" className="w-full rounded-2xl grayscale opacity-40 mix-blend-luminosity" />
                </div>
             </div>
          </div>

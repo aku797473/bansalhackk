@@ -13,6 +13,7 @@ import {
 import { weatherAPI, marketAPI, labourAPI } from '../services/api';
 import clsx from 'clsx';
 import logo from '../assets/logo.png';
+import realisticFarmer from '../assets/realistic-farmer.png';
 
 const WEATHER_EMOJIS = { '01': '☀️', '02': '🌤️', '03': '⛅', '04': '☁️', '09': '🌧️', '10': '🌦️', '11': '⛈️', '13': '❄️', '50': '🌫️' };
 const getWeatherEmoji = (icon) => WEATHER_EMOJIS[icon?.slice(0, 2)] || '🌡️';
@@ -261,7 +262,7 @@ export default function Dashboard() {
                 <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border-2 border-indigo-300 dark:border-indigo-600 shadow-xl shadow-indigo-500/20 flex items-center justify-center flex-shrink-0 animate-scale-up">
                    {user?.image
                      ? <img src={user.image} alt={user?.name || 'Profile'} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                     : <img src={logo} alt="Smart Kisan" className="w-full h-full object-contain scale-110 p-3" />
+                     : <img src={realisticFarmer} alt="Smart Kisan" className="w-full h-full object-cover" />
                    }
                 </div>
                 <span>{t(greetingKey)}, <span className="text-indigo-600 dark:text-indigo-400">{user?.name?.split(' ')[0] || t('auth.farmer')}</span></span>
