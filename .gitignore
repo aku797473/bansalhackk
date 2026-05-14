@@ -54,3 +54,5 @@ ecosystem.config.js
 
 # Local Database Data
 .mongo-data/
+
+.vercel

@@ -258,8 +258,11 @@ export default function Dashboard() {
                 </span>
             </div>
             <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-6 leading-tight">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl shadow-indigo-500/5 flex items-center justify-center p-3 flex-shrink-0 animate-scale-up">
-                   <img src={logo} alt="Smart Kisan" className="w-full h-full object-contain scale-110" />
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border-2 border-indigo-300 dark:border-indigo-600 shadow-xl shadow-indigo-500/20 flex items-center justify-center flex-shrink-0 animate-scale-up">
+                   {user?.image
+                     ? <img src={user.image} alt={user?.name || 'Profile'} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                     : <img src={logo} alt="Smart Kisan" className="w-full h-full object-contain scale-110 p-3" />
+                   }
                 </div>
                 <span>{t(greetingKey)}, <span className="text-indigo-600 dark:text-indigo-400">{user?.name?.split(' ')[0] || t('auth.farmer')}</span></span>
             </h1>
