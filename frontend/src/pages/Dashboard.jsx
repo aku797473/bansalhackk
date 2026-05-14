@@ -198,7 +198,7 @@ export default function Dashboard() {
     { 
       id: 'schemes', to: '/schemes', size: 'sm',
       color: 'card hover:border-fuchsia-500/30 flex items-center justify-between group',
-      icon: Landmark, label: t('nav.schemes'),
+      icon: Bank, label: t('nav.schemes'),
       render: () => ( 
         <>
           <div className="flex items-center gap-4">
