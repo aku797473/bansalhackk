@@ -11,7 +11,7 @@ import {
 import { UserButton } from '@clerk/clerk-react';
 import clsx from 'clsx';
 
-import logo from '../assets/logo.png';
+import logo from '../assets/kisan-logo-new.jpg';
 import { newsAPI } from '../services/api';
 
 export default function Navbar() {
@@ -204,7 +204,7 @@ export default function Navbar() {
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-3">
                <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-                  <img src={logo} className="w-6 h-6 object-contain" alt="logo" />
+                  <img src={logo} className="w-8 h-8 object-cover rounded-lg filter contrast-[1.1] brightness-[1.1]" alt="logo" />
                </div>
                <span className="font-bold text-gray-900 dark:text-white text-lg">{t('nav.menu')}</span>
             </div>

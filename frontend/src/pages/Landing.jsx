@@ -6,7 +6,7 @@ import { Cloud, Leaf, FlaskConical, TrendingUp, Users, Map,
   Award, Star, Quote, Landmark, PlayCircle, MousePointer2, X
 } from 'lucide-react';
 import clsx from 'clsx';
-import logo from '../assets/logo.png';
+import logo from '../assets/kisan-logo-new.jpg';
 import realisticFarmer from '../assets/realistic-farmer.png';
 
 const modules = (t) => [
@@ -48,7 +48,7 @@ export default function Landing() {
         <div className="nav-container max-w-5xl mx-auto h-16 border border-slate-100 dark:border-white/5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded-2xl px-6 flex items-center justify-between shadow-sm transition-all">
           <div className="flex items-center gap-2">
              <div className="w-14 h-14 rounded-2xl bg-emerald-600 flex items-center justify-center shadow-xl shadow-emerald-500/20 border-2 border-white/20">
-                <img src={logo} className="w-10 h-10 object-contain scale-110" alt="logo" />
+                 <img src={logo} className="w-10 h-10 object-cover rounded-full shadow-lg border-2 border-white/20 filter contrast-[1.1] brightness-[1.1]" alt="logo" />
              </div>
              <span className="text-xl font-black tracking-tighter text-slate-900 dark:text-white">Smart Kisan</span>
           </div>
@@ -98,7 +98,7 @@ export default function Landing() {
 
                <div className="hero-image relative">
                   <div className="bg-slate-50 dark:bg-slate-900 rounded-3xl p-3 border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
-                     <img src={realisticFarmer} alt="Smart Kisan" className="w-full rounded-2xl shadow-2xl" />
+                     <img src={logo} alt="Smart Kisan" className="w-full rounded-2xl shadow-2xl filter contrast-[1.1] brightness-[1.1]" />
                   </div>
                </div>
             </div>
@@ -175,7 +175,7 @@ export default function Landing() {
                </div>
             </div>
             <div className="infra-image flex-1">
-               <div className="bg-slate-50 dark:bg-slate-900 rounded-3xl p-3 border border-slate-100 dark:border-slate-800">
+                <div className="bg-slate-50 dark:bg-slate-900 rounded-3xl p-3 border border-slate-100 dark:border-slate-800">
                   <img src={realisticFarmer} alt="Infrastructure" className="w-full rounded-2xl grayscale opacity-40 mix-blend-luminosity" />
                </div>
             </div>
