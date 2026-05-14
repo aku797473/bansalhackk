@@ -70,17 +70,21 @@ export default function Navbar() {
       <header className="fixed top-4 inset-x-0 z-[100] px-4 sm:px-6">
         <div className="max-w-7xl mx-auto h-16 bg-white/70 dark:bg-slate-900/70 backdrop-blur-2xl border border-white/20 dark:border-white/5 rounded-2xl sm:rounded-[2rem] shadow-2xl shadow-slate-200/50 dark:shadow-none px-4 flex items-center justify-between gap-4 transition-all">
           
-          {/* Logo Section */}
-          <NavLink to="/dashboard" className="flex items-center gap-3 shrink-0 group">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-emerald-600 flex items-center justify-center shadow-xl shadow-emerald-500/20 group-hover:scale-110 transition-all border-2 border-white/20">
-              <img src={logo} alt="Logo" className="w-10 h-10 sm:w-12 sm:h-12 object-contain scale-125" />
+          {/* Brand Wordmark - SaaS Style (no image on desktop) */}
+          <NavLink to="/dashboard" className="flex items-center gap-2.5 shrink-0 group">
+            {/* Geometric SVG icon - no image dependency */}
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/25 group-hover:shadow-indigo-500/40 group-hover:scale-105 transition-all">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 2C5.5 2 3 5 3 9c0 2.5 1.2 4.7 3 6l1-2.5C5.8 11.5 5 10.3 5 9c0-2.2 1.8-4 4-4s4 1.8 4 4c0 1.3-.8 2.5-2 3.5L12 15c1.8-1.3 3-3.5 3-6 0-4-2.5-7-6-7z" fill="white" fillOpacity="0.9"/>
+                <circle cx="9" cy="9" r="2" fill="white"/>
+              </svg>
             </div>
-            <div className="flex flex-col overflow-hidden">
-              <div className="flex items-center gap-1.5">
-                <span className="font-bold text-slate-900 dark:text-white text-xs sm:text-base leading-none truncate max-w-[80px] sm:max-w-none">Smart Kisan</span>
-                <span className="px-1 py-0.5 bg-gray-100 dark:bg-white/5 text-[7px] font-black text-gray-400 dark:text-gray-500 rounded uppercase tracking-tighter hidden xs:block">v2.0.5</span>
-              </div>
-              <span className="text-[9px] text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider hidden md:block">{t('nav.slogan')}</span>
+            {/* Text wordmark */}
+            <div className="flex flex-col leading-none">
+              <span className="text-sm font-black tracking-tight text-slate-900 dark:text-white">
+                Smart<span className="bg-gradient-to-r from-indigo-600 to-violet-500 bg-clip-text text-transparent">Kisan</span>
+              </span>
+              <span className="text-[8px] font-bold uppercase tracking-[0.15em] text-slate-400 dark:text-slate-500 hidden sm:block">AgriTech Platform</span>
             </div>
           </NavLink>
 
