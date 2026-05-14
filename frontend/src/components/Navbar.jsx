@@ -39,20 +39,20 @@ export default function Navbar() {
   }, [i18n.language, user]);
 
   const primaryLinks = [
-    { to: '/dashboard',  icon: Home,         label: t('nav.home') },
-    { to: '/weather',    icon: Cloud,         label: t('nav.weather') },
-    { to: '/crop',       icon: Leaf,          label: t('nav.crop') },
-    { to: '/market',     icon: TrendingUp,    label: t('nav.market') },
-    { to: '/fertilizer', icon: FlaskConical,  label: t('nav.fertilizer') },
+    { to: '/dashboard',  icon: Home,        label: t('nav.home'),        accent: 'text-violet-600 dark:text-violet-400', activeBg: 'bg-violet-50 dark:bg-violet-500/10', iconBg: 'bg-violet-100 dark:bg-violet-500/20' },
+    { to: '/weather',    icon: Cloud,       label: t('nav.weather'),     accent: 'text-sky-600 dark:text-sky-400',    activeBg: 'bg-sky-50 dark:bg-sky-500/10',    iconBg: 'bg-sky-100 dark:bg-sky-500/20' },
+    { to: '/crop',       icon: Leaf,        label: t('nav.crop'),        accent: 'text-emerald-600 dark:text-emerald-400', activeBg: 'bg-emerald-50 dark:bg-emerald-500/10', iconBg: 'bg-emerald-100 dark:bg-emerald-500/20' },
+    { to: '/market',     icon: TrendingUp,  label: t('nav.market'),      accent: 'text-indigo-600 dark:text-indigo-400', activeBg: 'bg-indigo-50 dark:bg-indigo-500/10', iconBg: 'bg-indigo-100 dark:bg-indigo-500/20' },
+    { to: '/fertilizer', icon: FlaskConical, label: t('nav.fertilizer'), accent: 'text-amber-600 dark:text-amber-400', activeBg: 'bg-amber-50 dark:bg-amber-500/10', iconBg: 'bg-amber-100 dark:bg-amber-500/20' },
   ];
 
   const moreLinks = [
-    { to: '/labour',     icon: Users,         label: t('nav.labour') },
-    { to: '/buyer',      icon: ShoppingBag,   label: t('nav.buyer', 'Marketplace') },
-    { to: '/profit-predictor', icon: TrendingUp, label: 'Profit Predictor' },
-    { to: '/map',        icon: Map,           label: t('nav.map') },
-    { to: '/news',       icon: Newspaper,     label: t('nav.news') },
-    { to: '/schemes',    icon: Landmark,      label: t('nav.schemes') },
+    { to: '/labour',           icon: Users,       label: t('nav.labour'),                      accent: 'text-rose-600 dark:text-rose-400',    activeBg: 'bg-rose-50 dark:bg-rose-500/10',    iconBg: 'bg-rose-100 dark:bg-rose-500/20' },
+    { to: '/buyer',            icon: ShoppingBag, label: t('nav.buyer', 'Marketplace'),        accent: 'text-teal-600 dark:text-teal-400',   activeBg: 'bg-teal-50 dark:bg-teal-500/10',   iconBg: 'bg-teal-100 dark:bg-teal-500/20' },
+    { to: '/profit-predictor', icon: TrendingUp,  label: 'Profit Predictor',                   accent: 'text-violet-600 dark:text-violet-400', activeBg: 'bg-violet-50 dark:bg-violet-500/10', iconBg: 'bg-violet-100 dark:bg-violet-500/20' },
+    { to: '/map',              icon: Map,         label: t('nav.map'),                         accent: 'text-cyan-600 dark:text-cyan-400',   activeBg: 'bg-cyan-50 dark:bg-cyan-500/10',   iconBg: 'bg-cyan-100 dark:bg-cyan-500/20' },
+    { to: '/news',             icon: Newspaper,   label: t('nav.news'),                        accent: 'text-orange-600 dark:text-orange-400', activeBg: 'bg-orange-50 dark:bg-orange-500/10', iconBg: 'bg-orange-100 dark:bg-orange-500/20' },
+    { to: '/schemes',          icon: Landmark,    label: t('nav.schemes'),                     accent: 'text-fuchsia-600 dark:text-fuchsia-400', activeBg: 'bg-fuchsia-50 dark:bg-fuchsia-500/10', iconBg: 'bg-fuchsia-100 dark:bg-fuchsia-500/20' },
   ];
 
   const [moreOpen, setMoreOpen] = useState(false);
@@ -88,18 +88,28 @@ export default function Navbar() {
             </div>
           </NavLink>
 
-          {/* Desktop Navigation - Hidden earlier to save space */}
-          <nav className="hidden xl:flex items-center gap-1">
-            {primaryLinks.map(({ to, icon: Icon, label }) => (
+          {/* Desktop Navigation */}
+          <nav className="hidden xl:flex items-center gap-0.5">
+            {primaryLinks.map(({ to, icon: Icon, label, accent, activeBg, iconBg }) => (
               <NavLink key={to} to={to}
                 className={({ isActive }) => clsx(
-                  'flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition-all duration-200',
+                  'relative flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-200 group/nav',
                   isActive
-                    ? 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-emerald-400'
-                    : 'text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-slate-100 hover:bg-gray-50 dark:hover:bg-slate-800'
+                    ? `${activeBg} ${accent} font-bold`
+                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100/80 dark:hover:bg-slate-800/60'
                 )}>
-                <Icon size={14} />
-                {label}
+                {({ isActive }) => (
+                  <>
+                    <span className={clsx(
+                      'flex items-center justify-center w-5 h-5 rounded-md transition-all duration-200',
+                      isActive ? iconBg : 'group-hover/nav:bg-slate-200/60 dark:group-hover/nav:bg-slate-700/60'
+                    )}>
+                      <Icon size={13} />
+                    </span>
+                    {label}
+                    {isActive && <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-3 h-0.5 rounded-full bg-current opacity-60" />}
+                  </>
+                )}
               </NavLink>
             ))}
 
@@ -108,28 +118,37 @@ export default function Navbar() {
               <button 
                 onClick={() => setMoreOpen(!moreOpen)}
                 className={clsx(
-                  "flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition-all",
+                  "flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all",
                   moreLinks.some(l => location.pathname === l.to)
-                    ? "bg-primary/10 text-primary dark:bg-primary/20"
-                    : "text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800"
+                    ? "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold"
+                    : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100/80 dark:hover:bg-slate-800/60"
                 )}
               >
                 <span>{t('common.more', 'More')}</span>
-                <ChevronRight size={14} className={clsx("transition-transform", moreOpen ? "rotate-90" : "")} />
+                <ChevronRight size={13} className={clsx("transition-transform", moreOpen ? "rotate-90" : "")} />
               </button>
 
               {moreOpen && (
-                <div className="absolute top-full right-0 mt-2 w-48 bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-2xl shadow-2xl p-2 animate-in fade-in slide-in-from-top-2 duration-200">
-                  {moreLinks.map(({ to, icon: Icon, label }) => (
+                <div className="absolute top-full right-0 mt-2 w-52 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-2xl shadow-slate-200/60 dark:shadow-black/40 p-1.5 animate-in fade-in slide-in-from-top-2 duration-200">
+                  {moreLinks.map(({ to, icon: Icon, label, accent, activeBg, iconBg }) => (
                     <NavLink key={to} to={to}
                       className={({ isActive }) => clsx(
-                        'flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all',
+                        'flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all',
                         isActive
-                          ? 'bg-primary text-white shadow-lg shadow-primary/20'
-                          : 'text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700'
+                          ? `${activeBg} ${accent} font-bold`
+                          : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800'
                       )}>
-                      <Icon size={16} />
-                      {label}
+                      {({ isActive }) => (
+                        <>
+                          <span className={clsx(
+                            'flex items-center justify-center w-6 h-6 rounded-lg transition-all',
+                            isActive ? iconBg : 'bg-slate-100 dark:bg-slate-800'
+                          )}>
+                            <Icon size={13} />
+                          </span>
+                          {label}
+                        </>
+                      )}
                     </NavLink>
                   ))}
                 </div>
@@ -194,22 +213,27 @@ export default function Navbar() {
             </button>
           </div>
 
-          <nav className="flex-1 space-y-2 overflow-y-auto pr-2 scrollbar-none">
-            {[...primaryLinks, ...moreLinks].map(({ to, icon: Icon, label }) => (
+          <nav className="flex-1 space-y-1 overflow-y-auto pr-2 scrollbar-none">
+            {[...primaryLinks, ...moreLinks].map(({ to, icon: Icon, label, accent, activeBg, iconBg }) => (
               <NavLink key={to} to={to}
                 className={({ isActive }) => clsx(
-                  'flex items-center justify-between w-full p-4 rounded-2xl text-sm font-bold transition-all',
-                  isActive 
-                    ? 'bg-primary text-white shadow-lg shadow-primary/20' 
+                  'flex items-center justify-between w-full p-3.5 rounded-2xl text-sm font-semibold transition-all',
+                  isActive
+                    ? `${activeBg} ${accent} font-bold`
                     : 'text-gray-600 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-900'
                 )}>
                 {({ isActive }) => (
                   <>
                     <div className="flex items-center gap-3">
-                      <Icon size={18} />
+                      <span className={clsx(
+                        'flex items-center justify-center w-8 h-8 rounded-xl transition-all',
+                        isActive ? iconBg : 'bg-slate-100 dark:bg-slate-800'
+                      )}>
+                        <Icon size={16} />
+                      </span>
                       {label}
                     </div>
-                    <ChevronRight size={14} className={isActive ? "opacity-100" : "opacity-0"} />
+                    <ChevronRight size={14} className={clsx("transition-transform", isActive ? "opacity-100" : "opacity-0")} />
                   </>
                 )}
               </NavLink>
