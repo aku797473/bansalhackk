@@ -13,7 +13,6 @@ import {
 import { weatherAPI, marketAPI, labourAPI } from '../services/api';
 import clsx from 'clsx';
 import logo from '../assets/logo.png';
-import farmBg from '../assets/farm_bg.png';
 
 const WEATHER_EMOJIS = { '01': '☀️', '02': '🌤️', '03': '⛅', '04': '☁️', '09': '🌧️', '10': '🌦️', '11': '⛈️', '13': '❄️', '50': '🌫️' };
 const getWeatherEmoji = (icon) => WEATHER_EMOJIS[icon?.slice(0, 2)] || '🌡️';
@@ -67,7 +66,7 @@ export default function Dashboard() {
       id: 'weather', 
       to: '/weather', 
       size: 'lg',
-      color: 'bg-gradient-to-br from-emerald-600 via-green-600 to-teal-700 shadow-emerald-500/30',
+      color: 'bg-gradient-to-br from-indigo-600 to-blue-700 shadow-indigo-500/30',
       icon: Cloud,
       label: t('nav.weather'),
       render: () => (
@@ -243,9 +242,8 @@ export default function Dashboard() {
         
         {/* Subtle Background SaaS Decoration */}
         <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-          <div className="absolute -top-40 -right-40 w-[600px] h-[600px] bg-emerald-500/10 dark:bg-emerald-600/5 blur-[120px] rounded-full" />
-          <div className="absolute top-40 -left-20 w-[500px] h-[500px] bg-green-500/10 dark:bg-green-600/5 blur-[120px] rounded-full" />
-          <div className="absolute bottom-20 right-20 w-[400px] h-[400px] bg-teal-500/8 dark:bg-teal-600/4 blur-[100px] rounded-full" />
+          <div className="absolute -top-40 -right-40 w-[600px] h-[600px] bg-indigo-500/10 dark:bg-indigo-600/5 blur-[120px] rounded-full" />
+          <div className="absolute top-40 -left-20 w-[500px] h-[500px] bg-sky-500/10 dark:bg-sky-600/5 blur-[120px] rounded-full" />
         </div>
 
         {/* ── Header Command Bar ──────────────────────────── */}
@@ -281,39 +279,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* ── Farm Hero Banner ─────────────────────────────── */}
-        <div className="relative w-full rounded-3xl overflow-hidden mb-8 shadow-2xl shadow-emerald-500/10" style={{minHeight: '220px'}}>
-          <img src={farmBg} alt="Smart Farm" className="absolute inset-0 w-full h-full object-cover object-center" />
-          <div className="absolute inset-0 bg-gradient-to-r from-emerald-900/85 via-green-900/70 to-teal-900/40" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-          <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 p-7 sm:p-10">
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-                <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-300">Smart Agriculture Platform</span>
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight mb-2">
-                🌾 Apni Zameen, Apna Data
-              </h2>
-              <p className="text-sm text-emerald-100/80 font-medium max-w-md leading-relaxed">
-                Real-time mandi prices · AI crop advisory · Weather intelligence · All in one place
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-3 shrink-0">
-              <button onClick={(e) => { e.stopPropagation(); }} className="px-5 py-2.5 bg-emerald-400 hover:bg-emerald-300 text-emerald-950 font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-lg shadow-emerald-500/30 flex items-center gap-2">
-                <span>🌱</span> Crop Advisory
-              </button>
-              <button onClick={(e) => { e.stopPropagation(); }} className="px-5 py-2.5 bg-white/15 hover:bg-white/25 backdrop-blur-md text-white font-bold text-xs uppercase tracking-wider rounded-xl border border-white/20 transition-all flex items-center gap-2">
-                <span>📊</span> Market Prices
-              </button>
-            </div>
-          </div>
-          {/* Decorative floating elements */}
-          <div className="absolute top-4 right-16 text-4xl opacity-20 animate-bounce" style={{animationDelay:'0.3s'}}>🌾</div>
-          <div className="absolute bottom-4 right-8 text-3xl opacity-20 animate-bounce" style={{animationDelay:'0.7s'}}>🚜</div>
-          <div className="absolute top-8 right-32 text-2xl opacity-15 animate-bounce" style={{animationDelay:'1.1s'}}>🌿</div>
-        </div>
-
         {/* ── The Bento Grid ───────────────────────────────── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 auto-rows-auto">
           {modules.map((m) => (
@@ -324,17 +289,13 @@ export default function Dashboard() {
                 "relative cursor-pointer overflow-hidden transition-all duration-300",
                 m.size === 'lg' ? 'col-span-1 sm:col-span-2 row-span-1 sm:row-span-2 rounded-3xl p-6 sm:p-8' : 
                 m.size === 'md' ? 'col-span-1 sm:col-span-1 row-span-1 rounded-3xl p-6' : 'col-span-1 sm:col-span-1 row-span-1 rounded-2xl p-5',
-                m.id === 'weather' ? 'text-white shadow-xl bg-gradient-to-br from-emerald-600 via-green-600 to-teal-700 shadow-emerald-600/20' : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 dark:text-white shadow-sm hover:shadow-lg',
+                m.id === 'weather' ? 'text-white shadow-xl bg-gradient-to-br from-indigo-600 to-blue-700 shadow-indigo-600/20' : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 dark:text-white shadow-sm hover:shadow-lg',
                 "hover:-translate-y-1 active:scale-[0.98]",
                 m.color // For border hover effects defined in array
               )}
             >
               {m.id === 'weather' && (
-                  <>
-                    <div className="absolute -top-10 -right-10 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
-                    <div className="absolute -bottom-8 -left-8 w-48 h-48 bg-emerald-300/10 rounded-full blur-2xl pointer-events-none" />
-                    <div className="absolute top-4 right-4 text-5xl opacity-10 pointer-events-none select-none">🌾</div>
-                  </>
+                  <div className="absolute -top-10 -right-10 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
               )}
               {m.render()}
             </div>
