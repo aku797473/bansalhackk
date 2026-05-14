@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import LanguageSelector from './LanguageSelector';
 import {
-  HouseSimple, CloudSun, Plant, Flask, TrendingUp, ShoppingBagOpen,
+  HouseSimple, CloudSun, Plant, Flask, TrendUp, ShoppingBagOpen,
   Users, MapPin, Newspaper, Bell, Bank, List, X, SignOut, Sun, Moon, CaretRight, Sparkle
 } from '@phosphor-icons/react';
 import { UserButton } from '@clerk/clerk-react';
@@ -42,7 +42,7 @@ export default function Navbar() {
     { to: '/dashboard',  icon: HouseSimple,   label: t('nav.home'),        accent: 'text-violet-600 dark:text-violet-400', activeBg: 'bg-violet-50 dark:bg-violet-500/10', iconBg: 'bg-violet-100 dark:bg-violet-500/20' },
     { to: '/weather',    icon: CloudSun,      label: t('nav.weather'),     accent: 'text-sky-600 dark:text-sky-400',       activeBg: 'bg-sky-50 dark:bg-sky-500/10',       iconBg: 'bg-sky-100 dark:bg-sky-500/20' },
     { to: '/crop',       icon: Plant,         label: t('nav.crop'),        accent: 'text-emerald-600 dark:text-emerald-400', activeBg: 'bg-emerald-50 dark:bg-emerald-500/10', iconBg: 'bg-emerald-100 dark:bg-emerald-500/20' },
-    { to: '/market',     icon: TrendingUp,    label: t('nav.market'),      accent: 'text-indigo-600 dark:text-indigo-400', activeBg: 'bg-indigo-50 dark:bg-indigo-500/10', iconBg: 'bg-indigo-100 dark:bg-indigo-500/20' },
+    { to: '/market',     icon: TrendUp,    label: t('nav.market'),      accent: 'text-indigo-600 dark:text-indigo-400', activeBg: 'bg-indigo-50 dark:bg-indigo-500/10', iconBg: 'bg-indigo-100 dark:bg-indigo-500/20' },
     { to: '/fertilizer', icon: Flask,         label: t('nav.fertilizer'), accent: 'text-amber-600 dark:text-amber-400',   activeBg: 'bg-amber-50 dark:bg-amber-500/10',   iconBg: 'bg-amber-100 dark:bg-amber-500/20' },
   ];
 
