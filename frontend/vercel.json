@@ -2,28 +2,21 @@
   "version": 2,
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "headers": [
-    {
-      "source": "/assets/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
-      ]
-    }
-  ],
-  "rewrites": [
-    { "source": "/api/weather/:path*", "destination": "/api/weather.js" },
-    { "source": "/api/news/:path*", "destination": "/api/news.js" },
-    { "source": "/api/schemes/:path*", "destination": "/api/schemes.js" },
-    { "source": "/api/market/:path*", "destination": "/api/market.js" },
-    { "source": "/api/crop/:path*", "destination": "/api/crop.js" },
-    { "source": "/api/fertilizer/:path*", "destination": "/api/fertilizer.js" },
-    { "source": "/api/labour/:path*", "destination": "/api/labour.js" },
-    { "source": "/api/buyer/:path*", "destination": "/api/buyer.js" },
-    { "source": "/api/payment/:path*", "destination": "/api/payment.js" },
-    { "source": "/api/ai/:path*", "destination": "/api/ai.js" },
-    { "source": "/api/(.*)", "destination": "/api/$1" },
-    { "source": "/assets/(.*)", "destination": "/assets/$1" },
-    { "source": "/(.*)", "destination": "/index.html" }
+  "routes": [
+    { "src": "/api/weather/(.*)", "dest": "/api/weather.js" },
+    { "src": "/api/news/(.*)", "dest": "/api/news.js" },
+    { "src": "/api/schemes/(.*)", "dest": "/api/schemes.js" },
+    { "src": "/api/market/(.*)", "dest": "/api/market.js" },
+    { "src": "/api/crop/(.*)", "dest": "/api/crop.js" },
+    { "src": "/api/fertilizer/(.*)", "dest": "/api/fertilizer.js" },
+    { "src": "/api/labour/(.*)", "dest": "/api/labour.js" },
+    { "src": "/api/buyer/(.*)", "dest": "/api/buyer.js" },
+    { "src": "/api/payment/(.*)", "dest": "/api/payment.js" },
+    { "src": "/api/ai/(.*)", "dest": "/api/ai.js" },
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
+
 
