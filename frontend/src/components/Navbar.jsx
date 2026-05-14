@@ -5,9 +5,9 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import LanguageSelector from './LanguageSelector';
 import {
-  Home, Cloud, Leaf, FlaskConical, TrendingUp, ShoppingBag,
-  Users, Map, Newspaper, Bell, Landmark, Menu, X, LogOut, Sun, Moon, ChevronRight
-} from 'lucide-react';
+  HouseSimple, CloudSun, Plant, Flask, TrendingUp, ShoppingBagOpen,
+  Users, MapPin, Newspaper, Bell, Bank, List, X, SignOut, Sun, Moon, CaretRight, Sparkle
+} from '@phosphor-icons/react';
 import { UserButton } from '@clerk/clerk-react';
 import clsx from 'clsx';
 
@@ -39,20 +39,20 @@ export default function Navbar() {
   }, [i18n.language, user]);
 
   const primaryLinks = [
-    { to: '/dashboard',  icon: Home,        label: t('nav.home'),        accent: 'text-violet-600 dark:text-violet-400', activeBg: 'bg-violet-50 dark:bg-violet-500/10', iconBg: 'bg-violet-100 dark:bg-violet-500/20' },
-    { to: '/weather',    icon: Cloud,       label: t('nav.weather'),     accent: 'text-sky-600 dark:text-sky-400',    activeBg: 'bg-sky-50 dark:bg-sky-500/10',    iconBg: 'bg-sky-100 dark:bg-sky-500/20' },
-    { to: '/crop',       icon: Leaf,        label: t('nav.crop'),        accent: 'text-emerald-600 dark:text-emerald-400', activeBg: 'bg-emerald-50 dark:bg-emerald-500/10', iconBg: 'bg-emerald-100 dark:bg-emerald-500/20' },
-    { to: '/market',     icon: TrendingUp,  label: t('nav.market'),      accent: 'text-indigo-600 dark:text-indigo-400', activeBg: 'bg-indigo-50 dark:bg-indigo-500/10', iconBg: 'bg-indigo-100 dark:bg-indigo-500/20' },
-    { to: '/fertilizer', icon: FlaskConical, label: t('nav.fertilizer'), accent: 'text-amber-600 dark:text-amber-400', activeBg: 'bg-amber-50 dark:bg-amber-500/10', iconBg: 'bg-amber-100 dark:bg-amber-500/20' },
+    { to: '/dashboard',  icon: HouseSimple,   label: t('nav.home'),        accent: 'text-violet-600 dark:text-violet-400', activeBg: 'bg-violet-50 dark:bg-violet-500/10', iconBg: 'bg-violet-100 dark:bg-violet-500/20' },
+    { to: '/weather',    icon: CloudSun,      label: t('nav.weather'),     accent: 'text-sky-600 dark:text-sky-400',       activeBg: 'bg-sky-50 dark:bg-sky-500/10',       iconBg: 'bg-sky-100 dark:bg-sky-500/20' },
+    { to: '/crop',       icon: Plant,         label: t('nav.crop'),        accent: 'text-emerald-600 dark:text-emerald-400', activeBg: 'bg-emerald-50 dark:bg-emerald-500/10', iconBg: 'bg-emerald-100 dark:bg-emerald-500/20' },
+    { to: '/market',     icon: TrendingUp,    label: t('nav.market'),      accent: 'text-indigo-600 dark:text-indigo-400', activeBg: 'bg-indigo-50 dark:bg-indigo-500/10', iconBg: 'bg-indigo-100 dark:bg-indigo-500/20' },
+    { to: '/fertilizer', icon: Flask,         label: t('nav.fertilizer'), accent: 'text-amber-600 dark:text-amber-400',   activeBg: 'bg-amber-50 dark:bg-amber-500/10',   iconBg: 'bg-amber-100 dark:bg-amber-500/20' },
   ];
 
   const moreLinks = [
-    { to: '/labour',           icon: Users,       label: t('nav.labour'),                      accent: 'text-rose-600 dark:text-rose-400',    activeBg: 'bg-rose-50 dark:bg-rose-500/10',    iconBg: 'bg-rose-100 dark:bg-rose-500/20' },
-    { to: '/buyer',            icon: ShoppingBag, label: t('nav.buyer', 'Marketplace'),        accent: 'text-teal-600 dark:text-teal-400',   activeBg: 'bg-teal-50 dark:bg-teal-500/10',   iconBg: 'bg-teal-100 dark:bg-teal-500/20' },
-    { to: '/profit-predictor', icon: TrendingUp,  label: 'Profit Predictor',                   accent: 'text-violet-600 dark:text-violet-400', activeBg: 'bg-violet-50 dark:bg-violet-500/10', iconBg: 'bg-violet-100 dark:bg-violet-500/20' },
-    { to: '/map',              icon: Map,         label: t('nav.map'),                         accent: 'text-cyan-600 dark:text-cyan-400',   activeBg: 'bg-cyan-50 dark:bg-cyan-500/10',   iconBg: 'bg-cyan-100 dark:bg-cyan-500/20' },
-    { to: '/news',             icon: Newspaper,   label: t('nav.news'),                        accent: 'text-orange-600 dark:text-orange-400', activeBg: 'bg-orange-50 dark:bg-orange-500/10', iconBg: 'bg-orange-100 dark:bg-orange-500/20' },
-    { to: '/schemes',          icon: Landmark,    label: t('nav.schemes'),                     accent: 'text-fuchsia-600 dark:text-fuchsia-400', activeBg: 'bg-fuchsia-50 dark:bg-fuchsia-500/10', iconBg: 'bg-fuchsia-100 dark:bg-fuchsia-500/20' },
+    { to: '/labour',           icon: Users,         label: t('nav.labour'),               accent: 'text-rose-600 dark:text-rose-400',       activeBg: 'bg-rose-50 dark:bg-rose-500/10',       iconBg: 'bg-rose-100 dark:bg-rose-500/20' },
+    { to: '/buyer',            icon: ShoppingBagOpen, label: t('nav.buyer', 'Marketplace'), accent: 'text-teal-600 dark:text-teal-400',      activeBg: 'bg-teal-50 dark:bg-teal-500/10',      iconBg: 'bg-teal-100 dark:bg-teal-500/20' },
+    { to: '/profit-predictor', icon: Sparkle,       label: 'Profit Predictor',            accent: 'text-violet-600 dark:text-violet-400',   activeBg: 'bg-violet-50 dark:bg-violet-500/10',  iconBg: 'bg-violet-100 dark:bg-violet-500/20' },
+    { to: '/map',              icon: MapPin,        label: t('nav.map'),                  accent: 'text-cyan-600 dark:text-cyan-400',       activeBg: 'bg-cyan-50 dark:bg-cyan-500/10',      iconBg: 'bg-cyan-100 dark:bg-cyan-500/20' },
+    { to: '/news',             icon: Newspaper,     label: t('nav.news'),                 accent: 'text-orange-600 dark:text-orange-400',   activeBg: 'bg-orange-50 dark:bg-orange-500/10',  iconBg: 'bg-orange-100 dark:bg-orange-500/20' },
+    { to: '/schemes',          icon: Bank,          label: t('nav.schemes'),              accent: 'text-fuchsia-600 dark:text-fuchsia-400', activeBg: 'bg-fuchsia-50 dark:bg-fuchsia-500/10', iconBg: 'bg-fuchsia-100 dark:bg-fuchsia-500/20' },
   ];
 
   const [moreOpen, setMoreOpen] = useState(false);
@@ -104,7 +104,7 @@ export default function Navbar() {
                       'flex items-center justify-center w-5 h-5 rounded-md transition-all duration-200',
                       isActive ? iconBg : 'group-hover/nav:bg-slate-200/60 dark:group-hover/nav:bg-slate-700/60'
                     )}>
-                      <Icon size={13} />
+                      <Icon size={14} weight="duotone" />
                     </span>
                     {label}
                     {isActive && <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-3 h-0.5 rounded-full bg-current opacity-60" />}
@@ -125,7 +125,7 @@ export default function Navbar() {
                 )}
               >
                 <span>{t('common.more', 'More')}</span>
-                <ChevronRight size={13} className={clsx("transition-transform", moreOpen ? "rotate-90" : "")} />
+                <CaretRight size={13} weight="bold" className={clsx("transition-transform", moreOpen ? "rotate-90" : "")} />
               </button>
 
               {moreOpen && (
@@ -144,7 +144,7 @@ export default function Navbar() {
                             'flex items-center justify-center w-6 h-6 rounded-lg transition-all',
                             isActive ? iconBg : 'bg-slate-100 dark:bg-slate-800'
                           )}>
-                            <Icon size={13} />
+                            <Icon size={14} weight="duotone" />
                           </span>
                           {label}
                         </>
@@ -160,10 +160,10 @@ export default function Navbar() {
           <div className="flex items-center gap-1 sm:gap-2 shrink-0">
             <div className="hidden sm:flex items-center gap-1">
               <button onClick={toggleTheme} className="p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-xl transition-all" title="Toggle Theme">
-                {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+                {theme === 'dark' ? <Sun size={18} weight="duotone" /> : <Moon size={18} weight="duotone" />}
               </button>
               <button onClick={() => navigate('/news')} className="relative p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-xl transition-all" title="Alerts">
-                <Bell size={18} />
+                <Bell size={18} weight="duotone" />
                 {hasNewNews && <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white dark:ring-slate-900 animate-pulse" />}
               </button>
             </div>
@@ -182,7 +182,7 @@ export default function Navbar() {
               className="xl:hidden ml-1 p-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-all active:scale-95 border border-blue-100 dark:border-blue-900/20"
               aria-label="Open Menu"
             >
-              <Menu size={22} strokeWidth={2.5} />
+              <List size={22} weight="bold" />
             </button>
           </div>
         </div>
@@ -209,7 +209,7 @@ export default function Navbar() {
                <span className="font-bold text-gray-900 dark:text-white text-lg">{t('nav.menu')}</span>
             </div>
             <button onClick={() => setOpen(false)} className="p-2 bg-gray-100 dark:bg-slate-800 rounded-xl text-gray-900 dark:text-white">
-              <X size={20} />
+              <X size={20} weight="bold" />
             </button>
           </div>
 
@@ -233,7 +233,7 @@ export default function Navbar() {
                       </span>
                       {label}
                     </div>
-                    <ChevronRight size={14} className={clsx("transition-transform", isActive ? "opacity-100" : "opacity-0")} />
+                    <CaretRight size={14} weight="bold" className={clsx("transition-transform", isActive ? "opacity-100" : "opacity-0")} />
                   </>
                 )}
               </NavLink>
@@ -242,11 +242,11 @@ export default function Navbar() {
 
           <div className="pt-6 mt-6 border-t border-gray-100 dark:border-slate-800 space-y-3">
             <button onClick={toggleTheme} className="flex items-center gap-3 w-full p-4 rounded-2xl bg-gray-50 dark:bg-slate-900 text-gray-700 dark:text-slate-300 font-bold text-sm">
-              {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+              {theme === 'dark' ? <Sun size={20} weight="duotone" /> : <Moon size={20} weight="duotone" />}
               {theme === 'dark' ? t('nav.light') : t('nav.dark')}
             </button>
             <button onClick={async () => { await logout(); navigate('/'); }} className="flex items-center gap-3 w-full p-4 rounded-2xl bg-red-50 dark:bg-red-950/10 text-red-500 font-bold text-sm shadow-sm active:scale-95 transition-transform">
-              <LogOut size={20} />
+              <SignOut size={20} weight="duotone" />
               {t('nav.logout')}
             </button>
           </div>
