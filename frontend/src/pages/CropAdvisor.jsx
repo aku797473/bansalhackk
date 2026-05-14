@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cropAPI } from '../services/api';
-import { Leaf, Sparkles, Calendar, Droplets, CheckCircle, RefreshCw, Trash2, ShieldCheck, Info, FileDown, Plus } from 'lucide-react';
+import { Plant, Robot, Calendar, Drop, CheckCircle, ArrowCounterClockwise, Trash, ShieldCheck, Info, FileArrowDown, Plus, CaretRight } from '@phosphor-icons/react';
 import cropsImg from '../assets/crops-closeup.png';
 import toast from 'react-hot-toast';
 import { usePageAnimation } from '../hooks/usePageAnimation';
@@ -148,7 +148,7 @@ export default function CropAdvisor() {
           {options.map(o => <option key={o} value={o}>{translateOption(o)}</option>)}
         </select>
         <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 group-hover:text-emerald-500 transition-colors">
-          <Droplets size={14} className="rotate-180" />
+          <CaretRight size={14} weight="bold" className="rotate-90" />
         </div>
       </div>
     </div>
@@ -170,7 +170,7 @@ export default function CropAdvisor() {
         <div>
           <h1 className="page-title flex items-center gap-3 tracking-tighter">
             <div className="p-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-2xl shadow-inner">
-               <Leaf className="text-emerald-600 animate-bounce-sm" size={28} />
+               <Plant className="text-emerald-600 animate-bounce-sm" size={28} weight="duotone" />
             </div>
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-green-600 dark:from-emerald-400 dark:to-green-400">
               {t('crop.title')}
@@ -182,7 +182,7 @@ export default function CropAdvisor() {
         <div className="flex items-center gap-3">
           {result && (
             <button onClick={clear} className="btn-danger h-11 px-5 rounded-2xl text-xs font-black uppercase tracking-widest flex items-center gap-2 group">
-              <Trash2 size={16} className="group-hover:rotate-12 transition-transform" /> 
+              <Trash size={16} weight="bold" className="group-hover:rotate-12 transition-transform" /> 
               <span>{t('crop.clear_result')}</span>
             </button>
           )}
@@ -236,7 +236,7 @@ export default function CropAdvisor() {
             </div>
           </div>
           <button onClick={handleSubmit} disabled={loading} className="btn-primary w-full h-14 rounded-2xl justify-center mt-8 text-base font-bold shadow-lg shadow-primary/20 active:scale-[0.98]">
-            {loading ? <><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" /> <span>{t('crop.thinking', 'Thinking...')}</span></> : <><Sparkles size={18} className="mr-2" /><span>{t('crop.recommend_btn')}</span></>}
+            {loading ? <><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" /> <span>{t('crop.thinking', 'Thinking...')}</span></> : <><Robot size={18} weight="duotone" className="mr-2" /><span>{t('crop.recommend_btn')}</span></>}
           </button>
         </div>
 
@@ -322,7 +322,7 @@ export default function CropAdvisor() {
 
               <button onClick={() => fetchCalendar(result.primaryCrop)}
                 className="w-full h-14 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 transition-all active:scale-[0.98]">
-                <Calendar size={18} /> <span>{t('crop.view_calendar')}</span>
+                <Calendar size={18} weight="bold" /> <span>{t('crop.view_calendar')}</span>
               </button>
             </>
           )}
@@ -331,7 +331,7 @@ export default function CropAdvisor() {
           {calendar && (
             <div className="card shadow-premium border-none animate-slide-up">
               <h3 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-8 border-b border-gray-100 dark:border-white/5 pb-4 flex items-center gap-2">
-                <Calendar size={14} className="text-primary" />
+                <Calendar size={14} weight="bold" className="text-primary" />
                 <span>{calendar.crop} — {t('crop.crop_calendar', 'Crop Calendar')}</span>
               </h3>
               <div className="space-y-6 relative before:absolute before:left-[47px] before:top-2 before:bottom-2 before:w-0.5 before:bg-gray-100 dark:before:bg-slate-800">

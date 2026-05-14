@@ -1,19 +1,19 @@
 import { useState } from 'react';
 import { 
-  TrendingUp, 
+  TrendUp, 
   MapPin, 
-  Sprout, 
-  Layers, 
+  Plant, 
+  Stack, 
   Wallet, 
-  Sparkles, 
-  Loader2, 
-  ArrowRight,
+  Robot, 
+  CircleNotch, 
+  CaretRight,
   Info,
-  ChevronRight,
-  AlertCircle,
-  Cloud,
-  FlaskConical
-} from 'lucide-react';
+  WarningCircle,
+  CloudSun,
+  Flask,
+  ClipboardText
+} from '@phosphor-icons/react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -76,7 +76,7 @@ export default function ProfitPredictor() {
       {/* Header Area */}
       <div className="relative mb-12 text-center">
         <div className="absolute inset-0 -top-10 flex items-center justify-center opacity-10 pointer-events-none">
-          <TrendingUp size={200} className="text-green-600" />
+          <TrendUp size={200} weight="duotone" className="text-green-600" />
         </div>
         <h1 className="text-4xl md:text-5xl font-black text-gray-900 dark:text-white mb-4 tracking-tight">
           AI <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-500">Profit Predictor</span>
@@ -91,13 +91,13 @@ export default function ProfitPredictor() {
         <div className="lg:col-span-5 space-y-6">
           <div className="card p-8 border-none shadow-premium bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl">
             <h2 className="text-xl font-black mb-6 flex items-center gap-3 text-gray-800 dark:text-white">
-              <Sparkles className="text-green-600" size={24} /> Farm Details
+              <ClipboardText className="text-green-600" size={24} weight="duotone" /> Farm Details
             </h2>
 
             <div className="space-y-5">
               <div className="space-y-2">
                 <label className="text-xs font-black uppercase text-gray-400 flex items-center gap-2">
-                  <Layers size={14} /> Land Size (Acres)
+                  <Stack size={14} weight="bold" /> Land Size (Acres)
                 </label>
                 <input 
                   type="number" 
@@ -111,7 +111,7 @@ export default function ProfitPredictor() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label className="text-xs font-black uppercase text-gray-400 flex items-center gap-2">
-                    <Sprout size={14} /> Planned Crop
+                    <Plant size={14} weight="duotone" /> Planned Crop
                   </label>
                   <select 
                     className="input h-14 border-2 rounded-2xl appearance-none"
@@ -123,7 +123,7 @@ export default function ProfitPredictor() {
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs font-black uppercase text-gray-400 flex items-center gap-2">
-                    <Info size={14} /> Soil Type
+                    <Info size={14} weight="bold" /> Soil Type
                   </label>
                   <select 
                     className="input h-14 border-2 rounded-2xl appearance-none"
@@ -138,7 +138,7 @@ export default function ProfitPredictor() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label className="text-xs font-black uppercase text-gray-400 flex items-center gap-2">
-                    <MapPin size={14} /> Location
+                    <MapPin size={14} weight="duotone" /> Location
                   </label>
                   <input 
                     type="text" 
@@ -150,7 +150,7 @@ export default function ProfitPredictor() {
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs font-black uppercase text-gray-400 flex items-center gap-2">
-                    <FlaskConical size={14} /> Fertilizer
+                    <Flask size={14} weight="duotone" /> Fertilizer
                   </label>
                   <input 
                     type="text" 
@@ -165,7 +165,7 @@ export default function ProfitPredictor() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label className="text-xs font-black uppercase text-gray-400 flex items-center gap-2">
-                    <Cloud size={14} /> Weather Context
+                    <CloudSun size={14} weight="duotone" /> Weather Context
                   </label>
                   <input 
                     type="text" 
@@ -177,7 +177,7 @@ export default function ProfitPredictor() {
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs font-black uppercase text-gray-400 flex items-center gap-2">
-                    <Wallet size={14} /> Budget (₹)
+                    <Wallet size={14} weight="duotone" /> Budget (₹)
                   </label>
                   <input 
                     type="number" 
@@ -197,13 +197,13 @@ export default function ProfitPredictor() {
                   loading && "opacity-70 cursor-not-allowed"
                 )}
               >
-                {loading ? (
+                 {loading ? (
                   <>
-                    <Loader2 className="animate-spin" size={24} /> Analyzing...
+                    <CircleNotch className="animate-spin" size={24} weight="bold" /> Analyzing...
                   </>
                 ) : (
                   <>
-                    Predict Profit <ChevronRight size={24} />
+                    Predict Profit <CaretRight size={24} weight="bold" />
                   </>
                 )}
               </button>
@@ -213,7 +213,7 @@ export default function ProfitPredictor() {
           {/* Quick Tip Card */}
           <div className="bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/30 p-6 rounded-3xl flex gap-4">
             <div className="w-12 h-12 bg-amber-100 dark:bg-amber-900/30 rounded-2xl flex items-center justify-center shrink-0">
-              <AlertCircle className="text-amber-600" />
+              <WarningCircle size={24} weight="duotone" className="text-amber-600" />
             </div>
             <div>
               <h4 className="font-black text-sm text-amber-900 dark:text-amber-400 uppercase">AI Tip</h4>
@@ -230,10 +230,10 @@ export default function ProfitPredictor() {
             <div className="card p-8 border-none shadow-premium bg-white dark:bg-slate-900 h-full animate-in fade-in slide-in-from-right-4 duration-500">
               <div className="flex items-center justify-between mb-8">
                 <h2 className="text-2xl font-black text-gray-800 dark:text-white flex items-center gap-3">
-                  <TrendingUp className="text-green-600" size={32} /> Analysis Result
+                  <TrendUp className="text-green-600" size={32} weight="duotone" /> Analysis Result
                 </h2>
                 <div className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest">
-                  AI Generated
+                  <Robot size={14} weight="duotone" /> AI Generated
                 </div>
               </div>
 
@@ -255,7 +255,7 @@ export default function ProfitPredictor() {
           ) : (
             <div className="h-full min-h-[500px] flex flex-col items-center justify-center text-center p-12 border-4 border-dashed border-gray-100 dark:border-slate-800 rounded-[3rem]">
               <div className="w-24 h-24 bg-gray-50 dark:bg-slate-800 rounded-[2rem] flex items-center justify-center mb-6">
-                <TrendingUp size={48} className="text-gray-300 dark:text-slate-700" />
+                <TrendUp size={48} weight="duotone" className="text-gray-300 dark:text-slate-700" />
               </div>
               <h3 className="text-xl font-black text-gray-400 dark:text-slate-600">Ready for Analysis</h3>
               <p className="text-gray-400 dark:text-slate-700 mt-2 max-w-xs mx-auto text-sm font-medium">

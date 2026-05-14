@@ -4,12 +4,12 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import {
-  Cloud, Leaf, TrendingUp, Users, FlaskConical, Map,
-  ArrowRight, AlertTriangle, RefreshCw, Droplets, Wind,
-  Bell, TrendingDown, Calendar, FileDown, CheckCircle2,
-  Newspaper, Landmark, ShieldCheck, Sparkles, Zap, Sun, Award,
-  ChevronRight, Activity
-} from 'lucide-react';
+  CloudSun, Plant, TrendUp, Users, Flask, MapPin,
+  ArrowRight, WarningCircle, ArrowCounterClockwise, Drop, Wind,
+  Bell, TrendDown, Calendar, FileArrowDown, CheckCircle,
+  Newspaper, Bank, ShieldCheck, ChatCircleText, Lightning, Sun, Trophy,
+  CaretRight, Pulse
+} from '@phosphor-icons/react';
 import { weatherAPI, marketAPI, labourAPI } from '../services/api';
 import clsx from 'clsx';
 import logo from '../assets/logo.png';
@@ -80,13 +80,13 @@ export default function Dashboard() {
              <div className="text-right">
                 <div className="text-xs font-bold uppercase tracking-wider opacity-80 mb-2">{weather?.city || 'Satna'}</div>
                 <div className="flex flex-col items-end gap-2">
-                   <span className="flex items-center gap-1.5 text-xs font-semibold bg-white/20 px-3 py-1.5 rounded-xl backdrop-blur-md border border-white/10 shadow-sm"><Droplets size={12} /> {weather?.humidity}%</span>
-                   <span className="flex items-center gap-1.5 text-xs font-semibold bg-white/20 px-3 py-1.5 rounded-xl backdrop-blur-md border border-white/10 shadow-sm"><Wind size={12} /> {weather?.windSpeed} km/h</span>
+                   <span className="flex items-center gap-1.5 text-xs font-semibold bg-white/20 px-3 py-1.5 rounded-xl backdrop-blur-md border border-white/10 shadow-sm"><Drop size={12} weight="duotone" /> {weather?.humidity}%</span>
+                   <span className="flex items-center gap-1.5 text-xs font-semibold bg-white/20 px-3 py-1.5 rounded-xl backdrop-blur-md border border-white/10 shadow-sm"><Wind size={12} weight="bold" /> {weather?.windSpeed} km/h</span>
                 </div>
              </div>
           </div>
           <div className="mt-6 pt-4 border-t border-white/20 flex justify-between items-center text-xs font-bold uppercase tracking-widest">
-             <span className="text-blue-100 flex items-center gap-2"><Activity size={14} className="animate-pulse text-blue-300"/> {t('dashboard.live_imd')}</span>
+             <span className="text-blue-100 flex items-center gap-2"><Pulse size={14} weight="bold" className="animate-pulse text-blue-300"/> {t('dashboard.live_imd')}</span>
              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-blue-600 transition-colors">
                <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
              </div>
@@ -103,11 +103,11 @@ export default function Dashboard() {
       label: t('nav.crop'),
       render: () => (
         <div className="flex flex-col h-full">
-           <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4">
               <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center">
-                <Leaf size={24} className="text-emerald-600 dark:text-emerald-400" />
+                <Plant size={24} weight="duotone" className="text-emerald-600 dark:text-emerald-400" />
               </div>
-              <ChevronRight size={20} className="text-gray-300 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all" />
+              <CaretRight size={20} weight="bold" className="text-gray-300 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all" />
            </div>
            <div className="text-lg font-bold text-gray-900 dark:text-white tracking-tight">{t('nav.crop')}</div>
            <p className="text-xs text-gray-500 dark:text-slate-400 font-medium leading-relaxed mt-1 mb-4">{t('dashboard.crop_system')}</p>
@@ -132,10 +132,10 @@ export default function Dashboard() {
           <div className="flex flex-col h-full">
              <div className="flex justify-between items-start mb-4">
                 <div className="w-12 h-12 rounded-2xl bg-violet-50 dark:bg-violet-900/20 flex items-center justify-center">
-                   <TrendingUp size={24} className="text-violet-600 dark:text-violet-400" />
+                   <TrendUp size={24} weight="duotone" className="text-violet-600 dark:text-violet-400" />
                 </div>
                 <div className="flex items-center gap-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-100 dark:border-emerald-800">
-                  <TrendingUp size={10} /> +{trend}%
+                  <TrendUp size={10} weight="bold" /> +{trend}%
                 </div>
              </div>
              <div className="text-lg font-bold text-gray-900 dark:text-white tracking-tight">{t('nav.market')}</div>
@@ -155,11 +155,11 @@ export default function Dashboard() {
         <>
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center">
-              <FlaskConical size={20} className="text-amber-600 dark:text-amber-400" />
+              <Flask size={20} weight="duotone" className="text-amber-600 dark:text-amber-400" />
             </div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">{t('nav.fertilizer')}</div>
           </div>
-          <ChevronRight size={16} className="text-gray-300 group-hover:text-amber-500 group-hover:translate-x-1 transition-all" />
+          <CaretRight size={16} weight="bold" className="text-gray-300 group-hover:text-amber-500 group-hover:translate-x-1 transition-all" />
         </> 
       )
     },
@@ -171,11 +171,11 @@ export default function Dashboard() {
         <>
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-xl bg-rose-50 dark:bg-rose-900/20 flex items-center justify-center">
-              <Users size={20} className="text-rose-600 dark:text-rose-400" />
+              <Users size={20} weight="duotone" className="text-rose-600 dark:text-rose-400" />
             </div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">{t('nav.labour')}</div>
           </div>
-          <ChevronRight size={16} className="text-gray-300 group-hover:text-rose-500 group-hover:translate-x-1 transition-all" />
+          <CaretRight size={16} weight="bold" className="text-gray-300 group-hover:text-rose-500 group-hover:translate-x-1 transition-all" />
         </> 
       )
     },
@@ -187,11 +187,11 @@ export default function Dashboard() {
         <>
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-xl bg-sky-50 dark:bg-sky-900/20 flex items-center justify-center">
-              <Newspaper size={20} className="text-sky-600 dark:text-sky-400" />
+              <Newspaper size={20} weight="duotone" className="text-sky-600 dark:text-sky-400" />
             </div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">{t('nav.news')}</div>
           </div>
-          <ChevronRight size={16} className="text-gray-300 group-hover:text-sky-500 group-hover:translate-x-1 transition-all" />
+          <CaretRight size={16} weight="bold" className="text-gray-300 group-hover:text-sky-500 group-hover:translate-x-1 transition-all" />
         </> 
       )
     },
@@ -203,11 +203,11 @@ export default function Dashboard() {
         <>
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-xl bg-fuchsia-50 dark:bg-fuchsia-900/20 flex items-center justify-center">
-              <Landmark size={20} className="text-fuchsia-600 dark:text-fuchsia-400" />
+              <Bank size={20} weight="duotone" className="text-fuchsia-600 dark:text-fuchsia-400" />
             </div>
             <div className="text-sm font-bold text-gray-900 dark:text-white">{t('nav.schemes')}</div>
           </div>
-          <ChevronRight size={16} className="text-gray-300 group-hover:text-fuchsia-500 group-hover:translate-x-1 transition-all" />
+          <CaretRight size={16} weight="bold" className="text-gray-300 group-hover:text-fuchsia-500 group-hover:translate-x-1 transition-all" />
         </> 
       )
     },
@@ -219,9 +219,9 @@ export default function Dashboard() {
         <div className="flex flex-col h-full">
            <div className="flex items-center justify-between mb-4">
               <div className="w-12 h-12 rounded-2xl bg-teal-50 dark:bg-teal-900/20 flex items-center justify-center">
-                <Map size={24} className="text-teal-600 dark:text-teal-400" />
+                <MapPin size={24} weight="duotone" className="text-teal-600 dark:text-teal-400" />
               </div>
-              <ChevronRight size={20} className="text-gray-300 group-hover:text-teal-500 group-hover:translate-x-1 transition-all" />
+              <CaretRight size={20} weight="bold" className="text-gray-300 group-hover:text-teal-500 group-hover:translate-x-1 transition-all" />
            </div>
            <div className="text-lg font-bold text-gray-900 dark:text-white tracking-tight">{t('nav.map')}</div>
            <p className="text-xs text-gray-500 dark:text-slate-400 font-medium leading-relaxed mt-1">{t('dashboard.map_desc')}</p>
@@ -254,7 +254,7 @@ export default function Dashboard() {
                   {t('dashboard.command_center')}
                 </span>
                 <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-2 bg-white dark:bg-slate-900/50 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm">
-                  <RefreshCw size={12} className="text-indigo-500 animate-spin-slow" /> {t('dashboard.live_sync')}
+                  <ArrowCounterClockwise size={12} weight="bold" className="text-indigo-500 animate-spin-slow" /> {t('dashboard.live_sync')}
                 </span>
             </div>
             <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-6 leading-tight">
@@ -267,7 +267,7 @@ export default function Dashboard() {
                 <span>{t(greetingKey)}, <span className="text-indigo-600 dark:text-indigo-400">{user?.name?.split(' ')[0] || t('auth.farmer')}</span></span>
             </h1>
             <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mt-4 flex items-center gap-2">
-                <Calendar size={16} className="text-slate-400" /> {new Date().toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' })}
+                <Calendar size={16} weight="duotone" className="text-slate-400" /> {new Date().toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' })}
             </p>
           </div>
           
@@ -308,7 +308,7 @@ export default function Dashboard() {
               
               <div className="flex items-center gap-4 mb-4 relative z-10">
                 <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md border border-white/20 flex items-center justify-center">
-                    <Sparkles size={24} className="text-white" />
+                    <ChatCircleText size={24} weight="duotone" className="text-white" />
                 </div>
                 <div className="text-xs font-bold uppercase tracking-wider text-indigo-100">{t('dashboard.kisan_mitra')}</div>
               </div>
@@ -320,7 +320,7 @@ export default function Dashboard() {
               <div className="flex items-center justify-between mb-4">
                 <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">{t('dashboard.active_schemes')}</span>
                 <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center">
-                  <Award className="text-amber-500" size={20} />
+                  <Trophy className="text-amber-500" size={20} weight="duotone" />
                 </div>
               </div>
               <div>
@@ -337,7 +337,7 @@ export default function Dashboard() {
         <div className="mt-10 grid lg:grid-cols-12 gap-6">
           <div className="lg:col-span-8">
               <h2 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-5 flex items-center gap-2">
-                <ShieldCheck className="text-indigo-500" size={18} /> {t('dashboard.farming_intel')}
+                <ShieldCheck className="text-indigo-500" size={18} weight="duotone" /> {t('dashboard.farming_intel')}
               </h2>
               <div className="grid sm:grid-cols-2 gap-5">
                 {[
@@ -362,7 +362,7 @@ export default function Dashboard() {
               <div className="mt-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm relative overflow-hidden group">
                 <div className="flex items-center justify-between mb-5 relative z-10">
                   <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">{t('dashboard.recent_alerts')}</h3>
-                  <Bell size={16} className="text-slate-400" />
+                  <Bell size={16} weight="duotone" className="text-slate-400" />
                 </div>
                 <div className="space-y-3 relative z-10">
                   {alerts.map((alert, idx) => (
@@ -394,7 +394,7 @@ export default function Dashboard() {
                   ))}
                 </div>
                 <button onClick={() => navigate('/news')} className="w-full mt-8 py-3.5 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-500/20 text-indigo-600 dark:text-indigo-400 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-indigo-100 dark:hover:bg-indigo-500/20 transition-all flex items-center justify-center gap-2">
-                  <Activity size={14} /> {t('dashboard.view_logs')}
+                  <Pulse size={14} weight="bold" /> {t('dashboard.view_logs')}
                 </button>
             </div>
           </div>

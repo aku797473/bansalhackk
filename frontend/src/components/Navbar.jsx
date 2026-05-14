@@ -6,7 +6,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import LanguageSelector from './LanguageSelector';
 import {
   HouseSimple, CloudSun, Plant, Flask, TrendUp, ShoppingBagOpen,
-  Users, MapPin, Newspaper, Bell, Bank, List, X, SignOut, Sun, Moon, CaretRight, Sparkle
+  Users, MapPin, Newspaper, Bell, Bank, List, X, SignOut, Sun, Moon, CaretRight, Calculator
 } from '@phosphor-icons/react';
 import { UserButton } from '@clerk/clerk-react';
 import clsx from 'clsx';
@@ -49,7 +49,7 @@ export default function Navbar() {
   const moreLinks = [
     { to: '/labour',           icon: Users,         label: t('nav.labour'),               accent: 'text-rose-600 dark:text-rose-400',       activeBg: 'bg-rose-50 dark:bg-rose-500/10',       iconBg: 'bg-rose-100 dark:bg-rose-500/20' },
     { to: '/buyer',            icon: ShoppingBagOpen, label: t('nav.buyer', 'Marketplace'), accent: 'text-teal-600 dark:text-teal-400',      activeBg: 'bg-teal-50 dark:bg-teal-500/10',      iconBg: 'bg-teal-100 dark:bg-teal-500/20' },
-    { to: '/profit-predictor', icon: Sparkle,       label: 'Profit Predictor',            accent: 'text-violet-600 dark:text-violet-400',   activeBg: 'bg-violet-50 dark:bg-violet-500/10',  iconBg: 'bg-violet-100 dark:bg-violet-500/20' },
+    { to: '/profit-predictor', icon: Calculator,    label: 'Profit Predictor',            accent: 'text-violet-600 dark:text-violet-400',   activeBg: 'bg-violet-50 dark:bg-violet-500/10',  iconBg: 'bg-violet-100 dark:bg-violet-500/20' },
     { to: '/map',              icon: MapPin,        label: t('nav.map'),                  accent: 'text-cyan-600 dark:text-cyan-400',       activeBg: 'bg-cyan-50 dark:bg-cyan-500/10',      iconBg: 'bg-cyan-100 dark:bg-cyan-500/20' },
     { to: '/news',             icon: Newspaper,     label: t('nav.news'),                 accent: 'text-orange-600 dark:text-orange-400',   activeBg: 'bg-orange-50 dark:bg-orange-500/10',  iconBg: 'bg-orange-100 dark:bg-orange-500/20' },
     { to: '/schemes',          icon: Bank,          label: t('nav.schemes'),              accent: 'text-fuchsia-600 dark:text-fuchsia-400', activeBg: 'bg-fuchsia-50 dark:bg-fuchsia-500/10', iconBg: 'bg-fuchsia-100 dark:bg-fuchsia-500/20' },
