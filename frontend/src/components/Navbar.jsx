@@ -72,12 +72,8 @@ export default function Navbar() {
           
           {/* Brand Wordmark - SaaS Style (no image on desktop) */}
           <NavLink to="/dashboard" className="flex items-center gap-2.5 shrink-0 group">
-            {/* Geometric SVG icon - no image dependency */}
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/25 group-hover:shadow-indigo-500/40 group-hover:scale-105 transition-all">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 2C5.5 2 3 5 3 9c0 2.5 1.2 4.7 3 6l1-2.5C5.8 11.5 5 10.3 5 9c0-2.2 1.8-4 4-4s4 1.8 4 4c0 1.3-.8 2.5-2 3.5L12 15c1.8-1.3 3-3.5 3-6 0-4-2.5-7-6-7z" fill="white" fillOpacity="0.9"/>
-                <circle cx="9" cy="9" r="2" fill="white"/>
-              </svg>
+            <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-indigo-500/25 group-hover:shadow-indigo-500/40 group-hover:scale-105 transition-all">
+              <img src={logo} className="w-full h-full object-cover filter contrast-[1.1] brightness-[1.1]" alt="logo" />
             </div>
             {/* Text wordmark */}
             <div className="flex flex-col leading-none">

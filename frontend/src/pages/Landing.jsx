@@ -47,8 +47,8 @@ export default function Landing() {
       <nav className="fixed top-0 inset-x-0 z-[100] px-4 pt-4">
         <div className="nav-container max-w-5xl mx-auto h-16 border border-slate-100 dark:border-white/5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded-2xl px-6 flex items-center justify-between shadow-sm transition-all">
           <div className="flex items-center gap-2">
-             <div className="w-14 h-14 rounded-2xl bg-emerald-600 flex items-center justify-center shadow-xl shadow-emerald-500/20 border-2 border-white/20">
-                 <img src={logo} className="w-10 h-10 object-cover rounded-full shadow-lg border-2 border-white/20 filter contrast-[1.1] brightness-[1.1]" alt="logo" />
+             <div className="w-12 h-12 rounded-2xl overflow-hidden bg-emerald-600 shadow-xl shadow-emerald-500/20 border-2 border-white/20 group-hover:scale-105 transition-all">
+                <img src={logo} className="w-full h-full object-cover filter contrast-[1.1] brightness-[1.1]" alt="logo" />
              </div>
              <span className="text-xl font-black tracking-tighter text-slate-900 dark:text-white">Smart Kisan</span>
           </div>
