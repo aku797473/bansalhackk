@@ -67,7 +67,7 @@ export default function Dashboard() {
       to: '/weather', 
       size: 'lg',
       color: 'bg-gradient-to-br from-indigo-600 to-blue-700 shadow-indigo-500/30',
-      icon: Cloud,
+      icon: CloudSun,
       label: t('nav.weather'),
       render: () => (
         <div className="flex flex-col h-full justify-between relative z-10 text-white">
@@ -99,7 +99,7 @@ export default function Dashboard() {
       to: '/crop', 
       size: 'md',
       color: 'card hover:border-emerald-500/30 group',
-      icon: Leaf,
+      icon: Plant,
       label: t('nav.crop'),
       render: () => (
         <div className="flex flex-col h-full">
@@ -123,7 +123,7 @@ export default function Dashboard() {
       to: '/market', 
       size: 'md',
       color: 'card hover:border-violet-500/30 group',
-      icon: TrendingUp,
+      icon: TrendUp,
       label: t('nav.market'),
       render: () => {
         const latest = marketData?.trends?.[marketData.trends.length - 1];
@@ -150,7 +150,7 @@ export default function Dashboard() {
     { 
       id: 'fertilizer', to: '/fertilizer', size: 'sm',
       color: 'card hover:border-amber-500/30 flex items-center justify-between group',
-      icon: FlaskConical, label: t('nav.fertilizer'),
+      icon: Flask, label: t('nav.fertilizer'),
       render: () => ( 
         <>
           <div className="flex items-center gap-4">
@@ -214,7 +214,7 @@ export default function Dashboard() {
     { 
       id: 'map', to: '/map', size: 'md',
       color: 'card hover:border-teal-500/30 group',
-      icon: Map, label: t('nav.map'),
+      icon: MapPin, label: t('nav.map'),
       render: () => (
         <div className="flex flex-col h-full">
            <div className="flex items-center justify-between mb-4">
