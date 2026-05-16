@@ -67,80 +67,79 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="fixed top-4 inset-x-0 z-[100] px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto h-16 bg-white/70 dark:bg-slate-900/70 backdrop-blur-2xl border border-white/20 dark:border-white/5 rounded-2xl sm:rounded-[2rem] shadow-2xl shadow-slate-200/50 dark:shadow-none px-4 flex items-center justify-between gap-4 transition-all">
+      <header className="fixed top-4 inset-x-0 z-[100] px-4 sm:px-6 transition-all duration-300">
+        <div className="max-w-7xl mx-auto h-16 bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border border-white/40 dark:border-slate-800/60 rounded-2xl sm:rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-black/20 px-4 flex items-center justify-between gap-4 transition-all duration-300">
           
-          {/* Brand Wordmark - SaaS Style (no image on desktop) */}
-          <NavLink to="/dashboard" className="flex items-center gap-2.5 shrink-0 group">
-            <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-indigo-500/25 group-hover:shadow-indigo-500/40 group-hover:scale-105 transition-all">
+          {/* Brand Wordmark - SaaS Style */}
+          <NavLink to="/dashboard" className="flex items-center gap-3 shrink-0 group">
+            <div className="w-10 h-10 rounded-xl overflow-hidden shadow-md shadow-indigo-500/20 group-hover:shadow-indigo-500/40 group-hover:scale-105 transition-all duration-300">
               <img src={logo} className="w-full h-full object-cover filter contrast-[1.1] brightness-[1.1]" alt="logo" />
             </div>
             {/* Text wordmark */}
-            <div className="flex flex-col leading-none">
-              <span className="text-sm font-black tracking-tight text-slate-900 dark:text-white">
-                Smart<span className="bg-gradient-to-r from-indigo-600 to-violet-500 bg-clip-text text-transparent">Kisan</span>
+            <div className="flex flex-col leading-none justify-center mt-0.5">
+              <span className="text-[17px] font-extrabold tracking-tight text-slate-900 dark:text-white font-outfit">
+                Smart<span className="bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">Kisan</span>
               </span>
-              <span className="text-[8px] font-bold uppercase tracking-[0.15em] text-slate-400 dark:text-slate-500 hidden sm:block">AgriTech Platform</span>
+              <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 hidden sm:block mt-0.5">AgriTech</span>
             </div>
           </NavLink>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden xl:flex items-center gap-0.5">
-            {primaryLinks.map(({ to, icon: Icon, label, accent, activeBg, iconBg }) => (
+          {/* Desktop Navigation - Stitch Premium Design */}
+          <nav className="hidden xl:flex items-center gap-2">
+            {primaryLinks.map(({ to, icon: Icon, label }) => (
               <NavLink key={to} to={to}
                 className={({ isActive }) => clsx(
-                  'relative flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-200 group/nav',
+                  'relative flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-300 group/nav overflow-hidden',
                   isActive
-                    ? `${activeBg} ${accent} font-bold`
-                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100/80 dark:hover:bg-slate-800/60'
+                    ? `text-indigo-600 dark:text-indigo-400 font-bold bg-indigo-50 dark:bg-indigo-500/10`
+                    : 'text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-50 dark:hover:bg-slate-800'
                 )}>
                 {({ isActive }) => (
                   <>
-                    <span className={clsx(
-                      'flex items-center justify-center w-5 h-5 rounded-md transition-all duration-200',
-                      isActive ? iconBg : 'group-hover/nav:bg-slate-200/60 dark:group-hover/nav:bg-slate-700/60'
-                    )}>
-                      <Icon size={14} weight="duotone" />
-                    </span>
+                    <Icon size={16} weight={isActive ? "fill" : "duotone"} className="transition-transform group-hover/nav:scale-110 duration-300" />
                     {label}
-                    {isActive && <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-3 h-0.5 rounded-full bg-current opacity-60" />}
+                    <span className={clsx(
+                      "absolute bottom-0 left-0 h-0.5 bg-indigo-600 dark:bg-indigo-400 transition-all duration-300 rounded-full",
+                      isActive ? "w-full opacity-100" : "w-0 opacity-0 group-hover/nav:w-1/2 group-hover/nav:opacity-50 group-hover/nav:left-1/4"
+                    )} />
                   </>
                 )}
               </NavLink>
             ))}
 
             {/* More Dropdown */}
-            <div className="relative ml-1">
+            <div className="relative ml-2">
               <button 
                 onClick={() => setMoreOpen(!moreOpen)}
                 className={clsx(
-                  "flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all",
+                  "flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-300 group/nav",
                   moreLinks.some(l => location.pathname === l.to)
-                    ? "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold"
-                    : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100/80 dark:hover:bg-slate-800/60"
+                    ? "bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-bold"
+                    : "text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-50 dark:hover:bg-slate-800"
                 )}
               >
+                <List size={16} weight="duotone" className="transition-transform group-hover/nav:scale-110" />
                 <span>{t('common.more', 'More')}</span>
-                <CaretRight size={13} weight="bold" className={clsx("transition-transform", moreOpen ? "rotate-90" : "")} />
+                <CaretRight size={12} weight="bold" className={clsx("transition-transform duration-300", moreOpen ? "rotate-90" : "")} />
               </button>
 
               {moreOpen && (
-                <div className="absolute top-full right-0 mt-2 w-52 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-2xl shadow-slate-200/60 dark:shadow-black/40 p-1.5 animate-in fade-in slide-in-from-top-2 duration-200">
-                  {moreLinks.map(({ to, icon: Icon, label, accent, activeBg, iconBg }) => (
+                <div className="absolute top-full right-0 mt-3 w-56 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border border-white/40 dark:border-slate-800/60 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] dark:shadow-black/50 p-2 animate-in fade-in zoom-in-95 duration-200">
+                  {moreLinks.map(({ to, icon: Icon, label }) => (
                     <NavLink key={to} to={to}
                       className={({ isActive }) => clsx(
-                        'flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all',
+                        'flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all duration-200 group/drop',
                         isActive
-                          ? `${activeBg} ${accent} font-bold`
-                          : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800'
+                          ? `bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-bold`
+                          : 'text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'
                       )}>
                       {({ isActive }) => (
                         <>
                           <span className={clsx(
-                            'flex items-center justify-center w-6 h-6 rounded-lg transition-all',
-                            isActive ? iconBg : 'bg-slate-100 dark:bg-slate-800'
+                            'flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-300',
+                            isActive ? 'bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 group-hover/drop:bg-indigo-50 dark:group-hover/drop:bg-indigo-900/30'
                           )}>
-                            <Icon size={14} weight="duotone" />
+                            <Icon size={16} weight={isActive ? "fill" : "duotone"} />
                           </span>
                           {label}
                         </>
