@@ -10,6 +10,7 @@ import {
   Newspaper, Bank, ShieldCheck, ChatCircleText, Lightning, Sun, Trophy,
   CaretRight, Bug, ChartLineUp, TestTube, Storefront, Star
 } from '@phosphor-icons/react';
+import ThreeStatusOrb from '../components/ThreeStatusOrb';
 import { weatherAPI, marketAPI, labourAPI } from '../services/api';
 import clsx from 'clsx';
 import logo from '../assets/kisan-logo-new.jpg';
@@ -577,9 +578,9 @@ export default function Dashboard() {
                 </div>
                 <div className="space-y-8">
                   {[
-                    { label: t('dashboard.nodes.sat'), status: t('dashboard.status.optimal'), color: 'bg-emerald-500' },
-                    { label: t('dashboard.nodes.market'), status: t('dashboard.status.stable'), color: 'bg-emerald-500' },
-                    { label: t('dashboard.nodes.ai'), status: t('dashboard.status.active'), color: 'bg-indigo-500' }
+                    { label: t('dashboard.nodes.sat'), status: t('dashboard.status.optimal'), color: '#10b981' },
+                    { label: t('dashboard.nodes.market'), status: t('dashboard.status.stable'), color: '#10b981' },
+                    { label: t('dashboard.nodes.ai'), status: t('dashboard.status.active'), color: '#6366f1' }
                   ].map(node => (
                     <div key={node.label} className="flex items-center justify-between group/node">
                         <div className="flex items-center gap-4">
@@ -587,7 +588,9 @@ export default function Dashboard() {
                         </div>
                         <div className="flex items-center gap-3">
                           <span className="text-[10px] font-black uppercase text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg border border-slate-200 dark:border-slate-700 shadow-inner">{node.status}</span>
-                          <div className={clsx("w-2 h-2 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.1)] animate-pulse", node.color)} />
+                          <div className="w-8 h-8">
+                             <ThreeStatusOrb color={node.color} distort={0.2} speed={3} />
+                          </div>
                         </div>
                     </div>
                   ))}

@@ -9,6 +9,7 @@ import {
 import clsx from 'clsx';
 import logo from '../assets/kisan-logo-new.jpg';
 import realisticFarmer from '../assets/realistic-farmer.png';
+import ThreeHero from '../components/ThreeHero';
 
 const modules = (t) => [
   {
@@ -68,7 +69,8 @@ export default function Landing() {
 
       {/* ── Hero Section ──────────────────────────────────── */}
       <header className="relative pt-32 pb-16 px-4">
-         <div className="max-w-6xl mx-auto">
+         <ThreeHero />
+         <div className="max-w-6xl mx-auto relative z-10">
             <div className="grid lg:grid-cols-2 gap-12 items-center text-center lg:text-left">
                <div>
                   <div className="hero-badge inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-800 rounded-full mb-6">
