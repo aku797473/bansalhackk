@@ -24,7 +24,7 @@ import clsx from 'clsx';
 const EMERGENCIES = [
   {
     id: 'snake',
-    icon: Activity,
+    icon: Heartbeat,
     color: 'bg-emerald-500',
     shadow: 'shadow-emerald-500/20',
     instructions: {

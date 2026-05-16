@@ -5,8 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import LanguageSelector from './LanguageSelector';
 import {
-  HouseSimple, CloudSun, Plant, Flask, TrendUp, ShoppingBagOpen,
-  Users, MapPin, Newspaper, Bell, Bank, List, X, SignOut, Sun, Moon, CaretRight, Calculator
+  List, X, SignOut, CaretRight
 } from '@phosphor-icons/react';
 import { UserButton } from '@clerk/clerk-react';
 import clsx from 'clsx';
@@ -39,20 +38,20 @@ export default function Navbar() {
   }, [i18n.language, user]);
 
   const primaryLinks = [
-    { to: '/dashboard',  icon: HouseSimple,   label: t('nav.home'),        accent: 'text-violet-600 dark:text-violet-400', activeBg: 'bg-violet-50 dark:bg-violet-500/10', iconBg: 'bg-violet-100 dark:bg-violet-500/20' },
-    { to: '/weather',    icon: CloudSun,      label: t('nav.weather'),     accent: 'text-sky-600 dark:text-sky-400',       activeBg: 'bg-sky-50 dark:bg-sky-500/10',       iconBg: 'bg-sky-100 dark:bg-sky-500/20' },
-    { to: '/crop',       icon: Plant,         label: t('nav.crop'),        accent: 'text-emerald-600 dark:text-emerald-400', activeBg: 'bg-emerald-50 dark:bg-emerald-500/10', iconBg: 'bg-emerald-100 dark:bg-emerald-500/20' },
-    { to: '/market',     icon: TrendUp,    label: t('nav.market'),      accent: 'text-indigo-600 dark:text-indigo-400', activeBg: 'bg-indigo-50 dark:bg-indigo-500/10', iconBg: 'bg-indigo-100 dark:bg-indigo-500/20' },
-    { to: '/fertilizer', icon: Flask,         label: t('nav.fertilizer'), accent: 'text-amber-600 dark:text-amber-400',   activeBg: 'bg-amber-50 dark:bg-amber-500/10',   iconBg: 'bg-amber-100 dark:bg-amber-500/20' },
+    { to: '/dashboard',  label: t('nav.home'),        accent: 'text-violet-600 dark:text-violet-400', activeBg: 'bg-violet-50 dark:bg-violet-500/10', iconBg: 'bg-violet-100 dark:bg-violet-500/20' },
+    { to: '/weather',    label: t('nav.weather'),     accent: 'text-sky-600 dark:text-sky-400',       activeBg: 'bg-sky-50 dark:bg-sky-500/10',       iconBg: 'bg-sky-100 dark:bg-sky-500/20' },
+    { to: '/crop',       label: t('nav.crop'),        accent: 'text-emerald-600 dark:text-emerald-400', activeBg: 'bg-emerald-50 dark:bg-emerald-500/10', iconBg: 'bg-emerald-100 dark:bg-emerald-500/20' },
+    { to: '/market',     label: t('nav.market'),      accent: 'text-indigo-600 dark:text-indigo-400', activeBg: 'bg-indigo-50 dark:bg-indigo-500/10', iconBg: 'bg-indigo-100 dark:bg-indigo-500/20' },
+    { to: '/fertilizer', label: t('nav.fertilizer'), accent: 'text-amber-600 dark:text-amber-400',   activeBg: 'bg-amber-50 dark:bg-amber-500/10',   iconBg: 'bg-amber-100 dark:bg-amber-500/20' },
   ];
 
   const moreLinks = [
-    { to: '/labour',           icon: Users,         label: t('nav.labour'),               accent: 'text-rose-600 dark:text-rose-400',       activeBg: 'bg-rose-50 dark:bg-rose-500/10',       iconBg: 'bg-rose-100 dark:bg-rose-500/20' },
-    { to: '/buyer',            icon: ShoppingBagOpen, label: t('nav.buyer'),                   accent: 'text-teal-600 dark:text-teal-400',      activeBg: 'bg-teal-50 dark:bg-teal-500/10',      iconBg: 'bg-teal-100 dark:bg-teal-500/20' },
-    { to: '/profit-predictor', icon: Calculator,    label: t('nav.profit_predictor'),        accent: 'text-violet-600 dark:text-violet-400',   activeBg: 'bg-violet-50 dark:bg-violet-500/10',  iconBg: 'bg-violet-100 dark:bg-violet-500/20' },
-    { to: '/map',              icon: MapPin,        label: t('nav.map'),                  accent: 'text-cyan-600 dark:text-cyan-400',       activeBg: 'bg-cyan-50 dark:bg-cyan-500/10',      iconBg: 'bg-cyan-100 dark:bg-cyan-500/20' },
-    { to: '/news',             icon: Newspaper,     label: t('nav.news'),                 accent: 'text-orange-600 dark:text-orange-400',   activeBg: 'bg-orange-50 dark:bg-orange-500/10',  iconBg: 'bg-orange-100 dark:bg-orange-500/20' },
-    { to: '/schemes',          icon: Bank,          label: t('nav.schemes'),              accent: 'text-fuchsia-600 dark:text-fuchsia-400', activeBg: 'bg-fuchsia-50 dark:bg-fuchsia-500/10', iconBg: 'bg-fuchsia-100 dark:bg-fuchsia-500/20' },
+    { to: '/labour',           label: t('nav.labour'),               accent: 'text-rose-600 dark:text-rose-400',       activeBg: 'bg-rose-50 dark:bg-rose-500/10',       iconBg: 'bg-rose-100 dark:bg-rose-500/20' },
+    { to: '/buyer',            label: t('nav.buyer'),                   accent: 'text-teal-600 dark:text-teal-400',      activeBg: 'bg-teal-50 dark:bg-teal-500/10',      iconBg: 'bg-teal-100 dark:bg-teal-500/20' },
+    { to: '/profit-predictor', label: t('nav.profit_predictor'),        accent: 'text-violet-600 dark:text-violet-400',   activeBg: 'bg-violet-50 dark:bg-violet-500/10',  iconBg: 'bg-violet-100 dark:bg-violet-500/20' },
+    { to: '/map',              label: t('nav.map'),                  accent: 'text-cyan-600 dark:text-cyan-400',       activeBg: 'bg-cyan-50 dark:bg-cyan-500/10',      iconBg: 'bg-cyan-100 dark:bg-cyan-500/20' },
+    { to: '/news',             label: t('nav.news'),                 accent: 'text-orange-600 dark:text-orange-400',   activeBg: 'bg-orange-50 dark:bg-orange-500/10',  iconBg: 'bg-orange-100 dark:bg-orange-500/20' },
+    { to: '/schemes',          label: t('nav.schemes'),              accent: 'text-fuchsia-600 dark:text-fuchsia-400', activeBg: 'bg-fuchsia-50 dark:bg-fuchsia-500/10', iconBg: 'bg-fuchsia-100 dark:bg-fuchsia-500/20' },
   ];
 
   const [moreOpen, setMoreOpen] = useState(false);
@@ -146,13 +145,6 @@ export default function Navbar() {
           {/* Right Actions */}
           <div className="flex items-center gap-1 sm:gap-2 shrink-0">
             <div className="hidden sm:flex items-center gap-1">
-              <button onClick={toggleTheme} className="p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-xl transition-all" title="Toggle Theme">
-                {theme === 'dark' ? <Sun size={18} weight="duotone" /> : <Moon size={18} weight="duotone" />}
-              </button>
-              <button onClick={() => navigate('/news')} className="relative p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-xl transition-all" title="Alerts">
-                <Bell size={18} weight="duotone" />
-                {hasNewNews && <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white dark:ring-slate-900 animate-pulse" />}
-              </button>
             </div>
             
             <div className="h-6 w-px bg-gray-100 dark:bg-slate-800 hidden sm:block mx-1" />

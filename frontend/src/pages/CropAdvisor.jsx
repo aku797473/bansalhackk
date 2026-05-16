@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cropAPI } from '../services/api';
-import { Plant, Robot, Calendar, Drop, CheckCircle, ArrowCounterClockwise, Trash, ShieldCheck, Info, FileArrowDown, Plus, CaretRight, Sparkle, Wind, ThermometerHot, Gauge, MapPin } from '@phosphor-icons/react';
+import { Plant, Robot, Calendar, Drop, CheckCircle, ArrowCounterClockwise, Trash, ShieldCheck, Info, FileArrowDown, Plus, CaretRight, Sparkle, Wind, ThermometerHot, Gauge, MapPin, Flask } from '@phosphor-icons/react';
 import cropsImg from '../assets/crops-closeup.png';
 import toast from 'react-hot-toast';
 import { usePageAnimation } from '../hooks/usePageAnimation';

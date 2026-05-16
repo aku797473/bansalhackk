@@ -577,15 +577,12 @@ export default function Dashboard() {
                 </div>
                 <div className="space-y-8">
                   {[
-                    { label: t('dashboard.nodes.sat'), status: t('dashboard.status.optimal'), color: 'bg-emerald-500', icon: CloudSun },
-                    { label: t('dashboard.nodes.market'), status: t('dashboard.status.stable'), color: 'bg-emerald-500', icon: TrendUp },
-                    { label: t('dashboard.nodes.ai'), status: t('dashboard.status.active'), color: 'bg-indigo-500', icon: Lightning }
+                    { label: t('dashboard.nodes.sat'), status: t('dashboard.status.optimal'), color: 'bg-emerald-500' },
+                    { label: t('dashboard.nodes.market'), status: t('dashboard.status.stable'), color: 'bg-emerald-500' },
+                    { label: t('dashboard.nodes.ai'), status: t('dashboard.status.active'), color: 'bg-indigo-500' }
                   ].map(node => (
                     <div key={node.label} className="flex items-center justify-between group/node">
                         <div className="flex items-center gap-4">
-                           <div className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-400 group-hover/node:text-indigo-500 transition-colors">
-                              <node.icon size={20} weight="duotone" />
-                           </div>
                            <span className="text-xs font-black uppercase tracking-widest text-slate-500 group-hover/node:text-slate-900 dark:group-hover/node:text-white transition-colors">{node.label}</span>
                         </div>
                         <div className="flex items-center gap-3">
