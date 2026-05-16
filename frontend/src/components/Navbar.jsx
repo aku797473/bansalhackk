@@ -215,7 +215,6 @@ export default function Navbar() {
 
           <div className="pt-6 mt-6 border-t border-gray-100 dark:border-slate-800 space-y-3">
             <button onClick={toggleTheme} className="flex items-center gap-3 w-full p-4 rounded-2xl bg-gray-50 dark:bg-slate-900 text-gray-700 dark:text-slate-300 font-bold text-sm">
-              {theme === 'dark' ? <Sun size={20} weight="duotone" /> : <Moon size={20} weight="duotone" />}
               {theme === 'dark' ? t('nav.light') : t('nav.dark')}
             </button>
             <button onClick={async () => { await logout(); navigate('/'); }} className="flex items-center gap-3 w-full p-4 rounded-2xl bg-red-50 dark:bg-red-950/10 text-red-500 font-bold text-sm shadow-sm active:scale-95 transition-transform">
