@@ -6,8 +6,6 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const { verifyToken } = require('./gateway/src/middleware/auth');
-const { clerkMiddleware } = require('@clerk/express');
 
 const app = express();
 app.use(cors());
@@ -19,12 +17,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Clerk Middleware
-app.use(clerkMiddleware({
-  publishableKey: process.env.CLERK_PUBLISHABLE_KEY,
-  secretKey: process.env.CLERK_SECRET_KEY,
-}));
-
 // Load Models
 require('./services/weather-service/src/models/WeatherHistory');
 require('./services/market-service/src/models/MarketHistory');
@@ -35,6 +27,7 @@ const weatherRoutes = require('./services/weather-service/src/routes/weather');
 const newsRoutes = require('./services/news-service/src/routes/news');
 const schemesRoutes = require('./services/schemes-service/src/routes/schemes');
 
+// These are public info routes, usually don't need token unless specified
 app.use('/api/market', marketRoutes);
 app.use('/api/weather', weatherRoutes);
 app.use('/api/news', newsRoutes);

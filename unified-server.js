@@ -28,16 +28,8 @@ app.use(morgan('dev'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
-// Clerk
-try {
-  const { clerkMiddleware } = require('@clerk/express');
-  app.use(clerkMiddleware({
-    publishableKey: process.env.CLERK_PUBLISHABLE_KEY || process.env.VITE_CLERK_PUBLISHABLE_KEY,
-    secretKey: process.env.CLERK_SECRET_KEY,
-  }));
-} catch (e) {
-  console.warn('⚠️ Clerk not available');
-}
+// REMOVED CLERK MIDDLEWARE COMPLETELY
+// Using local JWT identity only.
 
 // ─── Auth middleware ──────────────────────────────
 const { verifyToken } = require('./gateway/src/middleware/auth');
@@ -51,7 +43,7 @@ const safeRequire = (path, name) => {
   }
 };
 
-// PRE-LOAD ALL MODELS to avoid "MissingSchemaError"
+// PRE-LOAD ALL MODELS
 safeRequire('./services/auth-service/src/models/AuthUser', 'Model:AuthUser');
 safeRequire('./services/user-service/src/models/UserProfile', 'Model:UserProfile');
 safeRequire('./services/labour-service/src/models/Job', 'Model:Job');
@@ -83,10 +75,8 @@ app.get('/api/wake', (req, res) => {
     timestamp: new Date().toISOString() 
   });
 });
-// ─── Diagnostic Routes ─────────────────────────────
+
 app.get('/health', (req, res) => res.json({ status: 'ok', time: new Date() }));
-app.get('/wake', (req, res) => res.json({ status: 'waking', services: 'all' }));
-app.get('/api/wake', (req, res) => res.json({ status: 'waking', services: 'all' }));
 
 // ─── Microservice Routes ────────────────────────────
 if (userRoutes)       app.use('/api/users',      verifyToken, userRoutes);
@@ -118,8 +108,7 @@ app.use((err, req, res, next) => {
   console.error('🔥 [GLOBAL ERROR]:', err);
   res.status(500).json({ 
     success: false, 
-    message: err.message, 
-    stack: err.stack
+    message: err.message
   });
 });
 
@@ -130,12 +119,9 @@ app.use('*', (req, res) => {
 // ─── MongoDB ──────────────────────────────────────
 async function connectMongo() {
   const uri = process.env.MONGODB_URI;
-  if (!uri) {
-    console.error('❌ MONGODB_URI is not set in environment variables!');
-    return;
-  }
+  if (!uri) return;
   try {
-    await mongoose.connect(uri, { serverSelectionTimeoutMS: 10000 });
+    await mongoose.connect(uri);
     console.log('✅ MongoDB connected');
   } catch (err) {
     console.error('❌ MongoDB Connection Error:', err.message);

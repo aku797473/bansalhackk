@@ -7,17 +7,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const { verifyToken } = require('./gateway/src/middleware/auth');
-const { clerkMiddleware } = require('@clerk/express');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-
-// Clerk Middleware
-app.use(clerkMiddleware({
-  publishableKey: process.env.CLERK_PUBLISHABLE_KEY,
-  secretKey: process.env.CLERK_SECRET_KEY,
-}));
 
 // Load Models
 require('./services/labour-service/src/models/Job');
