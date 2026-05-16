@@ -12,13 +12,22 @@ export default function Login() {
 
   const handleLogin = async () => {
     setLoading(true);
+    const id = toast.loading('Authenticating...');
     try {
-      await login();
-      // After login, update the role
-      await updateUser({ role });
+      const fbUser = await login();
+      // After login, update the role and sync to MongoDB
+      await updateUser({ 
+        role, 
+        name: fbUser.displayName, 
+        image: fbUser.photoURL,
+        email: fbUser.email 
+      });
+      
+      toast.success('Access Granted', { id });
       navigate('/dashboard');
     } catch (error) {
-      toast.error('Login failed');
+      toast.error('Authentication Failed', { id });
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -85,8 +94,8 @@ export default function Login() {
 
         <div className="mt-12 text-center">
           <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest leading-loose">
-            By continuing, you agree to our <br />
-            <span className="text-indigo-600 cursor-pointer">Terms of Service</span> and <span className="text-indigo-600 cursor-pointer">Privacy Policy</span>
+            Secure multi-factor authentication protocol active. <br />
+            <span className="text-indigo-600 cursor-pointer">Security Center</span> | <span className="text-indigo-600 cursor-pointer">Privacy Vault</span>
           </p>
         </div>
       </div>

@@ -8,7 +8,7 @@ import {
   browserLocalPersistence
 } from 'firebase/auth';
 import { auth } from '../config/firebase';
-import { setTokenProvider } from '../services/api';
+import { setTokenProvider, userAPI } from '../services/api';
 import toast from 'react-hot-toast';
 
 const AuthContext = createContext(null);
@@ -18,24 +18,38 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Set persistence to local (keeps user logged in after refresh)
     setPersistence(auth, browserLocalPersistence);
 
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        // Get JWT token from Firebase
         const getToken = () => firebaseUser.getIdToken();
         setTokenProvider(getToken);
 
-        // Map Firebase user to our local user structure
-        // In a real app, you'd fetch additional metadata (like role) from Firestore
-        setUser({
-          id: firebaseUser.uid,
-          name: firebaseUser.displayName || 'Farmer',
-          email: firebaseUser.email,
-          image: firebaseUser.photoURL,
-          role: localStorage.getItem(`sk_role_${firebaseUser.uid}`) || 'farmer', // Fallback to local storage for demo
-        });
+        // Fetch profile from MongoDB via Backend
+        try {
+          const { data } = await userAPI.getProfile();
+          if (data.success) {
+            setUser({
+              id: firebaseUser.uid,
+              name: data.data.name || firebaseUser.displayName,
+              email: firebaseUser.email,
+              image: data.data.profilePic || firebaseUser.photoURL,
+              role: data.data.role || 'farmer',
+              location: data.data.location
+            });
+          }
+        } catch (err) {
+          // If profile doesn't exist, create a basic one
+          const basicUser = {
+            id: firebaseUser.uid,
+            name: firebaseUser.displayName || 'Farmer',
+            email: firebaseUser.email,
+            image: firebaseUser.photoURL,
+            role: 'farmer'
+          };
+          setUser(basicUser);
+          // Don't save yet, let the user pick their role in login/profile page
+        }
       } else {
         setUser(null);
         setTokenProvider(null);
@@ -49,11 +63,11 @@ export function AuthProvider({ children }) {
   const loginWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
     try {
-      await signInWithPopup(auth, provider);
-      toast.success('Welcome back!');
+      const result = await signInWithPopup(auth, provider);
+      return result.user;
     } catch (error) {
       toast.error('Authentication failed');
-      console.error(error);
+      throw error;
     }
   };
 
@@ -68,20 +82,32 @@ export function AuthProvider({ children }) {
 
   const updateUser = async (updatedFields) => {
     if (!user) return;
-    setUser(prev => {
-      const newUser = { ...prev, ...updatedFields };
-      if (updatedFields.role) {
-        localStorage.setItem(`sk_role_${user.id}`, updatedFields.role);
-      }
-      return newUser;
-    });
+    
+    // Optimistic update
+    const newUser = { ...user, ...updatedFields };
+    setUser(newUser);
+
+    // Persist to MongoDB
+    try {
+      await userAPI.saveProfile({
+        name: newUser.name,
+        role: newUser.role,
+        profilePic: newUser.image,
+        location: newUser.location,
+        phone: newUser.phone
+      });
+      console.log('✅ Profile synced to MongoDB');
+    } catch (err) {
+      console.error('❌ Failed to sync profile to MongoDB:', err.message);
+      toast.error('Sync failed, but local data updated');
+    }
   };
 
   return (
     <AuthContext.Provider value={{ 
       user, 
       loading, 
-      login: loginWithGoogle, // Simplify login for now
+      login: loginWithGoogle,
       logout, 
       updateUser, 
       isAuth: !!user,
