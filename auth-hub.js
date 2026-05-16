@@ -10,10 +10,18 @@ const { verifyToken } = require('./gateway/src/middleware/auth');
 
 const app = express();
 app.use(cors());
-app.use(express.json());
 
-// REMOVED CLERK MIDDLEWARE COMPLETELY
-// We now use local JWT for all identity operations.
+// FORCE JSON PARSING AT THE TOP
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// DEBUG LOGGER: To see why the hell it's failing
+app.use((req, res, next) => {
+  if (req.path.includes('/auth/')) {
+    console.log(`[AUTH-DEBUG] ${req.method} ${req.path} | Body keys: ${Object.keys(req.body).join(', ')}`);
+  }
+  next();
+});
 
 // Load Models
 require('./services/auth-service/src/models/AuthUser');

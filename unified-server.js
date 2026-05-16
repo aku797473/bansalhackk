@@ -25,11 +25,18 @@ app.use(cors({
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 app.use(compression());
 app.use(morgan('dev'));
+
+// FORCE JSON PARSING
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
-// REMOVED CLERK MIDDLEWARE COMPLETELY
-// Using local JWT identity only.
+// AUTH DEBUG LOGGER
+app.use((req, res, next) => {
+  if (req.path.includes('/auth/')) {
+    console.log(`[UNIFIED-AUTH-DEBUG] ${req.method} ${req.path} | Body: ${JSON.stringify(req.body)}`);
+  }
+  next();
+});
 
 // ─── Auth middleware ──────────────────────────────
 const { verifyToken } = require('./gateway/src/middleware/auth');
@@ -68,68 +75,31 @@ const buyerRoutes      = safeRequire('./services/buyer-service/src/routes/buyer'
 if (authRoutes) app.use('/api/auth', authRoutes);
 
 app.get('/api/wake', (req, res) => {
-  res.json({ 
-    status: 'ok', 
-    mode: 'unified', 
-    mongo: mongoose.connection.readyState === 1 ? 'connected' : 'connecting',
-    timestamp: new Date().toISOString() 
-  });
+  res.json({ status: 'ok', mode: 'unified' });
 });
-
-app.get('/health', (req, res) => res.json({ status: 'ok', time: new Date() }));
 
 // ─── Microservice Routes ────────────────────────────
 if (userRoutes)       app.use('/api/users',      verifyToken, userRoutes);
 if (weatherRoutes)    app.use('/api/weather',     verifyToken, weatherRoutes);
 if (cropRoutes)       app.use('/api/crop',        verifyToken, cropRoutes);
 if (fertilizerRoutes) app.use('/api/fertilizer',  verifyToken, fertilizerRoutes);
-if (marketRoutes) {
-  app.use('/api/market', (req, res, next) => {
-    if (req.method === 'GET') return next();
-    return verifyToken(req, res, next);
-  }, marketRoutes);
-}
-
-if (labourRoutes) {
-  app.use('/api/labour', (req, res, next) => {
-    if (req.method === 'GET') return next();
-    return verifyToken(req, res, next);
-  }, labourRoutes);
-}
-
+if (marketRoutes)     app.use('/api/market', (req, res, next) => (req.method === 'GET' ? next() : verifyToken(req, res, next)), marketRoutes);
+if (labourRoutes)     app.use('/api/labour', (req, res, next) => (req.method === 'GET' ? next() : verifyToken(req, res, next)), labourRoutes);
 if (chatRoutes)       app.use('/api/chatbot',     verifyToken, chatRoutes);
 if (paymentRoutes)    app.use('/api/payment',     verifyToken, paymentRoutes);
 if (schemesRoutes)    app.use('/api/schemes',     verifyToken, schemesRoutes);
 if (newsRoutes)       app.use('/api/news',        verifyToken, newsRoutes);
 if (buyerRoutes)      app.use('/api/buyer',       verifyToken, buyerRoutes);
 
-// ─── Global Error Handler ────────────────────────
-app.use((err, req, res, next) => {
-  console.error('🔥 [GLOBAL ERROR]:', err);
-  res.status(500).json({ 
-    success: false, 
-    message: err.message
-  });
-});
+app.use('*', (req, res) => res.status(404).json({ success: false, message: 'Route not found' }));
 
-app.use('*', (req, res) => {
-  res.status(404).json({ success: false, message: 'Route not found' });
-});
-
-// ─── MongoDB ──────────────────────────────────────
 async function connectMongo() {
   const uri = process.env.MONGODB_URI;
   if (!uri) return;
-  try {
-    await mongoose.connect(uri);
-    console.log('✅ MongoDB connected');
-  } catch (err) {
-    console.error('❌ MongoDB Connection Error:', err.message);
-  }
+  try { await mongoose.connect(uri); console.log('✅ MongoDB connected'); }
+  catch (err) { console.error('❌ MongoDB Error:', err.message); }
 }
 
 connectMongo().then(() => {
-  app.listen(PORT, () => {
-    console.log(`🚀 Unified Smart Kisan Server on port ${PORT}`);
-  });
+  app.listen(PORT, () => console.log(`🚀 Unified Smart Kisan Server on port ${PORT}`));
 });
