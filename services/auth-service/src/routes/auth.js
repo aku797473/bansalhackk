@@ -5,10 +5,10 @@ const bcrypt = require('bcryptjs');
 const AuthUser = require('../models/AuthUser');
 
 const generateTokens = (payload) => {
-  const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
+  const accessToken = jwt.sign(payload, process.env.JWT_SECRET || 'smart_kisan_secret_123', {
     expiresIn: process.env.JWT_EXPIRES_IN || '7d',
   });
-  const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {
+  const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET || 'smart_kisan_refresh_secret_456', {
     expiresIn: '30d',
   });
   return { accessToken, refreshToken };
@@ -17,18 +17,18 @@ const generateTokens = (payload) => {
 // POST /auth/register
 router.post('/register', async (req, res) => {
   try {
-    const { email, password, name = '', role = 'farmer' } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ success: false, message: 'Email and password required' });
+    const { phone, password, name = '', role = 'farmer' } = req.body;
+    if (!phone || !password) {
+      return res.status(400).json({ success: false, message: 'Phone number and password required' });
     }
-    let user = await AuthUser.findOne({ email: email.toLowerCase() });
+    let user = await AuthUser.findOne({ phone });
     if (user) {
-      return res.status(400).json({ success: false, message: 'User already exists' });
+      return res.status(400).json({ success: false, message: 'Account already exists for this number' });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    user = new AuthUser({ email: email.toLowerCase(), password: hashedPassword, name, role });
+    user = new AuthUser({ phone, password: hashedPassword, name, role });
     
-    const payload = { userId: user._id.toString(), email: user.email, role: user.role };
+    const payload = { userId: user._id.toString(), phone: user.phone, role: user.role };
     const { accessToken, refreshToken } = generateTokens(payload);
     
     user.refreshTokens = [refreshToken];
@@ -39,7 +39,7 @@ router.post('/register', async (req, res) => {
       success: true,
       accessToken,
       refreshToken,
-      user: { id: user._id, email: user.email, name: user.name, role: user.role },
+      user: { id: user._id, phone: user.phone, name: user.name, role: user.role },
     });
   } catch (err) {
     console.error('register error:', err);
@@ -50,20 +50,20 @@ router.post('/register', async (req, res) => {
 // POST /auth/login
 router.post('/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ success: false, message: 'Email and password required' });
+    const { phone, password } = req.body;
+    if (!phone || !password) {
+      return res.status(400).json({ success: false, message: 'Phone and password required' });
     }
-    const user = await AuthUser.findOne({ email: email.toLowerCase() });
+    const user = await AuthUser.findOne({ phone });
     if (!user) {
-      return res.status(401).json({ success: false, message: 'Invalid credentials' });
+      return res.status(401).json({ success: false, message: 'Invalid phone or password' });
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ success: false, message: 'Invalid credentials' });
+      return res.status(401).json({ success: false, message: 'Invalid phone or password' });
     }
     
-    const payload = { userId: user._id.toString(), email: user.email, role: user.role };
+    const payload = { userId: user._id.toString(), phone: user.phone, role: user.role };
     const { accessToken, refreshToken } = generateTokens(payload);
     
     user.refreshTokens = [...(user.refreshTokens || []).slice(-4), refreshToken];
@@ -74,7 +74,7 @@ router.post('/login', async (req, res) => {
       success: true,
       accessToken,
       refreshToken,
-      user: { id: user._id, email: user.email, name: user.name, role: user.role },
+      user: { id: user._id, phone: user.phone, name: user.name, role: user.role },
     });
   } catch (err) {
     console.error('login error:', err);
@@ -82,73 +82,34 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// POST /auth/refresh
 router.post('/refresh', async (req, res) => {
   try {
     const { refreshToken } = req.body;
-    if (!refreshToken) {
-      return res.status(400).json({ success: false, message: 'Refresh token required' });
-    }
-
-    let decoded;
-    try {
-      decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
-    } catch {
-      return res.status(401).json({ success: false, message: 'Invalid or expired refresh token' });
-    }
-
+    if (!refreshToken) return res.status(400).json({ success: false, message: 'Refresh token required' });
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET || 'smart_kisan_refresh_secret_456');
     const user = await AuthUser.findById(decoded.userId);
     if (!user || !user.refreshTokens.includes(refreshToken)) {
       return res.status(401).json({ success: false, message: 'Refresh token revoked' });
     }
-
-    const payload = { userId: user._id.toString(), email: user.email, role: user.role };
+    const payload = { userId: user._id.toString(), phone: user.phone, role: user.role };
     const { accessToken, refreshToken: newRefresh } = generateTokens(payload);
-
-    // Rotate refresh token
     user.refreshTokens = user.refreshTokens.filter(t => t !== refreshToken);
     user.refreshTokens.push(newRefresh);
     await user.save();
-
     res.json({ success: true, accessToken, refreshToken: newRefresh });
   } catch (err) {
-    console.error('refresh error:', err);
-    res.status(500).json({ success: false, message: 'Token refresh failed' });
+     res.status(401).json({ success: false, message: 'Token refresh failed' });
   }
 });
 
-// POST /auth/logout
-router.post('/logout', async (req, res) => {
-  try {
-    const { refreshToken } = req.body;
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-
-    if (token) {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      const user = await AuthUser.findById(decoded.userId);
-      if (user && refreshToken) {
-        user.refreshTokens = user.refreshTokens.filter(t => t !== refreshToken);
-        await user.save();
-      }
-    }
-    res.json({ success: true, message: 'Logged out successfully' });
-  } catch {
-    res.json({ success: true, message: 'Logged out' });
-  }
-});
-
-// GET /auth/me — validate token and return user
 router.get('/me', async (req, res) => {
   try {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
     if (!token) return res.status(401).json({ success: false, message: 'Token required' });
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'smart_kisan_secret_123');
     const user = await AuthUser.findById(decoded.userId).select('-refreshTokens -password');
     if (!user) return res.status(404).json({ success: false, message: 'User not found' });
-
     res.json({ success: true, user });
   } catch {
     res.status(401).json({ success: false, message: 'Invalid token' });
