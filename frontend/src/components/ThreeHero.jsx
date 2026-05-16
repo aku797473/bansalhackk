@@ -1,9 +1,9 @@
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Float, PresentationControls } from '@react-three/drei';
-import { useRef, Suspense } from 'react';
+import { Float, PresentationControls, Sky, Environment } from '@react-three/drei';
+import { useRef, Suspense, useMemo } from 'react';
 import * as THREE from 'three';
 
-function WheatHead({ position, rotation, scale = 1 }) {
+function WheatHead({ position, rotation, scale = 1, color = "#fbbf24" }) {
   const group = useRef();
   
   useFrame((state) => {
@@ -14,62 +14,81 @@ function WheatHead({ position, rotation, scale = 1 }) {
 
   return (
     <group ref={group} position={position} rotation={rotation} scale={scale}>
-      {/* Stem */}
       <mesh>
         <cylinderGeometry args={[0.05, 0.05, 6, 8]} />
-        <meshStandardMaterial color="#fbbf24" />
+        <meshStandardMaterial color={color} />
       </mesh>
-      {/* Grains */}
-      {Array.from({ length: 12 }).map((_, i) => (
+      {Array.from({ length: 15 }).map((_, i) => (
         <mesh key={i} position={[0, i * 0.3 - 1, 0]} rotation={[0, (i * Math.PI) / 3, 0]}>
-          <sphereGeometry args={[0.2, 8, 8]} />
-          <meshStandardMaterial color="#f59e0b" emissive="#d97706" emissiveIntensity={0.5} />
+          <sphereGeometry args={[0.22, 8, 8]} />
+          <meshStandardMaterial color={color} emissive={color} emissiveIntensity={0.8} />
         </mesh>
       ))}
     </group>
   );
 }
 
-function FarmSun() {
+function FloatingIslands() {
   return (
-    <mesh position={[10, 10, -10]}>
-      <sphereGeometry args={[2, 32, 32]} />
-      <meshStandardMaterial color="#fbbf24" emissive="#fbbf24" emissiveIntensity={2} />
+    <group position={[0, -2, 0]}>
+      {/* Golden Wheat Stalks */}
+      <WheatHead position={[-4, 0, 0]} rotation={[0, 0, 0.2]} scale={1.2} color="#fbbf24" />
+      <WheatHead position={[0, 0, -2]} rotation={[0, 0, 0]} scale={1.8} color="#f59e0b" />
+      <WheatHead position={[4, 0, 0]} rotation={[0, 0, -0.2]} scale={1.2} color="#d97706" />
+      
+      {/* Green Crops */}
+      <WheatHead position={[-2, -1, 2]} rotation={[0, 0.5, 0.1]} scale={0.8} color="#22c55e" />
+      <WheatHead position={[2, -1, 2]} rotation={[0, -0.5, -0.1]} scale={0.8} color="#10b981" />
+    </group>
+  );
+}
+
+function DynamicSun() {
+  const mesh = useRef();
+  useFrame((state) => {
+    const time = state.clock.getElapsedTime();
+    mesh.current.position.y = 12 + Math.sin(time * 0.5) * 2;
+  });
+
+  return (
+    <mesh ref={mesh} position={[15, 12, -15]}>
+      <sphereGeometry args={[4, 32, 32]} />
+      <meshStandardMaterial color="#fcd34d" emissive="#fbbf24" emissiveIntensity={4} />
     </mesh>
   );
 }
 
 export default function ThreeHero() {
   return (
-    <div className="absolute inset-0 z-0 pointer-events-none bg-gradient-to-br from-amber-50 to-emerald-50 dark:from-slate-950 dark:to-emerald-950/20">
-      <Canvas camera={{ position: [0, 0, 15], fov: 45 }}>
+    <div className="absolute inset-0 z-0 pointer-events-none">
+      <Canvas camera={{ position: [0, 2, 18], fov: 40 }}>
         <Suspense fallback={null}>
-          <ambientLight intensity={0.7} />
-          <pointLight position={[-10, 10, 10]} intensity={1} color="#fcd34d" />
+          <Sky distance={450000} sunPosition={[0, 1, 0]} inclination={0} azimuth={0.25} />
+          <ambientLight intensity={0.8} />
+          <pointLight position={[-10, 20, 10]} intensity={2} color="#fff" />
+          <spotLight position={[20, 20, 20]} angle={0.15} penumbra={1} intensity={3} castShadow />
           
           <PresentationControls
             global
             config={{ mass: 2, tension: 500 }}
             snap={{ mass: 4, tension: 1500 }}
-            rotation={[0, 0.3, 0]}
-            polar={[-Math.PI / 4, Math.PI / 4]}
-            azimuth={[-Math.PI / 6, Math.PI / 6]}
+            rotation={[0, 0.2, 0]}
+            polar={[-Math.PI / 6, Math.PI / 6]}
+            azimuth={[-Math.PI / 4, Math.PI / 4]}
           >
-            <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
-               <group position={[0, -2, 0]}>
-                  <WheatHead position={[-3, 0, 0]} rotation={[0, 0, 0.2]} scale={1.2} />
-                  <WheatHead position={[0, 0, -2]} rotation={[0, 0, 0]} scale={1.5} />
-                  <WheatHead position={[3, 0, 0]} rotation={[0, 0, -0.2]} scale={1.2} />
-               </group>
+            <Float speed={3} rotationIntensity={0.4} floatIntensity={1.5}>
+               <FloatingIslands />
             </Float>
           </PresentationControls>
 
-          <FarmSun />
+          <DynamicSun />
           
-          <fog attach="fog" args={['#fffbeb', 10, 30]} />
+          <fog attach="fog" args={['#fffbeb', 15, 45]} />
+          <Environment preset="sunset" />
         </Suspense>
       </Canvas>
-      <div className="absolute inset-0 bg-white/20 dark:bg-black/10" />
+      {/* Artistic Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-white via-transparent to-transparent dark:from-slate-950 dark:via-transparent opacity-60" />
     </div>
   );
 }
