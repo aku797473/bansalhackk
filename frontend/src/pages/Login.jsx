@@ -28,13 +28,13 @@ export default function Login() {
       if (mode === 'login') {
         await login(formData.phone, formData.password);
       } else {
-        if (!formData.name) throw new Error("Full Name is required for registration");
+        if (!formData.name) throw new Error("Full Name is required");
         await register(formData.name, formData.phone, formData.password, role);
       }
       toast.success('Identity Verified', { id });
       navigate('/dashboard');
     } catch (error) {
-      const msg = error.message || error.response?.data?.message || 'Operation failed';
+      const msg = error.response?.data?.message || error.message || 'Operation failed';
       toast.error(msg, { id });
     } finally {
       setLoading(false);
@@ -63,13 +63,13 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 relative overflow-hidden bg-slate-50 dark:bg-slate-950">
-      <ThreeBackground key="login-secure-v2" />
+      <ThreeBackground key="login-secure-v3" />
       
-      <div className="w-full max-w-xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-3xl rounded-[2.5rem] sm:rounded-[3.5rem] p-8 sm:p-16 border border-white/20 shadow-2xl relative z-10 transition-all duration-500">
+      <div className="w-full max-w-xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-3xl rounded-[2.5rem] sm:rounded-[3.5rem] p-8 sm:p-16 border border-white/20 shadow-2xl relative z-10">
         
-        {/* Mode Selector */}
         <div className="flex bg-slate-100/50 dark:bg-slate-800/50 p-1.5 rounded-2xl mb-10 border border-slate-200/20 shadow-inner">
           <button 
+            type="button"
             onClick={() => setMode('login')}
             className={clsx(
               "flex-1 py-3.5 text-[11px] font-black uppercase tracking-[0.3em] rounded-xl transition-all flex items-center justify-center gap-2",
@@ -79,6 +79,7 @@ export default function Login() {
             <ShieldCheck size={14} /> Sign In
           </button>
           <button 
+            type="button"
             onClick={() => setMode('register')}
             className={clsx(
               "flex-1 py-3.5 text-[11px] font-black uppercase tracking-[0.3em] rounded-xl transition-all flex items-center justify-center gap-2",
@@ -94,7 +95,7 @@ export default function Login() {
              {mode === 'login' ? 'IDENTITY' : 'INITIATE'} <Fingerprint className="text-emerald-600" size={40} />
           </h1>
           <p className="text-[10px] font-black text-slate-400 mt-4 uppercase tracking-[0.4em] opacity-60">
-            {mode === 'login' ? 'Encrypted Session Control' : 'Establish Your Farmer Node'}
+            {mode === 'login' ? 'Secure Protocol' : 'Identity initialization'}
           </p>
         </div>
 
@@ -105,36 +106,36 @@ export default function Login() {
               <input 
                 required
                 type="text" 
-                placeholder="RAMESH KUMAR"
+                placeholder="Ramesh Kumar"
                 value={formData.name}
                 onChange={e => setFormData({...formData, name: e.target.value})}
-                className="w-full bg-slate-50 dark:bg-slate-800/50 border-2 border-slate-100 dark:border-slate-800 rounded-2xl px-8 py-4.5 text-sm font-bold uppercase tracking-widest focus:border-emerald-600 outline-none transition-all focus:bg-white dark:focus:bg-slate-800"
+                className="w-full bg-slate-50 dark:bg-slate-800/50 border-2 border-slate-100 dark:border-slate-800 rounded-2xl px-8 py-4.5 text-sm font-bold focus:border-emerald-600 outline-none transition-all focus:bg-white dark:focus:bg-slate-800"
               />
             </div>
           )}
           
           <div className="space-y-2">
-            <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.5em] ml-2">Phone Identity</label>
+            <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.5em] ml-2">Phone Number</label>
             <input 
               required
               type="tel" 
               placeholder="98XXXXXXXX"
               value={formData.phone}
               onChange={e => setFormData({...formData, phone: e.target.value})}
-              className="w-full bg-slate-50 dark:bg-slate-800/50 border-2 border-slate-100 dark:border-slate-800 rounded-2xl px-8 py-4.5 text-sm font-bold uppercase tracking-widest focus:border-emerald-600 outline-none transition-all focus:bg-white dark:focus:bg-slate-800"
+              className="w-full bg-slate-50 dark:bg-slate-800/50 border-2 border-slate-100 dark:border-slate-800 rounded-2xl px-8 py-4.5 text-sm font-bold focus:border-emerald-600 outline-none transition-all focus:bg-white dark:focus:bg-slate-800"
             />
           </div>
 
           <div className="space-y-2 relative">
-            <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.5em] ml-2">Secret Key</label>
+            <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.5em] ml-2">Password</label>
             <div className="relative">
               <input 
                 required
                 type={showPassword ? "text" : "password"} 
-                placeholder="••••••••"
+                placeholder="Secret Key"
                 value={formData.password}
                 onChange={e => setFormData({...formData, password: e.target.value})}
-                className="w-full bg-slate-50 dark:bg-slate-800/50 border-2 border-slate-100 dark:border-slate-800 rounded-2xl px-8 py-4.5 text-sm font-bold uppercase tracking-widest focus:border-emerald-600 outline-none transition-all focus:bg-white dark:focus:bg-slate-800 pr-16"
+                className="w-full bg-slate-50 dark:bg-slate-800/50 border-2 border-slate-100 dark:border-slate-800 rounded-2xl px-8 py-4.5 text-sm font-bold focus:border-emerald-600 outline-none transition-all focus:bg-white dark:focus:bg-slate-800 pr-16"
               />
               <button 
                 type="button"
@@ -148,7 +149,7 @@ export default function Login() {
 
           {mode === 'register' && (
             <div className="space-y-4">
-              <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.5em] ml-2">Your Role</label>
+              <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.5em] ml-2">Account Role</label>
               <div className="grid grid-cols-3 gap-3">
                 {['farmer', 'seller', 'labor'].map(r => (
                   <button
@@ -157,7 +158,7 @@ export default function Login() {
                     onClick={() => setRole(r)}
                     className={clsx(
                       "py-4 rounded-xl border-2 text-[10px] font-black uppercase tracking-widest transition-all",
-                      role === r ? "border-emerald-600 bg-emerald-600 text-white shadow-lg" : "border-slate-100 dark:border-slate-800 text-slate-400 hover:border-emerald-600/30"
+                      role === r ? "border-emerald-600 bg-emerald-600 text-white" : "border-slate-100 dark:border-slate-800 text-slate-400 hover:border-emerald-600/30"
                     )}
                   >
                     {r}
@@ -170,28 +171,22 @@ export default function Login() {
           <button
             disabled={loading}
             type="submit"
-            className="w-full py-6 bg-slate-900 dark:bg-white text-white dark:text-black text-[11px] font-black uppercase tracking-[0.6em] rounded-2xl shadow-2xl hover:scale-102 active:scale-98 transition-all disabled:opacity-50 mt-4"
+            className="w-full py-6 bg-slate-900 dark:bg-white text-white dark:text-black text-[11px] font-black uppercase tracking-[0.6em] rounded-2xl shadow-2xl hover:scale-102 active:scale-98 transition-all disabled:opacity-50"
           >
-            {loading ? 'VALIDATING...' : mode === 'login' ? 'AUTHORIZE →' : 'INITIALIZE →'}
+            {loading ? 'WAIT...' : mode === 'login' ? 'LOGIN →' : 'REGISTER →'}
           </button>
         </form>
-
-        <div className="flex items-center gap-4 mb-8">
-           <div className="flex-1 h-px bg-slate-100 dark:bg-slate-800" />
-           <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em]">OR</span>
-           <div className="flex-1 h-px bg-slate-100 dark:bg-slate-800" />
-        </div>
 
         <button
           onClick={quickLogin}
           disabled={loading}
           className="w-full py-4 border-2 border-emerald-600/10 text-emerald-600 text-[10px] font-black uppercase tracking-[0.5em] rounded-xl hover:bg-emerald-600/5 transition-all active:scale-95 flex items-center justify-center gap-3"
         >
-          <ShieldCheck size={16} /> QUICK SYSTEM ACCESS
+          <ShieldCheck size={16} /> QUICK BYPASS
         </button>
 
         <p className="mt-12 text-center text-[9px] font-black text-slate-400 uppercase tracking-[0.5em] opacity-40">
-           SmartKisan Secure Identity Protocol 2.5
+           SmartKisan Identity Vault
         </p>
       </div>
     </div>
