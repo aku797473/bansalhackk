@@ -1,65 +1,29 @@
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import LanguageSelector from '../components/LanguageSelector';
-import { 
-  Cloud, Leaf, Flask, TrendUp, Users, MapTrifold,
-  ArrowRight, ShieldCheck, Lightning, CaretRight, Globe, 
-  Medal, Star, Quotes, Bank, PlayCircle, CursorClick, X
-} from '@phosphor-icons/react';
 import clsx from 'clsx';
-import logo from '../assets/kisan-logo-new.jpg';
-import realisticFarmer from '../assets/realistic-farmer.png';
 import ThreeHero from '../components/ThreeHero';
-
-const modules = (t) => [
-  {
-    icon: Cloud,
-    label: t('landing.modules.weather.label'),
-    desc: t('landing.modules.weather.desc'),
-    color: 'from-blue-500 to-cyan-400',
-    key: 'weather',
-    delay: '0'
-  },
-  {
-    icon: Leaf,
-    label: t('landing.modules.crop.label'),
-    desc: t('landing.modules.crop.desc'),
-    color: 'from-emerald-500 to-teal-400',
-    key: 'crop',
-    delay: '100'
-  },
-  {
-    icon: TrendUp,
-    label: t('landing.modules.market.label'),
-    desc: t('landing.modules.market.desc'),
-    color: 'from-amber-500 to-orange-400',
-    key: 'market',
-    delay: '200'
-  }
-];
 
 export default function Landing() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 selection:bg-emerald-500/30 selection:text-emerald-600 font-inter overflow-x-hidden transition-colors duration-300">
+    <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 selection:bg-indigo-500/30 selection:text-indigo-600 font-sans overflow-x-hidden transition-colors duration-300">
       
-      {/* ── Navigation ────────────────────────────────────── */}
+      {/* Navigation */}
       <nav className="fixed top-0 inset-x-0 z-[100] px-4 pt-4">
-        <div className="nav-container max-w-5xl mx-auto h-16 border border-slate-100 dark:border-white/5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded-2xl px-6 flex items-center justify-between shadow-sm transition-all">
-          <div className="flex items-center gap-2">
-             <div className="w-12 h-12 rounded-2xl overflow-hidden bg-emerald-600 shadow-xl shadow-emerald-500/20 border-2 border-white/20 group-hover:scale-105 transition-all">
-                <img src={logo} className="w-full h-full object-cover filter contrast-[1.1] brightness-[1.1]" alt="logo" />
-             </div>
-             <span className="text-xl font-black tracking-tighter text-slate-900 dark:text-white">Smart Kisan</span>
+        <div className="max-w-5xl mx-auto h-16 border border-slate-100 dark:border-white/5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl px-6 flex items-center justify-between shadow-sm">
+          <div className="flex flex-col leading-none">
+             <span className="text-lg font-black tracking-tighter uppercase">Smart<span className="text-indigo-600">Kisan</span></span>
+             <span className="text-[8px] font-black uppercase tracking-[0.3em] text-slate-400 mt-0.5">AgriTech</span>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
              <LanguageSelector showLabel={false} align="right" />
              <button 
                onClick={() => navigate('/login')}
-               className="h-9 px-5 bg-slate-900 dark:bg-emerald-600 text-white rounded-xl font-bold text-[10px] uppercase tracking-widest hover:bg-emerald-600 transition-all active:scale-95 shadow-sm"
+               className="text-[10px] font-black uppercase tracking-widest text-indigo-600 border-b-2 border-indigo-600/20 hover:border-indigo-600 transition-all"
              >
                {t('landing.login')}
              </button>
@@ -67,87 +31,75 @@ export default function Landing() {
         </div>
       </nav>
 
-      {/* ── Hero Section ──────────────────────────────────── */}
-      <header className="relative pt-32 pb-16 px-4">
+      {/* Hero Section */}
+      <header className="relative pt-48 pb-24 px-4 overflow-hidden">
          <ThreeHero />
-         <div className="max-w-6xl mx-auto relative z-10">
-            <div className="grid lg:grid-cols-2 gap-12 items-center text-center lg:text-left">
-               <div>
-                  <div className="hero-badge inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-800 rounded-full mb-6">
-                     <span className="w-1 h-1 rounded-full bg-emerald-500"></span>
-                     <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">{t('landing.hero_badge')}</span>
-                  </div>
-
-                  <h1 className="hero-title text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight mb-6 text-slate-900 dark:text-white">
-                     {t('landing.title')}
-                  </h1>
-
-                  <p className="hero-desc text-base sm:text-lg text-slate-500 dark:text-slate-400 font-medium max-w-xl mx-auto lg:mx-0 mb-10 leading-relaxed">
-                     {t('landing.subtitle')}
-                  </p>
-
-                  <div className="hero-btns flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
-                     <button 
-                        onClick={() => navigate('/login')}
-                        className="h-14 px-8 w-full sm:w-auto bg-slate-900 dark:bg-emerald-600 text-white text-[11px] font-black uppercase tracking-[0.2em] rounded-xl hover:bg-emerald-600 transition-all active:scale-95 flex items-center justify-center gap-3"
-                     >
-                        {t('landing.get_started')} <ArrowRight size={16} />
-                     </button>
-                     <button onClick={() => { document.querySelector('.features-section').scrollIntoView({ behavior: 'smooth' }); }} className="h-14 px-8 w-full sm:w-auto bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-[11px] font-black uppercase tracking-[0.2em] rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex items-center justify-center gap-3">
-                        <CursorClick size={18} weight="bold" className="text-emerald-600" /> {t('landing.explore_features', 'Explore Features')}
-                     </button>
-                  </div>
+         <div className="max-w-6xl mx-auto relative z-10 text-center lg:text-left">
+            <div className="max-w-3xl">
+               <div className="inline-flex items-center gap-3 px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-black rounded-lg mb-10">
+                  <span className="text-[9px] font-black uppercase tracking-[0.3em]">{t('landing.hero_badge')}</span>
                </div>
 
-               <div className="hero-image relative">
-                  <div className="bg-slate-50 dark:bg-slate-900 rounded-3xl p-3 border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
-                     <img src={logo} alt="Smart Kisan" className="w-full rounded-2xl shadow-2xl filter contrast-[1.1] brightness-[1.1]" />
-                  </div>
+               <h1 className="text-6xl sm:text-8xl lg:text-9xl font-black leading-[0.85] tracking-tighter mb-10 uppercase">
+                  {t('landing.title').split(' ').map((word, i) => (
+                    <span key={i} className={clsx("block", i % 2 !== 0 && "text-indigo-600")}>{word}</span>
+                  ))}
+               </h1>
+
+               <p className="text-lg sm:text-xl text-slate-500 dark:text-slate-400 font-bold max-w-xl mb-12 leading-tight uppercase tracking-tight">
+                  {t('landing.subtitle')}
+               </p>
+
+               <div className="flex flex-col sm:flex-row items-center gap-6">
+                  <button 
+                     onClick={() => navigate('/login')}
+                     className="h-16 px-10 bg-indigo-600 text-white text-[11px] font-black uppercase tracking-[0.3em] rounded-xl shadow-2xl shadow-indigo-500/40 hover:scale-105 transition-all"
+                  >
+                     {t('landing.get_started')}
+                  </button>
+                  <button onClick={() => { document.querySelector('.features-section').scrollIntoView({ behavior: 'smooth' }); }} className="text-[11px] font-black uppercase tracking-[0.3em] text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">
+                     EXPLORE INTERFACE ↓
+                  </button>
                </div>
             </div>
          </div>
       </header>
 
-      {/* ── Steps Section ─────────────────────────────────── */}
-      <section className="steps-section py-20 bg-slate-50/50 dark:bg-slate-900/20 border-y border-slate-100 dark:border-slate-800">
-         <div className="max-w-6xl mx-auto px-4 text-center">
-            <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white mb-16">{t('landing.steps_title')}</h2>
-            
-            <div className="grid md:grid-cols-3 gap-12">
-               {['01', '02', '03'].map((step) => (
-                  <div key={step} className="step-card flex flex-col items-center">
-                     <div className="w-12 h-12 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-lg font-black text-emerald-600 mb-6 shadow-sm">
-                        {step}
-                     </div>
-                     <h3 className="text-base font-bold uppercase tracking-tight mb-3 text-slate-900 dark:text-white">{t(`landing.steps.${step}.title`)}</h3>
-                     <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{t(`landing.steps.${step}.desc`)}</p>
-                  </div>
+      {/* Stats Section */}
+      <section className="py-24 border-y border-slate-100 dark:border-slate-800">
+         <div className="max-w-6xl mx-auto px-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
+               {[
+                 { label: 'ACTIVE USERS', value: '1.2M+' },
+                 { label: 'MANDI COVERED', value: '450+' },
+                 { label: 'AI ACCURACY', value: '98.4%' },
+                 { label: 'DATA NODES', value: '24/7' }
+               ].map((stat) => (
+                 <div key={stat.label} className="text-center md:text-left">
+                    <div className="text-4xl font-black tracking-tighter mb-2">{stat.value}</div>
+                    <div className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{stat.label}</div>
+                 </div>
                ))}
             </div>
          </div>
       </section>
 
-      {/* ── Feature Grid ──────────────────────────────────── */}
-      <section className="features-section py-20 px-4">
+      {/* Feature Grid - Minimalist */}
+      <section className="features-section py-32 px-4 bg-slate-50 dark:bg-slate-900/30">
          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-16">
-               <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest mb-4 block">{t('landing.eco_badge')}</span>
-               <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-white mb-6">{t('landing.eco_title')}</h2>
-               <p className="text-base text-slate-500 max-w-xl mx-auto font-medium">
-                  {t('landing.eco_desc')}
-               </p>
+            <div className="mb-24">
+               <h2 className="text-5xl sm:text-7xl font-black tracking-tighter uppercase mb-6 leading-none">{t('landing.eco_title')}</h2>
+               <p className="text-xl text-slate-500 font-bold max-w-2xl uppercase tracking-tight">{t('landing.eco_desc')}</p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6">
-               {modules(t).map((m) => (
-                 <div key={m.key} className="feature-card group p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:border-emerald-200 dark:hover:border-emerald-900 transition-all cursor-pointer shadow-sm">
-                    <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-6 bg-slate-50 dark:bg-slate-800 text-emerald-600">
-                       <m.icon size={20} />
-                    </div>
-                    <h3 className="text-lg font-bold tracking-tight mb-3 uppercase text-slate-900 dark:text-white">{m.label}</h3>
-                    <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6">{m.desc}</p>
-                    <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-emerald-600 opacity-0 group-hover:opacity-100 transition-all">
-                       {t('landing.init_module')} <ArrowRight size={14} />
+            <div className="grid md:grid-cols-3 gap-px bg-slate-200 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-[2.5rem] overflow-hidden">
+               {['weather', 'crop', 'market'].map((key) => (
+                 <div key={key} className="p-12 bg-white dark:bg-slate-950 hover:bg-indigo-600 hover:text-white transition-all duration-500 cursor-pointer group">
+                    <div className="text-[10px] font-black uppercase tracking-[0.3em] mb-12 opacity-40 group-hover:opacity-100">0{key === 'weather' ? 1 : key === 'crop' ? 2 : 3}</div>
+                    <h3 className="text-3xl font-black tracking-tighter uppercase mb-6">{t(`landing.modules.${key}.label`)}</h3>
+                    <p className="text-sm font-bold opacity-60 group-hover:opacity-100 leading-relaxed uppercase tracking-tight">{t(`landing.modules.${key}.desc`)}</p>
+                    <div className="mt-12 text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all">
+                       ACCESS MODULE →
                     </div>
                  </div>
                ))}
@@ -155,87 +107,17 @@ export default function Landing() {
          </div>
       </section>
 
-      {/* ── Tech Section ──────────────────────────────────── */}
-      <section className="infra-section py-20 bg-white dark:bg-slate-950 px-4">
-         <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-16">
-            <div className="infra-content flex-1 text-center lg:text-left">
-               <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-6 block">{t('landing.infra_badge')}</span>
-               <h2 className="text-3xl sm:text-4xl font-black tracking-tight mb-10 text-slate-900 dark:text-white">{t('landing.infra_title')}</h2>
-               <div className="space-y-8 text-left max-w-xl mx-auto lg:mx-0">
-                  {[
-                     { title: t('landing.infra.sat.title'), desc: t('landing.infra.sat.desc') },
-                     { title: t('landing.infra.market.title'), desc: t('landing.infra.market.desc') },
-                     { title: t('landing.infra.ai.title'), desc: t('landing.infra.ai.desc') }
-                  ].map(item => (
-                    <div key={item.title} className="flex gap-4 group">
-                       <div className="w-1 h-auto bg-emerald-500 rounded-full" />
-                       <div>
-                          <h4 className="text-sm font-bold uppercase tracking-tight mb-1 dark:text-white">{item.title}</h4>
-                          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{item.desc}</p>
-                       </div>
-                    </div>
-                  ))}
-               </div>
+      {/* Footer */}
+      <footer className="py-24 px-4 bg-white dark:bg-slate-950 border-t border-slate-100 dark:border-slate-800">
+         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
+            <div className="flex flex-col items-center md:items-start gap-4">
+               <span className="text-2xl font-black tracking-tighter uppercase">SmartKisan</span>
+               <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">© 2026 AGRI-INTELLIGENCE SYSTEMS</p>
             </div>
-            <div className="infra-image flex-1">
-                <div className="bg-slate-50 dark:bg-slate-900 rounded-3xl p-3 border border-slate-100 dark:border-slate-800">
-                  <img src={realisticFarmer} alt="Infrastructure" className="w-full rounded-2xl grayscale opacity-40 mix-blend-luminosity" />
-               </div>
-            </div>
-         </div>
-      </section>
-
-      {/* ── Testimonials ──────────────────────────────────── */}
-      <section className="testimonials-section py-20 bg-slate-50 dark:bg-slate-900/30 px-4">
-         <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl sm:text-3xl font-black text-center text-slate-900 dark:text-white mb-16">{t('landing.testimonials_title')}</h2>
-            <div className="grid md:grid-cols-2 gap-8">
-               {['t1', 't2'].map(key => (
-                  <div key={key} className="testimonial-card p-8 sm:p-10 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
-                     <p className="text-lg text-slate-600 dark:text-slate-300 mb-8 leading-relaxed italic">
-                        "{t(`landing.testimonials.${key}.text`)}"
-                     </p>
-                     <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                           <img src={`https://i.pravatar.cc/100?u=${key}`} alt="User" />
-                        </div>
-                        <div>
-                           <h4 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-tight">{t(`landing.testimonials.${key}.name`)}</h4>
-                           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t(`landing.testimonials.${key}.role`)}</span>
-                        </div>
-                     </div>
-                  </div>
-               ))}
-            </div>
-         </div>
-      </section>
-
-      {/* ── Final Call ────────────────────────────────────── */}
-      <section className="final-cta-section py-20 px-4 text-center bg-slate-900 dark:bg-black text-white overflow-hidden relative">
-         <div className="final-cta-content max-w-2xl mx-auto relative z-10">
-            <h2 className="text-3xl sm:text-4xl font-black tracking-tight mb-8">{t('landing.final_title')}</h2>
-            <p className="text-base text-slate-400 mb-10">
-               {t('landing.final_desc')}
-            </p>
-            <button 
-               onClick={() => navigate('/login')}
-               className="h-14 px-10 bg-white dark:bg-emerald-600 text-slate-900 dark:text-white font-bold uppercase tracking-widest rounded-xl hover:bg-emerald-500 hover:text-white transition-all active:scale-95"
-            >
-               {t('landing.init_portal')}
-            </button>
-         </div>
-      </section>
-
-      {/* ── Footer ────────────────────────────────────────── */}
-      <footer className="py-12 border-t border-slate-100 dark:border-white/5 bg-white dark:bg-slate-950 px-4">
-         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
-               {t('landing.footer_text')}
-            </p>
-            <div className="flex gap-6 text-[10px] font-bold uppercase tracking-widest text-slate-500">
-               <a href="#" className="hover:text-emerald-500 transition-colors">Privacy</a>
-               <a href="#" className="hover:text-emerald-500 transition-colors">Nodes</a>
-               <a href="#" className="hover:text-emerald-400 transition-colors">GitHub</a>
+            <div className="flex gap-10 text-[10px] font-black uppercase tracking-widest text-slate-500">
+               <a href="#" className="hover:text-indigo-600 transition-colors">PRIVACY</a>
+               <a href="#" className="hover:text-indigo-600 transition-colors">TERMS</a>
+               <a href="#" className="hover:text-indigo-600 transition-colors">GITHUB</a>
             </div>
          </div>
       </footer>
