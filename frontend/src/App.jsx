@@ -91,17 +91,20 @@ function KeepAlive() {
   return null;
 }
 
+import Footer from './components/Footer';
+
 function AppLayout({ children }) {
   const { isAuth } = useAuth();
   return (
-    <div className="min-h-screen bg-surface dark:bg-slate-900 transition-colors duration-200">
+    <div className="min-h-screen bg-surface dark:bg-slate-900 transition-colors duration-200 flex flex-col">
       <KeepAlive />
       {isAuth && <Navbar />}
-      <main className={clsx("transition-all duration-200", isAuth ? 'pt-16' : '')}>
+      <main className={clsx("flex-grow transition-all duration-200", isAuth ? 'pt-16' : '')}>
         <Suspense fallback={<LoadingScreen />}>
           {children}
         </Suspense>
       </main>
+      <Footer />
       {/* {isAuth && <TourGuide />} */}
       {isAuth && <ChatWidget />}
       {isAuth && <VoiceAssistant />}
