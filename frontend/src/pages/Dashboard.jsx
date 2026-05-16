@@ -45,7 +45,7 @@ export default function Dashboard() {
   const modules = [
     { 
       id: 'weather', to: '/weather', size: 'lg',
-      color: 'bg-indigo-600/90 dark:bg-indigo-600/80 text-white backdrop-blur-2xl border-white/20',
+      color: 'bg-indigo-600/95 dark:bg-indigo-600/80 text-white backdrop-blur-3xl border-white/20',
       label: t('nav.weather'),
       render: () => (
         <div className="flex flex-col h-full justify-between relative overflow-hidden">
@@ -53,16 +53,16 @@ export default function Dashboard() {
           <div className="relative z-10">
             <div className="text-[10px] font-black uppercase tracking-[0.3em] opacity-60 mb-2">{t('nav.weather')}</div>
             <div className="flex items-start">
-              <div className="text-8xl sm:text-9xl font-black tracking-tighter drop-shadow-2xl">{Math.round(weather?.temperature || 0)}°</div>
+              <div className="text-6xl sm:text-7xl font-black tracking-tighter drop-shadow-2xl">{Math.round(weather?.temperature || 0)}°</div>
             </div>
-            <div className="text-xs font-black opacity-80 mt-4 uppercase tracking-[0.2em] bg-white/10 w-fit px-4 py-1.5 rounded-lg border border-white/10">{weather?.description || t('dashboard.loading')}</div>
+            <div className="text-[10px] font-black opacity-80 mt-4 uppercase tracking-[0.2em] bg-white/10 w-fit px-4 py-1.5 rounded-lg border border-white/10">{weather?.description || t('dashboard.loading')}</div>
           </div>
           <div className="flex justify-between items-end relative z-10">
              <div>
-               <div className="text-[10px] font-black uppercase tracking-[0.3em] opacity-60">{weather?.city || 'Satna'}</div>
-               <div className="text-[11px] font-black mt-1 uppercase tracking-widest text-indigo-100">{weather?.humidity}% HUMIDITY CONTROL</div>
+               <div className="text-[9px] font-black uppercase tracking-[0.3em] opacity-60">{weather?.city || 'Satna'}</div>
+               <div className="text-[10px] font-black mt-1 uppercase tracking-widest text-indigo-100">{weather?.humidity}% HUMIDITY CONTROL</div>
              </div>
-             <div className="px-6 py-3 bg-white/20 rounded-xl text-[10px] font-black uppercase tracking-[0.3em] border border-white/20 backdrop-blur-md hover:bg-white hover:text-indigo-600 transition-all">SYSTEM ACTIVE</div>
+             <div className="px-5 py-2.5 bg-white/20 rounded-xl text-[9px] font-black uppercase tracking-[0.3em] border border-white/20 backdrop-blur-md hover:bg-white hover:text-indigo-600 transition-all">SYSTEM ACTIVE</div>
           </div>
         </div>
       )
@@ -73,12 +73,12 @@ export default function Dashboard() {
       render: () => (
         <div className="flex flex-col h-full justify-between">
           <div>
-            <div className="text-[9px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-[0.3em] mb-6">{t('nav.crop')}</div>
-            <div className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none uppercase">{t('dashboard.crop_system')}</div>
+            <div className="text-[9px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-[0.3em] mb-4">{t('nav.crop')}</div>
+            <div className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter leading-none uppercase">{t('dashboard.crop_system')}</div>
           </div>
-          <div className="flex items-center justify-between border-t border-slate-100 dark:border-slate-800 pt-6">
+          <div className="flex items-center justify-between border-t border-slate-100 dark:border-slate-800 pt-5">
              <span className="text-[9px] font-black text-emerald-600 uppercase tracking-[0.2em]">HEALTH OPTIMAL</span>
-             <div className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-900 dark:text-white border border-slate-100 dark:border-slate-700 shadow-inner">→</div>
+             <div className="w-8 h-8 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-900 dark:text-white border border-slate-100 dark:border-slate-700 shadow-inner">→</div>
           </div>
         </div>
       )
@@ -91,11 +91,11 @@ export default function Dashboard() {
         return (
           <div className="flex flex-col h-full justify-between">
             <div>
-              <div className="text-[9px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-[0.3em] mb-6">{t('nav.market')}</div>
-              <div className="text-5xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">₹{latest?.price?.toLocaleString() || '2,450'}</div>
-              <p className="text-[9px] text-slate-400 font-black uppercase tracking-[0.2em] mt-3">{t('dashboard.mandi_desc')}</p>
+              <div className="text-[9px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-[0.3em] mb-4">{t('nav.market')}</div>
+              <div className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">₹{latest?.price?.toLocaleString() || '2,450'}</div>
+              <p className="text-[9px] text-slate-400 font-black uppercase tracking-[0.2em] mt-2">{t('dashboard.mandi_desc')}</p>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-900 dark:text-white border border-slate-100 dark:border-slate-700 shadow-inner self-end">→</div>
+            <div className="w-8 h-8 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-900 dark:text-white border border-slate-100 dark:border-slate-700 shadow-inner self-end">→</div>
           </div>
         );
       }
@@ -110,99 +110,98 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="min-h-screen transition-colors duration-500 font-sans selection:bg-indigo-100 selection:text-indigo-900">
+    <div className="min-h-screen transition-colors duration-500 font-sans selection:bg-indigo-100 selection:text-indigo-900 overflow-x-hidden">
       <ThreeBackground />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-32 sm:pt-40 pb-20 relative z-10">
         
-        {/* Cinematic Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-12 mb-20">
-          <div className="space-y-8">
-            <div className="flex items-center gap-4">
-                <div className="px-4 py-1.5 bg-slate-900 dark:bg-white text-white dark:text-black text-[9px] font-black uppercase tracking-[0.4em] rounded-full shadow-2xl">
-                   COMMAND CENTER v1.0
+        {/* Balanced Header */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-10 mb-16">
+          <div className="space-y-6">
+            <div className="flex items-center gap-3">
+                <div className="px-3 py-1 bg-slate-900 dark:bg-white text-white dark:text-black text-[8px] font-black uppercase tracking-[0.4em] rounded-full">
+                   DASHBOARD v1.0
                 </div>
             </div>
-            <h1 className="text-7xl sm:text-9xl font-black tracking-tighter text-slate-900 dark:text-white leading-[0.8]">
-                <span className="block opacity-20 text-2xl sm:text-3xl font-black tracking-[0.2em] mb-4 uppercase">{t(greetingKey)}</span>
+            <h1 className="text-6xl sm:text-7xl lg:text-8xl font-black tracking-tighter text-slate-900 dark:text-white leading-[0.85]">
+                <span className="block opacity-20 text-xl sm:text-2xl font-black tracking-[0.2em] mb-2 uppercase">{t(greetingKey)}</span>
                 <span className="bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400 bg-clip-text text-transparent uppercase">
                   {user?.name?.split(' ')[0] || t('auth.farmer')}
                 </span>
             </h1>
             <div className="flex items-center gap-4">
-               <p className="text-[10px] text-slate-500 dark:text-slate-400 font-black uppercase tracking-[0.4em] bg-white/50 dark:bg-slate-900/50 backdrop-blur-xl px-6 py-3 rounded-xl border border-slate-200/50 dark:border-slate-800/50 shadow-sm">
+               <p className="text-[9px] text-slate-500 dark:text-slate-400 font-black uppercase tracking-[0.4em] bg-white/40 dark:bg-slate-900/40 backdrop-blur-xl px-5 py-2.5 rounded-xl border border-slate-200/50 dark:border-slate-800/50">
                   {new Date().toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' })}
                </p>
-               <div className="h-1 w-24 bg-indigo-600 rounded-full" />
+               <div className="h-0.5 w-16 bg-indigo-600 rounded-full" />
             </div>
           </div>
           
-          <div className="flex items-center gap-6">
-             <button onClick={() => navigate('/sos')} className="px-12 py-5 bg-red-600 text-white text-[11px] font-black uppercase tracking-[0.4em] rounded-2xl shadow-[0_20px_50px_rgba(220,38,38,0.3)] hover:scale-105 active:scale-95 transition-all animate-pulse border border-red-500/20">
-               CRITICAL SOS
+          <div className="flex items-center gap-5">
+             <button onClick={() => navigate('/sos')} className="px-10 py-4 bg-red-600 text-white text-[10px] font-black uppercase tracking-[0.4em] rounded-2xl shadow-xl shadow-red-500/20 hover:scale-105 active:scale-95 transition-all border border-red-500/10">
+               EMERGENCY SOS
              </button>
           </div>
         </div>
 
-        {/* Bento Grid - Glassmorphism Evolution */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 auto-rows-auto">
+        {/* Bento Grid - Refined Spacing */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 auto-rows-auto">
           {modules.map((m) => (
             <div
               key={m.id}
               onClick={() => navigate(m.to)}
               className={clsx(
                 "group cursor-pointer overflow-hidden transition-all duration-500 border",
-                m.size === 'lg' ? 'col-span-1 sm:col-span-2 row-span-2 rounded-[3rem] p-12' : 
-                m.size === 'md' ? 'col-span-1 row-span-1 rounded-[2.5rem] p-10' : 'col-span-1 row-span-1 rounded-[2rem] p-8',
-                m.id === 'weather' ? m.color : 'bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border-slate-200/50 dark:border-slate-800/50 hover:border-indigo-500/50 hover:-translate-y-3',
-                "shadow-[0_8px_30px_rgb(0,0,0,0.02)] dark:shadow-none hover:shadow-[0_30px_80px_rgba(0,0,0,0.1)] transition-all"
+                m.size === 'lg' ? 'col-span-1 sm:col-span-2 row-span-2 rounded-[2.5rem] p-10 sm:p-12' : 
+                m.size === 'md' ? 'col-span-1 row-span-1 rounded-[2rem] p-8 sm:p-10' : 'col-span-1 row-span-1 rounded-[1.75rem] p-6 sm:p-8',
+                m.id === 'weather' ? m.color : 'bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border-slate-200/50 dark:border-slate-800/50 hover:border-indigo-500/40 hover:-translate-y-2',
+                "shadow-[0_8px_30px_rgb(0,0,0,0.02)] dark:shadow-none hover:shadow-[0_20px_60px_rgba(0,0,0,0.08)]"
               )}
             >
               {m.render ? m.render() : (
                 <div className="flex flex-col h-full justify-between">
                   <div>
                     <div className="text-[9px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-[0.3em] mb-4">{m.label}</div>
-                    {m.desc && <p className="text-[11px] text-slate-500 dark:text-slate-400 font-bold leading-relaxed uppercase tracking-tight opacity-60 group-hover:opacity-100 transition-opacity">{m.desc}</p>}
+                    {m.desc && <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold leading-relaxed uppercase tracking-tight opacity-60 group-hover:opacity-100 transition-opacity">{m.desc}</p>}
                   </div>
-                  <div className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-900 dark:text-white border border-slate-100 dark:border-slate-700 shadow-inner self-end group-hover:scale-110 transition-transform">→</div>
+                  <div className="w-8 h-8 rounded-lg bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-900 dark:text-white border border-slate-100 dark:border-slate-700 shadow-inner self-end group-hover:scale-110 transition-transform">→</div>
                 </div>
               )}
             </div>
           ))}
 
-          {/* Expert Card - The Nexus */}
-          <div className="col-span-1 sm:col-span-2 bg-slate-900 dark:bg-indigo-600 rounded-[3rem] p-12 text-white flex flex-col justify-between cursor-pointer hover:-translate-y-3 transition-all shadow-[0_30px_80px_rgba(79,70,229,0.25)] border border-white/10 relative overflow-hidden group" onClick={() => navigate('/chat')}>
+          {/* Expert Card - Refined */}
+          <div className="col-span-1 sm:col-span-2 bg-slate-900 dark:bg-indigo-600 rounded-[2.5rem] p-10 sm:p-12 text-white flex flex-col justify-between cursor-pointer hover:-translate-y-2 transition-all shadow-[0_20px_60px_rgba(79,70,229,0.2)] border border-white/10 relative overflow-hidden group" onClick={() => navigate('/chat')}>
               <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl group-hover:bg-white/10 transition-all duration-1000" />
               <div className="relative z-10">
-                <div className="text-[9px] font-black uppercase tracking-[0.4em] opacity-40 mb-8">NEURAL ADVISORY LINK</div>
-                <h3 className="text-5xl font-black tracking-tighter leading-[0.9] max-w-sm uppercase">{t('dashboard.expert_advisory')}</h3>
+                <div className="text-[9px] font-black uppercase tracking-[0.4em] opacity-40 mb-6">NEURAL ADVISORY</div>
+                <h3 className="text-4xl sm:text-5xl font-black tracking-tighter leading-[0.9] max-w-sm uppercase">{t('dashboard.expert_advisory')}</h3>
               </div>
-              <div className="relative z-10 flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.3em] mt-12 bg-white/10 w-fit px-8 py-4 rounded-2xl border border-white/10 hover:bg-white hover:text-slate-900 transition-all">
-                INITIATE CONSULTATION <span>→</span>
+              <div className="relative z-10 flex items-center gap-4 text-[9px] font-black uppercase tracking-[0.3em] mt-10 bg-white/10 w-fit px-8 py-4 rounded-xl border border-white/10 hover:bg-white hover:text-slate-900 transition-all">
+                CONSULT NOW <span>→</span>
               </div>
           </div>
         </div>
 
-        {/* Data Architecture Status */}
-        <div className="mt-32 border-t border-slate-200 dark:border-slate-800 pt-16">
-           <div className="flex flex-col md:flex-row items-start justify-between gap-16">
-              <div className="flex flex-col gap-4">
+        {/* System Architecture */}
+        <div className="mt-24 border-t border-slate-200 dark:border-slate-800 pt-12">
+           <div className="flex flex-col md:flex-row items-start justify-between gap-12">
+              <div className="flex flex-col gap-3">
                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">{t('dashboard.sync_status')}</span>
-                 <div className="flex items-center gap-4">
+                 <div className="flex items-center gap-3">
                     <div className="h-1.5 w-1.5 rounded-full bg-indigo-600 animate-ping" />
-                    <span className="text-sm font-black text-slate-900 dark:text-white tracking-widest uppercase">QUANTUM ENCRYPTED ARCHITECTURE ACTIVE</span>
+                    <span className="text-[11px] font-black text-slate-900 dark:text-white tracking-[0.2em] uppercase">SYSTEMS ENCRYPTED & ACTIVE</span>
                  </div>
               </div>
-              <div className="grid grid-cols-3 gap-16">
+              <div className="flex gap-12 sm:gap-20">
                  {[
                    { label: t('dashboard.nodes.sat'), status: 'OPTIMAL', color: 'text-indigo-600' },
                    { label: t('dashboard.nodes.market'), status: 'STABLE', color: 'text-emerald-600' },
                    { label: t('dashboard.nodes.ai'), status: 'ACTIVE', color: 'text-indigo-600' }
                  ].map(node => (
-                   <div key={node.label} className="flex flex-col gap-3">
-                      <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em]">{node.label}</span>
-                      <span className={clsx("text-xs font-black tracking-widest", node.color)}>{node.status}</span>
-                      <div className="h-0.5 w-8 bg-slate-100 dark:bg-slate-800" />
+                   <div key={node.label} className="flex flex-col gap-2">
+                      <span className="text-[8px] font-black text-slate-400 uppercase tracking-[0.4em]">{node.label}</span>
+                      <span className={clsx("text-[10px] font-black tracking-widest", node.color)}>{node.status}</span>
                    </div>
                  ))}
               </div>
