@@ -8,7 +8,7 @@ import {
   ArrowRight, WarningCircle, ArrowCounterClockwise, Drop, Wind,
   Bell, TrendDown, Calendar, FileArrowDown, CheckCircle,
   Newspaper, Bank, ShieldCheck, ChatCircleText, Lightning, Sun, Trophy,
-  CaretRight, Pulse, Bug, ChartLineUp, TestTube, Sparkle, Storefront
+  CaretRight, Pulse, Bug, ChartLineUp, TestTube, Sparkle, Storefront, Star
 } from '@phosphor-icons/react';
 import { weatherAPI, marketAPI, labourAPI } from '../services/api';
 import clsx from 'clsx';
