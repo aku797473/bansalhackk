@@ -1,14 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { 
-  onAuthStateChanged, 
-  signInWithPopup, 
-  GoogleAuthProvider, 
-  signOut,
-  setPersistence,
-  browserLocalPersistence
-} from 'firebase/auth';
-import { auth } from '../config/firebase';
-import { setTokenProvider, userAPI } from '../services/api';
+import { setTokenProvider, authAPI, userAPI } from '../services/api';
 import toast from 'react-hot-toast';
 
 const AuthContext = createContext(null);
@@ -17,89 +8,90 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Initialize session from localStorage
   useEffect(() => {
-    setPersistence(auth, browserLocalPersistence);
-
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (firebaseUser) {
-        const getToken = () => firebaseUser.getIdToken();
-        setTokenProvider(getToken);
-
-        // Fetch profile from MongoDB via Backend
+    const initAuth = async () => {
+      const token = localStorage.getItem('sk_token');
+      if (token) {
+        setTokenProvider(() => Promise.resolve(token));
         try {
-          const { data } = await userAPI.getProfile();
+          const { data } = await authAPI.me();
           if (data.success) {
             setUser({
-              id: firebaseUser.uid,
-              name: data.data.name || firebaseUser.displayName,
-              email: firebaseUser.email,
-              image: data.data.profilePic || firebaseUser.photoURL,
-              role: data.data.role || 'farmer',
-              location: data.data.location
+              ...data.user,
+              id: data.user._id, // Map MongoDB ID
             });
           }
         } catch (err) {
-          // If profile doesn't exist, create a basic one
-          const basicUser = {
-            id: firebaseUser.uid,
-            name: firebaseUser.displayName || 'Farmer',
-            email: firebaseUser.email,
-            image: firebaseUser.photoURL,
-            role: 'farmer'
-          };
-          setUser(basicUser);
-          // Don't save yet, let the user pick their role in login/profile page
+          localStorage.removeItem('sk_token');
+          setTokenProvider(null);
         }
-      } else {
-        setUser(null);
-        setTokenProvider(null);
       }
       setLoading(false);
-    });
-
-    return () => unsubscribe();
+    };
+    initAuth();
   }, []);
 
-  const loginWithGoogle = async () => {
-    const provider = new GoogleAuthProvider();
+  const login = async (email, password) => {
     try {
-      const result = await signInWithPopup(auth, provider);
-      return result.user;
+      const { data } = await authAPI.login(email, password);
+      if (data.success) {
+        localStorage.setItem('sk_token', data.accessToken);
+        localStorage.setItem('sk_refresh', data.refreshToken);
+        setTokenProvider(() => Promise.resolve(data.accessToken));
+        
+        const userData = { ...data.user, id: data.user.id };
+        setUser(userData);
+        toast.success('Welcome back, ' + userData.name);
+        return userData;
+      }
     } catch (error) {
-      toast.error('Authentication failed');
+      toast.error(error.response?.data?.message || 'Authentication failed');
+      throw error;
+    }
+  };
+
+  const register = async (name, email, password, role) => {
+    try {
+      const { data } = await authAPI.register(name, email, password, role);
+      if (data.success) {
+        localStorage.setItem('sk_token', data.accessToken);
+        localStorage.setItem('sk_refresh', data.refreshToken);
+        setTokenProvider(() => Promise.resolve(data.accessToken));
+        
+        const userData = { ...data.user, id: data.user.id };
+        setUser(userData);
+        toast.success('Registration successful!');
+        return userData;
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Registration failed');
       throw error;
     }
   };
 
   const logout = async () => {
+    const refreshToken = localStorage.getItem('sk_refresh');
     try {
-      await signOut(auth);
-      toast.success('Logged out successfully');
-    } catch (error) {
-      toast.error('Logout failed');
+      await authAPI.logout(refreshToken);
+    } finally {
+      localStorage.removeItem('sk_token');
+      localStorage.removeItem('sk_refresh');
+      setUser(null);
+      setTokenProvider(null);
+      toast.success('Session terminated');
     }
   };
 
   const updateUser = async (updatedFields) => {
     if (!user) return;
-    
-    // Optimistic update
     const newUser = { ...user, ...updatedFields };
     setUser(newUser);
-
-    // Persist to MongoDB
+    // Profile sync with MongoDB is handled by the user service via userAPI.saveProfile
     try {
-      await userAPI.saveProfile({
-        name: newUser.name,
-        role: newUser.role,
-        profilePic: newUser.image,
-        location: newUser.location,
-        phone: newUser.phone
-      });
-      console.log('✅ Profile synced to MongoDB');
+       await userAPI.saveProfile(updatedFields);
     } catch (err) {
-      console.error('❌ Failed to sync profile to MongoDB:', err.message);
-      toast.error('Sync failed, but local data updated');
+       console.error('Profile sync failed', err);
     }
   };
 
@@ -107,11 +99,12 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider value={{ 
       user, 
       loading, 
-      login: loginWithGoogle,
+      login,
+      register,
       logout, 
       updateUser, 
       isAuth: !!user,
-      getToken: () => auth.currentUser?.getIdToken()
+      getToken: () => Promise.resolve(localStorage.getItem('sk_token'))
     }}>
       {children}
     </AuthContext.Provider>

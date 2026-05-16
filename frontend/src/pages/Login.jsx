@@ -3,31 +3,57 @@ import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import ThreeBackground from '../components/ThreeBackground';
 import toast from 'react-hot-toast';
+import clsx from 'clsx';
 
 export default function Login() {
-  const { login, updateUser } = useAuth();
+  const { login, register } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [mode, setMode] = useState('login'); // 'login' or 'register'
   const [role, setRole] = useState('farmer');
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: ''
+  });
 
-  const handleLogin = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setLoading(true);
-    const id = toast.loading('Authenticating...');
+    const id = toast.loading(mode === 'login' ? 'Authenticating...' : 'Creating Account...');
+    
     try {
-      const fbUser = await login();
-      // After login, update the role and sync to MongoDB
-      await updateUser({ 
-        role, 
-        name: fbUser.displayName, 
-        image: fbUser.photoURL,
-        email: fbUser.email 
-      });
-      
+      if (mode === 'login') {
+        await login(formData.email, formData.password);
+      } else {
+        await register(formData.name, formData.email, formData.password, role);
+      }
       toast.success('Access Granted', { id });
       navigate('/dashboard');
     } catch (error) {
-      toast.error('Authentication Failed', { id });
-      console.error(error);
+      toast.error(error.response?.data?.message || 'Action failed', { id });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const quickLogin = async () => {
+    setLoading(true);
+    const id = toast.loading('Bypassing Protocol...');
+    try {
+      // Demo account
+      await login('farmer@smartkisan.com', 'kisan123');
+      toast.success('Demo Access Granted', { id });
+      navigate('/dashboard');
+    } catch (err) {
+      // If demo fails, try to register it once
+      try {
+        await register('Smart Farmer', 'farmer@smartkisan.com', 'kisan123', 'farmer');
+        toast.success('New Demo Account Created', { id });
+        navigate('/dashboard');
+      } catch (inner) {
+        toast.error('Direct access failed', { id });
+      }
     } finally {
       setLoading(false);
     }
@@ -37,72 +63,105 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
       <ThreeBackground />
       
-      <div className="w-full max-w-xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-3xl rounded-[3rem] p-12 sm:p-16 border border-white/20 shadow-2xl relative z-10">
+      <div className="w-full max-w-xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-3xl rounded-[3.5rem] p-12 sm:p-16 border border-white/20 shadow-2xl relative z-10">
         <div className="text-center mb-12">
-          <div className="text-[11px] font-black text-indigo-600 uppercase tracking-[0.5em] mb-4">ACCESS PORTAL</div>
+          <div className="text-[10px] font-black text-indigo-600 uppercase tracking-[0.5em] mb-4">SECURITY PROTOCOL</div>
           <h1 className="text-5xl font-black tracking-tighter text-slate-900 dark:text-white uppercase leading-none">
-            SmartKisan
+            {mode === 'login' ? 'Auth Node' : 'Initialize'}
           </h1>
-          <p className="text-sm text-slate-500 font-bold mt-4 uppercase tracking-widest">Select your role and continue with Google</p>
-        </div>
-
-        <div className="grid grid-cols-1 gap-4 mb-10">
-          {[
-            { id: 'farmer', label: 'Farmer', desc: 'Manage crops & mandi' },
-            { id: 'seller', label: 'Seller', desc: 'Sell seeds & tools' },
-            { id: 'labor',  label: 'Labor',  desc: 'Find farm work' }
-          ].map((r) => (
-            <button
-              key={r.id}
-              onClick={() => setRole(r.id)}
-              className={clsx(
-                "p-6 rounded-2xl border-2 transition-all text-left group",
-                role === r.id 
-                  ? "border-indigo-600 bg-indigo-600/5 dark:bg-indigo-600/10" 
-                  : "border-slate-100 dark:border-slate-800 hover:border-indigo-600/30"
-              )}
-            >
-              <div className="flex justify-between items-center">
-                <div>
-                  <div className={clsx(
-                    "text-lg font-black uppercase tracking-widest",
-                    role === r.id ? "text-indigo-600" : "text-slate-900 dark:text-white"
-                  )}>
-                    {r.label}
-                  </div>
-                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">
-                    {r.desc}
-                  </div>
-                </div>
-                <div className={clsx(
-                  "w-4 h-4 rounded-full border-2",
-                  role === r.id ? "border-indigo-600 bg-indigo-600" : "border-slate-300 dark:border-slate-600"
-                )} />
-              </div>
-            </button>
-          ))}
-        </div>
-
-        <button
-          onClick={handleLogin}
-          disabled={loading}
-          className="w-full py-6 bg-slate-900 dark:bg-white text-white dark:text-black text-xs font-black uppercase tracking-[0.5em] rounded-2xl shadow-xl hover:scale-102 active:scale-98 transition-all flex items-center justify-center gap-4 disabled:opacity-50"
-        >
-          {loading ? 'AUTHENTICATING...' : 'CONTINUE WITH GOOGLE'}
-          <span>→</span>
-        </button>
-
-        <div className="mt-12 text-center">
-          <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest leading-loose">
-            Secure multi-factor authentication protocol active. <br />
-            <span className="text-indigo-600 cursor-pointer">Security Center</span> | <span className="text-indigo-600 cursor-pointer">Privacy Vault</span>
+          <p className="text-xs text-slate-500 font-bold mt-4 uppercase tracking-[0.2em] opacity-60">
+            {mode === 'login' ? 'Identify yourself to continue' : 'Establish your digital identity'}
           </p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6 mb-10">
+          {mode === 'register' && (
+            <div className="space-y-2">
+              <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] ml-2">Display Name</label>
+              <input 
+                required
+                type="text" 
+                placeholder="E.G. RAMESH KUMAR"
+                value={formData.name}
+                onChange={e => setFormData({...formData, name: e.target.value})}
+                className="w-full bg-slate-50 dark:bg-slate-800/50 border-2 border-slate-100 dark:border-slate-800 rounded-2xl px-6 py-4 text-sm font-bold uppercase tracking-widest focus:border-indigo-600 outline-none transition-all"
+              />
+            </div>
+          )}
+          
+          <div className="space-y-2">
+            <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] ml-2">Email Identity</label>
+            <input 
+              required
+              type="email" 
+              placeholder="FARMER@NETWORK.COM"
+              value={formData.email}
+              onChange={e => setFormData({...formData, email: e.target.value})}
+              className="w-full bg-slate-50 dark:bg-slate-800/50 border-2 border-slate-100 dark:border-slate-800 rounded-2xl px-6 py-4 text-sm font-bold uppercase tracking-widest focus:border-indigo-600 outline-none transition-all"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] ml-2">Access Key</label>
+            <input 
+              required
+              type="password" 
+              placeholder="••••••••"
+              value={formData.password}
+              onChange={e => setFormData({...formData, password: e.target.value})}
+              className="w-full bg-slate-50 dark:bg-slate-800/50 border-2 border-slate-100 dark:border-slate-800 rounded-2xl px-6 py-4 text-sm font-bold uppercase tracking-widest focus:border-indigo-600 outline-none transition-all"
+            />
+          </div>
+
+          {mode === 'register' && (
+            <div className="space-y-4">
+              <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] ml-2">Operational Role</label>
+              <div className="grid grid-cols-3 gap-3">
+                {['farmer', 'seller', 'labor'].map(r => (
+                  <button
+                    key={r}
+                    type="button"
+                    onClick={() => setRole(r)}
+                    className={clsx(
+                      "py-3 rounded-xl border-2 text-[10px] font-black uppercase tracking-widest transition-all",
+                      role === r ? "border-indigo-600 bg-indigo-600 text-white" : "border-slate-100 dark:border-slate-800 text-slate-400 hover:border-indigo-600/30"
+                    )}
+                  >
+                    {r}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <button
+            disabled={loading}
+            type="submit"
+            className="w-full py-6 bg-slate-900 dark:bg-white text-white dark:text-black text-[11px] font-black uppercase tracking-[0.5em] rounded-2xl shadow-xl hover:scale-102 active:scale-98 transition-all disabled:opacity-50"
+          >
+            {loading ? 'PROCESSING...' : mode === 'login' ? 'AUTHENTICATE →' : 'INITIALIZE IDENTITY →'}
+          </button>
+        </form>
+
+        <div className="space-y-6">
+           <button
+            onClick={quickLogin}
+            disabled={loading}
+            className="w-full py-4 border-2 border-indigo-600/20 text-indigo-600 text-[10px] font-black uppercase tracking-[0.5em] rounded-2xl hover:bg-indigo-600 hover:text-white transition-all shadow-lg"
+          >
+            QUICK DEMO ACCESS
+          </button>
+
+          <div className="text-center">
+            <button 
+              onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
+              className="text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-indigo-600 transition-colors"
+            >
+              {mode === 'login' ? "Don't have an identity? Initialize here" : "Already identified? Authenticate here"}
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
-}
-
-function clsx(...classes) {
-  return classes.filter(Boolean).join(' ');
 }

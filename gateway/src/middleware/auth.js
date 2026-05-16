@@ -1,17 +1,4 @@
-const admin = require('firebase-admin');
-
-// Initialize Firebase Admin
-// If service account env var is present, use it. Otherwise, use project ID.
-if (!admin.apps.length) {
-  try {
-    admin.initializeApp({
-      projectId: process.env.FIREBASE_PROJECT_ID || 'demo-project'
-    });
-    console.log('✅ Firebase Admin Initialized in Gateway');
-  } catch (err) {
-    console.error('❌ Failed to initialize Firebase Admin:', err.message);
-  }
-}
+const jwt = require('jsonwebtoken');
 
 const verifyToken = async (req, res, next) => {
   try {
@@ -22,19 +9,17 @@ const verifyToken = async (req, res, next) => {
 
     const token = authHeader.split(' ')[1];
     
-    // Verify the Firebase JWT
-    const decodedToken = await admin.auth().verifyIdToken(token);
+    // Verify the Local JWT using the backend secret
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'smart_kisan_secret_123');
     
-    if (!decodedToken.uid) {
-      return res.status(401).json({ success: false, message: 'Unauthorized: Invalid token' });
+    if (!decoded.userId) {
+      return res.status(401).json({ success: false, message: 'Unauthorized: Invalid token payload' });
     }
 
     // Inject into headers for downstream microservices compatibility
-    req.headers['x-user-id']    = decodedToken.uid;
-    req.headers['x-user-email'] = decodedToken.email || '';
-    // Role is usually stored in custom claims or Firestore. 
-    // For now, we'll assume it's passed or handled downstream.
-    req.headers['x-user-role']  = decodedToken.role || 'farmer'; 
+    req.headers['x-user-id']    = decoded.userId;
+    req.headers['x-user-email'] = decoded.email || '';
+    req.headers['x-user-role']  = decoded.role || 'farmer'; 
     
     next();
   } catch (err) {
