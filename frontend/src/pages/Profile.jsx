@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { userAPI } from '../services/api';
-import { User, MapPin, Globe, Tractor, Save, CheckCircle, Camera, Trash, SignOut, ShieldCheck, Bell, CaretRight, IdentificationCard, Star, PencilSimple } from '@phosphor-icons/react';
+import { User, MapPin, Globe, Plant, FloppyDisk, CheckCircle, Camera, Trash, SignOut, ShieldCheck, Bell, CaretRight, IdentificationCard, Star, PencilSimple } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { usePageAnimation } from '../hooks/usePageAnimation';
@@ -19,7 +19,7 @@ const STATES = ['Punjab','Haryana','Uttar Pradesh','Bihar','Madhya Pradesh','Mah
 const SOIL_TYPES = ['loamy','clay','sandy','silty','peaty','chalky','other'];
 const IRRIGATION = ['rain-fed','canal','borewell','drip','other'];
 const ROLES_INFO = { 
-  farmer: { icon: Tractor, labelKey: 'auth.farmer', color: 'text-emerald-500' }, 
+  farmer: { icon: Plant, labelKey: 'auth.farmer', color: 'text-emerald-500' }, 
   buyer:  { icon: User, labelKey: 'auth.buyer', color: 'text-blue-500' }, 
   labour: { icon: User, labelKey: 'auth.labour', color: 'text-amber-500' }, 
   admin:  { icon: ShieldCheck, labelKey: 'auth.admin', color: 'text-purple-500' } 
@@ -38,7 +38,7 @@ export default function Profile() {
     farmDetails: { landArea: '', soilType: 'loamy', irrigation: 'canal' },
   });
   const [saving, setSaving] = useState(false);
-  const [saved, setSaved]   = useState(false);
+  const [saved, setFloppyDiskd]   = useState(false);
 
   useEffect(() => {
     userAPI.getProfile()
@@ -87,10 +87,10 @@ export default function Profile() {
         i18n.changeLanguage(form.language);
         await userAPI.updateLanguage(form.language);
       }
-      setSaved(true);
+      setFloppyDiskd(true);
       toast.success(t('profile.saveSuccess'));
-      setTimeout(() => setSaved(false), 3000);
-    } catch { toast.error('Save failed'); }
+      setTimeout(() => setFloppyDiskd(false), 3000);
+    } catch { toast.error('FloppyDisk failed'); }
     finally { setSaving(false); }
   };
 
@@ -254,7 +254,7 @@ export default function Profile() {
                  <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl" />
                  <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tight mb-10 flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-                       <Tractor size={24} weight="fill" />
+                       <Plant size={24} weight="fill" />
                     </div>
                     {t('profile.farm_settings')}
                  </h3>
@@ -317,7 +317,7 @@ export default function Profile() {
               {/* Action Footer */}
               <div className="flex gap-4">
                  <button onClick={save} disabled={saving} className="flex-[2] h-20 bg-gradient-to-r from-indigo-600 to-purple-700 text-white rounded-[2rem] font-black text-xl uppercase tracking-widest shadow-2xl shadow-indigo-500/30 flex items-center justify-center gap-4 hover:-translate-y-1 transition-all active:scale-95 disabled:opacity-50">
-                    {saved ? <CheckCircle size={28} weight="fill" /> : <Save size={28} weight="fill" />}
+                    {saved ? <CheckCircle size={28} weight="fill" /> : <FloppyDisk size={28} weight="fill" />}
                     {saved ? t('profile.saved') : saving ? t('profile.saving') : t('common.save')}
                  </button>
                  <button onClick={() => setForm({ name: '', email: '', language: 'en', profilePic: '', location: { village: '', district: '', state: '', pincode: '' }, farmDetails: { landArea: '', soilType: 'loamy', irrigation: 'canal' }})} className="flex-1 h-20 bg-slate-100 dark:bg-slate-800 text-slate-400 rounded-[2rem] font-black text-sm uppercase tracking-widest flex items-center justify-center gap-4 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">

@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { newsAPI } from '../services/api';
 import { useQuery } from '@tanstack/react-query';
-import { Newspaper, ExternalLink, Calendar, RefreshCw, Play, Pause, Square, Volume2, VolumeX, Mic, ChevronRight, ArrowCounterClockwise, Sparkle, Lightning, Info, CaretRight } from '@phosphor-icons/react';
+import { Newspaper, ArrowSquareOut, Calendar, ArrowsClockwise, Play, Pause, Square, SpeakerHigh, SpeakerNone, Microphone, CaretRight, ArrowCounterClockwise, Sparkle, Lightning, Info } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import { usePageAnimation } from '../hooks/usePageAnimation';
 import clsx from 'clsx';
@@ -211,7 +211,7 @@ export default function News() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-8 mb-10">
                <div className="flex items-center gap-6">
                   <div className="w-16 h-16 rounded-[1.5rem] bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center shadow-2xl">
-                     <Mic size={32} weight="fill" className={clsx(speaking && !paused && "animate-pulse")} />
+                     <Microphone size={32} weight="fill" className={clsx(speaking && !paused && "animate-pulse")} />
                   </div>
                   <div>
                     <p className="text-[10px] font-black uppercase tracking-[0.25em] text-white/60 mb-1">{t('news.ai_voice_reader')}</p>
@@ -265,7 +265,7 @@ export default function News() {
               </div>
 
               <button onClick={() => { stop(); setAutoRead(p => !p); }} className={clsx("sm:ml-auto h-14 px-8 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all flex items-center gap-3 border", autoRead ? "bg-white/20 border-white/20 text-white" : "bg-black/10 border-white/5 text-white/50 hover:bg-black/20")}>
-                {autoRead ? <Volume2 size={18} weight="fill" /> : <VolumeX size={18} weight="bold" />}
+                {autoRead ? <SpeakerHigh size={18} weight="fill" /> : <SpeakerNone size={18} weight="bold" />}
                 {t('news.auto_read')}
               </button>
             </div>
@@ -304,10 +304,10 @@ export default function News() {
                   <div className="mt-auto pt-6 border-t border-slate-50 dark:border-slate-800/50 flex items-center justify-between">
                     <a href={item.link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[10px] font-black text-emerald-600 uppercase tracking-widest hover:translate-x-1 transition-transform">
                        {t('news.read_more')}
-                       <ExternalLink size={14} weight="bold" />
+                       <ArrowSquareOut size={14} weight="bold" />
                     </a>
                     <button onClick={() => handleReadOne(item, i)} className={clsx("w-12 h-12 rounded-2xl flex items-center justify-center transition-all shadow-sm active:scale-90", currentIdx === i && speaking ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/30" : "bg-slate-50 dark:bg-slate-800 text-slate-400 hover:bg-emerald-50 hover:text-emerald-600")}>
-                       {currentIdx === i && speaking ? <Pause size={20} weight="fill" /> : <Volume2 size={20} weight="fill" />}
+                       {currentIdx === i && speaking ? <Pause size={20} weight="fill" /> : <SpeakerHigh size={20} weight="fill" />}
                     </button>
                   </div>
                 </div>

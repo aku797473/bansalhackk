@@ -4,10 +4,10 @@ import {
   Phone, 
   Siren, 
   MapPin, 
-  ShieldAlert, 
-  Activity,
+  ShieldWarning, 
+  
   Heartbeat,
-  Flame,
+  Fire,
   Drop,
   CaretRight,
   WarningCircle,
@@ -68,7 +68,7 @@ const EMERGENCIES = [
   },
   {
     id: 'machinery',
-    icon: ShieldAlert,
+    icon: ShieldWarning,
     color: 'bg-orange-500',
     shadow: 'shadow-orange-500/20',
     instructions: {
@@ -90,7 +90,7 @@ const EMERGENCIES = [
   },
   {
     id: 'heat',
-    icon: Flame,
+    icon: Fire,
     color: 'bg-amber-500',
     shadow: 'shadow-amber-500/20',
     instructions: {
@@ -337,7 +337,7 @@ export default function SOS() {
                 <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[2.5rem] p-8 shadow-sm group hover:border-red-200 transition-all">
                    <div className="flex items-center gap-4 mb-4">
                       <div className="w-12 h-12 bg-red-50 dark:bg-red-500/10 rounded-2xl flex items-center justify-center border border-red-100 dark:border-red-800 group-hover:scale-110 transition-transform">
-                        <ShieldAlert size={24} weight="fill" className="text-red-500" />
+                        <ShieldWarning size={24} weight="fill" className="text-red-500" />
                       </div>
                       <h4 className="font-black text-slate-900 dark:text-white uppercase tracking-tight">{t('sos.rapid_response')}</h4>
                    </div>

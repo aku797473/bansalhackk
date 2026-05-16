@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Landmark, CheckCircle, Bank, ArrowRight, ExternalLink, ShieldCheck, CreditCard, Flask, Drop, ChartLineUp, Info, Star, Lightning, CaretRight } from '@phosphor-icons/react';
+import { CheckCircle, Bank, ArrowRight, ArrowSquareOut, ShieldCheck, CreditCard, Flask, Drop, ChartLineUp, Info, Star, Lightning, CaretRight } from '@phosphor-icons/react';
 import clsx from 'clsx';
 import { useQuery } from '@tanstack/react-query';
 import { schemesAPI } from '../services/api';
@@ -49,7 +49,7 @@ export default function Schemes() {
           <div>
             <div className="flex items-center gap-3 mb-6">
               <div className="px-4 py-2 bg-amber-600 dark:bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-amber-500/30 border border-amber-400/20 flex items-center gap-2">
-                <Landmark size={14} weight="fill" className="animate-pulse" />
+                <Bank size={14} weight="fill" className="animate-pulse" />
                 {t('schemes.government_portal')}
               </div>
               <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">

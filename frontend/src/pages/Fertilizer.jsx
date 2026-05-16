@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDropzone } from 'react-dropzone';
 import { fertilizerAPI } from '../services/api';
-import { FlaskConical, Upload, AlertTriangle, CheckCircle, Loader, History, Trash2, ChevronRight, RefreshCw, ShieldCheck, FileText, Download, Sparkle, Lightning, Info, CaretRight } from '@phosphor-icons/react';
+import { Flask, Upload, Warning, CheckCircle, Spinner, ClockCounterClockwise, Trash, CaretRight, ArrowsClockwise, ShieldCheck, FileText, Download, Sparkle, Lightning, Info, Calendar } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { usePageAnimation } from '../hooks/usePageAnimation';
@@ -43,13 +43,13 @@ export default function Fertilizer() {
   const [file, setFile]       = useState(null);
   const [result, setResult]   = useState(null);
   const [loading, setLoading] = useState(false);
-  const [history, setHistory] = useState([]);
+  const [history, setClockCounterClockwise] = useState([]);
 
   useEffect(() => {
     const saved = localStorage.getItem('sk_fert_history');
     const active = localStorage.getItem('sk_fert_active_result');
     if (saved) {
-      try { setHistory(JSON.parse(saved)); } catch (e) { console.error('Failed to parse history', e); }
+      try { setClockCounterClockwise(JSON.parse(saved)); } catch (e) { console.error('Failed to parse history', e); }
     }
     if (active) {
       try { setResult(JSON.parse(active)); } catch (e) {}
@@ -103,21 +103,21 @@ export default function Fertilizer() {
         title: analysisResult.primaryIssue?.deficiency || 'Unknown Analysis',
         result: analysisResult,
       };
-      setHistory(prev => [historyItem, ...prev].slice(0, 10));
+      setClockCounterClockwise(prev => [historyItem, ...prev].slice(0, 10));
       toast.success(t('common.success'));
     } catch {
       const analysisResult = DEMO_FERTILIZER_RESULT;
       setResult(analysisResult);
       const historyItem = { id: Date.now(), date: new Date().toISOString(), title: 'Nitrogen Deficiency (Demo)', result: analysisResult };
-      setHistory(prev => [historyItem, ...prev].slice(0, 10));
+      setClockCounterClockwise(prev => [historyItem, ...prev].slice(0, 10));
       toast('Showing demo analysis (AI service warming up…)', { icon: '⚡' });
     }
     finally { setLoading(false); }
   };
 
-  const deleteHistoryItem = (e, id) => {
+  const deleteClockCounterClockwiseItem = (e, id) => {
     e.stopPropagation();
-    setHistory(prev => prev.filter(h => h.id !== id));
+    setClockCounterClockwise(prev => prev.filter(h => h.id !== id));
     if (result && history.find(h => h.id === id)?.result === result) {
         setResult(null);
     }
@@ -132,7 +132,7 @@ export default function Fertilizer() {
           <div>
             <div className="flex items-center gap-3 mb-6">
               <div className="px-4 py-2 bg-amber-600 dark:bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-amber-500/30 border border-amber-400/20 flex items-center gap-2">
-                <FlaskConical size={14} weight="fill" className="animate-pulse" />
+                <Flask size={14} weight="fill" className="animate-pulse" />
                 {t('fertilizer.seed_iq')}
               </div>
               <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
@@ -156,7 +156,7 @@ export default function Fertilizer() {
                  onClick={clearActive}
                  className="h-14 px-8 bg-white dark:bg-slate-900 border border-red-200 dark:border-red-900/30 text-red-600 rounded-2xl shadow-sm hover:bg-red-50 dark:hover:bg-red-900/10 transition-all flex items-center gap-3 font-black text-[10px] uppercase tracking-widest"
                >
-                 <Trash2 size={18} weight="bold" />
+                 <Trash size={18} weight="bold" />
                  {t('fertilizer.clear_result')}
                </button>
              )}
@@ -184,7 +184,7 @@ export default function Fertilizer() {
                       <img src={preview} alt="preview" className="rounded-3xl shadow-2xl border-4 border-white dark:border-slate-800 aspect-square object-cover" />
                       {loading && (
                         <div className="absolute inset-0 bg-white/40 dark:bg-slate-900/40 backdrop-blur-sm rounded-3xl flex items-center justify-center">
-                           <RefreshCw size={32} className="text-amber-600 animate-spin" />
+                           <ArrowsClockwise size={32} className="text-amber-600 animate-spin" />
                         </div>
                       )}
                    </div>
@@ -203,7 +203,7 @@ export default function Fertilizer() {
 
                <div className="mt-4 flex flex-col gap-3">
                  <button onClick={analyze} disabled={!file || loading} className="w-full h-14 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-amber-500/30 flex items-center justify-center gap-3 hover:-translate-y-1 transition-all disabled:opacity-50 disabled:translate-y-0">
-                    {loading ? <RefreshCw size={18} className="animate-spin" /> : <Sparkle size={18} weight="fill" />}
+                    {loading ? <ArrowsClockwise size={18} className="animate-spin" /> : <Sparkle size={18} weight="fill" />}
                     {loading ? t('fertilizer.analyzing') : t('fertilizer.analyze_health')}
                  </button>
                  <button className="w-full h-14 bg-slate-50 dark:bg-slate-800/50 text-slate-500 rounded-2xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 border border-slate-100 dark:border-slate-800 hover:bg-slate-100 transition-all">
@@ -213,7 +213,7 @@ export default function Fertilizer() {
                </div>
             </div>
 
-            {/* History Section */}
+            {/* ClockCounterClockwise Section */}
             <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
                <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
                   <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('fertilizer.recent_reports')}</h3>
@@ -222,7 +222,7 @@ export default function Fertilizer() {
                <div className="max-h-[300px] overflow-y-auto scrollbar-none">
                   {history.length === 0 ? (
                     <div className="p-12 text-center">
-                       <History size={32} className="mx-auto text-slate-200 mb-4" />
+                       <ClockCounterClockwise size={32} className="mx-auto text-slate-200 mb-4" />
                        <p className="text-xs font-bold text-slate-400 italic">{t('fertilizer.no_history')}</p>
                     </div>
                   ) : (
@@ -230,14 +230,14 @@ export default function Fertilizer() {
                        {history.map((h) => (
                          <div key={h.id} onClick={() => setResult(h.result)} className={clsx("p-5 flex items-center gap-4 cursor-pointer transition-all hover:bg-slate-50 dark:hover:bg-slate-800 group", result === h.result && "bg-amber-50 dark:bg-amber-900/10")}>
                             <div className="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 shadow-sm border border-slate-100 dark:border-slate-800 flex items-center justify-center text-amber-500 group-hover:scale-110 transition-transform">
-                               <FlaskConical size={18} weight="duotone" />
+                               <Flask size={18} weight="duotone" />
                             </div>
                             <div className="flex-1 min-w-0">
                                <p className="text-sm font-black text-slate-900 dark:text-white truncate">{t(`fertilizer.results.${h.title}`, h.title)}</p>
                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{new Date(h.date).toLocaleDateString()}</p>
                             </div>
-                            <button onClick={(e) => deleteHistoryItem(e, h.id)} className="w-8 h-8 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center">
-                               <Trash2 size={14} />
+                            <button onClick={(e) => deleteClockCounterClockwiseItem(e, h.id)} className="w-8 h-8 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center">
+                               <Trash size={14} />
                             </button>
                          </div>
                        ))}
@@ -377,7 +377,7 @@ export default function Fertilizer() {
                       <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl" />
                       <h4 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-[0.25em] mb-10 flex items-center gap-4">
                          <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-500/10 flex items-center justify-center text-amber-600">
-                           <FlaskConical size={24} weight="duotone" />
+                           <Flask size={24} weight="duotone" />
                          </div>
                          {t('fertilizer.recommended_fertilizers')}
                       </h4>
