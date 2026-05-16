@@ -1,5 +1,5 @@
-import { lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { lazy, Suspense, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { MapProvider } from './contexts/MapContext';
@@ -7,32 +7,22 @@ import Navbar from './components/Navbar';
 import ChatWidget from './components/ChatWidget';
 import LoadingScreen from './components/LoadingScreen';
 import VoiceAssistant from './components/VoiceAssistant';
-import TourGuide from './components/TourGuide';
-
+import Footer from './components/Footer';
 import { ThemeProvider } from './contexts/ThemeContext';
-import { ClerkProvider } from '@clerk/clerk-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { HeartPulse } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import clsx from 'clsx';
+import axios from 'axios';
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      cacheTime: 30 * 60 * 1000, // 30 minutes
+      staleTime: 5 * 60 * 1000,
       retry: 1,
       refetchOnWindowFocus: false,
     },
   },
 });
-
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || import.meta.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
-if (!PUBLISHABLE_KEY) {
-  console.warn("Clerk Publishable Key is missing from environment variables.");
-}
-
-
 
 // Lazy loaded pages
 const Landing     = lazy(() => import('./pages/Landing'));
@@ -63,35 +53,19 @@ function PublicRoute({ children }) {
   return !isAuth ? children : <Navigate to="/dashboard" replace />;
 }
 
-import { useEffect } from 'react';
-import axios from 'axios';
-
 function KeepAlive() {
   const { isAuth } = useAuth();
-  
   useEffect(() => {
     if (!isAuth) return;
-    
-    // Ping the wake endpoint immediately on load
     const infoUrl = import.meta.env.VITE_INFO_API_URL || '/api';
     const gatewayUrl = infoUrl.replace('/weather', '').replace('/api/weather', '/api');
-    
-    const wakeUp = () => {
-      console.log('--- Waking up backend services ---');
-      axios.get(`${gatewayUrl}/wake`).catch(() => {});
-    };
-
+    const wakeUp = () => axios.get(`${gatewayUrl}/wake`).catch(() => {});
     wakeUp();
-    
-    // Ping every 10 minutes to prevent Render from sleeping (15min timeout)
     const interval = setInterval(wakeUp, 10 * 60 * 1000);
     return () => clearInterval(interval);
   }, [isAuth]);
-
   return null;
 }
-
-import Footer from './components/Footer';
 
 function AppLayout({ children }) {
   const { isAuth } = useAuth();
@@ -105,7 +79,6 @@ function AppLayout({ children }) {
         </Suspense>
       </main>
       <Footer />
-      {/* {isAuth && <TourGuide />} */}
       {isAuth && <ChatWidget />}
       {isAuth && <VoiceAssistant />}
       {isAuth && (
@@ -124,51 +97,46 @@ function AppLayout({ children }) {
 export default function App() {
   return (
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-      <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
-        <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={queryClient}>
         <ThemeProvider>
-
-        <MapProvider>
-          <AuthProvider>
-            <Toaster
-              position="top-right"
-              toastOptions={{
-                duration: 3500,
-                style: {
-                  borderRadius: '14px',
-                  fontSize: '14px',
-                  fontFamily: 'Inter, sans-serif',
-                  boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
-                },
-                success: { iconTheme: { primary: '#16a34a', secondary: '#fff' } },
-                error:   { iconTheme: { primary: '#ef4444', secondary: '#fff' } },
-              }}
-            />
-            <AppLayout>
-              <Routes>
-                <Route path="/"           element={<PublicRoute><Landing /></PublicRoute>} />
-                <Route path="/login"      element={<PublicRoute><Login /></PublicRoute>} />
-                <Route path="/dashboard"  element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-                <Route path="/weather"    element={<ProtectedRoute><Weather /></ProtectedRoute>} />
-                <Route path="/crop"       element={<ProtectedRoute><CropAdvisor /></ProtectedRoute>} />
-                <Route path="/fertilizer" element={<ProtectedRoute><Fertilizer /></ProtectedRoute>} />
-                <Route path="/market"     element={<ProtectedRoute><Market /></ProtectedRoute>} />
-                <Route path="/labour"     element={<ProtectedRoute><Labour /></ProtectedRoute>} />
-                <Route path="/map"        element={<ProtectedRoute><MapView /></ProtectedRoute>} />
-                <Route path="/news"       element={<ProtectedRoute><News /></ProtectedRoute>} />
-                <Route path="/schemes"    element={<ProtectedRoute><Schemes /></ProtectedRoute>} />
-                <Route path="/buyer"      element={<ProtectedRoute><Buyer /></ProtectedRoute>} />
-                <Route path="/profit-predictor" element={<ProtectedRoute><ProfitPredictor /></ProtectedRoute>} />
-                <Route path="/sos"        element={<ProtectedRoute><SOS /></ProtectedRoute>} />
-                <Route path="/profile"    element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                <Route path="*"           element={<Navigate to="/" replace />} />
-              </Routes>
-            </AppLayout>
-          </AuthProvider>
-        </MapProvider>
+          <MapProvider>
+            <AuthProvider>
+              <Toaster
+                position="top-right"
+                toastOptions={{
+                  duration: 3500,
+                  style: {
+                    borderRadius: '14px',
+                    fontSize: '14px',
+                    fontFamily: 'Inter, sans-serif',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+                  },
+                }}
+              />
+              <AppLayout>
+                <Routes>
+                  <Route path="/"           element={<PublicRoute><Landing /></PublicRoute>} />
+                  <Route path="/login"      element={<PublicRoute><Login /></PublicRoute>} />
+                  <Route path="/dashboard"  element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                  <Route path="/weather"    element={<ProtectedRoute><Weather /></ProtectedRoute>} />
+                  <Route path="/crop"       element={<ProtectedRoute><CropAdvisor /></ProtectedRoute>} />
+                  <Route path="/fertilizer" element={<ProtectedRoute><Fertilizer /></ProtectedRoute>} />
+                  <Route path="/market"     element={<ProtectedRoute><Market /></ProtectedRoute>} />
+                  <Route path="/labour"     element={<ProtectedRoute><Labour /></ProtectedRoute>} />
+                  <Route path="/map"        element={<ProtectedRoute><MapView /></ProtectedRoute>} />
+                  <Route path="/news"       element={<ProtectedRoute><News /></ProtectedRoute>} />
+                  <Route path="/schemes"    element={<ProtectedRoute><Schemes /></ProtectedRoute>} />
+                  <Route path="/buyer"      element={<ProtectedRoute><Buyer /></ProtectedRoute>} />
+                  <Route path="/profit-predictor" element={<ProtectedRoute><ProfitPredictor /></ProtectedRoute>} />
+                  <Route path="/sos"        element={<ProtectedRoute><SOS /></ProtectedRoute>} />
+                  <Route path="/profile"    element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                  <Route path="*"           element={<Navigate to="/" replace />} />
+                </Routes>
+              </AppLayout>
+            </AuthProvider>
+          </MapProvider>
         </ThemeProvider>
-        </QueryClientProvider>
-      </ClerkProvider>
+      </QueryClientProvider>
     </BrowserRouter>
   );
 }
