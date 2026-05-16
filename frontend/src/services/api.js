@@ -16,10 +16,9 @@ const businessApi = axios.create({ baseURL: BUSINESS_URL, timeout: 30000 });
 let tokenProvider = null;
 export const setTokenProvider = (fn) => { tokenProvider = fn; };
 
-// Interceptor to attach Clerk token to all hub instances
+// Interceptor to attach JWT token to all hub instances
 [authApi, aiApi, infoApi, marketApi, businessApi].forEach(instance => {
   instance.interceptors.request.use(async (config) => {
-    // Cache Buster for Info Hub
     if (instance === infoApi) {
       config.params = { ...config.params, _t: Date.now() };
     }
@@ -36,8 +35,9 @@ export const setTokenProvider = (fn) => { tokenProvider = fn; };
 
 // ─── Auth Hub ─────────────────────────────────────
 export const authAPI = {
-  login:      (email, password) => authApi.post('/auth/login', { email, password }),
-  register:   (name, email, password, role) => authApi.post('/auth/register', { name, email, password, role }),
+  // Updated to use Phone-based authentication
+  login:      (phone, password) => authApi.post('/auth/login', { phone, password }),
+  register:   (name, phone, password, role) => authApi.post('/auth/register', { name, phone, password, role }),
   refresh:    (refreshToken) => authApi.post('/auth/refresh', { refreshToken }),
   logout:     (refreshToken) => authApi.post('/auth/logout', { refreshToken }),
   me:         () => authApi.get('/auth/me'),
@@ -114,4 +114,4 @@ export const buyerAPI = {
   updatePayment: (id, data) => businessApi.patch(`/buyer/orders/${id}/payment`, data),
 };
 
-export default authApi; // Default
+export default authApi;

@@ -23,6 +23,7 @@ export function AuthProvider({ children }) {
           }
         } catch (err) {
           localStorage.removeItem('sk_token');
+          localStorage.removeItem('sk_refresh');
           setTokenProvider(null);
         }
       }
@@ -33,7 +34,7 @@ export function AuthProvider({ children }) {
 
   const login = async (phone, password) => {
     try {
-      const { data } = await authAPI.login({ phone, password });
+      const { data } = await authAPI.login(phone, password);
       if (data.success) {
         localStorage.setItem('sk_token', data.accessToken);
         localStorage.setItem('sk_refresh', data.refreshToken);
@@ -41,18 +42,19 @@ export function AuthProvider({ children }) {
         
         const userData = { ...data.user, id: data.user.id || data.user._id };
         setUser(userData);
-        toast.success('Welcome back, ' + userData.name);
+        toast.success('Access Authenticated');
         return userData;
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Authentication failed');
+      const msg = error.response?.data?.message || 'Authentication failed';
+      toast.error(msg);
       throw error;
     }
   };
 
   const register = async (name, phone, password, role) => {
     try {
-      const { data } = await authAPI.register({ name, phone, password, role });
+      const { data } = await authAPI.register(name, phone, password, role);
       if (data.success) {
         localStorage.setItem('sk_token', data.accessToken);
         localStorage.setItem('sk_refresh', data.refreshToken);
@@ -60,11 +62,12 @@ export function AuthProvider({ children }) {
         
         const userData = { ...data.user, id: data.user.id || data.user._id };
         setUser(userData);
-        toast.success('Registration successful!');
+        toast.success('Identity Created Successfully');
         return userData;
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Registration failed');
+      const msg = error.response?.data?.message || 'Registration failed';
+      toast.error(msg);
       throw error;
     }
   };
@@ -72,13 +75,14 @@ export function AuthProvider({ children }) {
   const logout = async () => {
     const refreshToken = localStorage.getItem('sk_refresh');
     try {
-      await authAPI.logout({ refreshToken });
+      if (refreshToken) await authAPI.logout(refreshToken);
     } finally {
       localStorage.removeItem('sk_token');
       localStorage.removeItem('sk_refresh');
       setUser(null);
       setTokenProvider(null);
-      toast.success('Session terminated');
+      toast.success('Identity De-linked');
+      window.location.href = '/';
     }
   };
 
