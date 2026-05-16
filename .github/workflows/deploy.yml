@@ -21,8 +21,10 @@ jobs:
           { name: labour, path: ./services/labour-service },
           { name: chatbot, path: ./services/chatbot-service },
           { name: news, path: ./services/news-service },
-          { name: payment, path: ./services/payment-service }
+          { name: payment, path: ./services/payment-service },
+          { name: buyer, path: ./services/buyer-service }
         ]
+
     steps:
       - uses: actions/checkout@v4
 

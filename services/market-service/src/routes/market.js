@@ -87,14 +87,36 @@ async function fetchAIMarketData(state, district, commodity) {
 // GET /market/prices
 router.get('/prices', async (req, res) => {
   try {
-    const { state, commodity, district } = req.query;
-    const userId = req.headers['x-user-id'] || 'anonymous';
+    // 1. Try to get REAL Government data from Redis
+    const cacheKey = `market:prices:${(state || '').toLowerCase()}`;
+    const isRedisReady = redis.status === 'ready';
+    
+    if (isRedisReady && state) {
+      const realData = await redis.get(cacheKey);
+      if (realData) {
+        let prices = JSON.parse(realData);
+        if (commodity) {
+          prices = prices.filter(p => p.commodity.toLowerCase().includes(commodity.toLowerCase()));
+        }
+        if (district) {
+          prices = prices.filter(p => p.market.toLowerCase().includes(district.toLowerCase()));
+        }
+        
+        if (prices.length > 0) {
+          return res.json({
+            success: true,
+            data: { prices, lastUpdated: new Date().toISOString(), source: 'Official Government Mandi Data' }
+          });
+        }
+      }
+    }
 
+    // 2. Fallback to AI (or if state not specified)
     MarketHistory.create({ userId, state, district, commodity, searchType: 'prices' }).catch(console.error);
 
     let prices = await fetchAIMarketData(state, district, commodity);
 
-    // Final fallback to verified dataset if AI fails
+    // 3. Final fallback to verified dataset if AI fails
     if (!prices || prices.length === 0) {
       let filtered = BASE_PRICES;
       if (state) filtered = filtered.filter(p => p.state.toLowerCase().includes(state.toLowerCase()));
@@ -115,6 +137,7 @@ router.get('/prices', async (req, res) => {
       success: true,
       data: { prices, lastUpdated: new Date().toISOString(), source: 'Smart AI Insight' }
     });
+
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

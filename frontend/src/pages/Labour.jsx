@@ -2,52 +2,24 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { labourAPI, paymentAPI } from '../services/api';
-
-import { Users, Plus, MapPin, Bank, X, Briefcase, Phone, User, Camera, WifiSlash, ShieldCheck, Star, Clock, CheckCircle, Plant, Drop, Flask, Truck, Warehouse, SpinnerGap } from '@phosphor-icons/react';
+import { Users, Plus, MapPin, Bank, X, Briefcase, Phone, User, Camera, WifiSlash, ShieldCheck, Star, Clock, CheckCircle, Plant, Drop, Flask, Truck, Warehouse, SpinnerGap, CaretRight, Sparkle, Lightning, Info, Handshake, ArrowCounterClockwise, FileText } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { usePageAnimation } from '../hooks/usePageAnimation';
 
-// ─── Fallback seed data shown when API is unreachable ─────────────────────────
 const FALLBACK_JOBS = [
-  {
-    _id: 'seed-1', key: 'wheat', category: 'harvesting', wage: 500, wageUnit: 'per_day', workersNeeded: 10, contactNumber: '9876543210', status: 'open',
-    location: { district: 'Rewa', state: 'Madhya Pradesh' }, createdAt: new Date().toISOString()
-  },
-  {
-    _id: 'seed-2', key: 'soybean', category: 'sowing', wage: 450, wageUnit: 'per_day', workersNeeded: 5, contactNumber: '9988776655', status: 'open',
-    location: { district: 'Indore', state: 'Madhya Pradesh' }, createdAt: new Date().toISOString()
-  },
-  {
-    _id: 'seed-3', key: 'sugarcane', category: 'harvesting', wage: 600, wageUnit: 'per_day', workersNeeded: 20, contactNumber: '8877665544', status: 'open',
-    location: { district: 'Pune', state: 'Maharashtra' }, createdAt: new Date().toISOString()
-  },
-  {
-    _id: 'seed-4', key: 'irrigation', category: 'irrigation', wage: 550, wageUnit: 'per_day', workersNeeded: 3, contactNumber: '7766554433', status: 'open',
-    location: { district: 'Ambala', state: 'Haryana' }, createdAt: new Date().toISOString()
-  },
-  {
-    _id: 'seed-5', key: 'potato', category: 'storage', wage: 400, wageUnit: 'per_day', workersNeeded: 15, contactNumber: '6655443322', status: 'open',
-    location: { district: 'Jalandhar', state: 'Punjab' }, createdAt: new Date().toISOString()
-  },
-  {
-    _id: 'seed-6', key: 'pesticide', category: 'pesticide', wage: 480, wageUnit: 'per_day', workersNeeded: 8, contactNumber: '9911223344', status: 'open',
-    location: { district: 'Nagpur', state: 'Maharashtra' }, createdAt: new Date().toISOString()
-  },
+  { _id: 'seed-1', key: 'wheat', category: 'harvesting', wage: 500, wageUnit: 'per_day', workersNeeded: 10, contactNumber: '9876543210', status: 'open', location: { district: 'Rewa', state: 'Madhya Pradesh' }, createdAt: new Date().toISOString() },
+  { _id: 'seed-2', key: 'soybean', category: 'sowing', wage: 450, wageUnit: 'per_day', workersNeeded: 5, contactNumber: '9988776655', status: 'open', location: { district: 'Indore', state: 'Madhya Pradesh' }, createdAt: new Date().toISOString() },
+  { _id: 'seed-3', key: 'sugarcane', category: 'harvesting', wage: 600, wageUnit: 'per_day', workersNeeded: 20, contactNumber: '8877665544', status: 'open', location: { district: 'Pune', state: 'Maharashtra' }, createdAt: new Date().toISOString() },
+  { _id: 'seed-4', key: 'irrigation', category: 'irrigation', wage: 550, wageUnit: 'per_day', workersNeeded: 3, contactNumber: '7766554433', status: 'open', location: { district: 'Ambala', state: 'Haryana' }, createdAt: new Date().toISOString() },
+  { _id: 'seed-5', key: 'potato', category: 'storage', wage: 400, wageUnit: 'per_day', workersNeeded: 15, contactNumber: '6655443322', status: 'open', location: { district: 'Jalandhar', state: 'Punjab' }, createdAt: new Date().toISOString() },
+  { _id: 'seed-6', key: 'pesticide', category: 'pesticide', wage: 480, wageUnit: 'per_day', workersNeeded: 8, contactNumber: '9911223344', status: 'open', location: { district: 'Nagpur', state: 'Maharashtra' }, createdAt: new Date().toISOString() }
 ];
 
 const CATEGORIES = ['harvesting','sowing','irrigation','pesticide','transport','storage','other'];
 const STATES = ['Punjab','Haryana','Uttar Pradesh','Bihar','Madhya Pradesh','Maharashtra','Gujarat','Rajasthan','Karnataka'];
 
-const CATEGORY_ICON = { 
-  harvesting: Plant, 
-  sowing: Plant, 
-  irrigation: Drop, 
-  pesticide: Flask, 
-  transport: Truck, 
-  storage: Warehouse, 
-  other: Briefcase 
-};
+const CATEGORY_ICON = { harvesting: Plant, sowing: Plant, irrigation: Drop, pesticide: Flask, transport: Truck, storage: Warehouse, other: Briefcase };
 const CATEGORY_COLORS = {
   harvesting: 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400 border-amber-200 dark:border-amber-900/30',
   sowing: 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/30',
@@ -56,15 +28,6 @@ const CATEGORY_COLORS = {
   transport: 'bg-sky-100 text-sky-600 dark:bg-sky-900/30 dark:text-sky-400 border-sky-200 dark:border-sky-900/30',
   storage: 'bg-slate-100 text-slate-600 dark:bg-slate-900/30 dark:text-slate-400 border-slate-200 dark:border-slate-900/30',
   other: 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400 border-purple-200 dark:border-purple-900/30'
-};
-const CATEGORY_GRADIENTS = {
-  harvesting: 'from-amber-400 to-orange-500',
-  sowing: 'from-emerald-400 to-green-600',
-  irrigation: 'from-blue-400 to-indigo-500',
-  pesticide: 'from-rose-400 to-red-600',
-  transport: 'from-sky-400 to-blue-600',
-  storage: 'from-slate-400 to-gray-600',
-  other: 'from-purple-400 to-indigo-600'
 };
 
 export default function Labour() {
@@ -77,24 +40,19 @@ export default function Labour() {
   const [loading, setLoading] = useState(false);
   const [apiDown, setApiDown] = useState(false);
   const [showModal, setShowModal] = useState(null);
-  const [applying, setApplying]   = useState(false);
-  const [applyMsg, setApplyMsg]   = useState('');
   const [processingPayment, setProcessingPayment] = useState(false);
-
   
   const [form, setForm] = useState({
     title:'', description:'', category:'harvesting', wage: 500, wageUnit:'per_day',
-    workersNeeded:1, district:'', state:'Punjab', startDate:'', duration:'', skills:'',
+    workersNeeded:1, district:'', state:'Madhya Pradesh', startDate:'', duration:'', skills:'',
     contactNumber: '', image: null
   });
 
-  // Load from localStorage
   useEffect(() => {
     const f = localStorage.getItem('sk_labour_form');
     if (f) setForm(JSON.parse(f));
   }, []);
 
-  // Save to localStorage
   useEffect(() => {
     localStorage.setItem('sk_labour_form', JSON.stringify(form));
   }, [form]);
@@ -109,19 +67,10 @@ export default function Labour() {
     labourAPI.getJobs()
       .then(r => {
         const data = r.data?.data || [];
-        if (data.length > 0) {
-          setJobs(data);
-        } else {
-          setJobs(FALLBACK_JOBS); // Ensure it's never empty
-        }
+        setJobs(data.length > 0 ? data : FALLBACK_JOBS);
       })
-      .catch(() => {
-        // API unreachable — keep fallback & inform user silently or via toast
-        setApiDown(true);
-      })
-      .finally(() => {
-        if (showLoading) setLoading(false);
-      });
+      .catch(() => setApiDown(true))
+      .finally(() => { if (showLoading) setLoading(false); });
   };
 
   useEffect(() => {
@@ -134,49 +83,27 @@ export default function Labour() {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setForm(prev => ({ ...prev, image: reader.result }));
-      };
+      reader.onloadend = () => setForm(prev => ({ ...prev, image: reader.result }));
       reader.readAsDataURL(file);
     }
   };
 
   const postJob = async () => {
     if (!form.title || !form.description || !form.district || !form.contactNumber) { 
-      toast.error(t('common.error_required', 'Title, Description, District and Mobile Number are required')); 
+      toast.error(t('common.error_required')); 
       return; 
     }
     setLoading(true);
     try {
-      await labourAPI.postJob({ 
-        ...form, 
-        skills: form.skills.split(',').map(s => s.trim()).filter(Boolean) 
-      });
-      toast.success(t('common.success', 'Work Posted Successfully!'));
+      await labourAPI.postJob({ ...form, skills: form.skills.split(',').map(s => s.trim()).filter(Boolean) });
+      toast.success(t('common.success'));
       setTab('browse');
-      setForm({ title:'', description:'', category:'harvesting', wage:500, wageUnit:'per_day', workersNeeded:1, district:'', state:'Punjab', startDate:'', duration:'', skills:'', contactNumber: '', image: null });
+      setForm({ title:'', description:'', category:'harvesting', wage:500, wageUnit:'per_day', workersNeeded:1, district:'', state:'Madhya Pradesh', startDate:'', duration:'', skills:'', contactNumber: '', image: null });
       fetchJobs();
-    } catch (err) { 
-      toast.error(t('common.error', 'Failed to post. Check all fields.')); 
-    } finally {
-      setLoading(false);
-    }
+    } catch (err) { toast.error(t('common.error')); } 
+    finally { setLoading(false); }
   };
 
-  const applyJob = async () => {
-    if (!showModal) return;
-    setApplying(true);
-    try {
-      await labourAPI.applyJob(showModal._id, { name: user?.name, phone: user?.phone, message: applyMsg });
-      toast.success(t('common.success', 'Application sent!'));
-      setShowModal(null);
-      setApplyMsg('');
-    } catch (err) {
-      toast.error(err.response?.data?.message || t('common.error', 'Apply failed'));
-    } finally { setApplying(false); }
-  };
-
-  // ─── Razorpay Logic ─────────────────────────────────
   const loadRazorpay = () => {
     return new Promise((resolve) => {
       const script = document.createElement('script');
@@ -190,384 +117,378 @@ export default function Labour() {
   const handlePayment = async (job) => {
     setProcessingPayment(true);
     try {
-      // 1. Load Razorpay Script
       const res = await loadRazorpay();
-      if (!res) {
-        toast.error('Razorpay SDK failed to load. Are you online?');
-        return;
-      }
-
-      // 2. Create Order in Backend
+      if (!res) { toast.error('Razorpay SDK failed to load'); return; }
       const { data: order } = await paymentAPI.createOrder(job.wage);
-
-      // 3. Configure Razorpay Options
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_placeholder', 
-
-        amount: order.amount,
-        currency: order.currency,
-        name: 'Smart Kisan',
-        description: `Booking for ${job.title}`,
-        image: '/logo.png',
-        order_id: order.id,
+        amount: order.amount, currency: order.currency, name: 'Smart Kisan',
+        description: `Booking for ${job.title}`, order_id: order.id,
         handler: async (response) => {
-          // 4. Verify Payment in Backend
           try {
-            const { data: verifyRes } = await paymentAPI.verifyPayment({
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-            });
-
-            if (verifyRes.status === 'success') {
-              toast.success(t('common.success', 'Payment Successful! Worker Booked.'));
-              setShowModal(null);
-              fetchJobs();
-            }
-          } catch (err) {
-            toast.error(t('common.error', 'Payment verification failed.'));
-          }
+            const { data: verifyRes } = await paymentAPI.verifyPayment({ razorpay_order_id: response.razorpay_order_id, razorpay_payment_id: response.razorpay_payment_id, razorpay_signature: response.razorpay_signature });
+            if (verifyRes.status === 'success') { toast.success(t('common.success')); setShowModal(null); fetchJobs(); }
+          } catch (err) { toast.error(t('common.error')); }
         },
-        prefill: {
-          name: user?.name,
-          email: user?.email,
-          contact: user?.phone || job.contactNumber,
-        },
+        prefill: { name: user?.name, email: user?.email, contact: user?.phone || job.contactNumber },
         theme: { color: '#6366f1' },
       };
-
-      const paymentObject = new window.Razorpay(options);
-      paymentObject.open();
-
-    } catch (err) {
-      console.error(err);
-      toast.error(t('common.error', 'Failed to initiate payment.'));
-    } finally {
-      setProcessingPayment(false);
-    }
+      new window.Razorpay(options).open();
+    } catch (err) { toast.error(t('common.error')); } 
+    finally { setProcessingPayment(false); }
   };
 
+  const translateOption = (opt, ns = 'labour') => {
+     if (ns === 'state') return t(`crop.states.${opt}`, opt);
+     return t(`labour.categories.${opt}`, opt);
+  };
 
   return (
-    <div ref={ref} className="page-wrapper px-2 sm:px-4">
-      <div className="anim-header page-header flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6 mb-6 sm:mb-10">
-        <div>
-          <h1 className="page-title flex items-center gap-3 tracking-tighter">
-            <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-2xl shadow-inner">
-               <Users className="text-purple-600 animate-pulse" size={28} />
-            </div>
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400">
-              {t('labour.title')}
-            </span>
-          </h1>
-          <p className="page-subtitle mt-2">{t('labour.subtitle')}</p>
-        </div>
-
-        <div className="flex items-center gap-2 px-4 py-2 bg-purple-50 dark:bg-purple-900/20 border border-purple-100 dark:border-purple-900/30 rounded-2xl shadow-sm">
-           <div className="w-2 h-2 rounded-full bg-purple-500 animate-ping" />
-           <span className="text-[10px] font-black uppercase tracking-widest text-purple-600 dark:text-purple-400">{t('labour.verified_post')}</span>
-        </div>
-      </div>
-
-      {apiDown && (
-        <div className="mb-6 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl p-4 flex items-center gap-3 text-amber-800 dark:text-amber-300">
-          <WifiSlash size={20} className="shrink-0" />
-          <div className="text-sm">
-            <span className="font-bold">{t('labour.service_unavailable')}</span>
-          </div>
-        </div>
-      )}
-
-      {/* Tabs */}
-      <div className="flex gap-2 mb-10 border-b border-gray-100 dark:border-slate-800 overflow-x-auto scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0">
-        {[
-          {id:'browse', label: t('labour.tabs.browse')},
-          {id:'post', label: t('labour.tabs.post')},
-          {id:'my-jobs', label: t('labour.tabs.my_posts')}
-        ].map(tb => (
-          <button key={tb.id} onClick={() => setTab(tb.id)}
-            className={clsx('px-6 py-4 text-sm font-black border-b-4 -mb-px transition-all uppercase tracking-widest whitespace-nowrap',
-              tab === tb.id ? 'border-primary text-primary' : 'border-transparent text-gray-400 hover:text-gray-600 dark:hover:text-slate-300'
-            )}>
-            {tb.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Browse Section */}
-      {tab === 'browse' && (
-        loading ? (
-          <div className="grid sm:grid-cols-2 gap-6">{[...Array(4)].map((_, i) => <div key={i} className="skeleton h-56 rounded-3xl" />)}</div>
-        ) : jobs.length === 0 ? (
-          <div className="card text-center py-24 bg-gray-50 dark:bg-slate-900/50 border-dashed border-2">
-            <Briefcase size={48} className="mx-auto text-gray-200 dark:text-slate-800 mb-4" />
-            <p className="text-gray-500 dark:text-slate-400 font-bold">{t('common.no_data')}</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-            {jobs.map(job => (
-              <div key={job._id} className="card cursor-pointer group relative p-5 sm:p-7"
-                onClick={() => setShowModal(job)}>
-                
-                {job.image && (
-                  <div className="absolute top-3 right-3 w-8 h-8 sm:w-12 sm:h-12 rounded-lg sm:rounded-2xl border-2 border-white dark:border-slate-800 shadow-md overflow-hidden z-10">
-                     <img src={job.image} alt="Poster" className="w-full h-full object-cover" />
-                  </div>
-                )}
-
-                <div className="flex items-start gap-4 mb-4 sm:mb-5">
-                  <div className={clsx("w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl flex items-center justify-center text-2xl sm:text-3xl shrink-0 shadow-lg border transition-transform group-hover:scale-110 duration-500", CATEGORY_COLORS[job.category] || CATEGORY_COLORS.other)}>
-                    {(() => {
-                      const Icon = CATEGORY_ICON[job.category] || CATEGORY_ICON.other;
-                      return <Icon weight="duotone" />;
-                    })()}
-                  </div>
-                  <div className="pr-2 xs:pr-0 overflow-hidden">
-                    <h3 className="font-black text-gray-900 dark:text-white leading-tight text-base sm:text-lg group-hover:text-primary transition-colors truncate">
-                      {job.key ? t(`labour.fallback.${job.key}.title`) : job.title}
-                    </h3>
-                    <div className="flex flex-wrap items-center gap-2 mt-1">
-                       <div className={clsx("badge py-0.5 px-2 border font-black uppercase tracking-widest text-[8px] sm:text-[9px]", CATEGORY_COLORS[job.category] || CATEGORY_COLORS.other)}>
-                          {t(`labour.categories.${job.category}`)}
-                       </div>
-                       <span className="text-[9px] sm:text-[10px] text-gray-400 font-bold flex items-center gap-1"><Clock size={10} /> {new Date(job.createdAt).toLocaleDateString(t('common.locale'))}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mb-4 sm:mb-5 p-3 sm:p-4 bg-gray-50 dark:bg-black/20 rounded-xl sm:rounded-2xl border border-gray-100 dark:border-white/5">
-                   <p className="text-[11px] sm:text-xs text-gray-600 dark:text-slate-400 line-clamp-2 font-medium leading-relaxed italic">
-                      "{job.key ? t(`labour.fallback.${job.key}.desc`) : job.description}"
-                    </p>
-                </div>
-                
-                <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 sm:gap-4 text-xs">
-                  <div className="flex items-center gap-2.5 text-gray-600 dark:text-slate-400 font-bold bg-gray-50 dark:bg-slate-800/50 p-2 sm:p-2.5 rounded-xl border border-gray-100 dark:border-white/5">
-                    <MapPin size={14} className="text-red-400 shrink-0" />
-                    <span className="truncate">{job.location?.district}</span>
-                  </div>
-                  <div className="flex items-center gap-2.5 text-green-600 dark:text-green-400 font-black bg-green-50 dark:bg-green-900/10 p-2 sm:p-2.5 rounded-xl border border-green-100 dark:border-green-900/20">
-                    <Bank size={14} className="shrink-0" />
-                    <span className="truncate">₹{job.wage} / {t(`labour.wage_units.${job.wageUnit}`)}</span>
-                  </div>
-                </div>
-                
-                <div className="mt-4 sm:mt-5 pt-4 sm:pt-5 border-t border-gray-50 dark:border-white/5 flex flex-col xs:flex-row xs:items-center justify-between gap-3">
-                  <div className="flex items-center gap-2 text-primary font-black text-xs sm:text-sm">
-                    <Phone size={14} /> <span>{job.contactNumber}</span>
-                  </div>
-                  <div className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-1.5">
-                    <Users size={12} /> <span>{job.workersNeeded} {t('labour.needed')}</span>
-                  </div>
-                </div>
+    <div ref={ref} className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] transition-colors duration-500 font-sans selection:bg-purple-100 selection:text-purple-900 pt-28 sm:pt-36 pb-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        
+        {/* Header Section */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-14">
+          <div>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="px-4 py-2 bg-purple-600 dark:bg-purple-500 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-purple-500/30 border border-purple-400/20 flex items-center gap-2">
+                <Users size={14} weight="fill" className="animate-pulse" />
+                {t('labour.verified_post')}
               </div>
-            ))}
-          </div>
-        )
-      )}
-
-      {/* Post Form */}
-      {tab === 'post' && (
-        <div className="grid lg:grid-cols-12 gap-8">
-          <div className="lg:col-span-8 card border-none shadow-premium relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
-            <h2 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-8 flex items-center gap-3 relative z-10">
-              <Plus className="bg-primary text-white rounded-xl p-1.5 shadow-lg shadow-primary/30" size={28} /> 
-              <span>{t('labour.tabs.post')}</span>
-            </h2>
-            <div className="space-y-6">
-              <div className="grid sm:grid-cols-2 gap-5">
-                 <div>
-                    <label className="label">{t('labour.job_title')} *</label>
-                    <input className="input dark:bg-slate-800 border-2" placeholder={t('labour.placeholders.title')}
-                      value={form.title} onChange={e => setForm(f => ({...f, title: e.target.value}))} />
-                 </div>
-                 <div>
-                    <label className="label">{t('auth.phone')} *</label>
-                    <div className="relative">
-                       <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                       <input className="input pl-10 dark:bg-slate-800 border-2" placeholder={t('labour.placeholders.phone')}
-                        value={form.contactNumber} onChange={e => setForm(f => ({...f, contactNumber: e.target.value}))} />
-                    </div>
-                 </div>
-              </div>
-
-              <div>
-                <label className="label">{t('labour.description')} *</label>
-                <textarea className="input min-h-[120px] dark:bg-slate-800 border-2" placeholder={t('labour.placeholders.description')}
-                  value={form.description} onChange={e => setForm(f => ({...f, description: e.target.value}))} />
-              </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-5">
-                <div className="sm:col-span-2">
-                  <label className="label">{t('labour.category')}</label>
-                  <select className="input dark:bg-slate-800 border-2" value={form.category} onChange={e => setForm(f => ({...f, category: e.target.value}))}>
-                    {CATEGORIES.map(c => <option key={c} value={c}>{t(`labour.categories.${c}`)}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className="label">{t('labour.wage')} (₹)</label>
-                  <input type="number" className="input dark:bg-slate-800 border-2" value={form.wage}
-                    onChange={e => setForm(f => ({...f, wage: Number(e.target.value)}))} />
-                </div>
-                <div>
-                  <label className="label">{t('labour.wage_unit', 'Unit')}</label>
-                  <select className="input dark:bg-slate-800 border-2" value={form.wageUnit} onChange={e => setForm(f => ({...f, wageUnit: e.target.value}))}>
-                    {['per_day', 'per_week', 'per_month', 'fixed'].map(u => <option key={u} value={u}>{t(`labour.wage_units.${u}`)}</option>)}
-                  </select>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-5">
-                <div>
-                  <label className="label">{t('labour.district')} *</label>
-                  <input className="input dark:bg-slate-800 border-2" placeholder={t('labour.placeholders.district')} value={form.district}
-                    onChange={e => setForm(f => ({...f, district: e.target.value}))} />
-                </div>
-                <div>
-                  <label className="label">{t('labour.state')}</label>
-                  <select className="input dark:bg-slate-800 border-2" value={form.state} onChange={e => setForm(f => ({...f, state: e.target.value}))}>
-                    {STATES.map(s => <option key={s} value={s}>{t(`crop.states.${s}`, s)}</option>)}
-                  </select>
-                </div>
+              <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                <Handshake size={14} weight="fill" className="text-indigo-500" />
+                {t('labour.version')}
               </div>
             </div>
-            
-            <button 
-              onClick={postJob} 
-              disabled={loading}
-              className="btn-primary w-full h-16 rounded-2xl justify-center mt-10 text-lg font-black shadow-xl shadow-primary/20 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed">
-              {loading ? <SpinnerGap className="animate-spin" size={24} /> : t('common.submit')}
+            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">
+              <span className="bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400 bg-clip-text text-transparent">
+                {t('labour.title')}
+              </span>
+            </h1>
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-bold mt-5 max-w-lg leading-relaxed">
+              {t('labour.subtitle')}
+            </p>
+          </div>
+          
+          <div className="flex items-center gap-3">
+             <button onClick={() => fetchJobs(true)} className="h-14 px-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl shadow-slate-200/40 dark:shadow-none hover:-translate-y-1 active:scale-95 transition-all flex items-center gap-3">
+                <ArrowCounterClockwise size={18} weight="bold" className={clsx("text-purple-600", loading && "animate-spin")} />
+                <span className="text-[10px] font-black uppercase tracking-widest text-slate-900 dark:text-white">{t('labour.refresh_list')}</span>
+             </button>
+          </div>
+        </div>
+
+        {/* Status Alerts */}
+        {apiDown && (
+          <div className="mb-10 p-6 bg-amber-50 dark:bg-amber-500/10 border border-amber-100 dark:border-amber-500/20 rounded-[2rem] flex items-center gap-4 animate-in fade-in slide-in-from-top-5 duration-500">
+             <div className="w-12 h-12 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-lg shadow-amber-500/20">
+                <WifiSlash size={24} weight="bold" />
+             </div>
+             <p className="text-sm font-bold text-amber-700 dark:text-amber-400">{t('labour.service_unavailable')}</p>
+          </div>
+        )}
+
+        {/* Navigation Tabs */}
+        <div className="flex gap-4 mb-14 border-b border-slate-200 dark:border-slate-800 overflow-x-auto scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0">
+          {[
+            { id: 'browse', label: t('labour.tabs.browse'), icon: Briefcase },
+            { id: 'post', label: t('labour.tabs.post'), icon: Plus },
+            { id: 'my-jobs', label: t('labour.tabs.my_posts'), icon: Users }
+          ].map(tb => (
+            <button key={tb.id} onClick={() => setTab(tb.id)} className={clsx("px-8 py-5 flex items-center gap-3 text-sm font-black border-b-4 transition-all uppercase tracking-widest whitespace-nowrap -mb-px", tab === tb.id ? "border-purple-600 text-purple-600" : "border-transparent text-slate-400 hover:text-slate-600 dark:hover:text-slate-300")}>
+              <tb.icon size={18} weight={tab === tb.id ? 'fill' : 'bold'} />
+              {tb.label}
             </button>
-          </div>
-
-          <div className="lg:col-span-4 space-y-8">
-             <div className="card text-center bg-gray-50 dark:bg-slate-900/50 border-dashed border-2 border-gray-200 dark:border-slate-800 p-8">
-                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-6 block">{t('labour.identity_photo')}</label>
-                <div className="relative w-36 h-36 mx-auto mb-6 group">
-                   <div className="w-full h-full rounded-[2.5rem] bg-gray-200 dark:bg-slate-800 flex items-center justify-center overflow-hidden border-4 border-white dark:border-slate-700 shadow-2xl transition-transform group-hover:scale-105">
-                      {form.image ? <img src={form.image} alt="Profile" className="w-full h-full object-cover" /> : <User size={48} className="text-gray-400" />}
-                   </div>
-                   <label className="absolute -bottom-2 -right-2 bg-primary text-white p-3 rounded-2xl shadow-xl cursor-pointer hover:scale-110 active:scale-95 transition-all">
-                      <Camera size={20} />
-                      <input type="file" className="hidden" accept="image/*" onChange={handleImage} />
-                   </label>
-                </div>
-                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider leading-relaxed px-4">{t('labour.upload_trust')}</p>
-             </div>
-
-             <div className="card bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/10 dark:to-orange-900/10 border-amber-100 dark:border-amber-900/30">
-                <h3 className="font-black text-amber-800 dark:text-amber-400 text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-                  <span>{t('labour.important_tips')}</span>
-                </h3>
-                <ul className="text-xs text-amber-700 dark:text-slate-400 space-y-3 leading-relaxed font-medium">
-                   <li className="flex gap-2"><span>•</span> <span>{t('labour.tips_list.phone')}</span></li>
-                   <li className="flex gap-2"><span>•</span> <span>{t('labour.tips_list.description')}</span></li>
-                   <li className="flex gap-2"><span>•</span> <span>{t('labour.tips_list.photo')}</span></li>
-                </ul>
-             </div>
-          </div>
+          ))}
         </div>
-      )}
 
-      {/* My Jobs List */}
-      {tab === 'my-jobs' && (
-        <div className="page-wrapper">
-          {myJobs.length === 0
-            ? <div className="card text-center py-24 text-gray-400 dark:text-slate-600 italic font-bold border-dashed border-2">{t('common.no_data')}</div>
-            : myJobs.map(job => (
-              <div key={job._id} className="card flex items-center justify-between group py-5 px-6">
-                <div className="flex items-center gap-5">
-                   <div className="w-12 h-12 rounded-2xl bg-gray-50 dark:bg-slate-800 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-                     {(() => {
-                        const Icon = CATEGORY_ICON[job.category] || CATEGORY_ICON.other;
-                        return <Icon weight="duotone" />;
-                     })()}
-                   </div>
-                   <div>
-                      <p className="font-black text-gray-900 dark:text-white text-base">{job.title}</p>
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">{job.location?.district} • {job.applications?.length || 0} Applications</p>
-                   </div>
-                </div>
-                <div className="flex items-center gap-4">
-                   <span className={clsx('px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest', job.status === 'open' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700')}>
-                      {t(`labour.status.${job.status}`, job.status)}
-                   </span>
-                   <button className="p-2.5 text-gray-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-xl transition-all"><X size={18} /></button>
-                </div>
-              </div>
-            ))
-          }
-        </div>
-      )}
-
-      {/* Detail Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-xl flex items-center justify-center z-[2000] p-3 sm:p-4">
-          <div className="bg-white dark:bg-slate-900 rounded-[1.5rem] sm:rounded-[2.5rem] w-full max-w-lg overflow-hidden shadow-2xl animate-scale-up border border-white/10 max-h-[90vh] overflow-y-auto">
-            <div className="relative h-40 sm:h-56 bg-purple-600 dark:bg-purple-900/50 p-6 sm:p-10 flex items-end">
-               <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
-               <button onClick={() => setShowModal(null)} className="absolute top-6 right-6 p-2.5 bg-white/20 text-white hover:bg-white/40 rounded-2xl transition-all active:scale-95"><X size={24} /></button>
-               
-               <div className="flex items-center gap-4 sm:gap-6 relative z-10">
-                  <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-2xl sm:rounded-3xl bg-white dark:bg-slate-800 shadow-2xl flex items-center justify-center overflow-hidden border-2 sm:border-4 border-white dark:border-slate-700">
-                     {showModal.image ? <img src={showModal.image} alt="Identity" className="w-full h-full object-cover" /> : (
-                       <div className="text-4xl text-purple-600">
-                         {(() => {
-                           const Icon = CATEGORY_ICON[showModal.category] || CATEGORY_ICON.other;
-                           return <Icon weight="duotone" />;
-                         })()}
+        {/* Content Sections */}
+        <div className="animate-in fade-in slide-in-from-bottom-10 duration-700">
+          {tab === 'browse' && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+               {jobs.map(job => (
+                 <div key={job._id} onClick={() => setShowModal(job)} className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group cursor-pointer relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 dark:bg-slate-800/30 rounded-bl-[4rem] -mr-8 -mt-8 transition-transform group-hover:scale-110" />
+                    
+                    <div className="flex items-start justify-between mb-8 relative z-10">
+                       <div className={clsx("w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shadow-lg transition-transform group-hover:rotate-12 duration-500", CATEGORY_COLORS[job.category] || CATEGORY_COLORS.other)}>
+                          {(() => { const Icon = CATEGORY_ICON[job.category] || CATEGORY_ICON.other; return <Icon weight="duotone" />; })()}
                        </div>
-                     )}
-                  </div>
-                  <div>
-                     <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight leading-none mb-1 sm:mb-2">
-                        {showModal.key ? t(`labour.fallback.${showModal.key}.title`) : showModal.title}
-                     </h3>
-                     <p className="text-white/70 font-bold uppercase tracking-widest text-[8px] sm:text-[10px]">{showModal.location?.district}, {t(`crop.states.${showModal.location?.state}`, showModal.location?.state)}</p>
-                  </div>
-               </div>
-            </div>
+                       <div className="text-right">
+                          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{t('labour.wage')}</p>
+                          <p className="text-2xl font-black text-emerald-600 dark:text-emerald-400 leading-none">₹{job.wage}<span className="text-[10px] font-bold text-slate-400 ml-1">/{t(`labour.wage_units.${job.wageUnit}`)}</span></p>
+                       </div>
+                    </div>
 
-            <div className="p-5 sm:p-10">
-               <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 mb-6 sm:mb-8">
-                  <div className="bg-emerald-50 dark:bg-emerald-900/10 p-4 sm:p-5 rounded-2xl sm:rounded-[1.5rem] flex-1 text-center border border-emerald-100 dark:border-emerald-900/20 relative overflow-hidden group">
-                     <div className="absolute top-0 right-0 p-1.5 bg-emerald-500 text-white rounded-bl-xl shadow-md">
-                        <CheckCircle2 size={12} />
+                    <div className="mb-8">
+                       <h3 className="text-xl font-black text-slate-900 dark:text-white leading-tight mb-2 group-hover:text-purple-600 transition-colors">
+                          {job.key ? t(`labour.fallback.${job.key}.title`) : job.title}
+                       </h3>
+                       <div className="flex items-center gap-2 mb-4">
+                          <div className={clsx("px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest", CATEGORY_COLORS[job.category] || CATEGORY_COLORS.other)}>
+                             {t(`labour.categories.${job.category}`)}
+                          </div>
+                          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5"><Clock size={12} weight="bold" /> {new Date(job.createdAt).toLocaleDateString()}</span>
+                       </div>
+                       <p className="text-xs font-bold text-slate-500 dark:text-slate-400 line-clamp-2 italic leading-relaxed">
+                          "{job.key ? t(`labour.fallback.${job.key}.desc`) : job.description}"
+                       </p>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4 mb-8">
+                       <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 flex items-center gap-3">
+                          <MapPin size={16} weight="fill" className="text-red-500" />
+                          <span className="text-[10px] font-black text-slate-700 dark:text-slate-200 uppercase truncate">{job.location?.district}</span>
+                       </div>
+                       <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 flex items-center gap-3">
+                          <Users size={16} weight="fill" className="text-blue-500" />
+                          <span className="text-[10px] font-black text-slate-700 dark:text-slate-200 uppercase truncate">{job.workersNeeded} {t('labour.needed')}</span>
+                       </div>
+                    </div>
+
+                    <div className="pt-6 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                       <div className="flex items-center gap-2 text-purple-600 font-black text-sm">
+                          <Phone size={16} weight="fill" />
+                          <span>{job.contactNumber}</span>
+                       </div>
+                       <CaretRight size={18} weight="bold" className="text-slate-300 group-hover:text-purple-600 group-hover:translate-x-1 transition-all" />
+                    </div>
+                 </div>
+               ))}
+            </div>
+          )}
+
+          {tab === 'post' && (
+            <div className="grid lg:grid-cols-12 gap-10">
+               <div className="lg:col-span-8 bg-white dark:bg-slate-900 rounded-[3rem] p-10 sm:p-14 border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl" />
+                  <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter mb-10 flex items-center gap-4">
+                     <div className="w-12 h-12 rounded-2xl bg-purple-600 text-white flex items-center justify-center shadow-lg shadow-purple-500/20">
+                        <Plus size={24} weight="bold" />
                      </div>
-                     <p className="text-[9px] sm:text-[10px] text-emerald-600 dark:text-emerald-400 font-black uppercase tracking-widest mb-1">{t('labour.guaranteed_wage')}</p>
-                     <p className="text-xl sm:text-2xl font-black text-emerald-700 dark:text-emerald-300">₹{showModal.wage}</p>
-                  </div>
-                  <div className="bg-blue-50 dark:bg-blue-900/10 p-4 sm:p-5 rounded-2xl sm:rounded-[1.5rem] flex-1 text-center border border-blue-100 dark:border-blue-900/20">
-                     <p className="text-[9px] sm:text-[10px] text-blue-600 dark:text-blue-400 font-black uppercase tracking-widest mb-1">{t('labour.open_positions')}</p>
-                     <p className="text-xl sm:text-2xl font-black text-blue-700 dark:text-blue-300">{showModal.workersNeeded}</p>
-                  </div>
-               </div>
+                     {t('labour.tabs.post')}
+                  </h2>
 
-               <div className="mb-6 sm:mb-8">
-                  <p className="text-[9px] sm:text-[10px] text-gray-400 font-black uppercase mb-2 tracking-widest">{t('labour.job_description')}</p>
-                  <p className="text-xs sm:text-sm text-gray-700 dark:text-slate-300 leading-relaxed bg-gray-50 dark:bg-black/20 p-4 sm:p-5 rounded-xl sm:rounded-2xl border border-gray-100 dark:border-white/5 font-medium italic">
-                    "{showModal.key ? t(`labour.fallback.${showModal.key}.desc`) : showModal.description}"
-                  </p>
-               </div>
+                  <div className="space-y-8">
+                     <div className="grid sm:grid-cols-2 gap-8">
+                        <div className="space-y-3">
+                           <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">{t('labour.job_title')} *</label>
+                           <input className="w-full h-14 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-6 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500/20 transition-all outline-none" placeholder={t('labour.placeholders.title')} value={form.title} onChange={e => setForm(f => ({...f, title: e.target.value}))} />
+                        </div>
+                        <div className="space-y-3">
+                           <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">{t('auth.phone')} *</label>
+                           <div className="relative">
+                              <Phone size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400" />
+                              <input className="w-full h-14 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl pl-14 pr-6 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500/20 transition-all outline-none" placeholder={t('labour.placeholders.phone')} value={form.contactNumber} onChange={e => setForm(f => ({...f, contactNumber: e.target.value}))} />
+                           </div>
+                        </div>
+                     </div>
 
-               <div className="flex flex-col gap-3 sm:gap-4">
-                  <button 
-                    onClick={() => handlePayment(showModal)}
-                    disabled={processingPayment}
-                    className="btn-primary w-full justify-center h-14 sm:h-16 rounded-xl sm:rounded-2xl text-base sm:text-lg font-black shadow-xl shadow-primary/30 group active:scale-95 transition-all bg-indigo-600 hover:bg-indigo-700"
-                  >
-                    <Bank size={18} className="mr-2" /> 
-                    <span>{processingPayment ? t('labour.processing') : t('labour.pay_book', { amount: showModal.wage })}</span>
+                     <div className="space-y-3">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">{t('labour.description')} *</label>
+                        <textarea className="w-full min-h-[140px] bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-[2rem] p-6 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500/20 transition-all outline-none resize-none" placeholder={t('labour.placeholders.description')} value={form.description} onChange={e => setForm(f => ({...f, description: e.target.value}))} />
+                     </div>
+
+                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-8">
+                        <div className="col-span-2 space-y-3">
+                           <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">{t('labour.category')}</label>
+                           <div className="relative">
+                              <select className="w-full h-14 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-6 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500/20 transition-all outline-none appearance-none cursor-pointer" value={form.category} onChange={e => setForm(f => ({...f, category: e.target.value}))}>
+                                 {CATEGORIES.map(c => <option key={c} value={c}>{t(`labour.categories.${c}`)}</option>)}
+                              </select>
+                              <CaretRight size={14} weight="bold" className="absolute right-6 top-1/2 -translate-y-1/2 rotate-90 text-slate-400 pointer-events-none" />
+                           </div>
+                        </div>
+                        <div className="space-y-3">
+                           <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">{t('labour.wage')} (₹)</label>
+                           <input type="number" className="w-full h-14 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-6 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500/20 transition-all outline-none" value={form.wage} onChange={e => setForm(f => ({...f, wage: Number(e.target.value)}))} />
+                        </div>
+                        <div className="space-y-3">
+                           <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">{t('labour.wage_unit')}</label>
+                           <div className="relative">
+                              <select className="w-full h-14 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-6 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500/20 transition-all outline-none appearance-none cursor-pointer" value={form.wageUnit} onChange={e => setForm(f => ({...f, wageUnit: e.target.value}))}>
+                                 {['per_day', 'per_week', 'per_month', 'fixed'].map(u => <option key={u} value={u}>{t(`labour.wage_units.${u}`)}</option>)}
+                              </select>
+                              <CaretRight size={14} weight="bold" className="absolute right-6 top-1/2 -translate-y-1/2 rotate-90 text-slate-400 pointer-events-none" />
+                           </div>
+                        </div>
+                     </div>
+
+                     <div className="grid grid-cols-2 gap-8">
+                        <div className="space-y-3">
+                           <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">{t('labour.district')} *</label>
+                           <input className="w-full h-14 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-6 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500/20 transition-all outline-none" placeholder={t('labour.placeholders.district')} value={form.district} onChange={e => setForm(f => ({...f, district: e.target.value}))} />
+                        </div>
+                        <div className="space-y-3">
+                           <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">{t('labour.state')}</label>
+                           <div className="relative">
+                              <select className="w-full h-14 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-6 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500/20 transition-all outline-none appearance-none cursor-pointer" value={form.state} onChange={e => setForm(f => ({...f, state: e.target.value}))}>
+                                 {STATES.map(s => <option key={s} value={s}>{translateOption(s, 'state')}</option>)}
+                              </select>
+                              <CaretRight size={14} weight="bold" className="absolute right-6 top-1/2 -translate-y-1/2 rotate-90 text-slate-400 pointer-events-none" />
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+                  <button onClick={postJob} disabled={loading} className="w-full h-20 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-[2rem] font-black text-xl uppercase tracking-widest shadow-2xl shadow-purple-500/30 flex items-center justify-center gap-4 mt-14 hover:-translate-y-1 transition-all active:scale-95 disabled:opacity-50">
+                     {loading ? <SpinnerGap className="animate-spin" size={28} /> : <Handshake size={28} weight="fill" />}
+                     {loading ? t('labour.posting') : t('common.submit')}
                   </button>
-                  <a href={`tel:${showModal.contactNumber}`} className="flex items-center justify-center h-10 sm:h-12 rounded-xl text-gray-500 font-bold hover:bg-gray-50 dark:hover:bg-slate-800 transition-all text-xs sm:text-sm">
-                     <Phone size={14} className="mr-2" /> <span>{t('labour.call_details')}</span>
-                  </a>
                </div>
 
+               <div className="lg:col-span-4 space-y-10">
+                  <div className="bg-white dark:bg-slate-900 rounded-[3rem] p-10 border border-slate-200 dark:border-slate-800 shadow-sm text-center">
+                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-10">{t('labour.identity_photo')}</p>
+                     <div className="relative w-44 h-44 mx-auto mb-10 group">
+                        <div className="w-full h-full rounded-[3rem] bg-slate-50 dark:bg-slate-800 border-4 border-white dark:border-slate-700 shadow-2xl flex items-center justify-center overflow-hidden transition-transform group-hover:scale-105">
+                           {form.image ? <img src={form.image} alt="Profile" className="w-full h-full object-cover" /> : <User size={64} className="text-slate-200" weight="fill" />}
+                        </div>
+                        <label className="absolute -bottom-2 -right-2 w-14 h-14 bg-purple-600 text-white rounded-2xl flex items-center justify-center shadow-2xl cursor-pointer hover:scale-110 active:scale-95 transition-all">
+                           <Camera size={24} weight="fill" />
+                           <input type="file" className="hidden" accept="image/*" onChange={handleImage} />
+                        </label>
+                     </div>
+                     <p className="text-xs font-bold text-slate-400 leading-relaxed uppercase tracking-wider">{t('labour.upload_trust')}</p>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-indigo-600 to-purple-800 rounded-[3rem] p-10 text-white shadow-2xl relative overflow-hidden group">
+                     <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full blur-3xl" />
+                     <h3 className="font-black text-white uppercase text-xs tracking-widest mb-8 flex items-center gap-3">
+                        <Lightning size={20} weight="fill" className="text-amber-400" />
+                        {t('labour.important_tips')}
+                     </h3>
+                     <div className="space-y-6">
+                        {[
+                          { icon: Phone, text: t('labour.tips_list.phone') },
+                          { icon: FileText, text: t('labour.tips_list.description') },
+                          { icon: Camera, text: t('labour.tips_list.photo') }
+                        ].map((tip, i) => (
+                          <div key={i} className="flex gap-4 group/tip">
+                             <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-white/60 group-hover/tip:bg-white group-hover/tip:text-indigo-600 transition-all shrink-0">
+                                <tip.icon size={18} weight="bold" />
+                             </div>
+                             <p className="text-xs font-bold text-indigo-100/70 leading-relaxed group-hover/tip:text-white transition-colors">{tip.text}</p>
+                          </div>
+                        ))}
+                     </div>
+                  </div>
+               </div>
             </div>
-          </div>
+          )}
+
+          {tab === 'my-jobs' && (
+            <div className="space-y-6">
+               {myJobs.length === 0 ? (
+                 <div className="bg-white/40 dark:bg-slate-900/40 backdrop-blur-md rounded-[3rem] p-32 text-center border-2 border-dashed border-slate-200 dark:border-slate-800">
+                    <Briefcase size={64} className="mx-auto text-slate-200 mb-6" weight="duotone" />
+                    <p className="text-xl font-black text-slate-400 italic">{t('common.no_data')}</p>
+                 </div>
+               ) : (
+                 myJobs.map(job => (
+                   <div key={job._id} className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 sm:px-12 flex flex-col sm:flex-row sm:items-center justify-between gap-8 border border-slate-200 dark:border-slate-800 shadow-sm group hover:shadow-xl hover:border-purple-500/30 transition-all duration-500">
+                      <div className="flex items-center gap-8">
+                         <div className={clsx("w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shadow-inner group-hover:scale-110 transition-transform duration-500", CATEGORY_COLORS[job.category] || CATEGORY_COLORS.other)}>
+                            {(() => { const Icon = CATEGORY_ICON[job.category] || CATEGORY_ICON.other; return <Icon weight="duotone" />; })()}
+                         </div>
+                         <div>
+                            <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter leading-tight">{job.title}</h3>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">{job.location?.district} • <span className="text-purple-600">{job.applications?.length || 0} Applications</span></p>
+                         </div>
+                      </div>
+                      <div className="flex items-center gap-6">
+                         <div className={clsx("px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-sm", job.status === 'open' ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600" : "bg-amber-50 dark:bg-amber-900/20 text-amber-600")}>
+                            {t(`labour.status.${job.status}`, job.status)}
+                         </div>
+                         <button className="w-12 h-12 bg-slate-50 dark:bg-slate-800 text-slate-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-2xl flex items-center justify-center transition-all">
+                            <X size={24} weight="bold" />
+                         </button>
+                      </div>
+                   </div>
+                 ))
+               )}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Modern Detail Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-slate-950/90 backdrop-blur-xl flex items-center justify-center z-[2000] p-4 sm:p-6 animate-in fade-in duration-300">
+           <div className="bg-white dark:bg-slate-900 rounded-[3rem] w-full max-w-2xl overflow-hidden shadow-2xl border border-white/10 relative animate-in zoom-in-95 slide-in-from-bottom-10 duration-500 max-h-[90vh] flex flex-col">
+              
+              <div className="relative h-64 sm:h-80 shrink-0">
+                 <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-indigo-900" />
+                 <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
+                 <button onClick={() => setShowModal(null)} className="absolute top-8 right-8 w-12 h-12 bg-white/20 backdrop-blur-md text-white rounded-2xl flex items-center justify-center hover:bg-white/40 transition-all z-20">
+                    <X size={24} weight="bold" />
+                 </button>
+                 
+                 <div className="absolute bottom-0 left-0 w-full p-10 flex items-end justify-between bg-gradient-to-t from-black/60 to-transparent">
+                    <div className="flex items-center gap-8">
+                       <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-[2rem] bg-white dark:bg-slate-800 shadow-2xl flex items-center justify-center overflow-hidden border-4 border-white dark:border-slate-700 shrink-0">
+                          {showModal.image ? <img src={showModal.image} alt="Poster" className="w-full h-full object-cover" /> : (
+                            <div className="text-5xl text-purple-600">
+                               {(() => { const Icon = CATEGORY_ICON[showModal.category] || CATEGORY_ICON.other; return <Icon weight="duotone" />; })()}
+                            </div>
+                          )}
+                       </div>
+                       <div>
+                          <div className={clsx("inline-flex px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest mb-3", CATEGORY_COLORS[showModal.category] || CATEGORY_COLORS.other)}>
+                             {t(`labour.categories.${showModal.category}`)}
+                          </div>
+                          <h3 className="text-3xl sm:text-4xl font-black text-white tracking-tighter leading-none mb-2">
+                             {showModal.key ? t(`labour.fallback.${showModal.key}.title`) : showModal.title}
+                          </h3>
+                          <div className="flex items-center gap-4 text-white/60 font-black text-[10px] uppercase tracking-widest">
+                             <span className="flex items-center gap-2"><MapPin size={14} weight="fill" className="text-red-400" /> {showModal.location?.district}, {translateOption(showModal.location?.state, 'state')}</span>
+                             <span className="flex items-center gap-2"><Clock size={14} weight="fill" className="text-blue-400" /> {new Date(showModal.createdAt).toLocaleDateString()}</span>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+
+              <div className="p-10 sm:p-14 overflow-y-auto scrollbar-none flex-1">
+                 <div className="grid sm:grid-cols-2 gap-8 mb-12">
+                    <div className="bg-emerald-50 dark:bg-emerald-900/10 p-8 rounded-[2.5rem] border border-emerald-100 dark:border-emerald-900/30 text-center relative group overflow-hidden">
+                       <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl -mr-12 -mt-12" />
+                       <p className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-3">{t('labour.guaranteed_wage')}</p>
+                       <p className="text-4xl font-black text-emerald-700 dark:text-emerald-300 tracking-tighter">₹{showModal.wage}<span className="text-xs font-bold text-slate-400 ml-2">/{t(`labour.wage_units.${showModal.wageUnit}`)}</span></p>
+                    </div>
+                    <div className="bg-blue-50 dark:bg-blue-900/10 p-8 rounded-[2.5rem] border border-blue-100 dark:border-blue-900/30 text-center relative overflow-hidden">
+                       <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl -mr-12 -mt-12" />
+                       <p className="text-[10px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-3">{t('labour.open_positions')}</p>
+                       <p className="text-4xl font-black text-blue-700 dark:text-blue-300 tracking-tighter">{showModal.workersNeeded}<span className="text-xs font-bold text-slate-400 ml-2">{t('labour.needed')}</span></p>
+                    </div>
+                 </div>
+
+                 <div className="mb-12">
+                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center gap-3">
+                       <Info size={16} weight="fill" className="text-slate-300" />
+                       {t('labour.job_description')}
+                    </h4>
+                    <div className="bg-slate-50 dark:bg-slate-800/50 rounded-[2rem] p-10 border border-slate-100 dark:border-slate-800 relative group">
+                       <div className="absolute -top-4 -left-4 w-12 h-12 bg-white dark:bg-slate-900 rounded-2xl flex items-center justify-center text-4xl text-slate-200">“</div>
+                       <p className="text-base font-bold text-slate-700 dark:text-slate-300 leading-relaxed italic relative z-10">
+                          {showModal.key ? t(`labour.fallback.${showModal.key}.desc`) : showModal.description}
+                       </p>
+                    </div>
+                 </div>
+
+                 <div className="flex flex-col sm:flex-row gap-5">
+                    <button onClick={() => handlePayment(showModal)} disabled={processingPayment} className="flex-[2] h-20 bg-gradient-to-r from-emerald-600 to-green-700 text-white rounded-[2rem] font-black text-xl uppercase tracking-widest shadow-2xl shadow-emerald-500/30 flex items-center justify-center gap-4 hover:-translate-y-1 transition-all active:scale-95 disabled:opacity-50">
+                       <Bank size={28} weight="fill" />
+                       {processingPayment ? t('labour.processing') : t('labour.pay_book', { amount: showModal.wage })}
+                    </button>
+                    <a href={`tel:${showModal.contactNumber}`} className="flex-1 h-20 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-200 rounded-[2rem] font-black text-sm uppercase tracking-widest flex items-center justify-center gap-4 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+                       <Phone size={24} weight="fill" />
+                       {t('labour.call_details')}
+                    </a>
+                 </div>
+              </div>
+
+           </div>
         </div>
       )}
     </div>

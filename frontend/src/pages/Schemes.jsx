@@ -1,19 +1,27 @@
 import { useTranslation } from 'react-i18next';
-import { Landmark, FileText, CheckCircle2, IndianRupee, ArrowRight, ExternalLink } from 'lucide-react';
+import { Landmark, CheckCircle, Bank, ArrowRight, ExternalLink, ShieldCheck, CreditCard, Flask, Drop, ChartLineUp, Info, Star, Lightning, CaretRight } from '@phosphor-icons/react';
 import clsx from 'clsx';
 import { useQuery } from '@tanstack/react-query';
 import { schemesAPI } from '../services/api';
-import * as Icons from 'lucide-react';
 import { usePageAnimation } from '../hooks/usePageAnimation';
 
 const FALLBACK_SCHEMES = [
-  { id: 1, title: 'PM-KISAN Samman Nidhi', titleHi: 'पीएम-किसान सम्मान निधि', description: '₹6,000/year direct income support to small & marginal farmers in 3 installments.', descriptionHi: 'छोटे और सीमांत किसानों को ₹6,000 प्रति वर्ष की सीधी आय सहायता।', benefit: '₹6,000/year', benefitHi: '₹6,000/वर्ष', tags: ['Income', 'Direct Benefit'], tagsHi: ['आय', 'प्रत्यक्ष लाभ'], iconName: 'IndianRupee', color: 'from-emerald-500 to-teal-400', bg: 'bg-emerald-50 dark:bg-emerald-900/20', link: 'https://pmkisan.gov.in' },
-  { id: 2, title: 'Pradhan Mantri Fasal Bima Yojana', titleHi: 'प्रधानमंत्री फसल बीमा योजना', description: 'Crop insurance scheme providing financial support to farmers suffering crop loss/damage.', descriptionHi: 'फसल नुकसान/क्षति से पीड़ित किसानों को वित्तीय सहायता प्रदान करने वाली फसल बीमा योजना।', benefit: 'Up to ₹2L cover', benefitHi: '₹2 लाख तक कवर', tags: ['Insurance', 'Crop Loss'], tagsHi: ['बीमा', 'फसल नुकसान'], iconName: 'ShieldCheck', color: 'from-blue-500 to-cyan-400', bg: 'bg-blue-50 dark:bg-blue-900/20', link: 'https://pmfby.gov.in' },
-  { id: 3, title: 'Kisan Credit Card', titleHi: 'किसान क्रेडिट कार्ड', description: 'Provides farmers with affordable credit for agricultural needs at subsidized interest rates.', descriptionHi: 'किसानों को सब्सिडी वाली ब्याज दरों पर कृषि जरूरतों के लिए सस्ता ऋण प्रदान करता है।', benefit: '4% Interest Rate', benefitHi: '4% ब्याज दर', tags: ['Credit', 'Loan'], tagsHi: ['क्रेडिट', 'ऋण'], iconName: 'CreditCard', color: 'from-purple-500 to-violet-400', bg: 'bg-purple-50 dark:bg-purple-900/20', link: 'https://www.nabard.org/content1.aspx?id=572' },
-  { id: 4, title: 'Soil Health Card Scheme', titleHi: 'मृदा स्वास्थ्य कार्ड योजना', description: 'Provides soil health cards to farmers with crop-wise recommendations for nutrients.', descriptionHi: 'किसानों को पोषक तत्वों की फसल-वार सिफारिशों के साथ मृदा स्वास्थ्य कार्ड प्रदान करता है।', benefit: 'Free Soil Testing', benefitHi: 'मुफ्त मिट्टी परीक्षण', tags: ['Soil', 'Advisory'], tagsHi: ['मिट्टी', 'सलाह'], iconName: 'FlaskConical', color: 'from-amber-500 to-orange-400', bg: 'bg-amber-50 dark:bg-amber-900/20', link: 'https://soilhealth.dac.gov.in' },
-  { id: 5, title: 'PM Krishi Sinchai Yojana', titleHi: 'पीएम कृषि सिंचाई योजना', description: 'Ensures access to protective irrigation to all agricultural farms with water use efficiency.', descriptionHi: 'सभी कृषि खेतों को जल उपयोग दक्षता के साथ संरक्षित सिंचाई तक पहुंच सुनिश्चित करता है।', benefit: 'Irrigation Support', benefitHi: 'सिंचाई सहायता', tags: ['Water', 'Irrigation'], tagsHi: ['पानी', 'सिंचाई'], iconName: 'Droplets', color: 'from-sky-500 to-blue-400', bg: 'bg-sky-50 dark:bg-sky-900/20', link: 'https://pmksy.gov.in' },
-  { id: 6, title: 'e-NAM (National Agriculture Market)', titleHi: 'ई-नाम (राष्ट्रीय कृषि बाजार)', description: 'Online trading platform for agricultural commodities to get better prices for produce.', descriptionHi: 'उपज के लिए बेहतर मूल्य पाने हेतु कृषि वस्तुओं के लिए ऑनलाइन ट्रेडिंग प्लेटफॉर्म।', benefit: 'Better Market Price', benefitHi: 'बेहतर बाजार मूल्य', tags: ['Market', 'Trading'], tagsHi: ['बाजार', 'व्यापार'], iconName: 'TrendingUp', color: 'from-rose-500 to-pink-400', bg: 'bg-rose-50 dark:bg-rose-900/20', link: 'https://enam.gov.in' },
+  { id: 1, title: 'PM-KISAN Samman Nidhi', titleHi: 'पीएम-किसान सम्मान निधि', description: '₹6,000/year direct income support to small & marginal farmers in 3 installments.', descriptionHi: 'छोटे और सीमांत किसानों को ₹6,000 प्रति वर्ष की सीधी आय सहायता।', benefit: '₹6,000/year', benefitHi: '₹6,000/वर्ष', tags: ['Income', 'Direct Benefit'], tagsHi: ['आय', 'प्रत्यक्ष लाभ'], icon: Bank, color: 'emerald', link: 'https://pmkisan.gov.in' },
+  { id: 2, title: 'Pradhan Mantri Fasal Bima Yojana', titleHi: 'प्रधानमंत्री फसल बीमा योजना', description: 'Crop insurance scheme providing financial support to farmers suffering crop loss/damage.', descriptionHi: 'फसल नुकसान/क्षति से पीड़ित किसानों को वित्तीय सहायता प्रदान करने वाली फसल बीमा योजना।', benefit: 'Up to ₹2L cover', benefitHi: '₹2 लाख तक कवर', tags: ['Insurance', 'Crop Loss'], tagsHi: ['बीमा', 'फसल नुकसान'], icon: ShieldCheck, color: 'blue', link: 'https://pmfby.gov.in' },
+  { id: 3, title: 'Kisan Credit Card', titleHi: 'किसान क्रेडिट कार्ड', description: 'Provides farmers with affordable credit for agricultural needs at subsidized interest rates.', descriptionHi: 'किसानों को सब्सिडी वाली ब्याज दरों पर कृषि जरूरतों के लिए सस्ता ऋण प्रदान करता है।', benefit: '4% Interest Rate', benefitHi: '4% ब्याज दर', tags: ['Credit', 'Loan'], tagsHi: ['क्रेडिट', 'ऋण'], icon: CreditCard, color: 'purple', link: 'https://www.nabard.org/content1.aspx?id=572' },
+  { id: 4, title: 'Soil Health Card Scheme', titleHi: 'मृदा स्वास्थ्य कार्ड योजना', description: 'Provides soil health cards to farmers with crop-wise recommendations for nutrients.', descriptionHi: 'किसानों को पोषक तत्वों की फसल-वार सिफारिशों के साथ मृदा स्वास्थ्य कार्ड प्रदान करता है।', benefit: 'Free Soil Testing', benefitHi: 'मुफ्त मिट्टी परीक्षण', tags: ['Soil', 'Advisory'], tagsHi: ['मिट्टी', 'सलाह'], icon: Flask, color: 'amber', link: 'https://soilhealth.dac.gov.in' },
+  { id: 5, title: 'PM Krishi Sinchai Yojana', titleHi: 'पीएम कृषि सिंचाई योजना', description: 'Ensures access to protective irrigation to all agricultural farms with water use efficiency.', descriptionHi: 'सभी कृषि खेतों को जल उपयोग दक्षता के साथ संरक्षित सिंचाई तक पहुंच सुनिश्चित करता है।', benefit: 'Irrigation Support', benefitHi: 'सिंचाई सहायता', tags: ['Water', 'Irrigation'], tagsHi: ['पानी', 'सिंचाई'], icon: Drop, color: 'sky', link: 'https://pmksy.gov.in' },
+  { id: 6, title: 'e-NAM Market', titleHi: 'ई-नाम बाजार', description: 'Online trading platform for agricultural commodities to get better prices for produce.', descriptionHi: 'उपज के लिए बेहतर मूल्य पाने हेतु कृषि वस्तुओं के लिए ऑनलाइन ट्रेडिंग प्लेटफॉर्म।', benefit: 'Better Price', benefitHi: 'बेहतर मूल्य', tags: ['Market', 'Trading'], tagsHi: ['बाजार', 'व्यापार'], icon: ChartLineUp, color: 'rose', link: 'https://enam.gov.in' },
 ];
+
+const COLOR_MAP = {
+  emerald: 'from-emerald-500 to-teal-500 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-900/30 shadow-emerald-500/10',
+  blue: 'from-blue-500 to-indigo-500 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-blue-100 dark:border-blue-900/30 shadow-blue-500/10',
+  purple: 'from-purple-500 to-violet-500 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 border-purple-100 dark:border-purple-900/30 shadow-purple-500/10',
+  amber: 'from-amber-500 to-orange-500 bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 border-amber-100 dark:border-amber-900/30 shadow-amber-500/10',
+  sky: 'from-sky-500 to-blue-500 bg-sky-50 dark:bg-sky-900/20 text-sky-600 dark:text-sky-400 border-sky-100 dark:border-sky-900/30 shadow-sky-500/10',
+  rose: 'from-rose-500 to-pink-500 bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 border-rose-100 dark:border-rose-900/30 shadow-rose-500/10'
+};
 
 export default function Schemes() {
   const { t, i18n } = useTranslation();
@@ -30,74 +38,110 @@ export default function Schemes() {
     staleTime: 15 * 60 * 1000,
   });
 
-  // Always show data — use API data if available, fallback to static
-  const schemes = response?.data?.length ? response.data : FALLBACK_SCHEMES;
+  const schemes = response?.data?.length ? response.data.map((s, i) => ({...s, ...FALLBACK_SCHEMES[i % FALLBACK_SCHEMES.length]})) : FALLBACK_SCHEMES;
 
   return (
-    <div ref={ref} className="page-wrapper pb-20">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-        <div>
-          <span className="px-3 py-1 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-full text-[10px] font-black uppercase tracking-widest border border-amber-100 mb-4 inline-block tracking-tighter">Government Portal</span>
-          <h1 className="page-title flex items-center gap-2">
-            <Landmark className="text-emerald-500" size={32} />
-            <span>{t('schemes.title')}</span>
-          </h1>
-          <p className="page-subtitle">
-            {t('schemes.subtitle')}
-          </p>
-        </div>
-      </div>
-
-      {isLoading && schemes.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-20 gap-4">
-          <div className="w-12 h-12 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
-          <p className="text-gray-500 dark:text-slate-400 animate-pulse">{t('schemes.loading')}</p>
-        </div>
-      )}
-
-      {/* Grid */}
-      <div className="grid md:grid-cols-2 gap-6">
-        {schemes.map((scheme) => {
-          const Icon = Icons[scheme.iconName] || Icons.Landmark;
-          return (
-          <div key={scheme.id} className="anim-card card p-6 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 shadow-xl hover:shadow-2xl transition-all duration-300 group overflow-hidden relative flex flex-col h-full">
-            
-            {/* Top right decoration */}
-            <div className={clsx('absolute -top-10 -right-10 w-32 h-32 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-500 bg-gradient-to-br', scheme.color)} />
-
-            <div className="flex items-start gap-5 relative z-10">
-              <div className={clsx('w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 shadow-sm', scheme.bg)}>
-                <Icon size={26} className={clsx('text-transparent bg-clip-text bg-gradient-to-br', scheme.color)} style={{ color: 'inherit' }} />
+    <div ref={ref} className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] transition-colors duration-500 font-sans selection:bg-amber-100 selection:text-amber-900 pt-28 sm:pt-36 pb-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        
+        {/* Header Section */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-14">
+          <div>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="px-4 py-2 bg-amber-600 dark:bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-amber-500/30 border border-amber-400/20 flex items-center gap-2">
+                <Landmark size={14} weight="fill" className="animate-pulse" />
+                {t('schemes.government_portal')}
               </div>
-              <div className="flex-1">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white leading-tight mb-2 group-hover:text-primary transition-colors">
-                  {lang === 'hi' ? scheme.titleHi : scheme.title}
-                </h2>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  <span className="px-2.5 py-1 text-[10px] font-black uppercase tracking-widest rounded-lg bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/50">
-                    {lang === 'hi' ? (scheme.benefitHi || scheme.benefit) : scheme.benefit}
-                  </span>
-                  {(lang === 'hi' ? (scheme.tagsHi || scheme.tags) : scheme.tags).map(t => (
-                    <span key={t} className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest rounded-lg bg-gray-50 dark:bg-slate-800 text-gray-500 dark:text-slate-400 border border-gray-100 dark:border-slate-700">
-                      {t}
-                    </span>
-                  ))}
-                </div>
+              <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                <ShieldCheck size={14} weight="fill" className="text-emerald-500" />
+                {t('schemes.verified_scheme')}
               </div>
             </div>
-
-            <p className="text-sm text-gray-600 dark:text-slate-300 leading-relaxed font-medium mb-6 relative z-10 flex-1">
-              {lang === 'hi' ? scheme.descriptionHi : scheme.description}
+            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">
+              <span className="bg-gradient-to-r from-amber-600 to-orange-600 dark:from-amber-400 dark:to-orange-400 bg-clip-text text-transparent">
+                {t('schemes.title')}
+              </span>
+            </h1>
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-bold mt-5 max-w-lg leading-relaxed">
+              {t('schemes.subtitle')}
             </p>
-
-            <a href={scheme.link} target="_blank" rel="noopener noreferrer" 
-               className="mt-auto inline-flex items-center justify-between w-full p-4 rounded-xl bg-gray-50 dark:bg-slate-800/50 hover:bg-primary hover:text-white text-gray-700 dark:text-slate-300 transition-colors font-bold group/btn relative z-10">
-              <span>{t('schemes.apply')}</span>
-              <ExternalLink size={18} className="group-hover/btn:scale-110 group-hover/btn:translate-x-1 transition-transform" />
-            </a>
           </div>
-          );
-        })}
+        </div>
+
+        {isLoading && (
+          <div className="flex flex-col items-center justify-center py-32 gap-6">
+             <div className="w-16 h-16 border-4 border-amber-500/20 border-t-amber-500 rounded-full animate-spin shadow-2xl shadow-amber-500/20" />
+             <p className="text-sm font-black uppercase tracking-widest text-slate-400 animate-pulse">{t('schemes.loading')}</p>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 animate-in fade-in slide-in-from-bottom-10 duration-700">
+           {schemes.map((scheme) => {
+             const Icon = scheme.icon || Bank;
+             const colors = COLOR_MAP[scheme.color] || COLOR_MAP.emerald;
+             return (
+               <div key={scheme.id} className="bg-white dark:bg-slate-900 rounded-[3rem] border border-slate-200 dark:border-slate-800 p-10 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group relative overflow-hidden flex flex-col h-full">
+                  
+                  {/* Decorative Elements */}
+                  <div className={clsx("absolute -top-20 -right-20 w-64 h-64 rounded-full blur-[80px] opacity-10 group-hover:opacity-20 transition-opacity bg-gradient-to-br", colors.split(' ')[0])} />
+                  
+                  <div className="flex items-start gap-8 relative z-10 mb-10">
+                     <div className={clsx("w-20 h-20 rounded-[2rem] flex items-center justify-center shrink-0 shadow-2xl group-hover:rotate-6 transition-transform duration-500", colors.split(' ').slice(2, 4).join(' '))}>
+                        <Icon size={36} weight="duotone" />
+                     </div>
+                     <div className="flex-1 pt-2">
+                        <h2 className="text-2xl font-black text-slate-900 dark:text-white leading-tight tracking-tight mb-4 group-hover:text-amber-600 transition-colors">
+                           {lang === 'hi' ? scheme.titleHi : scheme.title}
+                        </h2>
+                        <div className="flex flex-wrap gap-3">
+                           <div className={clsx("px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 border", colors.split(' ').slice(4, 7).join(' '))}>
+                              <Lightning size={14} weight="fill" />
+                              {lang === 'hi' ? (scheme.benefitHi || scheme.benefit) : scheme.benefit}
+                           </div>
+                           {(lang === 'hi' ? (scheme.tagsHi || scheme.tags) : scheme.tags).map(tag => (
+                             <div key={tag} className="px-4 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-widest border border-slate-100 dark:border-slate-800">
+                                {tag}
+                             </div>
+                           ))}
+                        </div>
+                     </div>
+                  </div>
+
+                  <div className="relative z-10 mb-10 flex-1">
+                     <div className="bg-slate-50 dark:bg-slate-800/50 rounded-[2rem] p-8 border border-slate-100 dark:border-slate-800 italic relative overflow-hidden group/text">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl pointer-events-none" />
+                        <p className="text-sm font-bold text-slate-600 dark:text-slate-300 leading-relaxed relative z-10">
+                           "{lang === 'hi' ? scheme.descriptionHi : scheme.description}"
+                        </p>
+                     </div>
+                  </div>
+
+                  <a href={scheme.link} target="_blank" rel="noopener noreferrer" className="mt-auto h-20 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-[2rem] font-black text-sm uppercase tracking-[0.2em] flex items-center justify-center gap-4 hover:bg-amber-600 hover:text-white transition-all shadow-sm hover:shadow-2xl hover:shadow-amber-500/30 group/btn">
+                     {t('schemes.apply')}
+                     <CaretRight size={24} weight="bold" className="group-hover/btn:translate-x-2 transition-transform" />
+                  </a>
+               </div>
+             );
+           })}
+        </div>
+
+        <div className="mt-20 p-12 bg-gradient-to-br from-slate-900 to-slate-950 rounded-[4rem] text-white shadow-2xl relative overflow-hidden">
+           <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 rounded-full blur-[120px] pointer-events-none" />
+           <div className="flex flex-col md:flex-row items-center justify-between gap-10 relative z-10">
+              <div className="flex items-center gap-8">
+                 <div className="w-24 h-24 rounded-[2.5rem] bg-white/10 backdrop-blur-xl flex items-center justify-center border border-white/20">
+                    <Info size={48} weight="fill" className="text-amber-400" />
+                 </div>
+                 <div>
+                    <h3 className="text-3xl font-black tracking-tight mb-2">{t('schemes.help_title')}</h3>
+                    <p className="text-slate-400 font-bold max-w-sm">{t('schemes.help_desc')}</p>
+                 </div>
+              </div>
+              <button className="h-20 px-12 bg-white text-slate-900 rounded-[2rem] font-black text-sm uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl">
+                 {t('schemes.contact_support')}
+              </button>
+           </div>
+        </div>
       </div>
     </div>
   );

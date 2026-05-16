@@ -14,12 +14,12 @@ import clsx from 'clsx';
 import { usePageAnimation } from '../hooks/usePageAnimation';
 import { STATES_DATA } from '../data/regions';
 
-const CATEGORIES = [
-  { id: 'all', name: 'All Shops', icon: '🏪' },
-  { id: 'trader', name: 'Traders/Mandi', icon: '🤝' },
-  { id: 'seeds', name: 'Seed Shops', icon: '🌱' },
-  { id: 'fertilizer', name: 'Fertilizers', icon: '🧪' },
-  { id: 'machinery', name: 'Machinery', icon: '🚜' },
+const getCategories = (t) => [
+  { id: 'all', name: t('buyer.categories.all'), icon: '🏪' },
+  { id: 'trader', name: t('buyer.categories.trader'), icon: '🤝' },
+  { id: 'seeds', name: t('buyer.categories.seeds'), icon: '🌱' },
+  { id: 'fertilizer', name: t('buyer.categories.fertilizer'), icon: '🧪' },
+  { id: 'machinery', name: t('buyer.categories.machinery'), icon: '🚜' },
 ];
 
 const FALLBACK_BUYERS = [
@@ -52,6 +52,7 @@ export default function BuyerPortal() {
   const [tab, setTab] = useState('browse');
   const [buyers, setBuyers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const CATEGORIES = getCategories(t);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBuyer, setSelectedBuyer] = useState(null);
@@ -228,11 +229,11 @@ export default function BuyerPortal() {
               <Storefront className="text-green-600 dark:text-green-400" size={32} />
             </div>
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-400 dark:to-emerald-400">
-              {t('buyer.marketplace_title', 'Agri Marketplace v5')}
+              {t('buyer.marketplace_title')}
             </span>
           </h1>
           <p className="text-gray-500 dark:text-slate-400 mt-2 font-medium">
-            {t('buyer.marketplace_subtitle', 'Connect with verified traders, seed shops, and fertilizer centers near you.')}
+            {t('buyer.marketplace_subtitle')}
           </p>
         </div>
 
@@ -261,7 +262,7 @@ export default function BuyerPortal() {
               <MagnifyingGlass className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
               <input 
                 type="text" 
-                placeholder="Search shops, districts, or products..."
+                placeholder={t('buyer.search_placeholder')}
                 className="input pl-12 h-14 rounded-2xl border-2"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -332,7 +333,7 @@ export default function BuyerPortal() {
                           </button>
                         )}
                         <div className="flex items-center gap-1 text-[10px] font-black text-green-600 uppercase tracking-widest">
-                          <ShieldCheck size={14} /> Verified
+                          <ShieldCheck size={14} /> {t('buyer.verified')}
                         </div>
                       </div>
                     </div>
@@ -349,16 +350,16 @@ export default function BuyerPortal() {
         <div className="grid lg:grid-cols-12 gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
            <div className="lg:col-span-8 card border-none shadow-premium p-8 sm:p-10">
               <h2 className="text-2xl font-black mb-8 flex items-center gap-3">
-                <Storefront className="text-green-600" /> Register Your Shop / Business
+                <Storefront className="text-green-600" /> {t('buyer.tabs.register')}
               </h2>
               <div className="space-y-6">
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div>
-                    <label className="label">Shop Name (Dukaan ka Naam) *</label>
+                    <label className="label">{t('buyer.shop_name')} *</label>
                     <input className="input border-2 h-14 rounded-xl" placeholder="e.g. Bharat Anaj Bhandar" value={form.shopName} onChange={e => setForm({...form, shopName: e.target.value})} />
                   </div>
                   <div>
-                    <label className="label">Business Category *</label>
+                    <label className="label">{t('buyer.business_category')} *</label>
                     <select className="input border-2 h-14 rounded-xl" value={form.category} onChange={e => setForm({...form, category: e.target.value})}>
                       {CATEGORIES.filter(c => c.id !== 'all').map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                     </select>
@@ -367,29 +368,29 @@ export default function BuyerPortal() {
 
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div>
-                    <label className="label">Owner Name *</label>
+                    <label className="label">{t('buyer.owner_name')} *</label>
                     <input className="input border-2 h-14 rounded-xl" value={form.ownerName} onChange={e => setForm({...form, ownerName: e.target.value})} />
                   </div>
                   <div>
-                    <label className="label">Mobile Number *</label>
+                    <label className="label">{t('buyer.mobile_number')} *</label>
                     <input className="input border-2 h-14 rounded-xl" value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} />
                   </div>
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div>
-                    <label className="label">Full Address *</label>
+                    <label className="label">{t('buyer.full_address')} *</label>
                     <textarea className="input border-2 min-h-[100px] rounded-xl pt-4" placeholder="Street, Village, Near Landmark..." value={form.address} onChange={e => setForm({...form, address: e.target.value})} />
                   </div>
                   <div className="space-y-4">
                     <div>
-                      <label className="label">State *</label>
+                      <label className="label">{t('buyer.state')} *</label>
                       <select className="input border-2 h-14 rounded-xl" value={form.state} onChange={e => setForm({...form, state: e.target.value, district: STATES_DATA[e.target.value][0]})}>
                         {Object.keys(STATES_DATA).map(s => <option key={s} value={s}>{s}</option>)}
                       </select>
                     </div>
                     <div>
-                      <label className="label">District *</label>
+                      <label className="label">{t('buyer.district')} *</label>
                       <select className="input border-2 h-14 rounded-xl" value={form.district} onChange={e => setForm({...form, district: e.target.value})}>
                         {STATES_DATA[form.state]?.map(d => <option key={d} value={d}>{d}</option>)}
                       </select>
@@ -400,22 +401,22 @@ export default function BuyerPortal() {
                 {/* Inventory Builder */}
                 <div className="card bg-slate-50 dark:bg-slate-900/50 p-6 rounded-[2rem] border-2 border-slate-100 dark:border-slate-800">
                   <h3 className="font-black text-lg mb-6 flex items-center gap-3">
-                    <Package className="text-green-600" /> Manage Shop Inventory
+                    <Package className="text-green-600" /> {t('buyer.manage_inventory')}
                   </h3>
                   
                   <div className="grid sm:grid-cols-12 gap-4 mb-6">
                     <div className="sm:col-span-4">
-                      <input className="input h-12 rounded-xl text-sm" placeholder="Item Name (e.g. Wheat)" value={newItem.itemName} onChange={e => setNewItem({...newItem, itemName: e.target.value})} />
+                      <input className="input h-12 rounded-xl text-sm" placeholder={t('buyer.item_name')} value={newItem.itemName} onChange={e => setNewItem({...newItem, itemName: e.target.value})} />
                     </div>
                     <div className="sm:col-span-3">
-                      <input type="number" className="input h-12 rounded-xl text-sm" placeholder="Price" value={newItem.price} onChange={e => setNewItem({...newItem, price: e.target.value})} />
+                      <input type="number" className="input h-12 rounded-xl text-sm" placeholder={t('buyer.price')} value={newItem.price} onChange={e => setNewItem({...newItem, price: e.target.value})} />
                     </div>
                     <div className="sm:col-span-3">
                       <select className="input h-12 rounded-xl text-sm" value={newItem.unit} onChange={e => setNewItem({...newItem, unit: e.target.value})}>
-                        <option value="kg">per kg</option>
-                        <option value="quintal">per quintal</option>
-                        <option value="bag">per bag</option>
-                        <option value="piece">per piece</option>
+                        <option value="kg">{t('buyer.per_kg')}</option>
+                        <option value="quintal">{t('buyer.per_quintal')}</option>
+                        <option value="bag">{t('buyer.per_bag')}</option>
+                        <option value="piece">{t('buyer.per_piece')}</option>
                       </select>
                     </div>
                     <div className="sm:col-span-2">
@@ -450,7 +451,7 @@ export default function BuyerPortal() {
                 <div className="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-800">
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <h4 className="font-black text-sm flex items-center gap-2"><MapTrifold className="text-green-600" /> Precise Location (Map)</h4>
+                      <h4 className="font-black text-sm flex items-center gap-2"><MapTrifold className="text-green-600" /> {t('buyer.location_search')}</h4>
                       <p className="text-[10px] text-gray-400 mt-1">Farmers will see your shop pinned on the map.</p>
                     </div>
                     <button 
@@ -518,7 +519,7 @@ export default function BuyerPortal() {
                 </div>
 
                 <button onClick={handleRegister} disabled={loading} className="btn-primary w-full h-16 rounded-2xl text-lg font-black shadow-xl shadow-green-600/20 mt-6 disabled:opacity-50">
-                  {loading ? 'Registering...' : 'Create Shop Profile'}
+                  {loading ? 'Registering...' : t('buyer.create_profile')}
                 </button>
               </div>
            </div>
@@ -528,7 +529,7 @@ export default function BuyerPortal() {
                  <div className="w-20 h-20 bg-white dark:bg-slate-800 rounded-3xl shadow-xl mx-auto mb-6 flex items-center justify-center overflow-hidden">
                     {form.image ? <img src={form.image} className="w-full h-full object-cover" /> : <Camera className="text-green-600" size={32} />}
                  </div>
-                 <h3 className="font-black text-gray-900 dark:text-white mb-2">Upload Shop Photo</h3>
+                 <h3 className="font-black text-gray-900 dark:text-white mb-2">{t('buyer.upload_photo')}</h3>
                  <p className="text-xs text-gray-500 mb-6">Visible to all farmers in your area.</p>
                  <input type="file" id="shop-photo" hidden accept="image/*" onChange={handlePhotoChange} />
                  <label htmlFor="shop-photo" className="cursor-pointer px-6 py-2 bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 rounded-xl text-xs font-black shadow-sm border border-gray-100 dark:border-slate-700">
@@ -609,9 +610,9 @@ export default function BuyerPortal() {
                  </div>
 
                  <div className="mt-12 p-8 bg-green-50 dark:bg-green-900/10 rounded-3xl border-2 border-dashed border-green-200 dark:border-green-900/30 text-center">
-                    <p className="text-green-800 dark:text-green-400 font-bold mb-4">Want to negotiate or ask about other items?</p>
+                    <p className="text-green-800 dark:text-green-400 font-bold mb-4">{t('buyer.negotiate_text')}</p>
                     <a href={`tel:${selectedBuyer.phone}`} className="inline-flex items-center gap-3 px-8 py-4 bg-green-600 text-white rounded-2xl font-black shadow-lg">
-                       <Phone size={20} /> Call Shop Owner
+                       <Phone size={20} /> {t('buyer.call_owner')}
                     </a>
                  </div>
               </div>

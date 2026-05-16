@@ -66,6 +66,8 @@ services:
       - NEWS_SERVICE_URL=http://news-service:5009
       - PAYMENT_SERVICE_URL=http://payment-service:5010
       - SCHEMES_SERVICE_URL=http://schemes-service:5011
+      - BUYER_SERVICE_URL=http://buyer-service:5012
+
       - CLERK_PUBLISHABLE_KEY=${CLERK_PUBLISHABLE_KEY}
       - CLERK_SECRET_KEY=${CLERK_SECRET_KEY}
     depends_on:
@@ -265,3 +267,21 @@ services:
       - JWT_SECRET=${JWT_SECRET}
     networks:
       - smart-kisan-net
+
+  buyer-service:
+    build: ./services/buyer-service
+    container_name: sk-buyer
+    restart: unless-stopped
+    environment:
+      - PORT=5012
+      - MONGODB_URI=mongodb://mongodb:27017/smart-kisan
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - smart-kisan-net
+

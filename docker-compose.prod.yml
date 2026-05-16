@@ -28,6 +28,8 @@ services:
       - NEWS_SERVICE_URL=http://sk-news:5009
       - PAYMENT_SERVICE_URL=http://sk-payment:5010
       - SCHEMES_SERVICE_URL=http://sk-schemes:5011
+      - BUYER_SERVICE_URL=http://sk-buyer:5012
+
     networks: [sk-net]
     depends_on:
       redis:
@@ -120,6 +122,14 @@ services:
     env_file: .env.prod
     environment: [PORT=5011]
     networks: [sk-net]
+
+  buyer-service:
+    build: ./services/buyer-service
+    container_name: sk-buyer
+    env_file: .env.prod
+    environment: [PORT=5012]
+    networks: [sk-net]
+
 
 networks:
   sk-net:

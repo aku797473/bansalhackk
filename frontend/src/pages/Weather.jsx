@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { weatherAPI } from '../services/api';
 import { useQuery } from '@tanstack/react-query';
-import { MapPin, Drop, Wind, Thermometer, Warning, ArrowCounterClockwise, Calendar, CheckCircle, ShieldCheck, Sun, CloudRain, CloudLightning, CloudFog, Cloud, Info } from '@phosphor-icons/react';
+import { MapPin, Drop, Wind, Thermometer, Warning, ArrowCounterClockwise, Calendar, CheckCircle, ShieldCheck, Sun, CloudRain, CloudLightning, CloudFog, Cloud, Info, MagnifyingGlass, Sparkle, Lightning } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { usePageAnimation } from '../hooks/usePageAnimation';
@@ -46,14 +46,13 @@ export default function Weather() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const { data, isLoading: loading, refetch, isFetching: searching } = useQuery({
-    queryKey: ['weather', searchQuery, 'v7'],
+    queryKey: ['weather', searchQuery, 'v8'],
     queryFn: async () => {
       if (searchQuery) {
         const res = await weatherAPI.getByCity(searchQuery);
         return res.data.data;
       }
 
-      // Fast geo: 1.5s timeout, then immediately fall back
       const getPosition = () => new Promise((resolve) => {
         if (!navigator.geolocation) return resolve(null);
         const timer = setTimeout(() => resolve(null), 1500);
@@ -71,9 +70,8 @@ export default function Weather() {
       const res = await weatherAPI.getCurrent(lat, lon);
       const d = res.data.data;
       
-      // Ensure forecast exists and has at least 1 item before padding
       if (d && (!d.forecast || d.forecast.length === 0)) {
-        d.forecast = FALLBACK_WEATHER.forecast; // Use fallback outlook if backend fails to provide it
+        d.forecast = FALLBACK_WEATHER.forecast; 
       } else if (d && d.forecast && d.forecast.length < 7) {
         while (d.forecast.length < 7) {
           const last = d.forecast[d.forecast.length - 1];
@@ -99,12 +97,12 @@ export default function Weather() {
     retry: 1,
   });
 
-  // Show fallback data right away — never show full-page skeleton
   const displayData = data || FALLBACK_WEATHER;
   const isRealData = data && !data.isFallback;
 
   const fetchByLocation = () => {
     setSearchQuery('');
+    setCitySearch('');
     refetch();
   };
 
@@ -113,165 +111,215 @@ export default function Weather() {
     setSearchQuery(citySearch.trim());
   };
 
-  // Only show skeleton on the very first cold load (no fallback yet rendered)
-  if (loading && !displayData) return (
-    <div className="max-w-4xl mx-auto px-4 py-6">
-      <div className="skeleton h-48 mb-4" />
-      <div className="grid grid-cols-5 gap-3">{[...Array(5)].map((_, i) => <div key={i} className="skeleton h-28" />)}</div>
-    </div>
-  );
-
   return (
-    <div ref={ref} className="max-w-4xl mx-auto px-4 py-6">
-      <div className="anim-header page-header flex items-center justify-between">
-        <div>
-          <h1 className="page-title">{t('weather.title')}</h1>
-          <p className="page-subtitle">
-            {t('weather.current')}
-            {searching && <span className="ml-2 text-xs text-primary animate-pulse">{t('common.updating', 'Updating…')}</span>}
-            {displayData?.isFallback && !searching && <span className="ml-2 text-xs text-amber-500">{t('weather.fallback_notice', 'Showing estimate — fetching live data…')}</span>}
-          </p>
-        </div>
-        <button onClick={fetchByLocation} className={`btn-ghost p-2 ${searching ? 'animate-spin' : ''}`}><ArrowCounterClockwise size={16} /></button>
-      </div>
-
-      {/* Search */}
-      <div className="anim-card flex gap-2 mb-6">
-        <input className="input flex-1" placeholder={t('market.search')}
-          value={citySearch} onChange={e => setCitySearch(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && searchCity()} />
-        <button onClick={searchCity} disabled={searching} className="btn-primary">
-          {searching ? '...' : t('common.submit')}
-        </button>
-      </div>
-
-      {displayData && (
-        <>
-          {/* Alerts */}
-          {displayData.alerts?.length > 0 && (
-            <div className="mb-5 p-4 bg-red-50 border border-red-200 rounded-2xl flex items-start gap-3">
-              <Warning size={18} weight="bold" className="text-red-500 shrink-0 mt-0.5" />
-              <div>
-                <p className="font-semibold text-red-700 text-sm">{t('weather.alerts')}</p>
-                {displayData.alerts.map((a, i) => <p key={i} className="text-sm text-red-600">{a.message}</p>)}
+    <div ref={ref} className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] transition-colors duration-500 font-sans selection:bg-sky-100 selection:text-sky-900 pt-28 sm:pt-36 pb-20">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6">
+        
+        {/* Header Section */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-14">
+          <div>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="px-4 py-2 bg-sky-600 dark:bg-sky-500 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-sky-500/30 border border-sky-400/20 flex items-center gap-2">
+                <Sparkle size={14} weight="fill" className="animate-pulse" />
+                {t('weather.real_time')}
+              </div>
+              <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                <Lightning size={14} weight="fill" className="text-amber-500" />
+                {t('weather.version')}
               </div>
             </div>
-          )}
+            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">
+              <span className="bg-gradient-to-r from-sky-600 to-blue-600 dark:from-sky-400 dark:to-blue-400 bg-clip-text text-transparent">
+                {t('weather.title')}
+              </span>
+            </h1>
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-bold mt-5 max-w-lg leading-relaxed flex items-center gap-3">
+              {t('weather.current')}
+              {searching && <span className="text-sky-500 animate-pulse text-[10px] uppercase tracking-widest">{t('weather.updating')}</span>}
+              {displayData?.isFallback && !searching && <span className="text-amber-500 text-[10px] uppercase tracking-widest">{t('weather.estimate')}</span>}
+            </p>
+          </div>
+          
+          <div className="flex items-center gap-3">
+             <div className="relative group flex-1 sm:w-64">
+                <input 
+                  className="w-full h-14 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-12 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all outline-none"
+                  placeholder={t('weather.search_placeholder')}
+                  value={citySearch} 
+                  onChange={e => setCitySearch(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && searchCity()} 
+                />
+                <MagnifyingGlass size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-sky-500 transition-colors" />
+             </div>
+             <button onClick={fetchByLocation} className="w-14 h-14 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex items-center justify-center text-slate-500 hover:text-sky-500 hover:border-sky-500 transition-all shadow-sm">
+                <ArrowCounterClockwise size={22} weight="bold" className={clsx(searching && "animate-spin")} />
+             </button>
+          </div>
+        </div>
 
-          {/* Current */}
-          <div className="anim-card bg-gradient-to-br from-sky-400 to-blue-600 rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 text-white shadow-premium mb-8 relative overflow-hidden group">
-            <div className="absolute -top-20 -right-20 w-80 h-80 bg-white/20 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-1000" />
-            
-            <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-6 sm:gap-10 relative z-10">
-              <div className="text-center lg:text-left w-full lg:w-auto">
-                <div className="flex items-center justify-center lg:justify-start gap-2 mb-4 text-sky-50 font-bold tracking-wide">
-                  <MapPin size={18} />
-                  <span className="text-base sm:text-lg truncate max-w-[200px] sm:max-w-none">{displayData.city}, {displayData.country}</span>
+        {displayData && (
+          <div className="space-y-8">
+            {/* Alerts */}
+            {displayData.alerts?.length > 0 && (
+              <div className="p-6 bg-red-50 dark:bg-red-500/10 border border-red-100 dark:border-red-500/20 rounded-[2rem] flex items-start gap-4 animate-in fade-in slide-in-from-top-5 duration-500">
+                <div className="w-12 h-12 rounded-xl bg-red-500 text-white flex items-center justify-center shrink-0 shadow-lg shadow-red-500/20">
+                   <Warning size={24} weight="fill" className="animate-pulse" />
                 </div>
-                <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
-                  <div className="drop-shadow-lg">{getEmoji(displayData.icon, 80)}</div>
-                  <div>
-                    <h2 className="text-7xl sm:text-9xl font-black tracking-tighter drop-shadow-md leading-none">{Math.round(displayData.temperature)}°</h2>
-                    <p className="text-lg sm:text-xl font-bold text-sky-100 capitalize mt-2 flex items-center justify-center lg:justify-start gap-2">
-                       {displayData.description} 
-                       <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                       <span className="text-[10px] uppercase tracking-widest opacity-70">{isRealData ? t('weather.real_time') : t('weather.estimate')}</span>
-                    </p>
+                <div>
+                  <p className="text-xs font-black text-red-600 dark:text-red-400 uppercase tracking-widest mb-1">{t('weather.alerts')}</p>
+                  {displayData.alerts.map((a, i) => <p key={i} className="text-sm font-bold text-red-700 dark:text-red-300">{a.message}</p>)}
+                </div>
+              </div>
+            )}
+
+            {/* Current Weather Card */}
+            <div className="bg-gradient-to-br from-sky-400 via-blue-600 to-indigo-700 rounded-[3rem] p-8 sm:p-14 text-white shadow-2xl relative overflow-hidden group">
+              <div className="absolute -top-40 -right-40 w-[600px] h-[600px] bg-white/10 rounded-full blur-[100px] pointer-events-none group-hover:scale-110 transition-transform duration-1000" />
+              <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
+              
+              <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-12 relative z-10">
+                <div className="text-center lg:text-left w-full lg:w-auto">
+                  <div className="flex items-center justify-center lg:justify-start gap-3 mb-8">
+                    <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/20">
+                      <MapPin size={20} weight="fill" className="text-white" />
+                    </div>
+                    <span className="text-xl sm:text-2xl font-black tracking-tight drop-shadow-md">{displayData.city}, {displayData.country}</span>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row items-center gap-10 sm:gap-14">
+                    <div className="drop-shadow-[0_10px_30px_rgba(255,255,255,0.3)] transform group-hover:scale-110 transition-transform duration-700">
+                      {getEmoji(displayData.icon, 100)}
+                    </div>
+                    <div>
+                      <div className="flex items-start">
+                         <h2 className="text-8xl sm:text-[11rem] font-black tracking-tighter drop-shadow-2xl leading-none">{Math.round(displayData.temperature)}°</h2>
+                         <span className="text-3xl sm:text-5xl font-light opacity-50 mt-4 sm:mt-10 ml-2">C</span>
+                      </div>
+                      <p className="text-xl sm:text-3xl font-black text-sky-100 capitalize mt-4 flex items-center justify-center lg:justify-start gap-4">
+                         {displayData.description} 
+                         <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+                      </p>
+                    </div>
                   </div>
                 </div>
+                
+                <div className="grid grid-cols-3 lg:flex lg:flex-col gap-6 bg-white/10 backdrop-blur-xl rounded-[2.5rem] p-6 sm:p-10 border border-white/20 w-full lg:w-72 shadow-2xl">
+                  {[
+                    { icon: Thermometer, label: t('weather.feels_like'), val: `${Math.round(displayData.feelsLike)}°C`, color: 'text-orange-300' },
+                    { icon: Drop,        label: t('weather.humidity'),   val: `${displayData.humidity}%`, color: 'text-blue-300' },
+                    { icon: Wind,        label: t('weather.wind'),       val: `${displayData.windSpeed} <span class="text-[10px]">km/h</span>`, color: 'text-sky-300' },
+                  ].map(({ icon: Icon, label, val, color }) => (
+                    <div key={label} className="flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left group/stat">
+                      <div className="w-10 h-10 sm:w-14 sm:h-14 bg-white/15 rounded-2xl flex items-center justify-center shrink-0 border border-white/10 group-hover/stat:bg-white group-hover/stat:text-blue-600 transition-all duration-300">
+                        <Icon size={24} weight="duotone" className="group-hover/stat:scale-110 transition-transform" />
+                      </div>
+                      <div>
+                        <p className="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-white/50 mb-1 leading-tight">{label}</p>
+                        <p className={clsx("text-sm sm:text-2xl font-black", color)} dangerouslySetInnerHTML={{ __html: val }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* 7-day outlook */}
+            <div className="space-y-6">
+              <div className="flex items-center justify-between mb-2">
+                <h2 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-[0.25em] flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-sky-100 dark:bg-sky-500/10 flex items-center justify-center">
+                    <Calendar className="text-sky-600 dark:text-sky-400" size={20} weight="fill" />
+                  </div>
+                  {t('weather.outlook')}
+                </h2>
+                <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1 ml-6" />
               </div>
               
-              <div className="grid grid-cols-3 lg:flex lg:flex-col gap-4 sm:gap-6 bg-white/10 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-8 border border-white/20 w-full lg:w-auto">
-                {[
-                  { icon: Thermometer, label: t('weather.feels_like'), val: `${Math.round(displayData.feelsLike)}°C` },
-                  { icon: Drop,        label: t('weather.humidity'),   val: `${displayData.humidity}%` },
-                  { icon: Wind,        label: t('weather.wind'),       val: `${displayData.windSpeed} km/h` },
-                ].map(({ icon: Icon, label, val }) => (
-                  <div key={label} className="flex flex-col sm:flex-row items-center sm:items-start gap-1 sm:gap-4 text-center sm:text-left">
-                    <div className="w-8 h-8 sm:w-12 sm:h-12 bg-white/20 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0">
-                      <Icon size={18} className="text-white sm:w-6 sm:h-6" />
-                    </div>
-                    <div>
-                      <p className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-sky-100/70 leading-tight mb-0.5">{label}</p>
-                      <p className="text-xs sm:text-xl font-black">{val}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* 5-day forecast */}
-          {displayData.forecast?.length > 0 && (
-            <div className="anim-fade mb-8">
-              <h2 className="text-xl font-black text-gray-900 dark:text-white mb-5 flex items-center gap-2">
-                {t('weather.outlook')} <Calendar className="text-primary" />
-              </h2>
-              <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-none snap-x">
-                {displayData.forecast.map((day, i) => (
+              <div className="flex gap-5 overflow-x-auto pb-6 scrollbar-none snap-x -mx-4 px-4 sm:mx-0 sm:px-0">
+                {displayData.forecast?.map((day, i) => (
                   <div key={i} className={clsx(
-                    'min-w-[140px] snap-start border rounded-3xl p-5 text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl relative overflow-hidden group',
+                    'min-w-[160px] snap-start border rounded-[2.5rem] p-8 text-center transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl relative overflow-hidden group',
                     i === 0 
-                      ? 'border-primary shadow-lg shadow-primary/20 bg-gradient-to-b from-primary/10 to-transparent dark:from-primary/20' 
-                      : 'border-gray-100 dark:border-white/5 bg-white dark:bg-slate-900 shadow-sm'
+                      ? 'bg-white dark:bg-slate-900 border-sky-500 shadow-xl shadow-sky-500/10' 
+                      : 'border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md'
                   )}>
-                    {i === 0 && <div className="absolute top-0 right-0 w-16 h-16 bg-primary/20 rounded-full blur-xl group-hover:scale-150 transition-transform" />}
-                    <p className={clsx("text-[10px] font-black uppercase tracking-widest mb-3 relative z-10", i === 0 ? "text-primary dark:text-emerald-400" : "text-gray-400")}>
+                    {i === 0 && <div className="absolute top-0 right-0 w-16 h-16 bg-sky-500/10 rounded-full blur-xl animate-pulse" />}
+                    <p className={clsx("text-[10px] font-black uppercase tracking-widest mb-4", i === 0 ? "text-sky-600" : "text-slate-400")}>
                       {i === 0 ? t('common.today') : new Date(day.date).toLocaleDateString(i18n.language === 'hi' ? 'hi-IN' : 'en-IN', { weekday: 'short', day: 'numeric' })}
                     </p>
-                    <div className="block mb-4 drop-shadow-sm group-hover:scale-110 transition-transform relative z-10">{getEmoji(day.icon, 32)}</div>
-                    <p className="text-2xl font-black text-gray-900 dark:text-white leading-none mb-1 relative z-10">{day.tempMax}°</p>
-                    <p className="text-xs font-bold text-gray-400 mb-4 relative z-10">{day.tempMin}°</p>
-                    <div className={clsx(
-                      "text-[10px] font-black py-1.5 rounded-full uppercase tracking-tighter relative z-10 flex items-center justify-center gap-1",
-                      i === 0 ? "bg-primary text-white" : "bg-sky-50 dark:bg-slate-800 text-sky-600 dark:text-sky-400"
-                    )}>
-                      <Drop size={10} weight="bold" /> {day.humidity}%
+                    <div className="mb-6 group-hover:scale-110 transition-transform duration-500">{getEmoji(day.icon, 40)}</div>
+                    <div className="flex items-center justify-center gap-2 mb-6">
+                      <span className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter">{day.tempMax}°</span>
+                      <span className="text-sm font-bold text-slate-400">{day.tempMin}°</span>
                     </div>
-                    {day.estimated && (
-                      <p className="text-[8px] font-bold text-gray-300 dark:text-slate-600 mt-2 uppercase tracking-widest">Est.</p>
-                    )}
+                    <div className={clsx(
+                      "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-tighter",
+                      i === 0 ? "bg-sky-600 text-white shadow-lg shadow-sky-500/20" : "bg-slate-100 dark:bg-slate-800 text-slate-500"
+                    )}>
+                      <Drop size={12} weight="bold" /> {day.humidity}%
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
-          )}
 
-          {/* Professional Farming Advisory Checklist */}
-          <div className="anim-fade card bg-white dark:bg-slate-900 border-2 border-emerald-100 dark:border-emerald-900/30 overflow-hidden shadow-xl p-0">
-            <div className="bg-emerald-50 dark:bg-emerald-900/20 p-5 border-b border-emerald-100 dark:border-emerald-900/30 flex items-center justify-between">
-               <h3 className="font-black text-emerald-800 dark:text-emerald-400 uppercase tracking-widest text-xs flex items-center gap-2">
-                 <ShieldCheck size={18} /> {t('weather.advisory_title')}
-               </h3>
-               <span className="text-[10px] font-black text-emerald-600 uppercase">{t('weather.updated')}: {new Date().toLocaleTimeString()}</span>
-            </div>
-            
-            <div className="p-6 grid sm:grid-cols-2 gap-4">
-               {[
-                 { label: t('weather.irrigation_req', 'Irrigation Required'), check: displayData.temperature > 35, desc: t('weather.temp_tip', 'High evapotranspiration') },
-                 { label: t('weather.fungal_risk', 'Risk of Fungal Attack'), check: displayData.humidity > 85, desc: t('weather.pest_tip', 'Watch for pests') }
-               ].map((item, idx) => (
-                 <div key={idx} className={clsx(
-                   'p-4 rounded-2xl border flex items-center gap-4 transition-all',
-                   item.check ? 'bg-emerald-50/50 border-emerald-100 dark:bg-emerald-900/10 dark:border-emerald-900/30' : 'bg-amber-50/50 border-amber-100 dark:bg-amber-900/10 dark:border-amber-900/30'
-                 )}>
-                    <div className={clsx('w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-sm', item.check ? 'bg-emerald-500 text-white' : 'bg-amber-500 text-white')}>
-                       {item.check ? <CheckCircle size={20} weight="bold" /> : <Warning size={20} weight="bold" />}
-                    </div>
-                    <div>
-                       <p className="text-sm font-black text-gray-900 dark:text-white leading-tight">{item.label}</p>
-                       <p className="text-[10px] font-bold text-gray-500 mt-0.5">{item.desc}</p>
-                    </div>
+            {/* Farming Advisory Card */}
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[3rem] overflow-hidden shadow-sm relative group">
+              <div className="bg-slate-50 dark:bg-slate-800/30 p-8 border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                 <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-[0.2em] text-xs flex items-center gap-4">
+                   <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-500/10 flex items-center justify-center">
+                     <ShieldCheck size={24} weight="duotone" className="text-emerald-600 dark:text-emerald-400" />
+                   </div>
+                   {t('weather.advisory_title')}
+                 </h3>
+                 <div className="flex items-center gap-3">
+                   <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                   <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('weather.updated')}: {new Date().toLocaleTimeString()}</span>
                  </div>
-               ))}
-            </div>
-            
-            <div className="p-4 bg-gray-50 dark:bg-slate-800/50 border-t border-gray-100 dark:border-slate-800 flex items-center justify-center gap-2 text-[10px] font-bold text-gray-400">
-               <Info size={12} /> {t('weather.advisory_disclaimer')}
+              </div>
+              
+              <div className="p-8 sm:p-12 grid sm:grid-cols-2 gap-8">
+                 {[
+                   { label: t('weather.irrigation_req'), check: displayData.temperature > 35, desc: t('weather.temp_tip'), icon: Drop, color: 'text-blue-500', bg: 'bg-blue-50 dark:bg-blue-500/10' },
+                   { label: t('weather.fungal_risk'), check: displayData.humidity > 85, desc: t('weather.pest_tip'), icon: Warning, color: 'text-amber-500', bg: 'bg-amber-50 dark:bg-amber-500/10' }
+                 ].map((item, idx) => (
+                   <div key={idx} className={clsx(
+                     'p-8 rounded-[2rem] border transition-all hover:scale-[1.02] duration-300 flex items-start gap-6',
+                     item.check ? 'bg-white dark:bg-slate-800/50 border-emerald-200 dark:border-emerald-800 shadow-xl shadow-emerald-500/5' : 'bg-slate-50 dark:bg-slate-800/20 border-slate-100 dark:border-slate-800'
+                   )}>
+                      <div className={clsx('w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 shadow-inner', item.check ? 'bg-emerald-500 text-white' : item.bg + ' ' + item.color)}>
+                         {item.check ? <CheckCircle size={28} weight="fill" /> : <item.icon size={28} weight="duotone" />}
+                      </div>
+                      <div>
+                         <p className="text-lg font-black text-slate-900 dark:text-white leading-tight mb-2 uppercase tracking-tight">{item.label}</p>
+                         <p className="text-xs font-bold text-slate-500 leading-relaxed">{item.desc}</p>
+                         {item.check && (
+                           <div className="mt-4 flex items-center gap-2 text-[10px] font-black text-emerald-600 uppercase tracking-widest">
+                             <Lightning size={14} weight="fill" /> {t('weather.high_priority')}
+                           </div>
+                         )}
+                      </div>
+                   </div>
+                 ))}
+              </div>
+              
+              <div className="p-6 bg-slate-50/50 dark:bg-slate-800/20 border-t border-slate-100 dark:border-slate-800 flex items-center justify-center gap-3 text-[10px] font-bold text-slate-400">
+                 <Info size={14} className="text-slate-400" /> {t('weather.advisory_disclaimer')}
+              </div>
             </div>
           </div>
-        </>
-      )}
+        )}
+      </div>
+      
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes bounce-sm {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-4px); }
+        }
+        .animate-bounce-sm {
+          animation: bounce-sm 2s infinite ease-in-out;
+        }
+      `}} />
     </div>
   );
 }

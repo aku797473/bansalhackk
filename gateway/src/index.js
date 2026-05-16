@@ -23,15 +23,26 @@ app.get('/api/wake', (req, res) => res.json({ status: 'ok', service: 'gateway-ap
 app.get('/wake', (req, res) => res.json({ status: 'ok', service: 'gateway-root' }));
 
 // ─── Security & Middleware ────────────────────────
+// ─── Security & Middleware ────────────────────────
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  process.env.FRONTEND_URL
+].filter(Boolean);
+
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow any origin for the demo to avoid CORS blocks
-    callback(null, true);
+    if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV === 'development') {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-user-id'],
   credentials: true
 }));
+
 
 app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" }
@@ -47,21 +58,21 @@ app.use(clerkMiddleware({
 
 
 // ─── Rate Limiting ────────────────────────────────
+// ─── Rate Limiting ────────────────────────────────
 const globalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 min
-  max: 200,
-  message: { success: false, message: 'Too many requests, please try again later.' },
-  standardHeaders: true,
-  legacyHeaders: false,
+  windowMs: 15 * 60 * 1000,
+  max: 1000, // Higher limit for general use
+  message: { success: false, message: 'Too many requests' },
 });
 
-const authLimiter = rateLimit({
+const strictLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 20,
-  message: { success: false, message: 'Too many auth attempts.' },
+  max: 50, // Stricter for AI and Auth
+  message: { success: false, message: 'Request limit exceeded' },
 });
 
 app.use(globalLimiter);
+
 
 // ─── Service URLs ─────────────────────────────────
 const services = {
@@ -95,7 +106,9 @@ const proxyOptions = (target) => ({
 });
 
 // ─── Public Routes (no JWT) ───────────────────────
-app.use('/api/auth', authLimiter, createProxyMiddleware(proxyOptions(services.auth)));
+app.use('/api/auth', strictLimiter, createProxyMiddleware(proxyOptions(services.auth)));
+
+
 
 // Market & Info (Public for demo stability)
 app.use('/api/market', createProxyMiddleware(proxyOptions(services.market)));
@@ -140,11 +153,13 @@ app.use('/api/weather',     verifyToken, createProxyMiddleware(proxyOptions(serv
 app.use('/api/crop',        verifyToken, createProxyMiddleware(proxyOptions(services.crop)));
 app.use('/api/fertilizer',  verifyToken, createProxyMiddleware(proxyOptions(services.fertilizer)));
 app.use('/api/labour',      verifyToken, createProxyMiddleware(proxyOptions(services.labour)));
-app.use('/api/chatbot',     verifyToken, createProxyMiddleware(proxyOptions(services.chatbot)));
+app.use('/api/chatbot',     verifyToken, strictLimiter, createProxyMiddleware(proxyOptions(services.chatbot)));
+
 app.use('/api/news',        verifyToken, createProxyMiddleware(proxyOptions(services.news)));
 app.use('/api/payment',     verifyToken, createProxyMiddleware(proxyOptions(services.payment)));
 app.use('/api/schemes',     verifyToken, createProxyMiddleware(proxyOptions(services.schemes)));
-app.use('/api/buyer', express.json({ limit: '50mb' }), require('./routes/buyer'));
+app.use('/api/buyer',      verifyToken, createProxyMiddleware(proxyOptions(services.buyer)));
+
 
 
 app.get('/', (req, res) => {
@@ -161,9 +176,20 @@ app.get('/health', (req, res) => {
   });
 });
 
+// ─── Global Error Handler ─────────────────────────
+app.use((err, req, res, next) => {
+  console.error(`🚨 Fatal Error: ${err.stack}`);
+  res.status(err.status || 500).json({
+    success: false,
+    error: err.code || 'INTERNAL_SERVER_ERROR',
+    message: err.message || 'An unexpected error occurred'
+  });
+});
+
 app.use('*', (req, res) => {
   res.status(404).json({ success: false, message: 'Route not found' });
 });
+
 
 app.listen(PORT, () => {
   console.log(`🚀 API Gateway running on port ${PORT}`);
