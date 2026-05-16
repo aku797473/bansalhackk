@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-const { createProxyMiddleware } = require('http-proxy-middleware');
+const { createProxyMiddleware, fixRequestBody } = require('http-proxy-middleware');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const cors = require('cors');
@@ -16,11 +16,7 @@ mongoose.connect(MONGODB_URI).then(() => console.log('✅ Gateway connected to M
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Global Wake Route (Must be at the very top)
-app.get('/api/wake', (req, res) => res.json({ status: 'ok', service: 'gateway-api' }));
-app.get('/wake', (req, res) => res.json({ status: 'ok', service: 'gateway-root' }));
-
-// ─── Security & Middleware ────────────────────────
+// ─── Security & Global Middleware ────────────────────────
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
@@ -45,8 +41,10 @@ app.use(helmet({
 }));
 app.use(compression());
 app.use(morgan('combined'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+// IMPORTANT: Do NOT use express.json() globally before proxies.
+// If you do, the body stream is consumed and proxies will send empty bodies.
+// We only use it for the gateway's own internal routes if needed.
 
 // ─── Rate Limiting ────────────────────────────────
 const globalLimiter = rateLimit({
@@ -86,6 +84,7 @@ const proxyOptions = (target) => ({
     '^/api': '',
   },
   on: {
+    proxyReq: fixRequestBody, // This ensures that if any body was parsed, it's re-sent
     error: (err, req, res) => {
       console.error(`Proxy error: ${err.message}`);
       res.status(503).json({ success: false, message: 'Service temporarily unavailable' });
@@ -104,34 +103,6 @@ app.get('/api/weather/map-markers', createProxyMiddleware(proxyOptions(services.
 app.get('/api/labour/map-markers', createProxyMiddleware(proxyOptions(services.labour)));
 app.get('/api/fertilizer/soil/map-markers', createProxyMiddleware(proxyOptions(services.fertilizer)));
 
-// ─── Wake-up endpoint (Public — no auth) ──────────
-const http  = require('http');
-const https = require('https');
-
-function pingService(url) {
-  return new Promise((resolve) => {
-    const mod = url.startsWith('https') ? https : http;
-    const req = mod.get(url + '/health', { timeout: 25000 }, (res) => {
-      resolve({ url, status: res.statusCode });
-    });
-    req.on('error', () => resolve({ url, status: 'down' }));
-    req.on('timeout', () => { req.destroy(); resolve({ url, status: 'timeout' }); });
-  });
-}
-
-app.get('/api/wake', async (req, res) => {
-  const results = await Promise.allSettled(
-    Object.entries(services).map(([name, url]) =>
-      pingService(url).then(r => ({ name, ...r }))
-    )
-  );
-  res.json({
-    status: 'ok',
-    timestamp: new Date().toISOString(),
-    services: results.map(r => r.value || r.reason)
-  });
-});
-
 // ─── Protected Routes (JWT required) ─────────────
 app.use('/api/users',       verifyToken, createProxyMiddleware(proxyOptions(services.user)));
 app.use('/api/weather',     verifyToken, createProxyMiddleware(proxyOptions(services.weather)));
@@ -144,32 +115,30 @@ app.use('/api/payment',     verifyToken, createProxyMiddleware(proxyOptions(serv
 app.use('/api/schemes',     verifyToken, createProxyMiddleware(proxyOptions(services.schemes)));
 app.use('/api/buyer',      verifyToken, createProxyMiddleware(proxyOptions(services.buyer)));
 
-app.get('/', (req, res) => {
-  res.json({ message: 'Smart Kisan API Gateway is running.' });
+// ─── Gateway Internal Routes (Parsing JSON here is OK) ──
+app.use(express.json());
+
+app.get('/api/wake', async (req, res) => {
+  const http  = require('http');
+  const https = require('https');
+  function pingService(url) {
+    return new Promise((resolve) => {
+      const mod = url.startsWith('https') ? https : http;
+      mod.get(url + '/health', { timeout: 10000 }, (r) => resolve({ url, status: r.statusCode }))
+         .on('error', () => resolve({ url, status: 'down' }));
+    });
+  }
+  const results = await Promise.allSettled(Object.entries(services).map(([name, url]) => pingService(url).then(r => ({ name, ...r }))));
+  res.json({ status: 'ok', services: results.map(r => r.value || r.reason) });
 });
 
-// ─── Health Check ─────────────────────────────────
-app.get('/health', (req, res) => {
-  res.json({ 
-    status: 'ok', 
-    service: 'api-gateway',
-    timestamp: new Date().toISOString()
-  });
-});
+app.get('/health', (req, res) => res.json({ status: 'ok', service: 'api-gateway' }));
 
-// ─── Global Error Handler ─────────────────────────
 app.use((err, req, res, next) => {
   console.error(`🚨 Fatal Error: ${err.stack}`);
-  res.status(err.status || 500).json({
-    success: false,
-    message: err.message || 'An unexpected error occurred'
-  });
+  res.status(err.status || 500).json({ success: false, message: err.message || 'An unexpected error occurred' });
 });
 
-app.use('*', (req, res) => {
-  res.status(404).json({ success: false, message: 'Route not found' });
-});
+app.use('*', (req, res) => res.status(404).json({ success: false, message: 'Route not found' }));
 
-app.listen(PORT, () => {
-  console.log(`🚀 API Gateway running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`🚀 API Gateway running on port ${PORT}`));
