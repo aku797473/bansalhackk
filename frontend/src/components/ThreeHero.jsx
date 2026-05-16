@@ -1,5 +1,5 @@
 import { Canvas, useFrame } from '@react-three/fiber';
-import { MeshDistortMaterial, Sphere, PerspectiveCamera } from '@react-three/drei';
+import { PerspectiveCamera } from '@react-three/drei';
 import { useRef, Suspense } from 'react';
 
 function AnimatedSphere() {
@@ -9,20 +9,19 @@ function AnimatedSphere() {
     const time = state.clock.getElapsedTime();
     meshRef.current.rotation.x = time * 0.2;
     meshRef.current.rotation.y = time * 0.3;
-    meshRef.current.position.y = Math.sin(time) * 0.2; // Manual float
+    meshRef.current.position.y = Math.sin(time) * 0.2;
   });
 
   return (
-    <Sphere ref={meshRef} args={[1, 100, 100]} scale={1.8}>
-      <MeshDistortMaterial
+    <mesh ref={meshRef} scale={1.8}>
+      <sphereGeometry args={[1, 64, 64]} />
+      <meshStandardMaterial
         color="#10b981"
-        attach="material"
-        distort={0.4}
-        speed={3}
         roughness={0.4}
         metalness={0.8}
+        wireframe={false}
       />
-    </Sphere>
+    </mesh>
   );
 }
 
