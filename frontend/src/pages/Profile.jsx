@@ -113,7 +113,7 @@ export default function Profile() {
                 Premium Member
               </div>
             </div>
-            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">
+            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none font-outfit">
               <span className="bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">
                 {t('nav.profile')}
               </span>
@@ -135,8 +135,8 @@ export default function Profile() {
            
            {/* Left Column: Stats & Identity */}
            <div className="lg:col-span-4 space-y-10">
-              <div className="bg-white dark:bg-slate-900 rounded-[3rem] p-10 border border-slate-200 dark:border-slate-800 shadow-sm text-center relative overflow-hidden group">
-                 <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-2xl" />
+              <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl rounded-[3rem] p-10 border border-slate-200/50 dark:border-slate-800/50 shadow-premium text-center relative overflow-hidden group">
+                 <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl" />
                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-10">{t('profile.identity')}</p>
                  
                  <div className="relative w-44 h-44 mx-auto mb-10 group/avatar">
@@ -158,7 +158,7 @@ export default function Profile() {
                     )}
                  </div>
 
-                 <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">{form.name || t('profile.farmer_default')}</h2>
+                 <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2 font-outfit">{form.name || t('profile.farmer_default')}</h2>
                  <p className="text-xs font-bold text-slate-400 mb-8">{user?.email || user?.phone}</p>
                  
                  <div className="flex flex-wrap justify-center gap-3">
@@ -210,8 +210,8 @@ export default function Profile() {
            <div className="lg:col-span-8 space-y-10">
               
               {/* Personal Section */}
-              <div className="bg-white dark:bg-slate-900 rounded-[3rem] p-10 sm:p-14 border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden">
-                 <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl" />
+              <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl rounded-[3rem] p-10 sm:p-14 border border-slate-200/50 dark:border-slate-800/50 shadow-premium relative overflow-hidden">
+                 <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
                  <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tight mb-10 flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
                        <User size={24} weight="fill" />
@@ -250,8 +250,8 @@ export default function Profile() {
               </div>
 
               {/* Farm Section */}
-              <div className="bg-white dark:bg-slate-900 rounded-[3rem] p-10 sm:p-14 border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden">
-                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl" />
+              <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl rounded-[3rem] p-10 sm:p-14 border border-slate-200/50 dark:border-slate-800/50 shadow-premium relative overflow-hidden">
+                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
                  <h3 className="text-xl font-black text-slate-900 dark:text-white tracking-tight mb-10 flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
                        <Plant size={24} weight="fill" />

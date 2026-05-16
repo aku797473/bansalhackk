@@ -140,7 +140,7 @@ export default function Fertilizer() {
                 {t('fertilizer.ai_verified')}
               </div>
             </div>
-            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">
+            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none font-outfit">
               <span className="bg-gradient-to-r from-amber-600 to-orange-600 dark:from-amber-400 dark:to-orange-400 bg-clip-text text-transparent">
                 {t('fertilizer.title')}
               </span>
@@ -171,8 +171,8 @@ export default function Fertilizer() {
           {/* Left Column: Tools */}
           <div className="lg:col-span-4 space-y-8">
             {/* Upload Zone */}
-            <div className="bg-white dark:bg-slate-900 rounded-[3rem] p-4 shadow-premium border border-slate-200 dark:border-slate-800 relative overflow-hidden group">
-               <div className="absolute -top-20 -right-20 w-48 h-48 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
+            <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl rounded-[3rem] p-4 shadow-premium border border-slate-200/50 dark:border-slate-800/50 relative overflow-hidden group">
+               <div className="absolute -top-20 -right-20 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
                
                <div {...getRootProps()} className={clsx(
                  "border-2 border-dashed rounded-[2.5rem] p-10 flex flex-col items-center justify-center cursor-pointer transition-all duration-500",
@@ -214,7 +214,7 @@ export default function Fertilizer() {
             </div>
 
             {/* ClockCounterClockwise Section */}
-            <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+            <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl rounded-[2.5rem] border border-slate-200/50 dark:border-slate-800/50 overflow-hidden shadow-sm">
                <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
                   <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('fertilizer.recent_reports')}</h3>
                   <div className="w-6 h-6 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center text-[10px] font-black text-slate-500">{history.length}</div>
@@ -262,7 +262,7 @@ export default function Fertilizer() {
             ) : (
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-10 duration-700">
                  {/* Main Certificate Card */}
-                 <div className="bg-white dark:bg-slate-900 rounded-[3rem] shadow-premium overflow-hidden border border-slate-200 dark:border-slate-800 relative">
+                 <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl rounded-[3rem] shadow-premium overflow-hidden border border-slate-200/50 dark:border-slate-800/50 relative">
                     <div className="bg-slate-50 dark:bg-slate-800/30 p-8 sm:p-12 border-b border-slate-100 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-8">
                        <div className="flex items-center gap-6">
                           <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 text-white flex items-center justify-center shadow-xl shadow-amber-500/20 shrink-0">
@@ -284,8 +284,8 @@ export default function Fertilizer() {
                           <div className="space-y-10">
                              <div>
                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">{t('fertilizer.diagnosis')}</p>
-                               <div className="flex items-center gap-4 mb-2">
-                                  <h4 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">{t(`fertilizer.results.${result.primaryIssue?.deficiency}`, result.primaryIssue?.deficiency)}</h4>
+                                <div className="flex items-center gap-4 mb-2">
+                                  <h4 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter font-outfit">{t(`fertilizer.results.${result.primaryIssue?.deficiency}`, result.primaryIssue?.deficiency)}</h4>
                                   <span className={clsx("px-3 py-1 rounded-lg text-[10px] font-black uppercase text-white", SEVERITY_COLOR[result.primaryIssue?.severity] || 'bg-amber-500')}>
                                     {t(`fertilizer.results.${result.primaryIssue?.severity}`, result.primaryIssue?.severity)}
                                   </span>

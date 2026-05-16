@@ -86,7 +86,7 @@ export default function Navbar() {
 
           {/* Desktop Navigation - Stitch Premium Design */}
           <nav className="hidden xl:flex items-center gap-2">
-            {primaryLinks.map(({ to, icon: Icon, label }) => (
+            {primaryLinks.map(({ to, label }) => (
               <NavLink key={to} to={to}
                 className={({ isActive }) => clsx(
                   'relative flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-300 group/nav overflow-hidden',
@@ -96,7 +96,6 @@ export default function Navbar() {
                 )}>
                 {({ isActive }) => (
                   <>
-                    <Icon size={16} weight={isActive ? "fill" : "duotone"} className="transition-transform group-hover/nav:scale-110 duration-300" />
                     {label}
                     <span className={clsx(
                       "absolute bottom-0 left-0 h-0.5 bg-indigo-600 dark:bg-indigo-400 transition-all duration-300 rounded-full",
@@ -118,14 +117,13 @@ export default function Navbar() {
                     : "text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-50 dark:hover:bg-slate-800"
                 )}
               >
-                <List size={16} weight="duotone" className="transition-transform group-hover/nav:scale-110" />
                 <span>{t('common.more', 'More')}</span>
                 <CaretRight size={12} weight="bold" className={clsx("transition-transform duration-300", moreOpen ? "rotate-90" : "")} />
               </button>
 
               {moreOpen && (
                 <div className="absolute top-full right-0 mt-3 w-56 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border border-white/40 dark:border-slate-800/60 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] dark:shadow-black/50 p-2 animate-in fade-in zoom-in-95 duration-200">
-                  {moreLinks.map(({ to, icon: Icon, label }) => (
+                  {moreLinks.map(({ to, label }) => (
                     <NavLink key={to} to={to}
                       className={({ isActive }) => clsx(
                         'flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all duration-200 group/drop',
@@ -135,12 +133,6 @@ export default function Navbar() {
                       )}>
                       {({ isActive }) => (
                         <>
-                          <span className={clsx(
-                            'flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-300',
-                            isActive ? 'bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 group-hover/drop:bg-indigo-50 dark:group-hover/drop:bg-indigo-900/30'
-                          )}>
-                            <Icon size={16} weight={isActive ? "fill" : "duotone"} />
-                          </span>
                           {label}
                         </>
                       )}
@@ -209,7 +201,7 @@ export default function Navbar() {
           </div>
 
           <nav className="flex-1 space-y-1 overflow-y-auto pr-2 scrollbar-none">
-            {[...primaryLinks, ...moreLinks].map(({ to, icon: Icon, label, accent, activeBg, iconBg }) => (
+            {[...primaryLinks, ...moreLinks].map(({ to, label, accent, activeBg }) => (
               <NavLink key={to} to={to}
                 className={({ isActive }) => clsx(
                   'flex items-center justify-between w-full p-3.5 rounded-2xl text-sm font-semibold transition-all',
@@ -220,12 +212,6 @@ export default function Navbar() {
                 {({ isActive }) => (
                   <>
                     <div className="flex items-center gap-3">
-                      <span className={clsx(
-                        'flex items-center justify-center w-8 h-8 rounded-xl transition-all',
-                        isActive ? iconBg : 'bg-slate-100 dark:bg-slate-800'
-                      )}>
-                        <Icon size={16} />
-                      </span>
                       {label}
                     </div>
                     <CaretRight size={14} weight="bold" className={clsx("transition-transform", isActive ? "opacity-100" : "opacity-0")} />

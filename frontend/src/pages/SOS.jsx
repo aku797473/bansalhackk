@@ -158,7 +158,7 @@ export default function SOS() {
                 {t('sos.version')}
               </div>
             </div>
-            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">
+            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none font-outfit">
               <span className="bg-gradient-to-r from-red-600 to-rose-600 dark:from-red-400 dark:to-rose-400 bg-clip-text text-transparent">
                 {t('sos.title')}
               </span>
@@ -232,7 +232,7 @@ export default function SOS() {
 
           {/* Right Column: First Aid */}
           <div className="lg:col-span-8 space-y-8">
-             <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[3rem] p-8 sm:p-12 shadow-sm relative group">
+             <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 rounded-[3rem] p-8 sm:p-12 shadow-premium relative group">
                 <div className="flex items-center justify-between mb-10">
                    <h3 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-4">
                      <div className="w-10 h-10 rounded-xl bg-red-100 dark:bg-red-500/10 flex items-center justify-center">
@@ -323,7 +323,7 @@ export default function SOS() {
 
              {/* Bottom Quick Help Card */}
              <div className="grid sm:grid-cols-2 gap-6">
-                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[2.5rem] p-8 shadow-sm group hover:border-emerald-200 transition-all">
+                <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 rounded-[2.5rem] p-8 shadow-premium group hover:border-emerald-200 transition-all">
                    <div className="flex items-center gap-4 mb-4">
                       <div className="w-12 h-12 bg-emerald-50 dark:bg-emerald-500/10 rounded-2xl flex items-center justify-center border border-emerald-100 dark:border-emerald-800 group-hover:scale-110 transition-transform">
                         <Heartbeat size={24} weight="fill" className="text-emerald-500" />
@@ -334,7 +334,7 @@ export default function SOS() {
                      Ask our AI assistant for specialized agricultural safety advice or crop-related emergencies.
                    </p>
                 </div>
-                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[2.5rem] p-8 shadow-sm group hover:border-red-200 transition-all">
+                <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 rounded-[2.5rem] p-8 shadow-premium group hover:border-red-200 transition-all">
                    <div className="flex items-center gap-4 mb-4">
                       <div className="w-12 h-12 bg-red-50 dark:bg-red-500/10 rounded-2xl flex items-center justify-center border border-red-100 dark:border-red-800 group-hover:scale-110 transition-transform">
                         <ShieldWarning size={24} weight="fill" className="text-red-500" />

@@ -57,7 +57,7 @@ export default function Schemes() {
                 {t('schemes.verified_scheme')}
               </div>
             </div>
-            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">
+            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none font-outfit">
               <span className="bg-gradient-to-r from-amber-600 to-orange-600 dark:from-amber-400 dark:to-orange-400 bg-clip-text text-transparent">
                 {t('schemes.title')}
               </span>
@@ -80,26 +80,26 @@ export default function Schemes() {
              const Icon = scheme.icon || Bank;
              const colors = COLOR_MAP[scheme.color] || COLOR_MAP.emerald;
              return (
-               <div key={scheme.id} className="bg-white dark:bg-slate-900 rounded-[3rem] border border-slate-200 dark:border-slate-800 p-10 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group relative overflow-hidden flex flex-col h-full">
+               <div key={scheme.id} className="card bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl rounded-[3rem] border border-slate-200/50 dark:border-slate-800/50 p-10 shadow-sm hover:shadow-premium hover:-translate-y-2 transition-all duration-500 group relative overflow-hidden flex flex-col h-full">
                   
                   {/* Decorative Elements */}
-                  <div className={clsx("absolute -top-20 -right-20 w-64 h-64 rounded-full blur-[80px] opacity-10 group-hover:opacity-20 transition-opacity bg-gradient-to-br", colors.split(' ')[0])} />
+                  <div className={clsx("absolute -top-20 -right-20 w-64 h-64 rounded-full blur-[80px] opacity-10 group-hover:opacity-30 group-hover:scale-150 transition-all duration-700 bg-gradient-to-br", colors.split(' ')[0])} />
                   
                   <div className="flex items-start gap-8 relative z-10 mb-10">
-                     <div className={clsx("w-20 h-20 rounded-[2rem] flex items-center justify-center shrink-0 shadow-2xl group-hover:rotate-6 transition-transform duration-500", colors.split(' ').slice(2, 4).join(' '))}>
+                     <div className={clsx("w-20 h-20 rounded-[2rem] flex items-center justify-center shrink-0 shadow-lg group-hover:-rotate-6 group-hover:scale-110 transition-transform duration-500", colors.split(' ').slice(2, 4).join(' '))}>
                         <Icon size={36} weight="duotone" />
                      </div>
                      <div className="flex-1 pt-2">
-                        <h2 className="text-2xl font-black text-slate-900 dark:text-white leading-tight tracking-tight mb-4 group-hover:text-amber-600 transition-colors">
+                        <h2 className="text-3xl font-black text-slate-900 dark:text-white leading-tight tracking-tight mb-4 group-hover:text-amber-600 transition-colors font-outfit">
                            {lang === 'hi' ? scheme.titleHi : scheme.title}
                         </h2>
                         <div className="flex flex-wrap gap-3">
-                           <div className={clsx("px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 border", colors.split(' ').slice(4, 7).join(' '))}>
-                              <Lightning size={14} weight="fill" />
+                           <div className={clsx("px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 border shadow-inner", colors.split(' ').slice(4, 7).join(' '))}>
+                              <Lightning size={14} weight="fill" className="animate-pulse" />
                               {lang === 'hi' ? (scheme.benefitHi || scheme.benefit) : scheme.benefit}
                            </div>
                            {(lang === 'hi' ? (scheme.tagsHi || scheme.tags) : scheme.tags).map(tag => (
-                             <div key={tag} className="px-4 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-widest border border-slate-100 dark:border-slate-800">
+                             <div key={tag} className="px-4 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 backdrop-blur-md text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-widest border border-slate-200/50 dark:border-slate-800/50">
                                 {tag}
                              </div>
                            ))}
@@ -108,15 +108,15 @@ export default function Schemes() {
                   </div>
 
                   <div className="relative z-10 mb-10 flex-1">
-                     <div className="bg-slate-50 dark:bg-slate-800/50 rounded-[2rem] p-8 border border-slate-100 dark:border-slate-800 italic relative overflow-hidden group/text">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl pointer-events-none" />
+                     <div className="bg-white/50 dark:bg-slate-800/40 backdrop-blur-sm rounded-[2rem] p-8 border border-white/20 dark:border-slate-700/30 italic relative overflow-hidden group/text shadow-inner">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl pointer-events-none group-hover/text:scale-150 transition-transform duration-700" />
                         <p className="text-sm font-bold text-slate-600 dark:text-slate-300 leading-relaxed relative z-10">
                            "{lang === 'hi' ? scheme.descriptionHi : scheme.description}"
                         </p>
                      </div>
                   </div>
 
-                  <a href={scheme.link} target="_blank" rel="noopener noreferrer" className="mt-auto h-20 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-[2rem] font-black text-sm uppercase tracking-[0.2em] flex items-center justify-center gap-4 hover:bg-amber-600 hover:text-white transition-all shadow-sm hover:shadow-2xl hover:shadow-amber-500/30 group/btn">
+                  <a href={scheme.link} target="_blank" rel="noopener noreferrer" className="mt-auto h-20 bg-slate-100 dark:bg-slate-800/80 backdrop-blur-md text-slate-900 dark:text-white rounded-[2rem] font-black text-sm uppercase tracking-[0.2em] flex items-center justify-center gap-4 hover:bg-amber-600 hover:text-white transition-all duration-300 shadow-sm hover:shadow-2xl hover:shadow-amber-500/30 group/btn border border-slate-200/50 dark:border-slate-700/50">
                      {t('schemes.apply')}
                      <CaretRight size={24} weight="bold" className="group-hover/btn:translate-x-2 transition-transform" />
                   </a>
@@ -125,19 +125,20 @@ export default function Schemes() {
            })}
         </div>
 
-        <div className="mt-20 p-12 bg-gradient-to-br from-slate-900 to-slate-950 rounded-[4rem] text-white shadow-2xl relative overflow-hidden">
-           <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 rounded-full blur-[120px] pointer-events-none" />
+        <div className="mt-20 p-12 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 rounded-[4rem] text-white shadow-premium relative overflow-hidden group">
+           <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 rounded-full blur-[120px] pointer-events-none group-hover:scale-110 transition-transform duration-1000" />
+           <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-indigo-500/10 rounded-full blur-[100px] pointer-events-none" />
            <div className="flex flex-col md:flex-row items-center justify-between gap-10 relative z-10">
               <div className="flex items-center gap-8">
-                 <div className="w-24 h-24 rounded-[2.5rem] bg-white/10 backdrop-blur-xl flex items-center justify-center border border-white/20">
-                    <Info size={48} weight="fill" className="text-amber-400" />
+                 <div className="w-24 h-24 rounded-[2.5rem] bg-white/10 backdrop-blur-xl flex items-center justify-center border border-white/20 shadow-inner group-hover:scale-105 group-hover:rotate-6 transition-all duration-500">
+                    <Info size={48} weight="fill" className="text-amber-400 drop-shadow-lg" />
                  </div>
                  <div>
-                    <h3 className="text-3xl font-black tracking-tight mb-2">{t('schemes.help_title')}</h3>
-                    <p className="text-slate-400 font-bold max-w-sm">{t('schemes.help_desc')}</p>
+                    <h3 className="text-4xl font-black tracking-tight mb-3 font-outfit">{t('schemes.help_title')}</h3>
+                    <p className="text-slate-400 font-bold max-w-sm text-sm leading-relaxed">{t('schemes.help_desc')}</p>
                  </div>
               </div>
-              <button className="h-20 px-12 bg-white text-slate-900 rounded-[2rem] font-black text-sm uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl">
+              <button className="h-20 px-12 bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white hover:text-slate-900 rounded-[2rem] font-black text-sm uppercase tracking-widest hover:scale-105 active:scale-95 transition-all duration-300 shadow-xl">
                  {t('schemes.contact_support')}
               </button>
            </div>

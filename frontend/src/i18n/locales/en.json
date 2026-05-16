@@ -524,6 +524,7 @@
   "map": {
     "title": "Live Field Mapping",
     "subtitle": "Track your movement & measure field area using GPS.",
+    "gps_active": "GPS ACTIVE",
     "street": "Street",
     "satellite": "Satellite",
     "tap_tip": "Tap map to add boundary points",

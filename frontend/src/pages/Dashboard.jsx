@@ -8,7 +8,7 @@ import {
   ArrowRight, WarningCircle, ArrowCounterClockwise, Drop, Wind,
   Bell, TrendDown, Calendar, FileArrowDown, CheckCircle,
   Newspaper, Bank, ShieldCheck, ChatCircleText, Lightning, Sun, Trophy,
-  CaretRight, Pulse, Bug, ChartLineUp, TestTube, Sparkle, Storefront, Star
+  CaretRight, Bug, ChartLineUp, TestTube, Storefront, Star
 } from '@phosphor-icons/react';
 import { weatherAPI, marketAPI, labourAPI } from '../services/api';
 import clsx from 'clsx';
@@ -149,16 +149,13 @@ export default function Dashboard() {
               <div className="w-16 h-16 rounded-[1.25rem] bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/40 dark:to-emerald-800/20 flex items-center justify-center border border-emerald-200 dark:border-emerald-700/50 shadow-md group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
                 <Plant size={32} weight="duotone" className="text-emerald-600 dark:text-emerald-400" />
               </div>
-              <div className="bg-white/80 dark:bg-emerald-500/10 backdrop-blur-md px-3 py-1.5 rounded-xl border border-emerald-100 dark:border-emerald-800/50 shadow-sm">
-                <Sparkle size={18} weight="fill" className="text-emerald-500 animate-pulse" />
-              </div>
-           </div>
+            </div>
            <div className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2 font-outfit relative z-20">{t('nav.crop')}</div>
            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed mb-6 relative z-20">{t('dashboard.crop_system')}</p>
            <div className="mt-auto pt-6 border-t border-emerald-100 dark:border-emerald-900/30 flex items-center justify-between relative z-20">
               <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 dark:bg-emerald-500/10 rounded-lg border border-emerald-100 dark:border-emerald-800/30">
-                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse" />
-                 <span className="text-[10px] font-black uppercase text-emerald-700 dark:text-emerald-400 tracking-wider">{t('dashboard.ai_ready')}</span>
+                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+                 <span className="text-[10px] font-black uppercase text-emerald-700 dark:text-emerald-400 tracking-wider">SYSTEM ACTIVE</span>
               </div>
               <div className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-emerald-50 dark:group-hover:bg-emerald-900/30 transition-colors">
                 <CaretRight size={20} weight="bold" className="text-slate-400 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all duration-300" />
@@ -184,9 +181,6 @@ export default function Dashboard() {
                    <TrendUp size={32} weight="duotone" className="text-violet-600 dark:text-violet-400" />
                 </div>
                 <div className="flex flex-col items-end">
-                   <div className="flex items-center gap-1.5 text-[11px] font-black text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 px-3 py-1.5 rounded-xl border border-emerald-100 dark:border-emerald-800/50 shadow-sm">
-                     <TrendUp size={14} weight="bold" /> +2.4%
-                   </div>
                    <div className="mt-3 bg-white/50 dark:bg-slate-800/50 rounded-lg px-2 py-1 backdrop-blur-sm"><Sparkline /></div>
                 </div>
              </div>
@@ -218,8 +212,7 @@ export default function Dashboard() {
             <div className="flex flex-col">
               <div className="text-lg font-black text-slate-900 dark:text-white tracking-tight font-outfit">{t('nav.fertilizer')}</div>
               <div className="flex items-center gap-1 mt-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-                <div className="text-[10px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-widest">{t('fertilizer.ai_verified')}</div>
+                <div className="text-[10px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-widest">VERIFIED</div>
               </div>
             </div>
           </div>
@@ -243,8 +236,7 @@ export default function Dashboard() {
             <div className="flex flex-col">
               <div className="text-lg font-black text-slate-900 dark:text-white tracking-tight font-outfit">{t('nav.labour')}</div>
               <div className="flex items-center gap-1 mt-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.8)]" />
-                <div className="text-[10px] font-bold text-rose-600 dark:text-rose-400 uppercase tracking-widest">{t('labour.verified_post')}</div>
+                <div className="text-[10px] font-bold text-rose-600 dark:text-rose-400 uppercase tracking-widest">VERIFIED</div>
               </div>
             </div>
           </div>
@@ -268,8 +260,7 @@ export default function Dashboard() {
             <div className="flex flex-col">
               <div className="text-lg font-black text-slate-900 dark:text-white tracking-tight font-outfit">{t('nav.news')}</div>
               <div className="flex items-center gap-1 mt-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" />
-                <div className="text-[10px] font-bold text-sky-600 dark:text-sky-400 uppercase tracking-widest">{t('dashboard.live_sync')}</div>
+                <div className="text-[10px] font-bold text-sky-600 dark:text-sky-400 uppercase tracking-widest">UPDATED</div>
               </div>
             </div>
           </div>
@@ -293,8 +284,7 @@ export default function Dashboard() {
             <div className="flex flex-col">
               <div className="text-lg font-black text-slate-900 dark:text-white tracking-tight font-outfit">{t('nav.schemes')}</div>
               <div className="flex items-center gap-1 mt-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-fuchsia-500" />
-                <div className="text-[10px] font-bold text-fuchsia-600 dark:text-fuchsia-400 uppercase tracking-widest">{t('dashboard.active_schemes')}</div>
+                <div className="text-[10px] font-bold text-fuchsia-600 dark:text-fuchsia-400 uppercase tracking-widest">GOVERNMENT</div>
               </div>
             </div>
           </div>
@@ -314,12 +304,6 @@ export default function Dashboard() {
            <div className="flex items-center justify-between mb-6 relative z-20">
               <div className="w-16 h-16 rounded-[1.25rem] bg-gradient-to-br from-teal-50 to-teal-100 dark:from-teal-900/40 dark:to-teal-800/20 flex items-center justify-center border border-teal-200 dark:border-teal-700/50 shadow-md group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-500">
                 <MapPin size={32} weight="duotone" className="text-teal-600 dark:text-teal-400" />
-              </div>
-              <div className="bg-white/80 dark:bg-teal-500/10 backdrop-blur-md px-3 py-1.5 rounded-xl border border-teal-100 dark:border-teal-800/50 shadow-sm">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-teal-500 animate-pulse shadow-[0_0_8px_rgba(20,184,166,0.8)]" />
-                  <span className="text-[10px] font-black uppercase text-teal-700 dark:text-teal-400 tracking-wider">{t('schemes.gps_active')}</span>
-                </div>
               </div>
            </div>
            <div className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2 font-outfit relative z-20">{t('nav.map')}</div>
@@ -346,8 +330,7 @@ export default function Dashboard() {
             <div className="flex flex-col">
               <div className="text-lg font-black text-slate-900 dark:text-white tracking-tight font-outfit">{t('nav.buyer')}</div>
               <div className="flex items-center gap-1 mt-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
-                <div className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">{t('buyer.verified')}</div>
+                <div className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">VERIFIED</div>
               </div>
             </div>
           </div>
@@ -371,8 +354,7 @@ export default function Dashboard() {
             <div className="flex flex-col">
               <div className="text-lg font-black text-slate-900 dark:text-white tracking-tight font-outfit">{t('nav.profit_predictor')}</div>
               <div className="flex items-center gap-1 mt-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.8)] animate-pulse" />
-                <div className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">AI {t('dashboard.ai_ready')}</div>
+                <div className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">ACTIVE</div>
               </div>
             </div>
           </div>

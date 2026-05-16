@@ -198,7 +198,7 @@ export default function CropAdvisor() {
                 {t('crop.imd_verified')}
               </div>
             </div>
-            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">
+            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none font-outfit">
               <span className="bg-gradient-to-r from-emerald-600 to-green-600 dark:from-emerald-400 dark:to-green-400 bg-clip-text text-transparent">
                 {t('crop.title')}
               </span>
@@ -221,7 +221,7 @@ export default function CropAdvisor() {
         <div className="grid lg:grid-cols-12 gap-8 items-start">
           {/* Input Form Card */}
           <div className="lg:col-span-5">
-            <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/60 dark:border-slate-800/60 rounded-[2.5rem] p-8 sm:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none relative overflow-hidden group">
+            <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 rounded-[2.5rem] p-8 sm:p-10 shadow-premium relative overflow-hidden group">
               <div className="absolute -top-24 -right-24 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
               
               <h2 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-10 flex items-center gap-3">
@@ -303,7 +303,7 @@ export default function CropAdvisor() {
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-5 duration-700">
                 
                 {/* Main Recommendation Card */}
-                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[2.5rem] overflow-hidden shadow-2xl relative group">
+                <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 rounded-[2.5rem] overflow-hidden shadow-premium relative group">
                   <div className="h-48 sm:h-64 relative overflow-hidden">
                      <img src={cropsImg} alt="Crops" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
                      <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-slate-900 via-white/10 dark:via-slate-900/10 to-transparent" />
@@ -318,7 +318,7 @@ export default function CropAdvisor() {
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-10">
                       <div>
                         <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-3 block">{t('crop.primary_crop_title')}</span>
-                        <h3 className="text-5xl sm:text-8xl font-black text-emerald-600 dark:text-emerald-500 tracking-tighter leading-none break-words">
+                        <h3 className="text-5xl sm:text-8xl font-black text-emerald-600 dark:text-emerald-500 tracking-tighter leading-none break-words font-outfit">
                           {translateOption(result.primaryCrop)}
                         </h3>
                       </div>
@@ -358,7 +358,7 @@ export default function CropAdvisor() {
 
                 {/* Fertilizers & AI Insight */}
                 <div className="grid sm:grid-cols-2 gap-6">
-                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[2rem] p-8 shadow-sm">
+                  <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 rounded-[2rem] p-8 shadow-premium">
                     <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6 flex items-center gap-2">
                       <Flask size={16} weight="fill" className="text-indigo-500" />
                       {t('crop.fertilizers')}
@@ -372,7 +372,7 @@ export default function CropAdvisor() {
                     </div>
                   </div>
 
-                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[2rem] p-8 shadow-sm">
+                  <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 rounded-[2rem] p-8 shadow-premium">
                     <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4 flex items-center gap-2">
                       <CheckCircle size={16} weight="fill" className="text-emerald-500" />
                       {t('crop.confidence')}
@@ -390,7 +390,7 @@ export default function CropAdvisor() {
                 </div>
 
                 {/* AI Tips Section */}
-                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[2.5rem] p-8 sm:p-10 shadow-sm relative overflow-hidden">
+                <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 rounded-[2.5rem] p-8 sm:p-10 shadow-premium relative overflow-hidden">
                   <div className="flex items-center justify-between mb-8">
                      <h3 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-3">
                        <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center">
@@ -422,10 +422,10 @@ export default function CropAdvisor() {
 
                 {/* Calendar Detail Section */}
                 {calendar && (
-                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[2.5rem] p-8 sm:p-12 shadow-premium animate-in fade-in slide-in-from-top-10 duration-700">
-                    <div className="flex items-center justify-between mb-12 border-b border-slate-100 dark:border-slate-800 pb-8">
+                  <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 rounded-[2.5rem] p-8 sm:p-12 shadow-premium animate-in fade-in slide-in-from-top-10 duration-700">
+                    <div className="flex items-center justify-between mb-12 border-b border-slate-200/50 dark:border-slate-800/50 pb-8">
                        <div>
-                         <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter mb-2">{calendar.crop}</h3>
+                         <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter mb-2 font-outfit">{calendar.crop}</h3>
                          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">{t('crop.crop_calendar')}</p>
                        </div>
                        <div className="w-16 h-16 rounded-[1.5rem] bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center">

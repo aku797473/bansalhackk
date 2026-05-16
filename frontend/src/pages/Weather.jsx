@@ -128,7 +128,7 @@ export default function Weather() {
                 {t('weather.version')}
               </div>
             </div>
-            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">
+            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none font-outfit">
               <span className="bg-gradient-to-r from-sky-600 to-blue-600 dark:from-sky-400 dark:to-blue-400 bg-clip-text text-transparent">
                 {t('weather.title')}
               </span>
@@ -143,7 +143,7 @@ export default function Weather() {
           <div className="flex items-center gap-3">
              <div className="relative group flex-1 sm:w-64">
                 <input 
-                  className="w-full h-14 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-12 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all outline-none"
+                  className="w-full h-14 bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 rounded-2xl px-12 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all outline-none"
                   placeholder={t('weather.search_placeholder')}
                   value={citySearch} 
                   onChange={e => setCitySearch(e.target.value)}
@@ -151,7 +151,7 @@ export default function Weather() {
                 />
                 <MagnifyingGlass size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-sky-500 transition-colors" />
              </div>
-             <button onClick={fetchByLocation} className="w-14 h-14 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex items-center justify-center text-slate-500 hover:text-sky-500 hover:border-sky-500 transition-all shadow-sm">
+             <button onClick={fetchByLocation} className="w-14 h-14 bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 rounded-2xl flex items-center justify-center text-slate-500 hover:text-sky-500 hover:border-sky-500 transition-all shadow-premium">
                 <ArrowCounterClockwise size={22} weight="bold" className={clsx(searching && "animate-spin")} />
              </button>
           </div>
@@ -238,10 +238,10 @@ export default function Weather() {
               <div className="flex gap-5 overflow-x-auto pb-6 scrollbar-none snap-x -mx-4 px-4 sm:mx-0 sm:px-0">
                 {displayData.forecast?.map((day, i) => (
                   <div key={i} className={clsx(
-                    'min-w-[160px] snap-start border rounded-[2.5rem] p-8 text-center transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl relative overflow-hidden group',
+                    'min-w-[160px] snap-start border rounded-[2.5rem] p-8 text-center transition-all duration-500 hover:-translate-y-2 hover:shadow-premium relative overflow-hidden group',
                     i === 0 
-                      ? 'bg-white dark:bg-slate-900 border-sky-500 shadow-xl shadow-sky-500/10' 
-                      : 'border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md'
+                      ? 'bg-white/80 dark:bg-slate-900/80 border-sky-500 shadow-xl shadow-sky-500/20' 
+                      : 'border-slate-200/50 dark:border-slate-800/50 bg-white/40 dark:bg-slate-900/40 backdrop-blur-2xl'
                   )}>
                     {i === 0 && <div className="absolute top-0 right-0 w-16 h-16 bg-sky-500/10 rounded-full blur-xl animate-pulse" />}
                     <p className={clsx("text-[10px] font-black uppercase tracking-widest mb-4", i === 0 ? "text-sky-600" : "text-slate-400")}>

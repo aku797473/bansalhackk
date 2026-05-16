@@ -160,7 +160,7 @@ export default function Labour() {
                 {t('labour.version')}
               </div>
             </div>
-            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">
+            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none font-outfit">
               <span className="bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400 bg-clip-text text-transparent">
                 {t('labour.title')}
               </span>
@@ -205,10 +205,10 @@ export default function Labour() {
         {/* Content Sections */}
         <div className="animate-in fade-in slide-in-from-bottom-10 duration-700">
           {tab === 'browse' && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                {jobs.map(job => (
-                 <div key={job._id} onClick={() => setShowModal(job)} className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group cursor-pointer relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 dark:bg-slate-800/30 rounded-bl-[4rem] -mr-8 -mt-8 transition-transform group-hover:scale-110" />
+                 <div key={job._id} onClick={() => setShowModal(job)} className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl rounded-[2.5rem] border border-slate-200/50 dark:border-slate-800/50 p-8 shadow-sm hover:shadow-premium hover:-translate-y-2 hover:border-purple-500/50 transition-all duration-500 group cursor-pointer relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 dark:bg-purple-900/20 rounded-bl-[4rem] -mr-8 -mt-8 transition-transform group-hover:scale-110 blur-xl opacity-0 group-hover:opacity-100 duration-500" />
                     
                     <div className="flex items-start justify-between mb-8 relative z-10">
                        <div className={clsx("w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shadow-lg transition-transform group-hover:rotate-12 duration-500", CATEGORY_COLORS[job.category] || CATEGORY_COLORS.other)}>
@@ -221,7 +221,7 @@ export default function Labour() {
                     </div>
 
                     <div className="mb-8">
-                       <h3 className="text-xl font-black text-slate-900 dark:text-white leading-tight mb-2 group-hover:text-purple-600 transition-colors">
+                       <h3 className="text-xl font-black text-slate-900 dark:text-white leading-tight mb-2 group-hover:text-purple-600 transition-colors font-outfit">
                           {job.key ? t(`labour.fallback.${job.key}.title`) : job.title}
                        </h3>
                        <div className="flex items-center gap-2 mb-4">
@@ -260,9 +260,9 @@ export default function Labour() {
 
           {tab === 'post' && (
             <div className="grid lg:grid-cols-12 gap-10">
-               <div className="lg:col-span-8 bg-white dark:bg-slate-900 rounded-[3rem] p-10 sm:p-14 border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl" />
-                  <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter mb-10 flex items-center gap-4">
+               <div className="lg:col-span-8 bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl rounded-[3rem] p-10 sm:p-14 border border-slate-200/50 dark:border-slate-800/50 shadow-sm hover:shadow-premium transition-shadow relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
+                  <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter mb-10 flex items-center gap-4 font-outfit">
                      <div className="w-12 h-12 rounded-2xl bg-purple-600 text-white flex items-center justify-center shadow-lg shadow-purple-500/20">
                         <Plus size={24} weight="bold" />
                      </div>

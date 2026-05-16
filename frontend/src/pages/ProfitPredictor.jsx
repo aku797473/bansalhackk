@@ -112,7 +112,7 @@ export default function ProfitPredictor() {
                 {t('profit_predictor.version')}
               </div>
             </div>
-            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">
+            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none font-outfit">
               <span className="bg-gradient-to-r from-emerald-600 to-green-600 dark:from-emerald-400 dark:to-green-400 bg-clip-text text-transparent">
                 {t('profit_predictor.title')}
               </span>
@@ -126,8 +126,8 @@ export default function ProfitPredictor() {
         <div className="grid lg:grid-cols-12 gap-8 items-start">
           {/* Input Form Column */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/60 dark:border-slate-800/60 rounded-[2.5rem] p-8 sm:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none relative overflow-hidden group">
-               <div className="absolute -top-24 -right-24 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
+            <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 rounded-[2.5rem] p-8 sm:p-10 shadow-premium relative overflow-hidden group">
+               <div className="absolute -top-24 -right-24 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
                <h2 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-10 flex items-center gap-3">
                  <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-500/10 flex items-center justify-center">
                    <ClipboardText size={18} weight="fill" className="text-emerald-600 dark:text-emerald-400" />
@@ -268,13 +268,13 @@ export default function ProfitPredictor() {
           {/* Result Column */}
           <div className="lg:col-span-7 h-full">
             {prediction ? (
-              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[2.5rem] p-8 sm:p-12 shadow-sm h-full flex flex-col animate-in fade-in slide-in-from-right-5 duration-700">
-                 <div className="flex items-center justify-between mb-10 pb-8 border-b border-slate-100 dark:border-slate-800">
+              <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 rounded-[2.5rem] p-8 sm:p-12 shadow-premium h-full flex flex-col animate-in fade-in slide-in-from-right-5 duration-700">
+                 <div className="flex items-center justify-between mb-10 pb-8 border-b border-slate-200/50 dark:border-slate-800/50">
                     <div className="flex items-center gap-4">
-                       <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center">
+                       <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center border border-emerald-100 dark:border-emerald-500/20">
                           <Gauge size={28} weight="duotone" className="text-emerald-600 dark:text-emerald-400" />
                        </div>
-                       <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter uppercase">{t('profit_predictor.analysis_result')}</h3>
+                       <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter uppercase font-outfit">{t('profit_predictor.analysis_result')}</h3>
                     </div>
                     <div className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-500 text-[10px] font-black uppercase tracking-widest rounded-xl flex items-center gap-2">
                        <CheckCircle size={14} weight="fill" className="text-emerald-500" />

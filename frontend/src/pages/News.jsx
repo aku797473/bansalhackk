@@ -185,7 +185,7 @@ export default function News() {
                 {t('news.live_updates')}
               </div>
             </div>
-            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">
+            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none font-outfit">
               <span className="bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent">
                 {t('news.title')}
               </span>
@@ -282,7 +282,7 @@ export default function News() {
         ) : news.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {news.map((item, i) => (
-              <div key={i} className={clsx("bg-white dark:bg-slate-900 rounded-[2.5rem] border overflow-hidden flex flex-col group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500", currentIdx === i ? "border-emerald-500 ring-4 ring-emerald-500/10 shadow-emerald-500/10" : "border-slate-100 dark:border-slate-800")}>
+              <div key={i} className={clsx("bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl rounded-[2.5rem] border overflow-hidden flex flex-col group hover:shadow-premium hover:-translate-y-2 transition-all duration-500", currentIdx === i ? "border-emerald-500 ring-4 ring-emerald-500/10 shadow-emerald-500/10" : "border-slate-200/50 dark:border-slate-800/50")}>
                 <div className="h-52 relative overflow-hidden bg-slate-100 dark:bg-slate-800">
                   <img src={item.imageUrl} alt="Cover" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=1000&auto=format&fit=crop'; }} />
                   <div className="absolute top-4 left-4 px-3 py-1 bg-black/60 backdrop-blur-md rounded-lg text-white text-[9px] font-black uppercase tracking-widest border border-white/10">{item.source}</div>
@@ -298,7 +298,7 @@ export default function News() {
                     <Calendar size={14} weight="bold" />
                     {new Date(item.pubDate).toLocaleDateString(lang === 'hi' ? 'hi-IN' : 'en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                   </div>
-                  <h3 className="text-lg font-black text-slate-900 dark:text-white leading-tight mb-4 line-clamp-3 group-hover:text-emerald-600 transition-colors">{item.title}</h3>
+                  <h3 className="text-lg font-black text-slate-900 dark:text-white leading-tight mb-4 line-clamp-3 group-hover:text-emerald-600 transition-colors font-outfit">{item.title}</h3>
                   <p className="text-sm font-bold text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2 mb-6 italic">"{item.description}"</p>
 
                   <div className="mt-auto pt-6 border-t border-slate-50 dark:border-slate-800/50 flex items-center justify-between">

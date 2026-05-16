@@ -180,7 +180,7 @@ export default function Market() {
                 {t('market.real_data')}
               </div>
             </div>
-            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">
+            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none font-outfit">
               <span className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
                 {t('market.title')}
               </span>
@@ -265,9 +265,9 @@ export default function Market() {
           <>
             <div className="grid lg:grid-cols-12 gap-8 mb-12">
               <div className="lg:col-span-8">
-                <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 sm:p-12 shadow-sm border border-slate-200 dark:border-slate-800 relative overflow-hidden h-full">
+                <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl rounded-[2.5rem] p-8 sm:p-12 shadow-premium border border-slate-200/50 dark:border-slate-800/50 relative overflow-hidden h-full">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-12">
-                    <h3 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tighter">
+                    <h3 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tighter font-outfit">
                       {t('market.trend_title', { district: translateOption(selDistrict), commodity: translateOption(selCommodity) })}
                     </h3>
                     <div className="flex items-center gap-6">
@@ -317,7 +317,7 @@ export default function Market() {
                   </div>
                 </div>
 
-                <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-10 shadow-sm border border-slate-200 dark:border-slate-800">
+                <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl rounded-[2.5rem] p-10 shadow-premium border border-slate-200/50 dark:border-slate-800/50">
                   <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-8">{t('market.price_range')}</p>
                   <div className="flex items-center justify-between">
                     <div>
@@ -349,10 +349,10 @@ export default function Market() {
             </div>
 
             {/* Mandi Board Details Table */}
-            <div className="bg-white dark:bg-slate-900 rounded-[3rem] shadow-premium overflow-hidden border border-slate-200 dark:border-slate-800">
-              <div className="p-8 sm:p-12 border-b border-slate-100 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl rounded-[3rem] shadow-premium overflow-hidden border border-slate-200/50 dark:border-slate-800/50">
+              <div className="p-8 sm:p-12 border-b border-slate-200/50 dark:border-slate-800/50 flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
-                  <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter mb-2">{t('market.mandi_board')}</h3>
+                  <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter mb-2 font-outfit">{t('market.mandi_board')}</h3>
                   <div className="flex items-center gap-2">
                      <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                      <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">{t('market.updated_at', { time: new Date(marketData?.lastSync).toLocaleTimeString() })}</span>
