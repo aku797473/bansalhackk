@@ -1,78 +1,70 @@
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Points, PointMaterial, Stars } from '@react-three/drei';
-import { useState, useRef, Suspense } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { useRef, useMemo, Suspense } from 'react';
 import * as THREE from 'three';
 
-function Scene() {
-  const { mouse } = useThree();
-  const gridRef = useRef();
-
+function WheatBlade({ position, delay }) {
+  const meshRef = useRef();
+  
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
-    if (gridRef.current) {
-      gridRef.current.position.z = (time * 0.5) % 2;
-      gridRef.current.rotation.x = -Math.PI / 2 + (mouse.y * 0.1);
-      gridRef.current.rotation.y = mouse.x * 0.1;
-    }
+    // Wave animation to simulate wind
+    const wave = Math.sin(time * 1.5 + delay) * 0.15;
+    const wave2 = Math.cos(time * 0.8 + delay) * 0.1;
+    meshRef.current.rotation.x = wave;
+    meshRef.current.rotation.z = wave2;
   });
 
   return (
-    <>
-      <ambientLight intensity={0.5} />
-      <pointLight position={[10, 10, 10]} intensity={1} color="#4f46e5" />
-      
-      <group position={[0, -2, 0]}>
-        <gridHelper
-          ref={gridRef}
-          args={[100, 40, '#4f46e5', '#e2e8f0']}
-        />
-      </group>
-
-      <Particles count={1000} />
-      <Stars radius={100} depth={50} count={3000} factor={4} saturation={0} fade speed={1} />
-    </>
+    <mesh ref={meshRef} position={position}>
+      <coneGeometry args={[0.02, 1, 4]} />
+      <meshStandardMaterial color="#fbbf24" emissive="#d97706" emissiveIntensity={0.2} />
+    </mesh>
   );
 }
 
-function Particles({ count }) {
-  const points = useRef();
-  const [positions] = useState(() => {
-    const pos = new Float32Array(count * 3);
+function Field() {
+  const count = 400;
+  const blades = useMemo(() => {
+    const temp = [];
     for (let i = 0; i < count; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 20;
-      pos[i * 3 + 1] = (Math.random() - 0.5) * 10;
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 20;
+      temp.push({
+        position: [
+          (Math.random() - 0.5) * 30,
+          -2,
+          (Math.random() - 0.5) * 30
+        ],
+        delay: Math.random() * Math.PI * 2
+      });
     }
-    return pos;
-  });
-
-  useFrame((state) => {
-    points.current.rotation.y = state.clock.getElapsedTime() * 0.05;
-  });
+    return temp;
+  }, []);
 
   return (
-    <Points ref={points} positions={positions} stride={3}>
-      <PointMaterial
-        transparent
-        color="#4f46e5"
-        size={0.05}
-        sizeAttenuation={true}
-        depthWrite={false}
-        blending={THREE.AdditiveBlending}
-      />
-    </Points>
+    <group>
+      {blades.map((b, i) => (
+        <WheatBlade key={i} {...b} />
+      ))}
+      {/* Ground Plane */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2, 0]}>
+        <planeGeometry args={[100, 100]} />
+        <meshStandardMaterial color="#451a03" />
+      </mesh>
+    </group>
   );
 }
 
 export default function ThreeBackground() {
   return (
-    <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-slate-50 dark:bg-slate-950">
-      <Canvas camera={{ position: [0, 2, 10], fov: 45 }}>
+    <div className="fixed inset-0 z-0 pointer-events-none bg-gradient-to-b from-sky-100 to-amber-50 dark:from-slate-900 dark:to-slate-950">
+      <Canvas camera={{ position: [0, 2, 15], fov: 45 }}>
         <Suspense fallback={null}>
-          <Scene />
+          <ambientLight intensity={0.6} />
+          <pointLight position={[10, 10, 10]} intensity={1} color="#fcd34d" />
+          <Field />
+          <fog attach="fog" args={['#fffbeb', 5, 30]} />
         </Suspense>
       </Canvas>
-      <div className="absolute inset-0 bg-white/20 dark:bg-black/20 pointer-events-none" />
+      <div className="absolute inset-0 bg-white/10 dark:bg-black/40" />
     </div>
   );
 }
