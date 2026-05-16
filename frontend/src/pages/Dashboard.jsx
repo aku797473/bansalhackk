@@ -388,7 +388,6 @@ export default function Dashboard() {
           <div className="relative">
             <div className="flex flex-wrap items-center gap-3 mb-6">
                 <div className="flex items-center gap-2 px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-indigo-500/30 border border-indigo-400/20">
-                  <Lightning size={14} weight="fill" className="animate-pulse" />
                   {t('dashboard.version')}
                 </div>
                 <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
@@ -608,7 +607,7 @@ export default function Dashboard() {
                       </div>
                    </div>
                    <button onClick={() => navigate('/news')} className="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-indigo-500/25 transition-all active:scale-95 flex items-center justify-center gap-3">
-                     <Pulse size={16} weight="bold" /> {t('dashboard.view_logs')}
+                     <FileArrowDown size={16} weight="bold" /> {t('dashboard.view_logs')}
                    </button>
                 </div>
             </div>
