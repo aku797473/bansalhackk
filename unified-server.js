@@ -70,6 +70,7 @@ const chatRoutes       = safeRequire('./services/chatbot-service/src/routes/chat
 const paymentRoutes    = safeRequire('./services/payment-service/src/routes/payment', 'payment');
 const schemesRoutes    = safeRequire('./services/schemes-service/src/routes/schemes', 'schemes');
 const newsRoutes       = safeRequire('./services/news-service/src/routes/news', 'news');
+const buyerRoutes      = safeRequire('./services/buyer-service/src/routes/buyer', 'buyer');
 
 // ─── Public Routes ───────────────────────────────
 if (authRoutes) app.use('/api/auth', authRoutes);
@@ -110,6 +111,7 @@ if (chatRoutes)       app.use('/api/chatbot',     verifyToken, chatRoutes);
 if (paymentRoutes)    app.use('/api/payment',     verifyToken, paymentRoutes);
 if (schemesRoutes)    app.use('/api/schemes',     verifyToken, schemesRoutes);
 if (newsRoutes)       app.use('/api/news',        verifyToken, newsRoutes);
+if (buyerRoutes)      app.use('/api/buyer',       verifyToken, buyerRoutes);
 
 // ─── Global Error Handler ────────────────────────
 app.use((err, req, res, next) => {

@@ -34,4 +34,4 @@ app.get('/health', (req, res) => res.json({ status: 'ok', hub: 'auth' }));
 
 mongoose.connect(process.env.MONGODB_URI).then(() => {
   app.listen(process.env.PORT || 5001, () => console.log('🔐 Auth Hub running on 5001'));
-});
+}).catch(err => console.error('MongoDB connection error:', err));

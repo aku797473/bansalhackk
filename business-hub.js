@@ -22,11 +22,13 @@ app.use(clerkMiddleware({
 // Load Models
 require('./services/labour-service/src/models/Job');
 require('./services/market-service/src/models/MarketHistory');
+require('./services/buyer-service/src/models/Buyer');
 
 // Routes
 const marketRoutes = require('./services/market-service/src/routes/market');
 const labourRoutes = require('./services/labour-service/src/routes/labour');
 const paymentRoutes = require('./services/payment-service/src/routes/payment');
+const buyerRoutes = require('./services/buyer-service/src/routes/buyer');
 
 app.use('/api/market', (req, res, next) => {
   if (req.method === 'GET') return next();
@@ -38,6 +40,7 @@ app.use('/api/labour', (req, res, next) => {
   return verifyToken(req, res, next);
 }, labourRoutes);
 app.use('/api/payment', verifyToken, paymentRoutes);
+app.use('/api/buyer', verifyToken, buyerRoutes);
 
 app.get('/test-direct', (req, res) => res.send('Direct test working!'));
 app.get('/api/labour/test-direct', (req, res) => res.send('API Labour test direct working!'));
@@ -55,4 +58,4 @@ app.use((err, req, res, next) => {
 
 mongoose.connect(process.env.MONGODB_URI).then(() => {
   app.listen(process.env.PORT || 5004, () => console.log('💼 Business Hub running on 5004'));
-});
+}).catch(err => console.error('MongoDB connection error:', err));

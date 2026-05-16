@@ -35,4 +35,4 @@ app.get('/health', (req, res) => res.json({ status: 'ok', hub: 'ai' }));
 
 mongoose.connect(process.env.MONGODB_URI).then(() => {
   app.listen(process.env.PORT || 5002, () => console.log('🤖 AI Hub running on 5002'));
-});
+}).catch(err => console.error('MongoDB connection error:', err));
