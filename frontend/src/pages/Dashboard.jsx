@@ -87,45 +87,49 @@ export default function Dashboard() {
       id: 'weather', 
       to: '/weather', 
       size: 'lg',
-      color: 'bg-gradient-to-br from-indigo-600 via-blue-600 to-sky-500 shadow-indigo-500/40',
+      color: 'card hover:border-sky-400 hover:shadow-premium bg-gradient-to-br from-indigo-600 via-blue-600 to-sky-500 shadow-indigo-500/40 relative overflow-hidden group',
       icon: CloudSun,
       label: t('nav.weather'),
       render: () => (
         <div className="flex flex-col h-full justify-between relative z-10 text-white">
+          <div className="absolute -left-12 -top-12 w-48 h-48 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-all duration-700" />
           <div className="flex justify-between items-start">
-             <div>
-               <div className="mb-4 transform hover:scale-110 transition-transform duration-500">{getWeatherEmoji(weather?.icon)}</div>
-               <div className="text-5xl sm:text-7xl font-black tracking-tighter drop-shadow-md">
-                 {Math.round(weather?.temperature || 0)}°
-                 <span className="text-2xl font-light opacity-80">C</span>
+             <div className="relative z-20">
+               <div className="mb-6 transform group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500">{getWeatherEmoji(weather?.icon)}</div>
+               <div className="flex items-start">
+                 <div className="text-6xl sm:text-8xl font-black tracking-tighter drop-shadow-xl font-outfit">
+                   {Math.round(weather?.temperature || 0)}
+                 </div>
+                 <span className="text-3xl font-light opacity-80 mt-2 ml-1">°C</span>
                </div>
-               <div className="text-sm font-bold opacity-90 mt-2 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full w-fit border border-white/10">
+               <div className="text-sm font-bold opacity-100 mt-2 bg-white/20 backdrop-blur-md px-4 py-1.5 rounded-full w-fit border border-white/20 shadow-sm flex items-center gap-2">
+                 <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
                  {weather?.description || t('dashboard.loading')}
                </div>
              </div>
-             <div className="text-right">
-                <div className="flex items-center justify-end gap-2 text-xs font-black uppercase tracking-widest opacity-80 mb-4 bg-black/10 px-3 py-1.5 rounded-xl">
-                  <MapPin size={14} weight="fill" /> {weather?.city || 'Satna'}
+             <div className="text-right relative z-20">
+                <div className="flex items-center justify-end gap-2 text-[11px] font-black uppercase tracking-widest opacity-90 mb-6 bg-black/20 backdrop-blur-sm px-4 py-2 rounded-xl shadow-inner border border-white/10">
+                  <MapPin size={16} weight="fill" className="text-red-400 animate-bounce" /> {weather?.city || 'Satna'}
                 </div>
-                <div className="flex flex-col items-end gap-3">
-                   <div className="flex flex-col items-end">
-                     <span className="text-[10px] uppercase font-black opacity-60 mb-0.5">{t('weather.humidity')}</span>
-                     <span className="flex items-center gap-2 text-sm font-black"><Drop size={16} weight="duotone" className="text-blue-200" /> {weather?.humidity}%</span>
+                <div className="flex flex-col items-end gap-4">
+                   <div className="flex flex-col items-end bg-white/10 px-3 py-2 rounded-xl backdrop-blur-sm border border-white/5 group-hover:bg-white/20 transition-colors">
+                     <span className="text-[10px] uppercase font-black opacity-70 mb-0.5 tracking-wider">{t('weather.humidity')}</span>
+                     <span className="flex items-center gap-2 text-base font-black"><Drop size={18} weight="duotone" className="text-blue-200" /> {weather?.humidity}%</span>
                    </div>
-                   <div className="flex flex-col items-end">
-                     <span className="text-[10px] uppercase font-black opacity-60 mb-0.5">{t('weather.wind')}</span>
-                     <span className="flex items-center gap-2 text-sm font-black"><Wind size={16} weight="bold" className="text-blue-100" /> {weather?.windSpeed} <span className="text-[10px]">km/h</span></span>
+                   <div className="flex flex-col items-end bg-white/10 px-3 py-2 rounded-xl backdrop-blur-sm border border-white/5 group-hover:bg-white/20 transition-colors">
+                     <span className="text-[10px] uppercase font-black opacity-70 mb-0.5 tracking-wider">{t('weather.wind')}</span>
+                     <span className="flex items-center gap-2 text-base font-black"><Wind size={18} weight="bold" className="text-blue-100" /> {weather?.windSpeed} <span className="text-[10px]">km/h</span></span>
                    </div>
                 </div>
              </div>
           </div>
-          <div className="mt-8 pt-5 border-t border-white/20 flex justify-between items-center">
+          <div className="mt-8 pt-5 border-t border-white/20 flex justify-between items-center relative z-20">
              <div className="flex items-center gap-3">
-                <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-blue-100">{t('dashboard.live_imd')}</span>
+                <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_12px_rgba(52,211,153,1)]" />
+                <span className="text-[11px] font-black uppercase tracking-widest text-blue-50 drop-shadow-sm">{t('dashboard.live_imd')}</span>
              </div>
-             <div className="w-10 h-10 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center group-hover:bg-white group-hover:text-indigo-600 transition-all duration-300 shadow-lg">
-               <ArrowRight size={20} weight="bold" className="group-hover:translate-x-1 transition-transform" />
+             <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center group-hover:bg-white group-hover:text-indigo-600 transition-all duration-300 shadow-lg border border-white/30 cursor-pointer">
+               <ArrowRight size={22} weight="bold" className="group-hover:translate-x-1.5 transition-transform" />
              </div>
           </div>
         </div>
@@ -135,28 +139,30 @@ export default function Dashboard() {
       id: 'crop', 
       to: '/crop', 
       size: 'md',
-      color: 'card hover:border-emerald-500/40 group overflow-hidden',
+      color: 'card hover:border-emerald-500/40 hover:shadow-premium group overflow-hidden backdrop-blur-2xl bg-white/60 dark:bg-slate-900/60',
       icon: Plant,
       label: t('nav.crop'),
       render: () => (
-        <div className="flex flex-col h-full relative">
-            <div className="absolute -right-8 -top-8 w-24 h-24 bg-emerald-500/5 rounded-full blur-2xl group-hover:bg-emerald-500/10 transition-colors duration-500" />
-            <div className="flex items-center justify-between mb-6">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100/50 dark:from-emerald-900/20 dark:to-emerald-800/10 flex items-center justify-center border border-emerald-100 dark:border-emerald-800/50 shadow-sm group-hover:scale-110 transition-transform duration-500">
-                <Plant size={28} weight="duotone" className="text-emerald-600 dark:text-emerald-400" />
+        <div className="flex flex-col h-full relative z-10">
+            <div className="absolute -right-8 -top-8 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/20 group-hover:scale-150 transition-all duration-700 ease-out" />
+            <div className="flex items-center justify-between mb-6 relative z-20">
+              <div className="w-16 h-16 rounded-[1.25rem] bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/40 dark:to-emerald-800/20 flex items-center justify-center border border-emerald-200 dark:border-emerald-700/50 shadow-md group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
+                <Plant size={32} weight="duotone" className="text-emerald-600 dark:text-emerald-400" />
               </div>
-              <div className="bg-emerald-50 dark:bg-emerald-500/10 px-3 py-1.5 rounded-xl border border-emerald-100 dark:border-emerald-800/50">
-                <Sparkle size={16} weight="fill" className="text-emerald-500 animate-pulse" />
+              <div className="bg-white/80 dark:bg-emerald-500/10 backdrop-blur-md px-3 py-1.5 rounded-xl border border-emerald-100 dark:border-emerald-800/50 shadow-sm">
+                <Sparkle size={18} weight="fill" className="text-emerald-500 animate-pulse" />
               </div>
            </div>
-           <div className="text-xl font-black text-slate-900 dark:text-white tracking-tight mb-2">{t('nav.crop')}</div>
-           <p className="text-xs text-slate-500 dark:text-slate-400 font-bold leading-relaxed">{t('dashboard.crop_system')}</p>
-           <div className="mt-auto flex items-center justify-between">
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50/50 dark:bg-emerald-500/5 rounded-lg border border-emerald-100/50 dark:border-emerald-800/30">
-                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                 <span className="text-[10px] font-black uppercase text-emerald-700 dark:text-emerald-400 tracking-tighter">{t('dashboard.ai_ready')}</span>
+           <div className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2 font-outfit relative z-20">{t('nav.crop')}</div>
+           <p className="text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed mb-6 relative z-20">{t('dashboard.crop_system')}</p>
+           <div className="mt-auto pt-6 border-t border-emerald-100 dark:border-emerald-900/30 flex items-center justify-between relative z-20">
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 dark:bg-emerald-500/10 rounded-lg border border-emerald-100 dark:border-emerald-800/30">
+                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse" />
+                 <span className="text-[10px] font-black uppercase text-emerald-700 dark:text-emerald-400 tracking-wider">{t('dashboard.ai_ready')}</span>
               </div>
-              <CaretRight size={20} weight="bold" className="text-slate-300 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all" />
+              <div className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-emerald-50 dark:group-hover:bg-emerald-900/30 transition-colors">
+                <CaretRight size={20} weight="bold" className="text-slate-400 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all duration-300" />
+              </div>
            </div>
         </div>
       )
@@ -165,32 +171,34 @@ export default function Dashboard() {
       id: 'market', 
       to: '/market', 
       size: 'md',
-      color: 'card hover:border-violet-500/40 group overflow-hidden',
+      color: 'card hover:border-violet-500/40 hover:shadow-premium group overflow-hidden backdrop-blur-2xl bg-white/60 dark:bg-slate-900/60',
       icon: TrendUp,
       label: t('nav.market'),
       render: () => {
         const latest = marketData?.trends?.[marketData.trends.length - 1];
         return (
-          <div className="flex flex-col h-full relative">
-             <div className="absolute -right-8 -top-8 w-24 h-24 bg-violet-500/5 rounded-full blur-2xl group-hover:bg-violet-500/10 transition-colors duration-500" />
-             <div className="flex justify-between items-start mb-6">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-50 to-violet-100/50 dark:from-violet-900/20 dark:to-violet-800/10 flex items-center justify-center border border-violet-100 dark:border-violet-800/50 shadow-sm group-hover:scale-110 transition-transform duration-500">
-                   <TrendUp size={28} weight="duotone" className="text-violet-600 dark:text-violet-400" />
+          <div className="flex flex-col h-full relative z-10">
+             <div className="absolute -right-8 -top-8 w-32 h-32 bg-violet-500/10 rounded-full blur-3xl group-hover:bg-violet-500/20 group-hover:scale-150 transition-all duration-700 ease-out" />
+             <div className="flex justify-between items-start mb-6 relative z-20">
+                <div className="w-16 h-16 rounded-[1.25rem] bg-gradient-to-br from-violet-50 to-violet-100 dark:from-violet-900/40 dark:to-violet-800/20 flex items-center justify-center border border-violet-200 dark:border-violet-700/50 shadow-md group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-500">
+                   <TrendUp size={32} weight="duotone" className="text-violet-600 dark:text-violet-400" />
                 </div>
                 <div className="flex flex-col items-end">
-                   <div className="flex items-center gap-1 text-[10px] font-black text-emerald-600 bg-emerald-50 dark:bg-emerald-500/10 px-3 py-1.5 rounded-xl border border-emerald-100 dark:border-emerald-800/50">
-                     <TrendUp size={12} weight="bold" /> +2.4%
+                   <div className="flex items-center gap-1.5 text-[11px] font-black text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 px-3 py-1.5 rounded-xl border border-emerald-100 dark:border-emerald-800/50 shadow-sm">
+                     <TrendUp size={14} weight="bold" /> +2.4%
                    </div>
-                   <div className="mt-2"><Sparkline /></div>
+                   <div className="mt-3 bg-white/50 dark:bg-slate-800/50 rounded-lg px-2 py-1 backdrop-blur-sm"><Sparkline /></div>
                 </div>
              </div>
-             <div className="text-xl font-black text-slate-900 dark:text-white tracking-tight mb-1">{t('nav.market')}</div>
-             <div className="mt-auto pt-6 border-t border-slate-100 dark:border-slate-800/50 flex items-end justify-between">
+             <div className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2 font-outfit relative z-20">{t('nav.market')}</div>
+             <div className="mt-auto pt-6 border-t border-violet-100 dark:border-violet-900/30 flex items-end justify-between relative z-20">
                 <div>
-                  <div className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter">₹{latest?.price?.toLocaleString() || '2,450'}</div>
-                  <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mt-1">{t('dashboard.mandi_desc')}</p>
+                  <div className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter drop-shadow-sm">₹{latest?.price?.toLocaleString() || '2,450'}</div>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 font-black uppercase tracking-wider mt-1">{t('dashboard.mandi_desc')}</p>
                 </div>
-                <CaretRight size={20} weight="bold" className="text-slate-300 group-hover:text-violet-500 group-hover:translate-x-1 transition-all mb-1" />
+                <div className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-violet-50 dark:group-hover:bg-violet-900/30 transition-colors mb-1">
+                  <CaretRight size={20} weight="bold" className="text-slate-400 group-hover:text-violet-500 group-hover:translate-x-1 transition-all duration-300" />
+                </div>
              </div>
           </div>
         );
@@ -198,141 +206,179 @@ export default function Dashboard() {
     },
     { 
       id: 'fertilizer', to: '/fertilizer', size: 'sm',
-      color: 'card hover:border-amber-500/40 flex items-center justify-between group py-5 px-6',
+      color: 'card hover:border-amber-500/40 hover:shadow-premium flex items-center justify-between group py-5 px-6 backdrop-blur-2xl bg-white/60 dark:bg-slate-900/60 relative overflow-hidden',
       icon: Flask, label: t('nav.fertilizer'),
       render: () => ( 
         <>
-          <div className="flex items-center gap-5">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-50 to-amber-100/50 dark:from-amber-900/20 dark:to-amber-800/10 flex items-center justify-center border border-amber-100 dark:border-amber-800/50 group-hover:scale-110 transition-transform">
-              <Flask size={24} weight="duotone" className="text-amber-600 dark:text-amber-400" />
+          <div className="absolute -right-4 -top-4 w-16 h-16 bg-amber-500/10 rounded-full blur-2xl group-hover:bg-amber-500/20 transition-all duration-500" />
+          <div className="flex items-center gap-5 relative z-10">
+            <div className="w-14 h-14 rounded-[1.25rem] bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900/40 dark:to-amber-800/20 flex items-center justify-center border border-amber-200 dark:border-amber-700/50 group-hover:scale-110 group-hover:-rotate-6 transition-transform duration-500 shadow-md">
+              <Flask size={28} weight="duotone" className="text-amber-600 dark:text-amber-400" />
             </div>
             <div className="flex flex-col">
-              <div className="text-sm font-black text-slate-900 dark:text-white tracking-tight">{t('nav.fertilizer')}</div>
-              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t('fertilizer.ai_verified')}</div>
+              <div className="text-lg font-black text-slate-900 dark:text-white tracking-tight font-outfit">{t('nav.fertilizer')}</div>
+              <div className="flex items-center gap-1 mt-1">
+                <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                <div className="text-[10px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-widest">{t('fertilizer.ai_verified')}</div>
+              </div>
             </div>
           </div>
-          <CaretRight size={20} weight="bold" className="text-slate-300 group-hover:text-amber-500 group-hover:translate-x-1 transition-all" />
+          <div className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-amber-50 dark:group-hover:bg-amber-900/30 transition-colors relative z-10">
+            <CaretRight size={20} weight="bold" className="text-slate-400 group-hover:text-amber-500 group-hover:translate-x-1 transition-all duration-300" />
+          </div>
         </> 
       )
     },
     { 
       id: 'labour', to: '/labour', size: 'sm',
-      color: 'card hover:border-rose-500/40 flex items-center justify-between group py-5 px-6',
+      color: 'card hover:border-rose-500/40 hover:shadow-premium flex items-center justify-between group py-5 px-6 backdrop-blur-2xl bg-white/60 dark:bg-slate-900/60 relative overflow-hidden',
       icon: Users, label: t('nav.labour'),
       render: () => ( 
         <>
-          <div className="flex items-center gap-5">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-rose-50 to-rose-100/50 dark:from-rose-900/20 dark:to-rose-800/10 flex items-center justify-center border border-rose-100 dark:border-rose-800/50 group-hover:scale-110 transition-transform">
-              <Users size={24} weight="duotone" className="text-rose-600 dark:text-rose-400" />
+          <div className="absolute -right-4 -top-4 w-16 h-16 bg-rose-500/10 rounded-full blur-2xl group-hover:bg-rose-500/20 transition-all duration-500" />
+          <div className="flex items-center gap-5 relative z-10">
+            <div className="w-14 h-14 rounded-[1.25rem] bg-gradient-to-br from-rose-50 to-rose-100 dark:from-rose-900/40 dark:to-rose-800/20 flex items-center justify-center border border-rose-200 dark:border-rose-700/50 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500 shadow-md">
+              <Users size={28} weight="duotone" className="text-rose-600 dark:text-rose-400" />
             </div>
             <div className="flex flex-col">
-              <div className="text-sm font-black text-slate-900 dark:text-white tracking-tight">{t('nav.labour')}</div>
-              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t('labour.verified_post')}</div>
+              <div className="text-lg font-black text-slate-900 dark:text-white tracking-tight font-outfit">{t('nav.labour')}</div>
+              <div className="flex items-center gap-1 mt-1">
+                <div className="w-1.5 h-1.5 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.8)]" />
+                <div className="text-[10px] font-bold text-rose-600 dark:text-rose-400 uppercase tracking-widest">{t('labour.verified_post')}</div>
+              </div>
             </div>
           </div>
-          <CaretRight size={20} weight="bold" className="text-slate-300 group-hover:text-rose-500 group-hover:translate-x-1 transition-all" />
+          <div className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-rose-50 dark:group-hover:bg-rose-900/30 transition-colors relative z-10">
+            <CaretRight size={20} weight="bold" className="text-slate-400 group-hover:text-rose-500 group-hover:translate-x-1 transition-all duration-300" />
+          </div>
         </> 
       )
     },
     { 
       id: 'news', to: '/news', size: 'sm',
-      color: 'card hover:border-sky-500/40 flex items-center justify-between group py-5 px-6',
+      color: 'card hover:border-sky-500/40 hover:shadow-premium flex items-center justify-between group py-5 px-6 backdrop-blur-2xl bg-white/60 dark:bg-slate-900/60 relative overflow-hidden',
       icon: Newspaper, label: t('nav.news'),
       render: () => ( 
         <>
-          <div className="flex items-center gap-5">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-sky-50 to-sky-100/50 dark:from-sky-900/20 dark:to-sky-800/10 flex items-center justify-center border border-sky-100 dark:border-sky-800/50 group-hover:scale-110 transition-transform">
-              <Newspaper size={24} weight="duotone" className="text-sky-600 dark:text-sky-400" />
+          <div className="absolute -right-4 -top-4 w-16 h-16 bg-sky-500/10 rounded-full blur-2xl group-hover:bg-sky-500/20 transition-all duration-500" />
+          <div className="flex items-center gap-5 relative z-10">
+            <div className="w-14 h-14 rounded-[1.25rem] bg-gradient-to-br from-sky-50 to-sky-100 dark:from-sky-900/40 dark:to-sky-800/20 flex items-center justify-center border border-sky-200 dark:border-sky-700/50 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-500 shadow-md">
+              <Newspaper size={28} weight="duotone" className="text-sky-600 dark:text-sky-400" />
             </div>
             <div className="flex flex-col">
-              <div className="text-sm font-black text-slate-900 dark:text-white tracking-tight">{t('nav.news')}</div>
-              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t('dashboard.live_sync')}</div>
+              <div className="text-lg font-black text-slate-900 dark:text-white tracking-tight font-outfit">{t('nav.news')}</div>
+              <div className="flex items-center gap-1 mt-1">
+                <div className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" />
+                <div className="text-[10px] font-bold text-sky-600 dark:text-sky-400 uppercase tracking-widest">{t('dashboard.live_sync')}</div>
+              </div>
             </div>
           </div>
-          <CaretRight size={20} weight="bold" className="text-slate-300 group-hover:text-sky-500 group-hover:translate-x-1 transition-all" />
+          <div className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-sky-50 dark:group-hover:bg-sky-900/30 transition-colors relative z-10">
+            <CaretRight size={20} weight="bold" className="text-slate-400 group-hover:text-sky-500 group-hover:translate-x-1 transition-all duration-300" />
+          </div>
         </> 
       )
     },
     { 
       id: 'schemes', to: '/schemes', size: 'sm',
-      color: 'card hover:border-fuchsia-500/40 flex items-center justify-between group py-5 px-6',
+      color: 'card hover:border-fuchsia-500/40 hover:shadow-premium flex items-center justify-between group py-5 px-6 backdrop-blur-2xl bg-white/60 dark:bg-slate-900/60 relative overflow-hidden',
       icon: Bank, label: t('nav.schemes'),
       render: () => ( 
         <>
-          <div className="flex items-center gap-5">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-fuchsia-50 to-fuchsia-100/50 dark:from-fuchsia-900/20 dark:to-fuchsia-800/10 flex items-center justify-center border border-fuchsia-100 dark:border-fuchsia-800/50 group-hover:scale-110 transition-transform">
-              <Bank size={24} weight="duotone" className="text-fuchsia-600 dark:text-fuchsia-400" />
+          <div className="absolute -right-4 -top-4 w-16 h-16 bg-fuchsia-500/10 rounded-full blur-2xl group-hover:bg-fuchsia-500/20 transition-all duration-500" />
+          <div className="flex items-center gap-5 relative z-10">
+            <div className="w-14 h-14 rounded-[1.25rem] bg-gradient-to-br from-fuchsia-50 to-fuchsia-100 dark:from-fuchsia-900/40 dark:to-fuchsia-800/20 flex items-center justify-center border border-fuchsia-200 dark:border-fuchsia-700/50 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 shadow-md">
+              <Bank size={28} weight="duotone" className="text-fuchsia-600 dark:text-fuchsia-400" />
             </div>
             <div className="flex flex-col">
-              <div className="text-sm font-black text-slate-900 dark:text-white tracking-tight">{t('nav.schemes')}</div>
-              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t('dashboard.active_schemes')}</div>
+              <div className="text-lg font-black text-slate-900 dark:text-white tracking-tight font-outfit">{t('nav.schemes')}</div>
+              <div className="flex items-center gap-1 mt-1">
+                <div className="w-1.5 h-1.5 rounded-full bg-fuchsia-500" />
+                <div className="text-[10px] font-bold text-fuchsia-600 dark:text-fuchsia-400 uppercase tracking-widest">{t('dashboard.active_schemes')}</div>
+              </div>
             </div>
           </div>
-          <CaretRight size={20} weight="bold" className="text-slate-300 group-hover:text-fuchsia-500 group-hover:translate-x-1 transition-all" />
+          <div className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-fuchsia-50 dark:group-hover:bg-fuchsia-900/30 transition-colors relative z-10">
+            <CaretRight size={20} weight="bold" className="text-slate-400 group-hover:text-fuchsia-500 group-hover:translate-x-1 transition-all duration-300" />
+          </div>
         </> 
       )
     },
     { 
       id: 'map', to: '/map', size: 'md',
-      color: 'card hover:border-teal-500/40 group overflow-hidden',
+      color: 'card hover:border-teal-500/40 hover:shadow-premium group overflow-hidden backdrop-blur-2xl bg-white/60 dark:bg-slate-900/60',
       icon: MapPin, label: t('nav.map'),
       render: () => (
-        <div className="flex flex-col h-full relative">
-           <div className="absolute -right-8 -top-8 w-24 h-24 bg-teal-500/5 rounded-full blur-2xl group-hover:bg-teal-500/10 transition-colors duration-500" />
-           <div className="flex items-center justify-between mb-6">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-teal-50 to-teal-100/50 dark:from-teal-900/20 dark:to-teal-800/10 flex items-center justify-center border border-teal-100 dark:border-teal-800/50 shadow-sm group-hover:scale-110 transition-transform duration-500">
-                <MapPin size={28} weight="duotone" className="text-teal-600 dark:text-teal-400" />
+        <div className="flex flex-col h-full relative z-10">
+           <div className="absolute -right-8 -top-8 w-32 h-32 bg-teal-500/10 rounded-full blur-3xl group-hover:bg-teal-500/20 group-hover:scale-150 transition-all duration-700 ease-out" />
+           <div className="flex items-center justify-between mb-6 relative z-20">
+              <div className="w-16 h-16 rounded-[1.25rem] bg-gradient-to-br from-teal-50 to-teal-100 dark:from-teal-900/40 dark:to-teal-800/20 flex items-center justify-center border border-teal-200 dark:border-teal-700/50 shadow-md group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-500">
+                <MapPin size={32} weight="duotone" className="text-teal-600 dark:text-teal-400" />
               </div>
-              <div className="bg-teal-50/50 dark:bg-teal-500/5 px-3 py-1 rounded-lg border border-teal-100/50 dark:border-teal-800/30">
+              <div className="bg-white/80 dark:bg-teal-500/10 backdrop-blur-md px-3 py-1.5 rounded-xl border border-teal-100 dark:border-teal-800/50 shadow-sm">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-teal-500 animate-pulse" />
-                  <span className="text-[8px] font-black uppercase text-teal-700 dark:text-teal-400 tracking-widest">{t('schemes.gps_active')}</span>
+                  <div className="w-2 h-2 rounded-full bg-teal-500 animate-pulse shadow-[0_0_8px_rgba(20,184,166,0.8)]" />
+                  <span className="text-[10px] font-black uppercase text-teal-700 dark:text-teal-400 tracking-wider">{t('schemes.gps_active')}</span>
                 </div>
               </div>
            </div>
-           <div className="text-xl font-black text-slate-900 dark:text-white tracking-tight mb-2">{t('nav.map')}</div>
-           <p className="text-xs text-slate-500 dark:text-slate-400 font-bold leading-relaxed mb-6">{t('dashboard.map_desc')}</p>
-           <div className="mt-auto flex justify-end">
-              <CaretRight size={24} weight="bold" className="text-slate-300 group-hover:text-teal-500 group-hover:translate-x-1 transition-all" />
+           <div className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2 font-outfit relative z-20">{t('nav.map')}</div>
+           <p className="text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed mb-6 relative z-20">{t('dashboard.map_desc')}</p>
+           <div className="mt-auto flex justify-end relative z-20">
+              <div className="w-12 h-12 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-teal-50 dark:group-hover:bg-teal-900/30 transition-colors">
+                <CaretRight size={24} weight="bold" className="text-slate-400 group-hover:text-teal-500 group-hover:translate-x-1.5 transition-all duration-300" />
+              </div>
            </div>
         </div>
       )
     },
     { 
       id: 'buyer', to: '/buyer', size: 'sm',
-      color: 'card hover:border-emerald-500/40 flex items-center justify-between group py-5 px-6',
+      color: 'card hover:border-emerald-500/40 hover:shadow-premium flex items-center justify-between group py-5 px-6 backdrop-blur-2xl bg-white/60 dark:bg-slate-900/60 relative overflow-hidden',
       icon: Storefront, label: t('nav.buyer'),
       render: () => ( 
         <>
-          <div className="flex items-center gap-5">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100/50 dark:from-emerald-900/20 dark:to-emerald-800/10 flex items-center justify-center border border-emerald-100 dark:border-emerald-800/50 group-hover:scale-110 transition-transform">
-              <Storefront size={24} weight="duotone" className="text-emerald-600 dark:text-emerald-400" />
+          <div className="absolute -right-4 -top-4 w-16 h-16 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all duration-500" />
+          <div className="flex items-center gap-5 relative z-10">
+            <div className="w-14 h-14 rounded-[1.25rem] bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/40 dark:to-emerald-800/20 flex items-center justify-center border border-emerald-200 dark:border-emerald-700/50 group-hover:scale-110 transition-transform duration-500 shadow-md">
+              <Storefront size={28} weight="duotone" className="text-emerald-600 dark:text-emerald-400" />
             </div>
             <div className="flex flex-col">
-              <div className="text-sm font-black text-slate-900 dark:text-white tracking-tight">{t('nav.buyer')}</div>
-              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t('buyer.verified')}</div>
+              <div className="text-lg font-black text-slate-900 dark:text-white tracking-tight font-outfit">{t('nav.buyer')}</div>
+              <div className="flex items-center gap-1 mt-1">
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+                <div className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">{t('buyer.verified')}</div>
+              </div>
             </div>
           </div>
-          <CaretRight size={20} weight="bold" className="text-slate-300 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all" />
+          <div className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-emerald-50 dark:group-hover:bg-emerald-900/30 transition-colors relative z-10">
+            <CaretRight size={20} weight="bold" className="text-slate-400 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all duration-300" />
+          </div>
         </> 
       )
     },
     { 
       id: 'profit_predictor', to: '/profit-predictor', size: 'sm',
-      color: 'card hover:border-indigo-500/40 flex items-center justify-between group py-5 px-6',
+      color: 'card hover:border-indigo-500/40 hover:shadow-premium flex items-center justify-between group py-5 px-6 backdrop-blur-2xl bg-white/60 dark:bg-slate-900/60 relative overflow-hidden',
       icon: ChartLineUp, label: t('nav.profit_predictor'),
       render: () => ( 
         <>
-          <div className="flex items-center gap-5">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-50 to-indigo-100/50 dark:from-indigo-900/20 dark:to-indigo-800/10 flex items-center justify-center border border-indigo-100 dark:border-indigo-800/50 group-hover:scale-110 transition-transform">
-              <ChartLineUp size={24} weight="duotone" className="text-indigo-600 dark:text-indigo-400" />
+          <div className="absolute -right-4 -top-4 w-16 h-16 bg-indigo-500/10 rounded-full blur-2xl group-hover:bg-indigo-500/20 transition-all duration-500" />
+          <div className="flex items-center gap-5 relative z-10">
+            <div className="w-14 h-14 rounded-[1.25rem] bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900/40 dark:to-indigo-800/20 flex items-center justify-center border border-indigo-200 dark:border-indigo-700/50 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 shadow-md">
+              <ChartLineUp size={28} weight="duotone" className="text-indigo-600 dark:text-indigo-400" />
             </div>
             <div className="flex flex-col">
-              <div className="text-sm font-black text-slate-900 dark:text-white tracking-tight">{t('nav.profit_predictor')}</div>
-              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">AI {t('dashboard.ai_ready')}</div>
+              <div className="text-lg font-black text-slate-900 dark:text-white tracking-tight font-outfit">{t('nav.profit_predictor')}</div>
+              <div className="flex items-center gap-1 mt-1">
+                <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.8)] animate-pulse" />
+                <div className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">AI {t('dashboard.ai_ready')}</div>
+              </div>
             </div>
           </div>
-          <CaretRight size={20} weight="bold" className="text-slate-300 group-hover:text-indigo-500 group-hover:translate-x-1 transition-all" />
+          <div className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-indigo-50 dark:group-hover:bg-indigo-900/30 transition-colors relative z-10">
+            <CaretRight size={20} weight="bold" className="text-slate-400 group-hover:text-indigo-500 group-hover:translate-x-1 transition-all duration-300" />
+          </div>
         </> 
       )
     },
