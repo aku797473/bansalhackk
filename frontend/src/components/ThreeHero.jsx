@@ -1,5 +1,5 @@
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Float, PresentationControls, Sky, Environment, Stars, Sparkles } from '@react-three/drei';
+import { Float, PresentationControls, Sky, Stars, Sparkles } from '@react-three/drei';
 import { useRef, Suspense } from 'react';
 import * as THREE from 'three';
 
@@ -25,13 +25,13 @@ function HarvestGlobe() {
         />
       </mesh>
       
-      {/* Decorative Golden Rings (Saturn like, representing prosperity) */}
+      {/* Decorative Golden Rings */}
       <mesh rotation={[Math.PI / 2.5, 0, 0]}>
         <torusGeometry args={[4.5, 0.05, 16, 100]} />
         <meshStandardMaterial color="#fbbf24" emissive="#d97706" emissiveIntensity={2} />
       </mesh>
       
-      {/* Floating Wheat Spikes around the globe */}
+      {/* Floating Wheat Spikes */}
       {Array.from({ length: 8 }).map((_, i) => (
         <group key={i} rotation={[0, (i * Math.PI) / 4, 0]} position={[0, Math.sin(i) * 0.5, 0]}>
            <mesh position={[5, 0, 0]}>
@@ -49,11 +49,12 @@ function HarvestGlobe() {
 export default function ThreeHero() {
   return (
     <div className="absolute inset-0 z-0 pointer-events-none">
-      <Canvas camera={{ position: [0, 0, 15], fov: 45 }}>
+      {/* Added simple background color to prevent flicker if context is lost */}
+      <Canvas camera={{ position: [0, 0, 15], fov: 45 }} gl={{ antialias: true, alpha: true }}>
         <Suspense fallback={null}>
           <Sky distance={450000} sunPosition={[5, 1, 8]} inclination={0} azimuth={0.25} />
-          <ambientLight intensity={0.5} />
-          <pointLight position={[-10, 10, 10]} intensity={1} color="#fff" />
+          <ambientLight intensity={0.7} />
+          <pointLight position={[-10, 10, 10]} intensity={1.5} color="#fff" />
           <spotLight position={[20, 20, 20]} angle={0.15} penumbra={1} intensity={2} castShadow />
           
           <PresentationControls
@@ -72,10 +73,9 @@ export default function ThreeHero() {
           <Stars radius={100} depth={50} count={2000} factor={4} saturation={0} fade speed={1} />
           
           <fog attach="fog" args={['#064e3b', 15, 45]} />
-          <Environment preset="forest" />
+          {/* REMOVED Environment preset to prevent external CDN fetch errors */}
         </Suspense>
       </Canvas>
-      {/* Color Balance Overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-emerald-50/20 via-transparent to-transparent dark:from-slate-950/20 opacity-50" />
     </div>
   );
