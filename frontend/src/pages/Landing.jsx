@@ -31,34 +31,33 @@ export default function Landing() {
         </div>
       </nav>
 
-      {/* Hero Section - Refined Typography Scale */}
       <header className="relative min-h-screen flex flex-col lg:flex-row overflow-hidden">
          
-         {/* Side 1: Content (Heading size reduced from 9rem to 8rem) */}
-         <div className="w-full lg:w-1/2 min-h-[70vh] lg:min-h-screen flex items-center px-6 sm:px-12 lg:px-24 pt-48 sm:pt-56 lg:pt-32 relative z-20 bg-white dark:bg-slate-950">
+         {/* Side 1: Content (Heading size refined and inline-blocked) */}
+         <div className="w-full lg:w-1/2 min-h-[70vh] lg:min-h-screen flex items-center px-6 sm:px-12 lg:px-24 pt-32 sm:pt-36 lg:pt-24 relative z-20 bg-white dark:bg-slate-950">
             <div className="max-w-xl w-full">
-               <div className="inline-flex items-center gap-3 px-4 sm:px-6 py-2 bg-emerald-600 text-white rounded-full mb-10 sm:mb-14 shadow-2xl shadow-emerald-500/20">
+               <div className="inline-flex items-center gap-3 px-4 sm:px-6 py-2 bg-emerald-600 text-white rounded-full mb-8 sm:mb-10 shadow-2xl shadow-emerald-500/20">
                   <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.4em]">{t('landing.hero_badge')}</span>
                </div>
 
-               <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black leading-[0.85] lg:leading-[0.9] tracking-tighter mb-10 sm:mb-14 uppercase">
+               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight mb-6 sm:mb-8 uppercase">
                   {t('landing.title').split(' ').map((word, i) => (
-                    <span key={i} className={clsx("block", i % 2 !== 0 && "text-emerald-600")}>{word}</span>
+                    <span key={i} className={clsx("inline-block mr-2.5", i % 2 !== 0 && "text-emerald-600")}>{word}</span>
                   ))}
                </h1>
 
-               <p className="text-lg sm:text-xl lg:text-xl text-slate-500 dark:text-slate-400 font-bold max-w-lg mb-14 sm:mb-20 leading-tight uppercase tracking-tight opacity-70">
+               <p className="text-base sm:text-lg lg:text-xl text-slate-500 dark:text-slate-400 font-medium max-w-lg mb-8 sm:mb-12 leading-relaxed tracking-tight">
                   {t('landing.subtitle')}
                </p>
 
-               <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-10">
+               <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
                   <button 
                      onClick={() => navigate('/login')}
-                     className="w-full sm:w-auto h-16 sm:h-20 px-12 sm:px-16 bg-slate-900 dark:bg-white text-white dark:text-black text-[11px] sm:text-[13px] font-black uppercase tracking-[0.4em] rounded-xl sm:rounded-[2.5rem] shadow-2xl hover:scale-105 active:scale-95 transition-all"
+                     className="w-full sm:w-auto h-14 sm:h-16 px-10 sm:px-12 bg-slate-900 dark:bg-white text-white dark:text-black text-[11px] sm:text-xs font-black uppercase tracking-[0.3em] rounded-xl sm:rounded-2xl shadow-xl hover:scale-105 active:scale-95 transition-all"
                   >
                      {t('landing.get_started')}
                   </button>
-                  <button onClick={() => { document.querySelector('.features-section').scrollIntoView({ behavior: 'smooth' }); }} className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.4em] text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all group">
+                  <button onClick={() => { document.querySelector('.features-section').scrollIntoView({ behavior: 'smooth' }); }} className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.3em] text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all group py-4">
                      LEARN MORE ↓
                   </button>
                </div>
