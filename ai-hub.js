@@ -26,6 +26,11 @@ app.use('/api/chatbot', verifyToken, chatRoutes);
 
 app.get('/health', (req, res) => res.json({ status: 'ok', hub: 'ai' }));
 
-mongoose.connect(process.env.MONGODB_URI).then(() => {
-  app.listen(process.env.PORT || 5002, () => console.log('🤖 AI Hub running on 5002'));
-}).catch(err => console.error('MongoDB connection error:', err));
+const PORT = process.env.PORT || 5002;
+app.listen(PORT, () => console.log(`🤖 AI Hub running on ${PORT}`));
+
+const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/smart-kisan';
+mongoose.connect(mongoUri)
+  .then(() => console.log('✅ MongoDB Connected (AI Hub)'))
+  .catch(err => console.error('⚠️ MongoDB connection error (AI Hub):', err.message));
+

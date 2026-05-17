@@ -36,6 +36,11 @@ app.use('/api/schemes', schemesRoutes);
 app.get('/api/wake', (req, res) => res.json({ status: 'ok', service: 'info-hub' }));
 app.get('/health', (req, res) => res.json({ status: 'ok', hub: 'info' }));
 
-mongoose.connect(process.env.MONGODB_URI).then(() => {
-  app.listen(process.env.PORT || 5003, () => console.log('📊 Info Hub running on 5003'));
-}).catch(err => console.error('MongoDB connection error:', err));
+const PORT = process.env.PORT || 5003;
+app.listen(PORT, () => console.log(`📊 Info Hub running on ${PORT}`));
+
+const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/smart-kisan';
+mongoose.connect(mongoUri)
+  .then(() => console.log('✅ MongoDB Connected (Info Hub)'))
+  .catch(err => console.error('⚠️ MongoDB connection error (Info Hub):', err.message));
+

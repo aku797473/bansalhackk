@@ -43,7 +43,11 @@ app.get('/health', (req, res) => res.json({
   identity: 'local-jwt-only' 
 }));
 
-mongoose.connect(process.env.MONGODB_URI).then(() => {
-  console.log('✅ MongoDB Connected (Auth Hub)');
-  app.listen(process.env.PORT || 5001, () => console.log('🔐 Auth Hub running on 5001'));
-}).catch(err => console.error('MongoDB connection error:', err));
+const PORT = process.env.PORT || 5001;
+app.listen(PORT, () => console.log(`🔐 Auth Hub running on ${PORT}`));
+
+const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/smart-kisan';
+mongoose.connect(mongoUri)
+  .then(() => console.log('✅ MongoDB Connected (Auth Hub)'))
+  .catch(err => console.error('⚠️ MongoDB connection error (Auth Hub):', err.message));
+

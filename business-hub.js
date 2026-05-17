@@ -49,6 +49,11 @@ app.use((err, req, res, next) => {
   });
 });
 
-mongoose.connect(process.env.MONGODB_URI).then(() => {
-  app.listen(process.env.PORT || 5004, () => console.log('💼 Business Hub running on 5004'));
-}).catch(err => console.error('MongoDB connection error:', err));
+const PORT = process.env.PORT || 5004;
+app.listen(PORT, () => console.log(`💼 Business Hub running on ${PORT}`));
+
+const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/smart-kisan';
+mongoose.connect(mongoUri)
+  .then(() => console.log('✅ MongoDB Connected (Business Hub)'))
+  .catch(err => console.error('⚠️ MongoDB connection error (Business Hub):', err.message));
+
