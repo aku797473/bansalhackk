@@ -1,10 +1,11 @@
 import axios from 'axios';
 
-const AUTH_URL     = import.meta.env.VITE_AUTH_API_URL     || '/api';
-const AI_URL       = import.meta.env.VITE_AI_API_URL       || '/api';
-const INFO_URL     = import.meta.env.VITE_INFO_API_URL     || 'https://smart-kisan-weather.onrender.com/api';
-const MARKET_URL   = import.meta.env.VITE_MARKET_API_URL   || import.meta.env.VITE_INFO_API_URL || 'https://smart-kisan-weather.onrender.com/api';
-const BUSINESS_URL = '/api';
+const BACKEND_URL  = import.meta.env.VITE_BACKEND_URL      || '';
+const AUTH_URL     = import.meta.env.VITE_AUTH_API_URL     || (BACKEND_URL ? `${BACKEND_URL}/api` : '/api');
+const AI_URL       = import.meta.env.VITE_AI_API_URL       || (BACKEND_URL ? `${BACKEND_URL}/api` : '/api');
+const INFO_URL     = import.meta.env.VITE_INFO_API_URL     || (BACKEND_URL ? `${BACKEND_URL}/api` : '/api');
+const MARKET_URL   = import.meta.env.VITE_MARKET_API_URL   || (BACKEND_URL ? `${BACKEND_URL}/api` : '/api');
+const BUSINESS_URL = BACKEND_URL ? `${BACKEND_URL}/api` : '/api';
 
 // Base instances for each hub
 const authApi     = axios.create({ baseURL: AUTH_URL,     timeout: 30000 });
