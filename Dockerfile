@@ -13,8 +13,9 @@ RUN npm install --production
 # Copy all application files
 COPY . .
 
-# Expose port 5000 (standard unified server port)
-EXPOSE 5000
+# Expose port 7860 (Hugging Face standard Docker port)
+EXPOSE 7860
+ENV PORT=7860
 
 # Start the unified server
 CMD ["node", "unified-server.js"]
