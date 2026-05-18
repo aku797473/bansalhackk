@@ -30,16 +30,16 @@ export default function Dashboard() {
   const locale = i18n.language === 'hi' ? 'hi-IN' : 'en-US';
 
   const { data: weather } = useQuery({
-    queryKey: ['weather-current', 'v2'],
+    queryKey: ['weather-current', 'v3'],
     queryFn: async () => {
       try {
         const getPosition = () => new Promise((resolve) => {
           if (!navigator.geolocation) return resolve(null);
-          const timer = setTimeout(() => resolve(null), 1500);
+          const timer = setTimeout(() => resolve(null), 10000);
           navigator.geolocation.getCurrentPosition(
             pos => { clearTimeout(timer); resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }); },
             () => { clearTimeout(timer); resolve(null); },
-            { timeout: 1500, maximumAge: 600000 }
+            { timeout: 10000, maximumAge: 600000 }
           );
         });
         const pos = await getPosition();
@@ -51,7 +51,7 @@ export default function Dashboard() {
           new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))
         ]);
 
-        const res = await fetchWithTimeout(weatherAPI.getCurrent(lat, lon), 4000);
+        const res = await fetchWithTimeout(weatherAPI.getCurrent(lat, lon), 8000);
         return res.data?.data || FALLBACK_WEATHER;
       } catch { return FALLBACK_WEATHER; }
     },

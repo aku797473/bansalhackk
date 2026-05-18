@@ -46,7 +46,7 @@ export default function Weather() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const { data, isLoading: loading, refetch, isFetching: searching } = useQuery({
-    queryKey: ['weather', searchQuery, i18n.language, 'v10'],
+    queryKey: ['weather', searchQuery, i18n.language, 'v11'],
     queryFn: async () => {
       try {
         const activeLang = i18n.language || 'en';
@@ -56,17 +56,17 @@ export default function Weather() {
         ]);
 
         if (searchQuery) {
-          const res = await fetchWithTimeout(weatherAPI.getByCity(searchQuery, activeLang), 4000);
+          const res = await fetchWithTimeout(weatherAPI.getByCity(searchQuery, activeLang), 8000);
           return res.data.data || FALLBACK_WEATHER;
         }
 
         const getPosition = () => new Promise((resolve) => {
           if (!navigator.geolocation) return resolve(null);
-          const timer = setTimeout(() => resolve(null), 1500);
+          const timer = setTimeout(() => resolve(null), 10000);
           navigator.geolocation.getCurrentPosition(
             pos => { clearTimeout(timer); resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }); },
             () => { clearTimeout(timer); resolve(null); },
-            { timeout: 1500, maximumAge: 600000 }
+            { timeout: 10000, maximumAge: 600000 }
           );
         });
 
@@ -74,7 +74,7 @@ export default function Weather() {
         const lat = pos?.lat || 24.6005;
         const lon = pos?.lon || 80.8322;
 
-        const res = await fetchWithTimeout(weatherAPI.getCurrent(lat, lon, activeLang), 4000);
+        const res = await fetchWithTimeout(weatherAPI.getCurrent(lat, lon, activeLang), 8000);
         const d = res.data.data;
         
         if (d && (!d.forecast || d.forecast.length === 0)) {
