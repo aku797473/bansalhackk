@@ -148,7 +148,7 @@ export default function Weather() {
             <p className="text-sm text-slate-500 dark:text-slate-400 font-bold mt-5 max-w-lg leading-relaxed flex items-center gap-3">
               {t('weather.current')}
               {searching && <span className="text-sky-500 animate-pulse text-xs font-semibold ml-2">Updating...</span>}
-              {displayData?.isFallback && !searching && <span className="text-amber-500 text-xs font-semibold ml-2">Estimated</span>}
+              {(displayData?.isFallback || displayData?.isMock) && !searching && <span className="text-amber-500 text-xs font-semibold ml-2">Estimated</span>}
             </p>
           </div>
           
@@ -204,12 +204,12 @@ export default function Weather() {
                     </div>
                     <div>
                       <div className="flex items-start">
-                         <h2 className="text-[5.5rem] sm:text-[11rem] font-black tracking-tighter drop-shadow-2xl leading-none">{Math.round(displayData.temperature)}°</h2>
-                         <span className="text-3xl sm:text-5xl font-light opacity-50 mt-4 sm:mt-10 ml-2">C</span>
+                         <h2 className="text-7xl sm:text-[8rem] font-black tracking-tighter drop-shadow-2xl leading-none">{Math.round(displayData.temperature)}°</h2>
+                         <span className="text-2xl sm:text-5xl font-light opacity-50 mt-2 sm:mt-6 ml-1 sm:ml-2">C</span>
                       </div>
                       <p className="text-xl sm:text-3xl font-black text-sky-100 capitalize mt-4 flex items-center justify-center lg:justify-start gap-4">
                          {displayData.description} 
-                         <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+                         <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
                       </p>
                     </div>
                   </div>

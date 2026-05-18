@@ -15,6 +15,13 @@ function getGreetingKey() {
   return 'dashboard.greeting_night';
 }
 
+const FALLBACK_WEATHER = {
+  city: 'Satna',
+  temperature: 32,
+  description: 'Partly Cloudy',
+  icon: '02d'
+};
+
 export default function Dashboard() {
   const { user }  = useAuth();
   const navigate  = useNavigate();
@@ -26,9 +33,22 @@ export default function Dashboard() {
     queryKey: ['weather-current'],
     queryFn: async () => {
       try {
-        const { data } = await weatherAPI.getCurrent(24.6005, 80.8322);
-        return data.data;
-      } catch { return null; }
+        const getPosition = () => new Promise((resolve) => {
+          if (!navigator.geolocation) return resolve(null);
+          const timer = setTimeout(() => resolve(null), 1500);
+          navigator.geolocation.getCurrentPosition(
+            pos => { clearTimeout(timer); resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }); },
+            () => { clearTimeout(timer); resolve(null); },
+            { timeout: 1500, maximumAge: 600000 }
+          );
+        });
+        const pos = await getPosition();
+        const lat = pos?.lat || 24.6005;
+        const lon = pos?.lon || 80.8322;
+
+        const { data } = await weatherAPI.getCurrent(lat, lon);
+        return data.data || FALLBACK_WEATHER;
+      } catch { return FALLBACK_WEATHER; }
     },
     staleTime: 10 * 60 * 1000,
   });
@@ -51,11 +71,11 @@ export default function Dashboard() {
         <div className="flex flex-col h-full justify-between">
           <div>
             <span className="text-xs font-bold text-white/80">{t('nav.weather')}</span>
-            <div className="text-6xl sm:text-7xl font-extrabold tracking-tight mt-2 leading-none">{Math.round(weather?.temperature || 0)}°</div>
-            <div className="text-sm font-medium mt-2 capitalize opacity-90">{weather?.description || t('dashboard.loading')}</div>
+            <div className="text-6xl sm:text-7xl font-extrabold tracking-tight mt-2 leading-none">{Math.round(weather?.temperature ?? FALLBACK_WEATHER.temperature)}°</div>
+            <div className="text-sm font-medium mt-2 capitalize opacity-90">{weather?.description || FALLBACK_WEATHER.description}</div>
           </div>
           <div className="flex justify-between items-center mt-6">
-             <div className="text-xs font-medium opacity-85">{weather?.city || 'Satna'}</div>
+             <div className="text-xs font-medium opacity-85">{weather?.city || FALLBACK_WEATHER.city}</div>
              <div className="px-4 py-2 bg-white text-indigo-600 rounded-full text-xs font-semibold shadow-md transition-all hover:scale-102">View Weather</div>
           </div>
         </div>
