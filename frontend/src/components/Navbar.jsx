@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
@@ -6,7 +6,27 @@ import { useTheme } from '../contexts/ThemeContext';
 import LanguageSelector from './LanguageSelector';
 import clsx from 'clsx';
 import { newsAPI } from '../services/api';
-import { User, SignOut, DotsThreeVertical, Sun, Moon } from '@phosphor-icons/react';
+import { 
+  User, 
+  SignOut, 
+  Sun, 
+  Moon, 
+  List, 
+  X, 
+  House, 
+  CloudSun, 
+  Plant, 
+  Storefront, 
+  Flask, 
+  Briefcase, 
+  Handshake, 
+  ChartLineUp, 
+  MapPin, 
+  Newspaper, 
+  Sparkle,
+  Gear,
+  CaretRight
+} from '@phosphor-icons/react';
 
 export default function Navbar() {
   const { t, i18n } = useTranslation();
@@ -17,6 +37,22 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
+
+  const userMenuRef = useRef();
+  const moreMenuRef = useRef();
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+        setUserMenuOpen(false);
+      }
+      if (moreMenuRef.current && !moreMenuRef.current.contains(event.target)) {
+        setMoreOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const checkNews = async () => {
@@ -36,20 +72,20 @@ export default function Navbar() {
   }, [i18n.language, user]);
 
   const primaryLinks = [
-    { to: '/dashboard',  label: t('nav.home') },
-    { to: '/weather',    label: t('nav.weather') },
-    { to: '/crop',       label: t('nav.crop') },
-    { to: '/market',     label: t('nav.market') },
-    { to: '/fertilizer', label: t('nav.fertilizer') },
+    { to: '/dashboard',  label: t('nav.home'), icon: House },
+    { to: '/weather',    label: t('nav.weather'), icon: CloudSun },
+    { to: '/crop',       label: t('nav.crop'), icon: Plant },
+    { to: '/market',     label: t('nav.market'), icon: Storefront },
+    { to: '/fertilizer', label: t('nav.fertilizer'), icon: Flask },
   ];
 
   const moreLinks = [
-    { to: '/labour',           label: t('nav.labour') },
-    { to: '/buyer',            label: t('nav.buyer') },
-    { to: '/profit-predictor', label: t('nav.profit_predictor') },
-    { to: '/map',              label: t('nav.map') },
-    { to: '/news',             label: t('nav.news') },
-    { to: '/schemes',          label: t('nav.schemes') },
+    { to: '/labour',           label: t('nav.labour'), icon: Briefcase },
+    { to: '/buyer',            label: t('nav.buyer'), icon: Handshake },
+    { to: '/profit-predictor', label: t('nav.profit_predictor'), icon: ChartLineUp },
+    { to: '/map',              label: t('nav.map'), icon: MapPin },
+    { to: '/news',             label: t('nav.news'), icon: Newspaper },
+    { to: '/schemes',          label: t('nav.schemes'), icon: Sparkle },
   ];
 
   useEffect(() => {
@@ -89,7 +125,7 @@ export default function Navbar() {
               </NavLink>
             ))}
 
-            <div className="relative">
+            <div className="relative" ref={moreMenuRef}>
               <button 
                 onClick={() => setMoreOpen(!moreOpen)} 
                 className={clsx(
@@ -120,10 +156,10 @@ export default function Navbar() {
             </div>
 
             {/* Custom User Menu */}
-            <div className="relative">
+            <div className="relative" ref={userMenuRef}>
               <button 
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
-                className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center overflow-hidden border border-slate-100 dark:border-slate-700 hover:border-indigo-600/30 transition-all"
+                className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center overflow-hidden border border-slate-100 dark:border-slate-700 hover:border-indigo-600/30 transition-all focus:outline-none"
               >
                 {user?.image || user?.profilePic ? (
                   <img src={user.image || user.profilePic} alt="user" className="w-full h-full object-cover" />
@@ -157,8 +193,11 @@ export default function Navbar() {
               )}
             </div>
 
-            <button onClick={() => setOpen(true)} className="xl:hidden w-10 h-10 flex items-center justify-center text-indigo-600">
-              <DotsThreeVertical size={24} weight="bold" />
+            <button 
+              onClick={() => setOpen(true)} 
+              className="xl:hidden w-10 h-10 flex items-center justify-center text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/20 active:scale-95 transition-all rounded-xl border border-indigo-50 dark:border-indigo-950/20"
+            >
+              <List size={22} weight="bold" />
             </button>
           </div>
         </div>
@@ -166,24 +205,140 @@ export default function Navbar() {
 
       {/* Mobile Drawer */}
       <div className={clsx("fixed inset-0 z-[200] xl:hidden transition-all duration-500", open ? "opacity-100 visible" : "opacity-0 invisible")}>
-        <div className="absolute inset-0 bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl" onClick={() => setOpen(false)} />
-        <div className={clsx("absolute inset-y-0 right-0 w-full sm:w-[400px] bg-white dark:bg-slate-900 shadow-2xl p-8 flex flex-col transition-transform duration-500", open ? "translate-x-0" : "translate-x-full")}>
-          <div className="flex justify-between items-center mb-12">
-            <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Smart<span className="text-indigo-600">Kisan</span></span>
-            <button onClick={() => setOpen(false)} className="text-xs font-semibold text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Close</button>
+        <div className="absolute inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-md" onClick={() => setOpen(false)} />
+        <div className={clsx("absolute inset-y-0 right-0 w-full sm:w-[420px] bg-white dark:bg-slate-900 shadow-2xl p-6 flex flex-col transition-transform duration-500 border-l border-slate-100 dark:border-slate-800", open ? "translate-x-0" : "translate-x-full")}>
+          
+          {/* Header */}
+          <div className="flex justify-between items-center pb-6 border-b border-slate-100 dark:border-slate-800">
+            <div className="flex flex-col leading-none">
+              <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+                Smart<span className="text-indigo-600">Kisan</span>
+              </span>
+              <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 tracking-wider mt-0.5">Agri Intelligence</span>
+            </div>
+            <button 
+              onClick={() => setOpen(false)} 
+              className="w-10 h-10 flex items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition-all active:scale-95"
+            >
+              <X size={20} weight="bold" />
+            </button>
           </div>
-          <nav className="flex-1 space-y-4 overflow-y-auto pr-4 scrollbar-none">
-            {[...primaryLinks, ...moreLinks].map(({ to, label }) => (
-              <NavLink key={to} to={to} className="block text-2xl font-bold text-slate-600 dark:text-slate-300 hover:text-indigo-600 transition-colors py-1">
-                {label}
-              </NavLink>
-            ))}
-          </nav>
-          <div className="pt-8 mt-8 border-t border-slate-100 dark:border-slate-800">
-            <button onClick={async () => { await logout(); navigate('/'); }} className="w-full py-4 text-center text-sm font-semibold bg-red-600 text-white hover:bg-red-700 transition-colors rounded-2xl shadow-xl shadow-red-500/20">
+
+          {/* User profile section if logged in */}
+          {user && (
+            <div className="my-6 p-4 bg-slate-50/50 dark:bg-slate-800/40 rounded-2xl border border-slate-100 dark:border-slate-800/60 flex items-center gap-4">
+              <div 
+                onClick={() => { setOpen(false); navigate('/profile'); }}
+                className="w-14 h-14 rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-sm relative overflow-hidden group cursor-pointer"
+              >
+                {user.image || user.profilePic ? (
+                  <img src={user.image || user.profilePic} alt="profile" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600">
+                    <User size={24} weight="bold" />
+                  </div>
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-[10px] font-bold tracking-wider text-slate-400 dark:text-slate-500 uppercase">{user.role || 'Farmer'}</div>
+                <div className="text-base font-bold text-slate-900 dark:text-white truncate">{user.name || 'Smart Farmer'}</div>
+                <button 
+                  onClick={() => { setOpen(false); navigate('/profile'); }}
+                  className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 mt-0.5"
+                >
+                  Edit Profile <CaretRight size={10} weight="bold" />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Navigation Links Scrollable */}
+          <div className="flex-1 overflow-y-auto my-2 pr-2 space-y-6 scrollbar-none">
+            
+            {/* Core Services */}
+            <div className="space-y-2">
+              <div className="text-[10px] font-bold tracking-widest text-slate-400 dark:text-slate-500 uppercase px-2">Core Modules</div>
+              <div className="space-y-1">
+                {primaryLinks.map(({ to, label, icon: Icon }) => (
+                  <NavLink 
+                    key={to} 
+                    to={to} 
+                    onClick={() => setOpen(false)}
+                    className={({ isActive }) => clsx(
+                      "flex items-center gap-3.5 px-4 py-3 rounded-xl text-base font-bold transition-all duration-200",
+                      isActive 
+                        ? "bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 shadow-sm border border-indigo-500/10" 
+                        : "text-slate-600 dark:text-slate-300 hover:text-indigo-600 hover:bg-slate-50 dark:hover:bg-slate-800/30"
+                    )}
+                  >
+                    <Icon size={20} weight="duotone" className="shrink-0" />
+                    <span>{label}</span>
+                  </NavLink>
+                ))}
+              </div>
+            </div>
+
+            {/* Additional Tools */}
+            <div className="space-y-2">
+              <div className="text-[10px] font-bold tracking-widest text-slate-400 dark:text-slate-500 uppercase px-2">Tools & Services</div>
+              <div className="space-y-1">
+                {moreLinks.map(({ to, label, icon: Icon }) => (
+                  <NavLink 
+                    key={to} 
+                    to={to} 
+                    onClick={() => setOpen(false)}
+                    className={({ isActive }) => clsx(
+                      "flex items-center gap-3.5 px-4 py-3 rounded-xl text-base font-bold transition-all duration-200",
+                      isActive 
+                        ? "bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 shadow-sm border border-indigo-500/10" 
+                        : "text-slate-600 dark:text-slate-300 hover:text-indigo-600 hover:bg-slate-50 dark:hover:bg-slate-800/30"
+                    )}
+                  >
+                    <Icon size={20} weight="duotone" className="shrink-0" />
+                    <span>{label}</span>
+                  </NavLink>
+                ))}
+              </div>
+            </div>
+
+            {/* Actions Panel */}
+            <div className="space-y-2">
+              <div className="text-[10px] font-bold tracking-widest text-slate-400 dark:text-slate-500 uppercase px-2">Settings</div>
+              <div className="space-y-1 p-2 bg-slate-50/50 dark:bg-slate-850 dark:bg-slate-800/20 rounded-2xl border border-slate-100/50 dark:border-slate-800/40">
+                <button 
+                  onClick={toggleTheme} 
+                  className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-indigo-600 rounded-xl transition-all"
+                >
+                  <div className="flex items-center gap-3">
+                    {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+                    <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+                  </div>
+                  <span className="text-xs text-slate-400 capitalize">{theme}</span>
+                </button>
+                <div className="h-px bg-slate-100 dark:bg-slate-800/60 my-1.5" />
+                <div className="flex items-center justify-between px-3 py-2.5">
+                  <div className="text-sm font-semibold text-slate-600 dark:text-slate-300 flex items-center gap-3">
+                    <Gear size={18} />
+                    <span>Language</span>
+                  </div>
+                  <LanguageSelector showLabel={true} />
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Footer Actions */}
+          <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
+            <button 
+              onClick={async () => { setOpen(false); await logout(); navigate('/'); }} 
+              className="w-full flex items-center justify-center gap-2 py-3.5 text-base font-bold bg-red-50 hover:bg-red-100 dark:bg-red-500/10 dark:hover:bg-red-500/20 text-red-600 dark:text-red-400 transition-colors rounded-2xl shadow-sm"
+            >
+              <SignOut size={20} weight="bold" />
               Log Out
             </button>
           </div>
+
         </div>
       </div>
     </>
