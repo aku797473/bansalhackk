@@ -39,11 +39,11 @@ const MOCK_DESCRIPTIONS = {
   hi: ['धूप', 'बादल छाए रहेंगे', 'हल्की बारिश', 'बिजली कड़कना', 'साफ मौसम', 'आंशिक रूप से बादल']
 };
 
-const getMockWeather = (lat, lon, lang = 'en') => {
+const getMockWeather = (lat, lon, lang = 'en', realCity = null) => {
   const isHi = String(lang).startsWith('hi');
   const descList = isHi ? MOCK_DESCRIPTIONS.hi : MOCK_DESCRIPTIONS.en;
   return {
-    city:        isHi ? 'प्रदर्शनी स्थान' : 'Demo Location',
+    city:        realCity ? realCity : (isHi ? 'प्रदर्शनी स्थान' : 'Demo Location'),
     country:     'IN',
     lat, lon,
     temperature: 32,
@@ -97,7 +97,16 @@ router.get('/current', async (req, res) => {
 
     if (!OWM_KEY || OWM_KEY === 'demo' || OWM_KEY.includes('your_')) {
       console.log('☁️ Weather: Using Mock Data (No API Key)');
-      const mock = getMockWeather(lat, lon, activeLang);
+      
+      let realCity = null;
+      try {
+        const geoRes = await axios.get(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}`);
+        realCity = geoRes.data.city || geoRes.data.locality || geoRes.data.principalSubdivision;
+      } catch(e) {
+        console.warn('Reverse geocode failed:', e.message);
+      }
+
+      const mock = getMockWeather(lat, lon, activeLang, realCity);
       await rSet(cacheKey, CACHE_TTL, JSON.stringify(mock));
       WeatherHistory.create({ userId, lat, lon, city: mock.city, temperature: mock.temperature, description: mock.description, searchType: 'current' }).catch(console.error);
       return res.json({ success: true, data: mock });
@@ -172,7 +181,14 @@ router.get('/current', async (req, res) => {
   } catch (err) {
     console.error('Weather API error (falling back to mock):', err.message);
     const { lat, lon, lang } = req.query;
-    const mock = getMockWeather(lat || 28.6, lon || 77.2, lang || 'en');
+    
+    let realCity = null;
+    try {
+      const geoRes = await axios.get(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat || 28.6}&longitude=${lon || 77.2}`);
+      realCity = geoRes.data.city || geoRes.data.locality || geoRes.data.principalSubdivision;
+    } catch(e) {}
+
+    const mock = getMockWeather(lat || 28.6, lon || 77.2, lang || 'en', realCity);
     res.json({ success: true, data: mock, note: 'Using fallback data due to API error' });
   }
 });
