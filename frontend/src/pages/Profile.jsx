@@ -133,6 +133,7 @@ export default function Profile() {
                 <Camera size={28} weight="bold" />
               </div>
             </div>
+            <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageChange} />
             <div className="mb-4 space-y-1">
               <div className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-[0.3em]">MEMBER ACCOUNT</div>
               <h2 className="text-3xl font-black text-slate-900 dark:text-white uppercase tracking-tight">{formData.name || user?.name || 'Smart Farmer'}</h2>

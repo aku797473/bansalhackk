@@ -65,22 +65,21 @@ router.get('/profile', async (req, res) => {
 router.post('/profile', async (req, res) => {
   try {
     const { userId, email, role } = getUserInfo(req);
-    const { name, language, location, farmDetails, phone } = req.body;
+    
+    const updateData = { userId };
+    if (email) updateData.email = email;
+    if (role) updateData.role = role;
+    
+    if (req.body.name !== undefined) updateData.name = req.body.name;
+    if (req.body.phone !== undefined) updateData.phone = req.body.phone;
+    if (req.body.language !== undefined) updateData.language = req.body.language;
+    if (req.body.location !== undefined) updateData.location = req.body.location;
+    if (req.body.farmDetails !== undefined) updateData.farmDetails = req.body.farmDetails;
+    if (req.body.profilePic !== undefined) updateData.profilePic = req.body.profilePic;
 
     const profile = await UserProfile.findOneAndUpdate(
       { userId },
-      { $set: { 
-          userId, 
-          email: email || req.body.email, 
-          role, 
-          name, 
-          phone, 
-          language, 
-          location, 
-          farmDetails,
-          profilePic: req.body.profilePic 
-        } 
-      },
+      { $set: updateData },
       { new: true, upsert: true, runValidators: true }
     );
 
