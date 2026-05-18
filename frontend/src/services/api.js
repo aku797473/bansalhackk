@@ -1,11 +1,17 @@
 import axios from 'axios';
 
-const BACKEND_URL  = import.meta.env.VITE_BACKEND_URL      || '';
-const AUTH_URL     = import.meta.env.VITE_AUTH_API_URL     || (BACKEND_URL ? `${BACKEND_URL}/api` : '/api');
-const AI_URL       = import.meta.env.VITE_AI_API_URL       || (BACKEND_URL ? `${BACKEND_URL}/api` : '/api');
-const INFO_URL     = import.meta.env.VITE_INFO_API_URL     || (BACKEND_URL ? `${BACKEND_URL}/api` : '/api');
-const MARKET_URL   = import.meta.env.VITE_MARKET_API_URL   || (BACKEND_URL ? `${BACKEND_URL}/api` : '/api');
-const BUSINESS_URL = BACKEND_URL ? `${BACKEND_URL}/api` : '/api';
+const getBaseURL = (envVal) => {
+  if (envVal) return envVal;
+  const base = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_BACKEND_URL || '';
+  if (!base) return '/api';
+  return base.endsWith('/api') ? base : `${base}/api`;
+};
+
+const AUTH_URL     = getBaseURL(import.meta.env.VITE_AUTH_API_URL);
+const AI_URL       = getBaseURL(import.meta.env.VITE_AI_API_URL);
+const INFO_URL     = getBaseURL(import.meta.env.VITE_INFO_API_URL);
+const MARKET_URL   = getBaseURL(import.meta.env.VITE_MARKET_API_URL);
+const BUSINESS_URL = getBaseURL(import.meta.env.VITE_BUSINESS_API_URL);
 
 // Base instances for each hub
 const authApi     = axios.create({ baseURL: AUTH_URL,     timeout: 30000 });
