@@ -26,6 +26,7 @@ export function AuthProvider({ children }) {
                 fullUser = {
                   ...fullUser,
                   ...profileRes.data,
+                  image: profileRes.data.profilePic || fullUser.image,
                   name: profileRes.data.name || fullUser.name,
                   role: profileRes.data.role || fullUser.role,
                   location: profileRes.data.location
@@ -62,6 +63,7 @@ export function AuthProvider({ children }) {
             fullUser = {
               ...fullUser,
               ...profileRes.data,
+              image: profileRes.data.profilePic || fullUser.image,
               name: profileRes.data.name || fullUser.name,
               role: profileRes.data.role || fullUser.role,
               location: profileRes.data.location
@@ -96,6 +98,7 @@ export function AuthProvider({ children }) {
             fullUser = {
               ...fullUser,
               ...profileRes.data,
+              image: profileRes.data.profilePic || fullUser.image,
               name: profileRes.data.name || fullUser.name,
               role: profileRes.data.role || fullUser.role,
               location: profileRes.data.location
@@ -130,6 +133,7 @@ export function AuthProvider({ children }) {
             fullUser = {
               ...fullUser,
               ...profileRes.data,
+              image: profileRes.data.profilePic || fullUser.image,
               name: profileRes.data.name || fullUser.name,
               role: profileRes.data.role || fullUser.role,
               location: profileRes.data.location
@@ -166,11 +170,22 @@ export function AuthProvider({ children }) {
   const updateUser = async (updatedFields) => {
     if (!user) return;
     const newUser = { ...user, ...updatedFields };
+    if (updatedFields.profilePic) {
+      newUser.image = updatedFields.profilePic;
+    }
     setUser(newUser);
     try {
-       await userAPI.saveProfile(updatedFields);
+       const { data } = await userAPI.saveProfile(updatedFields);
+       if (data.success && data.data) {
+         setUser(prev => ({
+           ...prev,
+           ...data.data,
+           image: data.data.profilePic || prev.image || prev.profilePic
+         }));
+       }
     } catch (err) {
        console.error('Profile sync failed', err);
+       throw err;
     }
   };
 
