@@ -43,6 +43,7 @@ export default function Navbar() {
     { to: '/fertilizer', label: t('nav.fertilizer') },
   ];
 
+  const moreLinks = [
     { to: '/labour',           label: t('nav.labour') },
     { to: '/buyer',            label: t('nav.buyer') },
     { to: '/profit-predictor', label: t('nav.profit_predictor') },
