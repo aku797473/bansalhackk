@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import ThreeBackground from '../components/ThreeBackground';
 import toast from 'react-hot-toast';
@@ -11,10 +11,22 @@ export default function Profile() {
   const [formData, setFormData] = useState({
     name: user?.name || '',
     role: user?.role || 'farmer',
-    bio: '',
-    phone: '',
-    location: ''
+    bio: user?.bio || '',
+    phone: user?.phone || '',
+    location: user?.location || ''
   });
+
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        name: user.name || '',
+        role: user.role || 'farmer',
+        bio: user.bio || '',
+        phone: user.phone || '',
+        location: user.location || ''
+      });
+    }
+  }, [user]);
 
   const handleImageClick = () => fileInputRef.current.click();
 
