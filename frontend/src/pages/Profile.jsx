@@ -112,16 +112,16 @@ export default function Profile() {
       
       <div className="max-w-5xl mx-auto relative z-10">
         {/* Cover Banner Header */}
-        <div className="relative h-56 rounded-[2.5rem] bg-gradient-to-r from-emerald-500/20 via-green-600/10 to-amber-500/20 border border-emerald-500/10 overflow-visible mb-20 shadow-lg">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(16,185,129,0.1),transparent)]" />
-          <div className="absolute right-10 bottom-6 opacity-30">
-            <Sparkle size={120} className="text-emerald-600/20" weight="duotone" />
+        <div className="relative h-56 rounded-[2.5rem] bg-gradient-to-r from-emerald-500/10 via-green-600/5 to-amber-500/10 border border-emerald-500/10 overflow-visible mb-20 shadow-sm">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(16,185,129,0.05),transparent)]" />
+          <div className="absolute right-10 bottom-6 opacity-20">
+            <Sparkle size={120} className="text-emerald-600/15" weight="duotone" />
           </div>
 
           {/* Avatar overlapping cover banner */}
           <div className="absolute -bottom-14 left-8 right-8 flex flex-col sm:flex-row items-center sm:items-end gap-6 text-center sm:text-left">
             <div 
-              className="w-36 h-36 rounded-[2.5rem] bg-white dark:bg-slate-900 border-4 border-white dark:border-slate-800 shadow-xl relative overflow-hidden group cursor-pointer transition-all hover:scale-102"
+              className="w-36 h-36 rounded-[2rem] bg-white dark:bg-slate-900 border-4 border-white dark:border-slate-800 shadow-lg relative overflow-hidden group cursor-pointer transition-all hover:scale-102"
               onClick={handleImageClick}
             >
               {user?.image || user?.profilePic ? (
@@ -135,13 +135,12 @@ export default function Profile() {
             </div>
             <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageChange} />
             <div className="mb-4 space-y-1">
-              <div className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-[0.3em]">MEMBER ACCOUNT</div>
-              <h2 className="text-3xl font-black text-slate-900 dark:text-white uppercase tracking-tight">{formData.name || user?.name || 'Smart Farmer'}</h2>
+              <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">{formData.name || user?.name || 'Smart Farmer'}</h2>
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 mt-2">
-                <div className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest bg-emerald-50 dark:bg-emerald-950/40 px-3.5 py-1.5 rounded-full border border-emerald-100/50 dark:border-emerald-900/30 shadow-sm">
-                  Role: {user?.role || 'farmer'}
+                <div className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1 rounded-full border border-emerald-100/50 dark:border-emerald-900/30 shadow-sm capitalize">
+                  {user?.role || 'farmer'}
                 </div>
-                <div className="flex items-center gap-1.5 text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+                <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-medium">
                   <MapPin size={14} className="text-emerald-500" />
                   {formData.location || 'India'}
                 </div>
@@ -153,14 +152,14 @@ export default function Profile() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           {/* Left Column - Meta & Info */}
           <div className="lg:col-span-1 space-y-8">
-            {/* Strengths Card */}
-            <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl rounded-[2.5rem] p-8 border border-slate-200/40 dark:border-slate-800/40 shadow-2xl space-y-6">
-              <div className="space-y-3">
-                <div className="flex justify-between text-xs font-black uppercase tracking-widest">
-                  <span className="text-slate-600 dark:text-slate-400">Profile Strengths</span>
+            {/* Completion Card */}
+            <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl rounded-[2rem] p-6 border border-slate-200/40 dark:border-slate-800/40 shadow-xl space-y-5">
+              <div className="space-y-2">
+                <div className="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  <span>Profile Completion</span>
                   <span className="text-emerald-600 dark:text-emerald-400">{calculateCompletion()}%</span>
                 </div>
-                <div className="h-3.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-200/20">
+                <div className="h-3 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-200/20">
                   <div 
                     className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-green-600 transition-all duration-700 ease-out shadow-sm"
                     style={{ width: `${calculateCompletion()}%` }}
@@ -168,81 +167,81 @@ export default function Profile() {
                 </div>
               </div>
 
-              <div className="border-t border-slate-100 dark:border-slate-800/60 pt-6 space-y-4 text-xs font-bold text-slate-500 dark:text-slate-400">
+              <div className="border-t border-slate-100 dark:border-slate-800/60 pt-4 space-y-3.5 text-xs font-medium text-slate-600 dark:text-slate-400">
                 <div className="flex items-center gap-3">
-                  <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${formData.name ? 'bg-emerald-500 text-white' : 'bg-slate-100 dark:bg-slate-800'}`}>✓</div>
-                  <span className="uppercase tracking-wide">Display Name</span>
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center text-xs ${formData.name ? 'bg-emerald-500 text-white' : 'bg-slate-100 dark:bg-slate-800'}`}>✓</div>
+                  <span>Display Name</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${formData.phone ? 'bg-emerald-500 text-white' : 'bg-slate-100 dark:bg-slate-800'}`}>✓</div>
-                  <span className="uppercase tracking-wide">Phone Number</span>
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center text-xs ${formData.phone ? 'bg-emerald-500 text-white' : 'bg-slate-100 dark:bg-slate-800'}`}>✓</div>
+                  <span>Phone Number</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${formData.location ? 'bg-emerald-500 text-white' : 'bg-slate-100 dark:bg-slate-800'}`}>✓</div>
-                  <span className="uppercase tracking-wide">Operational Location</span>
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center text-xs ${formData.location ? 'bg-emerald-500 text-white' : 'bg-slate-100 dark:bg-slate-800'}`}>✓</div>
+                  <span>Operational Location</span>
                 </div>
               </div>
             </div>
 
             {/* Verification Info Card */}
-            <div className="bg-slate-900 dark:bg-slate-950 rounded-[2.5rem] p-8 text-white shadow-2xl border border-white/5 space-y-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center">
-                  <ShieldCheck size={28} className="text-emerald-400" weight="duotone" />
+            <div className="bg-gradient-to-br from-slate-900 to-slate-950 rounded-[2rem] p-6 text-white shadow-xl border border-white/5 space-y-5">
+              <div className="flex items-center gap-3.5">
+                <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center">
+                  <ShieldCheck size={24} className="text-emerald-400" weight="duotone" />
                 </div>
                 <div>
-                  <div className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em]">IDENTITY LEVEL</div>
-                  <div className="text-sm font-black uppercase tracking-wider mt-0.5">VERIFIED PORTAL</div>
+                  <h4 className="text-sm font-bold text-slate-100">Verified Profile</h4>
+                  <p className="text-xs text-emerald-400 font-medium">Smart Kisan Secure</p>
                 </div>
               </div>
 
-              <p className="text-xs text-slate-400 leading-relaxed uppercase font-bold tracking-wider">
-                Your profile information is verified and secured within the decentralized Smart Kisan architecture.
+              <p className="text-xs text-slate-400 leading-relaxed font-medium">
+                Your credentials are secured inside the Smart Kisan system. No passwords or private tokens are shared.
               </p>
 
-              <div className="border-t border-white/10 pt-5 flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-                <Calendar size={18} className="text-emerald-500" />
-                ACCOUNT ACTIVE
+              <div className="border-t border-white/10 pt-4 flex items-center gap-2 text-xs text-slate-400">
+                <Calendar size={16} className="text-emerald-500" />
+                Active Account
               </div>
             </div>
           </div>
 
           {/* Right Column - Editor Form */}
           <div className="lg:col-span-2">
-            <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl rounded-[2.5rem] p-10 border border-slate-200/40 dark:border-slate-800/40 shadow-2xl space-y-10">
-              <div className="flex items-center gap-4 border-b border-slate-100 dark:border-slate-800/60 pb-6">
-                <UserCircle size={32} className="text-emerald-600 dark:text-emerald-400" weight="duotone" />
+            <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl rounded-[2rem] p-8 border border-slate-200/40 dark:border-slate-800/40 shadow-xl space-y-8">
+              <div className="flex items-center gap-4 border-b border-slate-100 dark:border-slate-800/60 pb-5">
+                <UserCircle size={28} className="text-emerald-600 dark:text-emerald-400" weight="duotone" />
                 <div>
-                  <h3 className="text-lg font-black uppercase tracking-wider text-slate-800 dark:text-slate-100">Personal Information</h3>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">Configure your farmer portal details</p>
+                  <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">Edit Profile</h3>
+                  <p className="text-xs text-slate-500">Update your public details and farming role below</p>
                 </div>
               </div>
 
-              <div className="space-y-8">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                  <div className="space-y-3">
-                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.3em] ml-2">Display Name</label>
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 ml-1">Display Name</label>
                     <input 
                       type="text" 
                       value={formData.name}
                       onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      className="w-full bg-slate-50 dark:bg-slate-950 border-2 border-slate-100/50 dark:border-slate-900/50 rounded-2xl px-6 py-4.5 text-sm font-bold uppercase tracking-widest focus:border-emerald-500 outline-none transition-all dark:text-white"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl px-5 py-3 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all dark:text-white font-medium"
                     />
                   </div>
-                  <div className="space-y-3">
-                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.3em] ml-2">Phone Number</label>
+                  <div className="space-y-2">
+                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 ml-1">Phone Number</label>
                     <input 
                       type="tel" 
                       placeholder="+91 XXXXX XXXXX"
                       value={formData.phone}
                       onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                      className="w-full bg-slate-50 dark:bg-slate-950 border-2 border-slate-100/50 dark:border-slate-900/50 rounded-2xl px-6 py-4.5 text-sm font-bold uppercase tracking-widest focus:border-emerald-500 outline-none transition-all dark:text-white"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl px-5 py-3 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all dark:text-white font-medium"
                     />
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.3em] ml-2">Operational Role</label>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 ml-1">Operational Role</label>
                   <div className="grid grid-cols-3 gap-4">
                     {[
                       { id: 'farmer', icon: IdentificationCard, label: 'Farmer' },
@@ -254,36 +253,36 @@ export default function Profile() {
                         type="button"
                         onClick={() => setFormData({...formData, role: role.id})}
                         className={clsx(
-                          "flex flex-col items-center justify-center p-6 rounded-2xl border-2 transition-all gap-3 hover:scale-102",
+                          "flex flex-col items-center justify-center p-4 rounded-xl border transition-all gap-2 hover:scale-[1.01]",
                           formData.role === role.id 
                             ? "border-emerald-500 bg-emerald-500/5 text-emerald-600 dark:text-emerald-400" 
-                            : "border-slate-100 dark:border-slate-900 text-slate-400 hover:border-emerald-500/30"
+                            : "border-slate-200 dark:border-slate-800 text-slate-400 hover:border-emerald-500/30"
                         )}
                       >
-                        <role.icon size={28} weight="duotone" />
-                        <span className="text-[9px] font-black uppercase tracking-widest">{role.label}</span>
+                        <role.icon size={24} weight="duotone" />
+                        <span className="text-xs font-bold capitalize">{role.label}</span>
                       </button>
                     ))}
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.3em] ml-2">Geographic Location</label>
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 ml-1">Geographic Location</label>
                   <input 
                     type="text" 
                     placeholder="E.G. SATNA, MADHYA PRADESH"
                     value={formData.location}
                     onChange={(e) => setFormData({...formData, location: e.target.value})}
-                    className="w-full bg-slate-50 dark:bg-slate-950 border-2 border-slate-100/50 dark:border-slate-900/50 rounded-2xl px-6 py-4.5 text-sm font-bold uppercase tracking-widest focus:border-emerald-500 outline-none transition-all dark:text-white"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl px-5 py-3 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all dark:text-white font-medium"
                   />
                 </div>
 
                 <button 
                   onClick={handleSave}
                   disabled={loading}
-                  className="w-full py-5 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white text-xs font-black uppercase tracking-[0.4em] rounded-2xl shadow-lg hover:shadow-emerald-500/20 hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="w-full py-4 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white text-sm font-semibold rounded-2xl shadow-lg hover:shadow-emerald-500/10 hover:scale-[1.005] active:scale-[0.995] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                 >
-                  {loading ? 'SAVING CHANGES...' : 'SAVE PROFILE'}
+                  {loading ? 'Saving Changes...' : 'Save Profile'}
                   <ArrowRight size={16} weight="bold" />
                 </button>
               </div>

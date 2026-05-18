@@ -47,14 +47,14 @@ export default function Schemes() {
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-14">
           <div>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="px-4 py-2 bg-amber-600 dark:bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-amber-500/30 border border-amber-400/20 flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-3 mb-6">
+              <div className="px-4 py-1.5 bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 text-xs font-semibold rounded-full border border-amber-200/50 dark:border-amber-800/35 flex items-center gap-2">
                 <Bank size={14} weight="fill" className="animate-pulse" />
                 {t('schemes.government_portal')}
               </div>
-              <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+              <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2 text-xs font-medium text-slate-500">
                 <ShieldCheck size={14} weight="fill" className="text-emerald-500" />
-                {t('schemes.verified_scheme')}
+                Verified Government Scheme
               </div>
             </div>
             <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none font-outfit">
@@ -71,7 +71,7 @@ export default function Schemes() {
         {isLoading && (
           <div className="flex flex-col items-center justify-center py-32 gap-6">
              <div className="w-16 h-16 border-4 border-amber-500/20 border-t-amber-500 rounded-full animate-spin shadow-2xl shadow-amber-500/20" />
-             <p className="text-sm font-black uppercase tracking-widest text-slate-400 animate-pulse">{t('schemes.loading')}</p>
+             <p className="text-sm font-semibold text-slate-400 animate-pulse">{t('schemes.loading')}</p>
           </div>
         )}
 
@@ -94,12 +94,12 @@ export default function Schemes() {
                            {lang === 'hi' ? scheme.titleHi : scheme.title}
                         </h2>
                         <div className="flex flex-wrap gap-3">
-                           <div className={clsx("px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 border shadow-inner", colors.split(' ').slice(4, 7).join(' '))}>
+                           <div className={clsx("px-3 py-1 rounded-lg text-xs font-semibold flex items-center gap-2 border shadow-inner", colors.split(' ').slice(4, 7).join(' '))}>
                               <Lightning size={14} weight="fill" className="animate-pulse" />
                               {lang === 'hi' ? (scheme.benefitHi || scheme.benefit) : scheme.benefit}
                            </div>
                            {(lang === 'hi' ? (scheme.tagsHi || scheme.tags) : scheme.tags).map(tag => (
-                             <div key={tag} className="px-4 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 backdrop-blur-md text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-widest border border-slate-200/50 dark:border-slate-800/50">
+                             <div key={tag} className="px-3 py-1 rounded-lg bg-slate-50 dark:bg-slate-800/80 backdrop-blur-md text-slate-500 dark:text-slate-400 text-xs font-semibold border border-slate-200/50 dark:border-slate-800/50">
                                 {tag}
                              </div>
                            ))}
@@ -116,7 +116,7 @@ export default function Schemes() {
                      </div>
                   </div>
 
-                  <a href={scheme.link} target="_blank" rel="noopener noreferrer" className="mt-auto h-20 bg-slate-100 dark:bg-slate-800/80 backdrop-blur-md text-slate-900 dark:text-white rounded-[2rem] font-black text-sm uppercase tracking-[0.2em] flex items-center justify-center gap-4 hover:bg-amber-600 hover:text-white transition-all duration-300 shadow-sm hover:shadow-2xl hover:shadow-amber-500/30 group/btn border border-slate-200/50 dark:border-slate-700/50">
+                  <a href={scheme.link} target="_blank" rel="noopener noreferrer" className="mt-auto h-16 bg-slate-100 dark:bg-slate-800/80 backdrop-blur-md text-slate-900 dark:text-white rounded-[2rem] font-bold text-base flex items-center justify-center gap-4 hover:bg-amber-600 hover:text-white transition-all duration-300 shadow-sm hover:shadow-2xl hover:shadow-amber-500/30 group/btn border border-slate-200/50 dark:border-slate-700/50">
                      {t('schemes.apply')}
                      <CaretRight size={24} weight="bold" className="group-hover/btn:translate-x-2 transition-transform" />
                   </a>
@@ -138,7 +138,7 @@ export default function Schemes() {
                     <p className="text-slate-400 font-bold max-w-sm text-sm leading-relaxed">{t('schemes.help_desc')}</p>
                  </div>
               </div>
-              <button className="h-20 px-12 bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white hover:text-slate-900 rounded-[2rem] font-black text-sm uppercase tracking-widest hover:scale-105 active:scale-95 transition-all duration-300 shadow-xl">
+              <button className="h-16 px-10 bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white hover:text-slate-900 rounded-[2rem] font-bold text-base hover:scale-105 active:scale-95 transition-all duration-300 shadow-xl">
                  {t('schemes.contact_support')}
               </button>
            </div>

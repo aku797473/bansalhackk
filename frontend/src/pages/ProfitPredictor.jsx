@@ -147,14 +147,14 @@ export default function ProfitPredictor() {
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-14">
           <div>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="px-4 py-2 bg-emerald-600 dark:bg-emerald-500 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-emerald-500/30 border border-emerald-400/20 flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-3 mb-6">
+              <div className="px-4 py-1.5 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 text-xs font-semibold rounded-full border border-emerald-200/50 dark:border-emerald-800/35 flex items-center gap-2">
                 <Sparkle size={14} weight="fill" className="animate-pulse" />
-                {t('profit_predictor.ai_generated')}
+                AI-Powered Predictor
               </div>
-              <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+              <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2 text-xs font-medium text-slate-500">
                 <Lightning size={14} weight="fill" className="text-amber-500" />
-                {t('profit_predictor.version')}
+                Analysis Engine Connected
               </div>
             </div>
             <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none font-outfit">
@@ -173,7 +173,7 @@ export default function ProfitPredictor() {
           <div className="lg:col-span-5 space-y-6">
             <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 rounded-[2.5rem] p-8 sm:p-10 shadow-premium relative overflow-hidden group">
                <div className="absolute -top-24 -right-24 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-               <h2 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-10 flex items-center gap-3">
+               <h2 className="text-sm font-bold text-slate-400 mb-10 flex items-center gap-3">
                  <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-500/10 flex items-center justify-center">
                    <ClipboardText size={18} weight="fill" className="text-emerald-600 dark:text-emerald-400" />
                  </div>
@@ -182,7 +182,7 @@ export default function ProfitPredictor() {
 
                <div className="space-y-6">
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2 ml-2">
+                    <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-2 ml-2">
                       <Stack size={14} weight="bold" className="text-emerald-500" /> {t('profit_predictor.land_size')} ({t('profit_predictor.acres')})
                     </label>
                     <input 
@@ -196,7 +196,7 @@ export default function ProfitPredictor() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2 ml-2">
+                      <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-2 ml-2">
                         <Plant size={14} weight="duotone" className="text-emerald-500" /> {t('profit_predictor.planned_crop')}
                       </label>
                       <select 
@@ -208,7 +208,7 @@ export default function ProfitPredictor() {
                       </select>
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2 ml-2">
+                      <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-2 ml-2">
                         <Info size={14} weight="bold" className="text-emerald-500" /> {t('profit_predictor.soil_type')}
                       </label>
                       <select 
@@ -223,7 +223,7 @@ export default function ProfitPredictor() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2 ml-2">
+                      <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-2 ml-2">
                         <MapPin size={14} weight="duotone" className="text-emerald-500" /> {t('profit_predictor.location')}
                       </label>
                       <input 
@@ -235,7 +235,7 @@ export default function ProfitPredictor() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2 ml-2">
+                      <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-2 ml-2">
                         <Flask size={14} weight="duotone" className="text-emerald-500" /> {t('profit_predictor.fertilizer')}
                       </label>
                       <input 
@@ -250,7 +250,7 @@ export default function ProfitPredictor() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2 ml-2">
+                      <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-2 ml-2">
                         <CloudSun size={14} weight="duotone" className="text-emerald-500" /> {t('profit_predictor.weather_context')}
                       </label>
                       <input 
@@ -262,7 +262,7 @@ export default function ProfitPredictor() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2 ml-2">
+                      <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-2 ml-2">
                         <Wallet size={14} weight="duotone" className="text-emerald-500" /> {t('profit_predictor.budget')}
                       </label>
                       <input 
@@ -278,7 +278,7 @@ export default function ProfitPredictor() {
                   <button 
                     onClick={handlePredict}
                     disabled={loading}
-                    className="w-full h-16 bg-emerald-600 hover:bg-emerald-700 text-white rounded-[1.5rem] font-black uppercase tracking-[0.2em] shadow-xl shadow-emerald-500/20 transition-all active:scale-95 flex items-center justify-center gap-3 mt-4"
+                    className="w-full h-16 bg-emerald-600 hover:bg-emerald-700 text-white rounded-[1.5rem] font-bold text-base shadow-xl shadow-emerald-500/20 transition-all active:scale-95 flex items-center justify-center gap-3 mt-4"
                   >
                     {loading ? (
                       <div className="flex items-center gap-3">
@@ -302,7 +302,7 @@ export default function ProfitPredictor() {
                   <WarningCircle size={28} weight="fill" className="text-amber-500" />
                </div>
                <div>
-                  <h4 className="text-[10px] font-black text-amber-600 dark:text-amber-400 uppercase tracking-widest mb-1">{t('profit_predictor.ai_tip_title')}</h4>
+                  <h4 className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-1">{t('profit_predictor.ai_tip_title')}</h4>
                   <p className="text-xs font-bold text-slate-600 dark:text-slate-400 leading-relaxed">
                     {t('profit_predictor.ai_tip_desc')}
                   </p>
@@ -321,9 +321,9 @@ export default function ProfitPredictor() {
                        </div>
                        <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter uppercase font-outfit">{t('profit_predictor.analysis_result')}</h3>
                     </div>
-                    <div className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-500 text-[10px] font-black uppercase tracking-widest rounded-xl flex items-center gap-2">
+                    <div className="px-4 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-500 text-xs font-medium rounded-full flex items-center gap-2">
                        <CheckCircle size={14} weight="fill" className="text-emerald-500" />
-                       {t('profit_predictor.ai_generated')}
+                       AI Recommendation
                     </div>
                  </div>
 
@@ -334,11 +334,11 @@ export default function ProfitPredictor() {
                  </div>
 
                  <div className="mt-10 grid sm:grid-cols-2 gap-4">
-                    <button className="h-14 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-2xl text-xs font-black uppercase tracking-widest text-slate-900 dark:text-white flex items-center justify-center gap-3 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all">
+                    <button className="h-14 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-bold text-slate-900 dark:text-white flex items-center justify-center gap-3 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all">
                        <FilePdf size={20} weight="bold" className="text-red-500" />
                        {t('profit_predictor.download_pdf')}
                     </button>
-                    <button className="h-14 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 rounded-2xl text-xs font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 flex items-center justify-center gap-3 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 transition-all">
+                    <button className="h-14 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 rounded-2xl text-sm font-bold text-emerald-600 dark:text-emerald-400 flex items-center justify-center gap-3 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 transition-all">
                        <ShareNetwork size={20} weight="bold" />
                        {t('profit_predictor.share_experts')}
                     </button>
@@ -349,7 +349,7 @@ export default function ProfitPredictor() {
                  <div className="w-24 h-24 bg-slate-50 dark:bg-slate-800/50 rounded-[2.5rem] flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
                     <TrendUp size={54} weight="duotone" className="text-slate-200 dark:text-slate-700 group-hover:text-emerald-500 transition-colors" />
                  </div>
-                 <h3 className="text-2xl font-black text-slate-400 dark:text-slate-600 uppercase tracking-tighter mb-4">{t('profit_predictor.ready_title')}</h3>
+                 <h3 className="text-2xl font-bold text-slate-400 dark:text-slate-600 tracking-tight mb-4">{t('profit_predictor.ready_title')}</h3>
                  <p className="text-sm text-slate-400 dark:text-slate-700 max-w-xs font-bold leading-relaxed">
                    {t('profit_predictor.ready_desc')}
                  </p>

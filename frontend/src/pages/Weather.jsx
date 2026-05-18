@@ -119,14 +119,14 @@ export default function Weather() {
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-14">
           <div>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="px-4 py-2 bg-sky-600 dark:bg-sky-500 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-sky-500/30 border border-sky-400/20 flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-3 mb-6">
+              <div className="px-4 py-1.5 bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 text-xs font-semibold rounded-full border border-sky-200/50 dark:border-sky-800/35 flex items-center gap-2">
                 <Sparkle size={14} weight="fill" className="animate-pulse" />
-                {t('weather.real_time')}
+                Real-Time Weather
               </div>
-              <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+              <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2 text-xs font-medium text-slate-500">
                 <Lightning size={14} weight="fill" className="text-amber-500" />
-                {t('weather.version')}
+                Radar Connected
               </div>
             </div>
             <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none font-outfit">
@@ -136,8 +136,8 @@ export default function Weather() {
             </h1>
             <p className="text-sm text-slate-500 dark:text-slate-400 font-bold mt-5 max-w-lg leading-relaxed flex items-center gap-3">
               {t('weather.current')}
-              {searching && <span className="text-sky-500 animate-pulse text-[10px] uppercase tracking-widest">{t('weather.updating')}</span>}
-              {displayData?.isFallback && !searching && <span className="text-amber-500 text-[10px] uppercase tracking-widest">{t('weather.estimate')}</span>}
+              {searching && <span className="text-sky-500 animate-pulse text-xs font-semibold ml-2">Updating...</span>}
+              {displayData?.isFallback && !searching && <span className="text-amber-500 text-xs font-semibold ml-2">Estimated</span>}
             </p>
           </div>
           
@@ -167,7 +167,7 @@ export default function Weather() {
                    <Warning size={24} weight="fill" className="animate-pulse" />
                 </div>
                 <div>
-                  <p className="text-xs font-black text-red-600 dark:text-red-400 uppercase tracking-widest mb-1">{t('weather.alerts')}</p>
+                  <p className="text-xs font-bold text-red-600 dark:text-red-400 mb-1">Alert Issued</p>
                   {displayData.alerts.map((a, i) => <p key={i} className="text-sm font-bold text-red-700 dark:text-red-300">{a.message}</p>)}
                 </div>
               </div>
@@ -245,7 +245,7 @@ export default function Weather() {
                       : 'border-slate-200/50 dark:border-slate-800/50 bg-white/40 dark:bg-slate-900/40 backdrop-blur-2xl'
                   )}>
                     {i === 0 && <div className="absolute top-0 right-0 w-16 h-16 bg-sky-500/10 rounded-full blur-xl animate-pulse" />}
-                    <p className={clsx("text-[10px] font-black uppercase tracking-widest mb-4", i === 0 ? "text-sky-600" : "text-slate-400")}>
+                    <p className={clsx("text-xs font-bold mb-4", i === 0 ? "text-sky-600" : "text-slate-400")}>
                       {i === 0 ? t('common.today') : new Date(day.date).toLocaleDateString(i18n.language === 'hi' ? 'hi-IN' : 'en-IN', { weekday: 'short', day: 'numeric' })}
                     </p>
                     <div className="mb-6 group-hover:scale-110 transition-transform duration-500">{getEmoji(day.icon, 40)}</div>
@@ -254,7 +254,7 @@ export default function Weather() {
                       <span className="text-sm font-bold text-slate-400">{day.tempMin}°</span>
                     </div>
                     <div className={clsx(
-                      "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-tighter",
+                      "inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold tracking-tight",
                       i === 0 ? "bg-sky-600 text-white shadow-lg shadow-sky-500/20" : "bg-slate-100 dark:bg-slate-800 text-slate-500"
                     )}>
                       <Drop size={12} weight="bold" /> {day.humidity}%
@@ -267,7 +267,7 @@ export default function Weather() {
             {/* Farming Advisory Card */}
             <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[3rem] overflow-hidden shadow-sm relative group">
               <div className="bg-slate-50 dark:bg-slate-800/30 p-8 border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-                 <h3 className="font-black text-slate-900 dark:text-white uppercase tracking-[0.2em] text-xs flex items-center gap-4">
+                 <h3 className="font-bold text-slate-900 dark:text-white text-sm flex items-center gap-4">
                    <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-500/10 flex items-center justify-center">
                      <ShieldCheck size={24} weight="duotone" className="text-emerald-600 dark:text-emerald-400" />
                    </div>
@@ -275,7 +275,7 @@ export default function Weather() {
                  </h3>
                  <div className="flex items-center gap-3">
                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                   <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('weather.updated')}: {new Date().toLocaleTimeString()}</span>
+                   <span className="text-xs font-medium text-slate-400">Updated: {new Date().toLocaleTimeString()}</span>
                  </div>
               </div>
               
@@ -295,7 +295,7 @@ export default function Weather() {
                          <p className="text-lg font-black text-slate-900 dark:text-white leading-tight mb-2 uppercase tracking-tight">{item.label}</p>
                          <p className="text-xs font-bold text-slate-500 leading-relaxed">{item.desc}</p>
                          {item.check && (
-                           <div className="mt-4 flex items-center gap-2 text-[10px] font-black text-emerald-600 uppercase tracking-widest">
+                           <div className="mt-4 flex items-center gap-2 text-xs font-bold text-emerald-600">
                              <Lightning size={14} weight="fill" /> {t('weather.high_priority')}
                            </div>
                          )}

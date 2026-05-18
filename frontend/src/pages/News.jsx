@@ -175,14 +175,14 @@ export default function News() {
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-14">
           <div>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="px-4 py-2 bg-emerald-600 dark:bg-emerald-500 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-emerald-500/30 border border-emerald-400/20 flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-3 mb-6">
+              <div className="px-4 py-1.5 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 text-xs font-semibold rounded-full border border-emerald-200/50 dark:border-emerald-800/35 flex items-center gap-2">
                 <Newspaper size={14} weight="fill" className="animate-pulse" />
-                {t('news.bharat_news_hub')}
+                Bharat News Hub
               </div>
-              <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+              <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2 text-xs font-medium text-slate-500">
                 <Lightning size={14} weight="fill" className="text-amber-500" />
-                {t('news.live_updates')}
+                Live Broadcast
               </div>
             </div>
             <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none font-outfit">
@@ -198,7 +198,7 @@ export default function News() {
           <div className="flex items-center gap-3">
              <button onClick={() => refetch()} className="h-14 px-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl shadow-slate-200/40 dark:shadow-none hover:-translate-y-1 active:scale-95 transition-all flex items-center gap-3">
                 <ArrowCounterClockwise size={18} weight="bold" className={clsx("text-emerald-600", loading && "animate-spin")} />
-                <span className="text-[10px] font-black uppercase tracking-widest text-slate-900 dark:text-white">{t('news.refresh')}</span>
+                <span className="text-sm font-semibold text-slate-900 dark:text-white">{t('news.refresh')}</span>
              </button>
           </div>
         </div>
@@ -214,7 +214,7 @@ export default function News() {
                      <Microphone size={32} weight="fill" className={clsx(speaking && !paused && "animate-pulse")} />
                   </div>
                   <div>
-                    <p className="text-[10px] font-black uppercase tracking-[0.25em] text-white/60 mb-1">{t('news.ai_voice_reader')}</p>
+                    <p className="text-xs font-medium text-white/70 mb-1">{t('news.ai_voice_reader')}</p>
                     <h3 className="text-3xl font-black tracking-tight">
                        {speaking && !paused ? t('news.reading_aloud') : t('news.listen_news')}
                     </h3>
@@ -225,7 +225,7 @@ export default function News() {
 
             {speaking && (
               <div className="mb-10 p-6 bg-white/5 backdrop-blur-md rounded-[2rem] border border-white/10 animate-in fade-in slide-in-from-bottom-5 duration-500">
-                <p className="text-[10px] font-black uppercase tracking-widest text-white/50 mb-3 flex items-center gap-2">
+                <p className="text-xs font-semibold text-white/70 mb-3 flex items-center gap-2">
                    <Sparkle size={14} weight="fill" />
                    {t('news.now_reading')}
                 </p>
@@ -236,7 +236,7 @@ export default function News() {
                    <div className="h-1.5 flex-1 bg-white/10 rounded-full overflow-hidden">
                       <div className="h-full bg-white rounded-full transition-all duration-500" style={{ width: `${((currentIdx + 1) / news.length) * 100}%` }} />
                    </div>
-                   <span className="text-[10px] font-black text-white/50 uppercase tracking-widest">{currentIdx + 1} / {news.length}</span>
+                   <span className="text-xs font-semibold text-white/70">{currentIdx + 1} / {news.length}</span>
                 </div>
               </div>
             )}
@@ -244,27 +244,27 @@ export default function News() {
             <div className="flex flex-wrap items-center gap-4">
               <div className="flex bg-black/10 backdrop-blur-xl rounded-2xl p-1.5 border border-white/5">
                 {['en', 'hi'].map(l => (
-                  <button key={l} onClick={() => { stop(); setVoiceLang(l); }} className={clsx("px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all", voiceLang === l ? "bg-white text-emerald-800 shadow-xl" : "text-white/60 hover:text-white")}>
+                  <button key={l} onClick={() => { stop(); setVoiceLang(l); }} className={clsx("px-5 py-2.5 rounded-xl text-xs font-semibold transition-all", voiceLang === l ? "bg-white text-emerald-800 shadow-xl" : "text-white/60 hover:text-white")}>
                     {l === 'en' ? t('news.voice_lang_en') : t('news.voice_lang_hi')}
                   </button>
                 ))}
               </div>
 
               <div className="flex items-center gap-3">
-                <button onClick={handleReadAll} disabled={news.length === 0 || loading} className="h-14 px-8 bg-white text-emerald-800 rounded-2xl font-black text-xs uppercase tracking-widest shadow-2xl hover:-translate-y-1 active:scale-95 transition-all flex items-center gap-3 disabled:opacity-50">
+                <button onClick={handleReadAll} disabled={news.length === 0 || loading} className="h-14 px-8 bg-white text-emerald-800 rounded-2xl font-bold text-sm shadow-2xl hover:-translate-y-1 active:scale-95 transition-all flex items-center gap-3 disabled:opacity-50">
                   {speaking && !paused ? <Pause size={20} weight="bold" /> : <Play size={20} weight="fill" />}
                   {speaking && !paused ? t('news.pause') : paused ? t('news.resume') : t('news.read_all')}
                 </button>
 
                 {speaking && (
-                  <button onClick={stop} className="h-14 px-8 bg-white/10 text-white border border-white/20 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white/20 transition-all flex items-center gap-3">
+                  <button onClick={stop} className="h-14 px-8 bg-white/10 text-white border border-white/20 rounded-2xl font-bold text-sm hover:bg-white/20 transition-all flex items-center gap-3">
                     <Square size={18} weight="fill" />
                     {t('news.stop')}
                   </button>
                 )}
               </div>
 
-              <button onClick={() => { stop(); setAutoRead(p => !p); }} className={clsx("sm:ml-auto h-14 px-8 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all flex items-center gap-3 border", autoRead ? "bg-white/20 border-white/20 text-white" : "bg-black/10 border-white/5 text-white/50 hover:bg-black/20")}>
+              <button onClick={() => { stop(); setAutoRead(p => !p); }} className={clsx("sm:ml-auto h-14 px-8 rounded-2xl font-bold text-xs transition-all flex items-center gap-3 border", autoRead ? "bg-white/20 border-white/20 text-white" : "bg-black/10 border-white/5 text-white/50 hover:bg-black/20")}>
                 {autoRead ? <SpeakerHigh size={18} weight="fill" /> : <SpeakerNone size={18} weight="bold" />}
                 {t('news.auto_read')}
               </button>
@@ -285,7 +285,7 @@ export default function News() {
               <div key={i} className={clsx("bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl rounded-[2.5rem] border overflow-hidden flex flex-col group hover:shadow-premium hover:-translate-y-2 transition-all duration-500", currentIdx === i ? "border-emerald-500 ring-4 ring-emerald-500/10 shadow-emerald-500/10" : "border-slate-200/50 dark:border-slate-800/50")}>
                 <div className="h-52 relative overflow-hidden bg-slate-100 dark:bg-slate-800">
                   <img src={item.imageUrl} alt="Cover" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=1000&auto=format&fit=crop'; }} />
-                  <div className="absolute top-4 left-4 px-3 py-1 bg-black/60 backdrop-blur-md rounded-lg text-white text-[9px] font-black uppercase tracking-widest border border-white/10">{item.source}</div>
+                  <div className="absolute top-4 left-4 px-3 py-1 bg-black/60 backdrop-blur-md rounded-lg text-white text-xs font-semibold border border-white/10">{item.source}</div>
                   {currentIdx === i && (
                     <div className="absolute inset-0 bg-emerald-600/20 backdrop-blur-[2px] flex items-center justify-center">
                        <Waveform active={speaking && !paused} />
@@ -294,7 +294,7 @@ export default function News() {
                 </div>
 
                 <div className="p-8 flex flex-col flex-1">
-                  <div className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">
+                  <div className="flex items-center gap-2 text-xs font-medium text-slate-500 mb-4">
                     <Calendar size={14} weight="bold" />
                     {new Date(item.pubDate).toLocaleDateString(lang === 'hi' ? 'hi-IN' : 'en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                   </div>
@@ -302,7 +302,7 @@ export default function News() {
                   <p className="text-sm font-bold text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2 mb-6 italic">"{item.description}"</p>
 
                   <div className="mt-auto pt-6 border-t border-slate-50 dark:border-slate-800/50 flex items-center justify-between">
-                    <a href={item.link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[10px] font-black text-emerald-600 uppercase tracking-widest hover:translate-x-1 transition-transform">
+                    <a href={item.link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs font-semibold text-emerald-600 hover:translate-x-1 transition-transform">
                        {t('news.read_more')}
                        <ArrowSquareOut size={14} weight="bold" />
                     </a>

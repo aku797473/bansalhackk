@@ -154,7 +154,7 @@ export default function Fertilizer() {
              {result && (
                <button 
                  onClick={clearActive}
-                 className="h-14 px-8 bg-white dark:bg-slate-900 border border-red-200 dark:border-red-900/30 text-red-600 rounded-2xl shadow-sm hover:bg-red-50 dark:hover:bg-red-900/10 transition-all flex items-center gap-3 font-black text-[10px] uppercase tracking-widest"
+                 className="h-14 px-8 bg-white dark:bg-slate-900 border border-red-200 dark:border-red-900/30 text-red-600 rounded-2xl shadow-sm hover:bg-red-50 dark:hover:bg-red-900/10 transition-all flex items-center gap-3 font-bold text-sm"
                >
                  <Trash size={18} weight="bold" />
                  {t('fertilizer.clear_result')}
@@ -162,7 +162,7 @@ export default function Fertilizer() {
              )}
                      <button className="h-14 px-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl shadow-slate-200/40 dark:shadow-none hover:-translate-y-1 active:scale-95 transition-all flex items-center gap-3">
                 <Lightning size={18} weight="bold" className="text-amber-500" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-slate-900 dark:text-white">{t('fertilizer.smart_engine')}</span>
+                <span className="text-sm font-semibold text-slate-900 dark:text-white">{t('fertilizer.smart_engine')}</span>
              </button>
           </div>
         </div>
@@ -195,18 +195,18 @@ export default function Fertilizer() {
                       </div>
                       <div>
                         <p className="text-lg font-black text-slate-900 dark:text-white leading-tight mb-2">{t('fertilizer.upload_desc')}</p>
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('fertilizer.file_limits')}</p>
+                        <p className="text-xs font-semibold text-slate-400">{t('fertilizer.file_limits')}</p>
                       </div>
                    </div>
                  )}
                </div>
 
                <div className="mt-4 flex flex-col gap-3">
-                 <button onClick={analyze} disabled={!file || loading} className="w-full h-14 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-amber-500/30 flex items-center justify-center gap-3 hover:-translate-y-1 transition-all disabled:opacity-50 disabled:translate-y-0">
+                 <button onClick={analyze} disabled={!file || loading} className="w-full h-14 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-2xl font-bold text-sm shadow-xl shadow-amber-500/30 flex items-center justify-center gap-3 hover:-translate-y-1 transition-all disabled:opacity-50 disabled:translate-y-0">
                     {loading ? <ArrowsClockwise size={18} className="animate-spin" /> : <Sparkle size={18} weight="fill" />}
                     {loading ? t('fertilizer.analyzing') : t('fertilizer.analyze_health')}
                  </button>
-                 <button className="w-full h-14 bg-slate-50 dark:bg-slate-800/50 text-slate-500 rounded-2xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 border border-slate-100 dark:border-slate-800 hover:bg-slate-100 transition-all">
+                 <button className="w-full h-14 bg-slate-50 dark:bg-slate-800/50 text-slate-500 rounded-2xl font-bold text-sm flex items-center justify-center gap-3 border border-slate-100 dark:border-slate-800 hover:bg-slate-100 transition-all">
                     <FileText size={18} weight="bold" />
                     {t('fertilizer.import_pdf')}
                  </button>
@@ -216,7 +216,7 @@ export default function Fertilizer() {
             {/* ClockCounterClockwise Section */}
             <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl rounded-[2.5rem] border border-slate-200/50 dark:border-slate-800/50 overflow-hidden shadow-sm">
                <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                  <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('fertilizer.recent_reports')}</h3>
+                  <h3 className="text-xs font-semibold text-slate-400">{t('fertilizer.recent_reports')}</h3>
                   <div className="w-6 h-6 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center text-[10px] font-black text-slate-500">{history.length}</div>
                </div>
                <div className="max-h-[300px] overflow-y-auto scrollbar-none">
@@ -234,7 +234,7 @@ export default function Fertilizer() {
                             </div>
                             <div className="flex-1 min-w-0">
                                <p className="text-sm font-black text-slate-900 dark:text-white truncate">{t(`fertilizer.results.${h.title}`, h.title)}</p>
-                               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{new Date(h.date).toLocaleDateString()}</p>
+                               <p className="text-xs font-semibold text-slate-400">{new Date(h.date).toLocaleDateString()}</p>
                             </div>
                             <button onClick={(e) => deleteClockCounterClockwiseItem(e, h.id)} className="w-8 h-8 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center">
                                <Trash size={14} />
@@ -270,10 +270,10 @@ export default function Fertilizer() {
                           </div>
                           <div>
                             <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter mb-1">{t('fertilizer.certificate_title')}</h3>
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em]">{t('fertilizer.sample_id')}: SK-{Math.floor(Math.random()*9000)+1000}</p>
+                            <p className="text-xs font-semibold text-slate-400">{t('fertilizer.sample_id')}: SK-{Math.floor(Math.random()*9000)+1000}</p>
                           </div>
                        </div>
-                       <button onClick={() => window.print()} className="h-12 px-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-3 hover:bg-slate-50 transition-all shadow-sm">
+                       <button onClick={() => window.print()} className="h-12 px-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold flex items-center gap-3 hover:bg-slate-50 transition-all shadow-sm">
                           <Download size={18} weight="bold" />
                           {t('fertilizer.export_pdf')}
                        </button>
@@ -283,21 +283,21 @@ export default function Fertilizer() {
                        <div className="grid md:grid-cols-2 gap-12">
                           <div className="space-y-10">
                              <div>
-                               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">{t('fertilizer.diagnosis')}</p>
+                               <p className="text-xs font-semibold text-slate-500 mb-4">{t('fertilizer.diagnosis')}</p>
                                 <div className="flex items-center gap-4 mb-2">
                                   <h4 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter font-outfit">{t(`fertilizer.results.${result.primaryIssue?.deficiency}`, result.primaryIssue?.deficiency)}</h4>
-                                  <span className={clsx("px-3 py-1 rounded-lg text-[10px] font-black uppercase text-white", SEVERITY_COLOR[result.primaryIssue?.severity] || 'bg-amber-500')}>
+                                  <span className={clsx("px-3 py-1 rounded-lg text-xs font-bold text-white", SEVERITY_COLOR[result.primaryIssue?.severity] || 'bg-amber-500')}>
                                     {t(`fertilizer.results.${result.primaryIssue?.severity}`, result.primaryIssue?.severity)}
                                   </span>
                                </div>
-                               <p className="text-[10px] font-black text-emerald-500 uppercase tracking-widest flex items-center gap-2">
+                               <p className="text-xs font-semibold text-emerald-600 flex items-center gap-2">
                                   <CheckCircle size={14} weight="fill" />
                                   {result.cropType} {t('fertilizer.plant_detected')}
                                </p>
                              </div>
 
                              <div className="space-y-6">
-                               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('fertilizer.npk_levels')}</p>
+                               <p className="text-xs font-semibold text-slate-500">{t('fertilizer.npk_levels')}</p>
                                {[
                                  { k: 'N', label: t('fertilizer.nitrogen'), val: result.npkEstimates?.N || 'Low', color: 'bg-emerald-500' },
                                  { k: 'P', label: t('fertilizer.phosphorus'), val: result.npkEstimates?.P || 'Medium', color: 'bg-blue-500' },
@@ -307,8 +307,8 @@ export default function Fertilizer() {
                                    <div className={clsx("w-10 h-10 rounded-xl flex items-center justify-center text-white font-black text-xs shadow-lg shadow-black/5", n.color)}>{n.k}</div>
                                    <div className="flex-1">
                                      <div className="flex justify-between items-end mb-2">
-                                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{n.label}</span>
-                                       <span className="text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-widest">{t(`fertilizer.results.${n.val}`, n.val)}</span>
+                                       <span className="text-xs font-semibold text-slate-500">{n.label}</span>
+                                       <span className="text-xs font-bold text-slate-900 dark:text-white">{t(`fertilizer.results.${n.val}`, n.val)}</span>
                                      </div>
                                      <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                                        <div className={clsx("h-full rounded-full transition-all duration-1000", n.color)} style={{ width: `${n.val === 'Low' ? 30 : n.val === 'Medium' ? 60 : 90}%` }} />
@@ -321,7 +321,7 @@ export default function Fertilizer() {
 
                           <div className="space-y-10">
                              <div className="bg-amber-50 dark:bg-amber-900/10 rounded-[2rem] p-8 border border-amber-100 dark:border-amber-900/30">
-                                <p className="text-[10px] font-black text-amber-600 dark:text-amber-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-4 flex items-center gap-2">
                                    <Info size={16} weight="fill" />
                                    {t('fertilizer.symptoms')}
                                 </p>
@@ -331,7 +331,7 @@ export default function Fertilizer() {
                              </div>
 
                              <div className="flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-800/50 rounded-[2.5rem] p-10 border border-slate-100 dark:border-slate-800">
-                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">{t('fertilizer.confidence_score')}</p>
+                                <p className="text-xs font-semibold text-slate-500 mb-6">{t('fertilizer.confidence_score')}</p>
                                 <div className="relative w-32 h-32 flex items-center justify-center">
                                    <svg className="w-full h-full -rotate-90">
                                       <circle cx="64" cy="64" r="58" stroke="currentColor" strokeWidth="12" fill="transparent" className="text-slate-200 dark:text-slate-800" />
@@ -339,7 +339,7 @@ export default function Fertilizer() {
                                    </svg>
                                    <div className="absolute inset-0 flex flex-col items-center justify-center">
                                       <span className="text-3xl font-black text-slate-900 dark:text-white leading-none">{result.primaryIssue?.confidence || 85}%</span>
-                                      <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest mt-1">{t('fertilizer.accuracy')}</span>
+                                      <span className="text-[10px] font-semibold text-slate-400 mt-1">{t('fertilizer.accuracy')}</span>
                                    </div>
                                 </div>
                              </div>
@@ -351,7 +351,7 @@ export default function Fertilizer() {
                  {/* Recommendations Grid */}
                  <div className="grid md:grid-cols-2 gap-8">
                     <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-10 border border-slate-200 dark:border-slate-800 shadow-sm">
-                       <h4 className="text-xs font-black text-emerald-600 uppercase tracking-widest mb-6 flex items-center gap-3">
+                       <h4 className="text-xs font-bold text-emerald-600 mb-6 flex items-center gap-3">
                           <CheckCircle size={20} weight="fill" />
                           {t('fertilizer.treatment')}
                        </h4>
@@ -361,7 +361,7 @@ export default function Fertilizer() {
                     </div>
 
                     <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-10 border border-slate-200 dark:border-slate-800 shadow-sm">
-                       <h4 className="text-xs font-black text-blue-600 uppercase tracking-widest mb-6 flex items-center gap-3">
+                       <h4 className="text-xs font-bold text-blue-600 mb-6 flex items-center gap-3">
                           <ShieldCheck size={20} weight="fill" />
                           {t('fertilizer.prevention')}
                        </h4>
@@ -375,7 +375,7 @@ export default function Fertilizer() {
                  {result.recommendedFertilizers?.length > 0 && (
                    <div className="bg-white dark:bg-slate-900 rounded-[3rem] p-10 sm:p-12 border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden">
                       <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl" />
-                      <h4 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-[0.25em] mb-10 flex items-center gap-4">
+                      <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-10 flex items-center gap-4">
                          <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-500/10 flex items-center justify-center text-amber-600">
                            <Flask size={24} weight="duotone" />
                          </div>
@@ -388,11 +388,11 @@ export default function Fertilizer() {
                               <div className="space-y-3">
                                  <div className="flex items-center gap-3">
                                     <div className="w-6 h-6 rounded-lg bg-emerald-100 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-600"><Lightning size={12} weight="fill" /></div>
-                                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{fert.dosage}</span>
+                                    <span className="text-xs font-semibold text-slate-500">{fert.dosage}</span>
                                  </div>
                                  <div className="flex items-center gap-3">
                                     <div className="w-6 h-6 rounded-lg bg-blue-100 dark:bg-blue-500/10 flex items-center justify-center text-blue-600"><Calendar size={12} weight="fill" /></div>
-                                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{fert.timing}</span>
+                                    <span className="text-xs font-semibold text-slate-500">{fert.timing}</span>
                                  </div>
                               </div>
                            </div>

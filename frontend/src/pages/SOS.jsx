@@ -106,7 +106,7 @@ const EMERGENCIES = [
         'अतिरिक्त कपड़े हटा दें और मरीज को हवा दें।',
         'त्वचा पर ठंडे, गीले कपड़े लगाएं या ठंडा पानी इस्तेमाल करें।',
         'यदि होश में है, तो ठंडे पानी या ORS के छोटे घूंट दें।',
-        'यदि उल्टी हो या बेहोश हो, तो तुरंत चिकित्सा सहायता लें।'
+        'बेहोश होने या उल्टी आने पर तुरंत डॉक्टर से संपर्क करें।'
       ]
     }
   }
@@ -114,48 +114,44 @@ const EMERGENCIES = [
 
 export default function SOS() {
   const { t, i18n } = useTranslation();
-  const lang = i18n.language === 'hi' ? 'hi' : 'en';
-  const ref = usePageAnimation();
-  const [selectedEmergency, setSelectedEmergency] = useState(null);
+  const lang = i18n.language || 'en';
+  const animateClass = usePageAnimation();
+  const [selectedEmergency, setSelectedEmergency] = useState(EMERGENCIES[0]);
   const [loadingLocation, setLoadingLocation] = useState(false);
 
   const handleNearbyHospitals = () => {
     setLoadingLocation(true);
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLoadingLocation(false);
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
-          window.open(`https://www.google.com/maps/search/Hospitals+near+me/@${lat},${lng},14z`, '_blank');
-        },
-        (error) => {
-          setLoadingLocation(false);
-          toast.error(lang === 'hi' ? "स्थान एक्सेस अस्वीकार कर दिया गया।" : "Location access denied.");
-          window.open(`https://www.google.com/maps/search/Hospitals+near+me`, '_blank');
-        }
-      );
-    } else {
+    if (!navigator.geolocation) {
+      toast.error('Geolocation is not supported by your browser');
       setLoadingLocation(false);
-      window.open(`https://www.google.com/maps/search/Hospitals`, '_blank');
+      return;
     }
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        window.open(`https://www.google.com/maps/search/hospitals+near+me/@${latitude},${longitude},14z`, '_blank');
+        setLoadingLocation(false);
+      },
+      (error) => {
+        toast.error('Failed to get location. Please enable location services.');
+        setLoadingLocation(false);
+      }
+    );
   };
 
   return (
-    <div ref={ref} className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] transition-colors duration-500 font-sans selection:bg-red-100 selection:text-red-900 pt-28 sm:pt-36 pb-20">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        
-        {/* Header Section */}
+    <div className={`min-h-screen bg-slate-50 dark:bg-slate-950 py-12 px-4 sm:px-6 lg:px-8 pb-24 ${animateClass}`}>
+      <div className="max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-14">
           <div>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="px-4 py-2 bg-red-600 dark:bg-red-500 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-red-500/30 border border-red-400/20 flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-3 mb-6">
+              <div className="px-4 py-1.5 bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 text-xs font-semibold rounded-full border border-red-200/50 dark:border-red-800/35 flex items-center gap-2">
                 <Siren size={14} weight="fill" className="animate-pulse" />
-                {t('sos.title')}
+                Emergency Services
               </div>
-              <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+              <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2 text-xs font-medium text-slate-500">
                 <Lightning size={14} weight="fill" className="text-amber-500" />
-                {t('sos.version')}
+                GPS Radar Active
               </div>
             </div>
             <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none font-outfit">
@@ -171,7 +167,7 @@ export default function SOS() {
           <div className="flex items-center gap-3">
              <button onClick={handleNearbyHospitals} disabled={loadingLocation} className="h-14 px-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl shadow-slate-200/40 dark:shadow-none hover:-translate-y-1 active:scale-95 transition-all flex items-center gap-3">
                 <MapPin size={18} weight="bold" className={clsx("text-blue-500", loadingLocation && "animate-bounce")} />
-                <span className="text-[10px] font-black uppercase tracking-widest text-slate-900 dark:text-white">
+                <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">
                   {loadingLocation ? t('sos.locating') : t('sos.find_hospitals')}
                 </span>
              </button>
@@ -184,7 +180,7 @@ export default function SOS() {
           <div className="lg:col-span-4 space-y-6">
             <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/60 dark:border-slate-800/60 rounded-[2.5rem] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none relative overflow-hidden group">
                <div className="absolute -top-24 -right-24 w-64 h-64 bg-red-500/5 rounded-full blur-3xl pointer-events-none" />
-               <h2 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-8 flex items-center gap-3">
+               <h2 className="text-sm font-bold text-slate-400 mb-8 flex items-center gap-3">
                  <Phone size={18} weight="fill" className="text-red-500" />
                  {t('sos.helplines')}
                </h2>
@@ -201,11 +197,11 @@ export default function SOS() {
                          <Phone size={20} weight="fill" className={h.color} />
                        </div>
                        <div>
-                         <p className="font-black text-slate-900 dark:text-white text-sm leading-tight uppercase">{h.label}</p>
-                         <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 mt-1">{h.sub}</p>
+                         <p className="font-bold text-slate-900 dark:text-white text-sm leading-tight">{h.label}</p>
+                         <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 mt-1">{h.sub}</p>
                        </div>
                      </div>
-                     <span className={clsx("text-2xl font-black tracking-tighter", h.color)}>{h.num}</span>
+                     <span className={clsx("text-2xl font-bold tracking-tight", h.color)}>{h.num}</span>
                    </a>
                  ))}
                </div>
@@ -217,14 +213,14 @@ export default function SOS() {
               <div className="flex items-center gap-4 mb-6">
                  <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/20">
                    <MapPin size={24} weight="fill" />
-                 </div>
-                 <h3 className="text-xl font-black tracking-tight">{t('sos.locate_help')}</h3>
+                  </div>
+                  <h3 className="text-xl font-bold tracking-tight">{t('sos.locate_help')}</h3>
               </div>
-              <p className="text-xs font-bold text-blue-100/80 leading-relaxed mb-6">
+              <p className="text-xs font-semibold text-blue-100/80 leading-relaxed mb-6">
                 {t('sos.locate_desc')}
               </p>
               <div className="flex items-center justify-between mt-auto">
-                 <span className="text-[10px] font-black uppercase tracking-widest text-white/60">Tap to start routing</span>
+                 <span className="text-xs font-semibold text-white/70">Tap to start routing</span>
                  <CaretRight size={20} weight="bold" className="group-hover:translate-x-2 transition-transform" />
               </div>
             </div>
@@ -234,13 +230,13 @@ export default function SOS() {
           <div className="lg:col-span-8 space-y-8">
              <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 rounded-[3rem] p-8 sm:p-12 shadow-premium relative group">
                 <div className="flex items-center justify-between mb-10">
-                   <h3 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-4">
+                   <h3 className="text-sm font-bold text-slate-400 flex items-center gap-4">
                      <div className="w-10 h-10 rounded-xl bg-red-100 dark:bg-red-500/10 flex items-center justify-center">
                        <FirstAid size={24} weight="duotone" className="text-red-600 dark:text-red-400" />
                      </div>
                      {t('sos.first_aid')}
                    </h3>
-                   <div className="hidden sm:flex items-center gap-2 text-[10px] font-black text-emerald-500 uppercase tracking-widest bg-emerald-50 dark:bg-emerald-500/10 px-4 py-2 rounded-xl">
+                   <div className="hidden sm:flex items-center gap-2 text-xs font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-500/10 px-4 py-2 rounded-full">
                       <Sparkle size={14} weight="fill" /> 
                       Smart Advice Engine
                    </div>
@@ -265,7 +261,7 @@ export default function SOS() {
                         <div className={clsx("w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg transition-transform group-hover/em:scale-110", em.color, em.shadow, isSelected && "scale-110")}>
                           <Icon size={28} weight="fill" className="text-white" />
                         </div>
-                        <span className={clsx("text-[10px] font-black uppercase tracking-widest text-center leading-tight", isSelected ? "text-white dark:text-slate-900" : "text-slate-500 dark:text-slate-400")}>
+                        <span className={clsx("text-xs font-bold text-center leading-tight", isSelected ? "text-white dark:text-slate-900" : "text-slate-500 dark:text-slate-400")}>
                           {t(`sos.emergencies.${em.id}`)}
                         </span>
                         {isSelected && <div className="absolute -bottom-2 w-2 h-2 bg-slate-900 dark:bg-white rotate-45" />}
@@ -281,7 +277,7 @@ export default function SOS() {
                        <div className={clsx("w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg", selectedEmergency.color)}>
                          <selectedEmergency.icon size={24} weight="fill" className="text-white" />
                        </div>
-                       <h4 className="text-2xl font-black text-red-900 dark:text-red-400 tracking-tighter uppercase">
+                       <h4 className="text-2xl font-bold text-red-900 dark:text-red-400 tracking-tight">
                          {t('sos.immediate_actions', { type: t(`sos.emergencies.${selectedEmergency.id}`) })}
                        </h4>
                     </div>
@@ -311,9 +307,9 @@ export default function SOS() {
                 ) : (
                   <div className="min-h-[300px] flex flex-col items-center justify-center text-center p-12 border-4 border-dashed border-slate-100 dark:border-slate-800/50 rounded-[3rem] group hover:border-red-200 transition-all duration-500">
                      <div className="w-20 h-20 bg-slate-50 dark:bg-slate-800/50 rounded-[2rem] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                        <HandPalm size={40} weight="duotone" className="text-slate-300 dark:text-slate-600 group-hover:text-red-400 transition-colors" />
+                         <HandPalm size={40} weight="duotone" className="text-slate-300 dark:text-slate-600 group-hover:text-red-400 transition-colors" />
                      </div>
-                     <h4 className="text-xl font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest">{t('sos.first_aid')}</h4>
+                     <h4 className="text-xl font-bold text-slate-400 dark:text-slate-600 tracking-tight">{t('sos.first_aid')}</h4>
                      <p className="text-sm text-slate-400 dark:text-slate-700 mt-4 max-w-xs font-bold leading-relaxed italic">
                        Select an emergency category above to see scientific first-aid steps.
                      </p>
@@ -328,7 +324,7 @@ export default function SOS() {
                       <div className="w-12 h-12 bg-emerald-50 dark:bg-emerald-500/10 rounded-2xl flex items-center justify-center border border-emerald-100 dark:border-emerald-800 group-hover:scale-110 transition-transform">
                         <Heartbeat size={24} weight="fill" className="text-emerald-500" />
                       </div>
-                      <h4 className="font-black text-slate-900 dark:text-white uppercase tracking-tight">Kisan Mitra AI</h4>
+                      <h4 className="font-bold text-slate-900 dark:text-white tracking-tight">Kisan Mitra AI</h4>
                    </div>
                    <p className="text-xs font-bold text-slate-500 dark:text-slate-400 leading-relaxed">
                      Ask our AI assistant for specialized agricultural safety advice or crop-related emergencies.
@@ -339,7 +335,7 @@ export default function SOS() {
                       <div className="w-12 h-12 bg-red-50 dark:bg-red-500/10 rounded-2xl flex items-center justify-center border border-red-100 dark:border-red-800 group-hover:scale-110 transition-transform">
                         <ShieldWarning size={24} weight="fill" className="text-red-500" />
                       </div>
-                      <h4 className="font-black text-slate-900 dark:text-white uppercase tracking-tight">{t('sos.rapid_response')}</h4>
+                      <h4 className="font-bold text-slate-900 dark:text-white tracking-tight">{t('sos.rapid_response')}</h4>
                    </div>
                    <p className="text-xs font-bold text-slate-500 dark:text-slate-400 leading-relaxed">
                      Our network of local volunteers and community workers can be alerted in case of mass emergencies.

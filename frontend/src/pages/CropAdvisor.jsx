@@ -143,7 +143,7 @@ export default function CropAdvisor() {
 
   const Select = ({ label, value, onChange, options, icon: Icon }) => (
     <div className="flex flex-col gap-2">
-      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
+      <label className="text-xs font-semibold text-slate-500 flex items-center gap-2">
         {Icon && <Icon size={12} weight="bold" className="text-emerald-500" />}
         {label}
       </label>
@@ -164,7 +164,7 @@ export default function CropAdvisor() {
 
   const NumberInput = ({ label, value, onChange, min, max, unit, icon: Icon }) => (
     <div className="flex flex-col gap-2">
-      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
+      <label className="text-xs font-semibold text-slate-500 flex items-center gap-2">
         {Icon && <Icon size={12} weight="bold" className="text-emerald-500" />}
         {label} {unit && <span className="opacity-60">({unit})</span>}
       </label>
@@ -189,11 +189,11 @@ export default function CropAdvisor() {
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-14">
           <div>
             <div className="flex items-center gap-3 mb-6">
-              <div className="px-4 py-2 bg-emerald-600 dark:bg-emerald-500 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-emerald-500/30 border border-emerald-400/20 flex items-center gap-2">
+              <div className="px-4 py-2 bg-emerald-600 dark:bg-emerald-500 text-white text-xs font-bold rounded-2xl shadow-lg shadow-emerald-500/30 border border-emerald-400/20 flex items-center gap-2">
                 <Sparkle size={14} weight="fill" className="animate-pulse" />
                 {t('crop.scientific_rec')}
               </div>
-              <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+              <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2 text-xs font-bold text-slate-500">
                 <ShieldCheck size={14} weight="fill" className="text-emerald-500" />
                 {t('crop.imd_verified')}
               </div>
@@ -210,7 +210,7 @@ export default function CropAdvisor() {
           
           <div className="flex items-center gap-3">
             {result && (
-              <button onClick={clear} className="h-14 px-6 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 border border-red-100 dark:border-red-500/20 rounded-2xl text-xs font-black uppercase tracking-widest flex items-center gap-2 hover:bg-red-100 dark:hover:bg-red-500/20 transition-all active:scale-95">
+              <button onClick={clear} className="h-14 px-6 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 border border-red-100 dark:border-red-500/20 rounded-2xl text-xs font-bold flex items-center gap-2 hover:bg-red-100 dark:hover:bg-red-500/20 transition-all active:scale-95">
                 <Trash size={18} weight="bold" />
                 <span>{t('crop.clear_result')}</span>
               </button>
@@ -224,7 +224,7 @@ export default function CropAdvisor() {
             <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 rounded-[2.5rem] p-8 sm:p-10 shadow-premium relative overflow-hidden group">
               <div className="absolute -top-24 -right-24 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
               
-              <h2 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-10 flex items-center gap-3">
+              <h2 className="text-xs font-bold text-slate-400 mb-10 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-500/10 flex items-center justify-center">
                   <Gauge size={18} weight="fill" className="text-emerald-600 dark:text-emerald-400" />
                 </div>
@@ -250,18 +250,18 @@ export default function CropAdvisor() {
                 <NumberInput label={t('crop.rainfall')} value={form.rainfall} onChange={v => set('rainfall', v)} min={0} max={3000} unit="mm" icon={Wind} />
 
                 <div className="pt-4">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-5 block">{t('crop.soil_nutrients')}</label>
+                  <label className="text-xs font-semibold text-slate-500 mb-5 block">{t('crop.soil_nutrients')}</label>
                   <div className="grid grid-cols-3 gap-4">
                     {['nitrogen','phosphorus','potassium'].map(k => (
                       <div key={k} className="flex flex-col gap-3">
-                        <span className="text-[8px] font-black text-slate-500 uppercase text-center tracking-widest">{k}</span>
+                        <span className="text-xs font-bold text-slate-500 text-center capitalize">{k}</span>
                         <div className="flex flex-col gap-1 bg-slate-50 dark:bg-slate-800/50 p-1.5 rounded-2xl border border-slate-100 dark:border-slate-800">
                           {LEVELS.map(l => (
                             <button 
                               key={l} 
                               onClick={() => set(k, l)}
                               className={clsx(
-                                "py-2 rounded-xl text-[10px] font-black uppercase tracking-tighter transition-all",
+                                "py-2 rounded-xl text-xs font-bold transition-all",
                                 form[k] === l 
                                   ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/20 border border-emerald-400/20" 
                                   : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
@@ -279,7 +279,7 @@ export default function CropAdvisor() {
                 <button 
                   onClick={handleSubmit} 
                   disabled={loading} 
-                  className="w-full h-16 rounded-[1.5rem] bg-emerald-600 hover:bg-emerald-700 text-white font-black uppercase tracking-[0.2em] shadow-xl shadow-emerald-500/25 transition-all active:scale-95 flex items-center justify-center gap-3 mt-4"
+                  className="w-full h-14 rounded-[1.5rem] bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-xl shadow-emerald-500/25 transition-all active:scale-95 flex items-center justify-center gap-3 mt-4"
                 >
                   {loading ? (
                     <div className="flex items-center gap-3">
@@ -308,7 +308,7 @@ export default function CropAdvisor() {
                      <img src={cropsImg} alt="Crops" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
                      <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-slate-900 via-white/10 dark:via-slate-900/10 to-transparent" />
                      <div className="absolute top-6 left-6">
-                        <div className="px-4 py-2 bg-white/20 backdrop-blur-xl border border-white/20 rounded-2xl text-white text-[10px] font-black uppercase tracking-widest shadow-xl">
+                        <div className="px-4 py-2 bg-white/20 backdrop-blur-xl border border-white/20 rounded-2xl text-white text-xs font-bold shadow-xl">
                           {t('crop.scientific_rec')}
                         </div>
                      </div>
@@ -317,22 +317,22 @@ export default function CropAdvisor() {
                   <div className="p-8 sm:p-12 pt-0 relative z-10">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-10">
                       <div>
-                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-3 block">{t('crop.primary_crop_title')}</span>
+                        <span className="text-xs font-semibold text-slate-400 mb-3 block">{t('crop.primary_crop_title')}</span>
                         <h3 className="text-5xl sm:text-8xl font-black text-emerald-600 dark:text-emerald-500 tracking-tighter leading-none break-words font-outfit">
                           {translateOption(result.primaryCrop)}
                         </h3>
                       </div>
                       {result.isFallback && (
-                        <div className="px-4 py-2 bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[10px] font-black uppercase tracking-widest rounded-xl border border-amber-100 dark:border-amber-800/50 self-start sm:self-center">
+                        <div className="px-4 py-2 bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-bold rounded-xl border border-amber-100 dark:border-amber-800/50 self-start sm:self-center">
                           {t('crop.historical_model')}
                         </div>
                       )}
                     </div>
                     
                     <div className="flex flex-wrap items-center gap-3 mb-10 border-b border-slate-100 dark:border-slate-800/50 pb-8">
-                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mr-2">{t('crop.alternatives_label')}</span>
+                      <span className="text-xs font-semibold text-slate-500 mr-2">{t('crop.alternatives_label')}</span>
                       {result.alternativeCrops?.map(c => (
-                        <span key={c} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-slate-200/50 dark:border-slate-700/50">
+                        <span key={c} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-2xl text-xs font-bold border border-slate-200/50 dark:border-slate-700/50">
                           {translateOption(c)}
                         </span>
                       ))}
@@ -346,7 +346,7 @@ export default function CropAdvisor() {
                         { icon: '📦', label: t('crop.expected_yield'), val: result.expectedYield || t('crop.high') }
                       ].map((item, idx) => (
                         <div key={idx} className="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-3xl border border-slate-100 dark:border-slate-800 transition-colors hover:border-emerald-200 dark:hover:border-emerald-800/50">
-                          <p className="text-slate-400 text-[8px] font-black uppercase mb-2 tracking-[0.15em] flex items-center gap-2">
+                          <p className="text-slate-400 text-xs font-bold mb-2 flex items-center gap-2">
                              <span className="text-sm">{item.icon}</span> {item.label}
                           </p>
                           <p className="font-black text-slate-900 dark:text-white text-xs sm:text-sm tracking-tight leading-tight">{translateOption(item.val)}</p>
@@ -359,13 +359,13 @@ export default function CropAdvisor() {
                 {/* Fertilizers & AI Insight */}
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 rounded-[2rem] p-8 shadow-premium">
-                    <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6 flex items-center gap-2">
+                    <h3 className="text-xs font-bold text-slate-400 mb-6 flex items-center gap-2">
                       <Flask size={16} weight="fill" className="text-indigo-500" />
                       {t('crop.fertilizers')}
                     </h3>
                     <div className="flex flex-wrap gap-2">
                       {result.fertilizers?.map(f => (
-                        <span key={f} className="px-4 py-2 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-indigo-100 dark:border-indigo-800/50">
+                        <span key={f} className="px-4 py-2 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-2xl text-xs font-bold border border-indigo-100 dark:border-indigo-800/50">
                           {translateOption(f, 'fertilizer')}
                         </span>
                       ))}
@@ -373,14 +373,14 @@ export default function CropAdvisor() {
                   </div>
 
                   <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 rounded-[2rem] p-8 shadow-premium">
-                    <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4 flex items-center gap-2">
+                    <h3 className="text-xs font-bold text-slate-400 mb-4 flex items-center gap-2">
                       <CheckCircle size={16} weight="fill" className="text-emerald-500" />
                       {t('crop.confidence')}
                     </h3>
                     <div className="flex flex-col gap-4">
                       <div className="flex items-center justify-between">
                          <span className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter">{(result.confidence * 100).toFixed(0)}%</span>
-                         <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">{t('crop.high_accuracy')}</span>
+                         <span className="text-xs font-bold text-emerald-500">{t('crop.high_accuracy')}</span>
                       </div>
                       <div className="h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden shadow-inner">
                         <div className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full animate-draw shadow-[0_0_12px_rgba(16,185,129,0.3)]" style={{ width: `${result.confidence * 100}%` }} />
@@ -392,7 +392,7 @@ export default function CropAdvisor() {
                 {/* AI Tips Section */}
                 <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 rounded-[2.5rem] p-8 sm:p-10 shadow-premium relative overflow-hidden">
                   <div className="flex items-center justify-between mb-8">
-                     <h3 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400 flex items-center gap-3">
+                     <h3 className="text-xs font-bold text-slate-400 flex items-center gap-3">
                        <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center">
                          <Robot size={20} weight="fill" className="text-emerald-600 dark:text-emerald-400" />
                        </div>
@@ -414,7 +414,7 @@ export default function CropAdvisor() {
                 {/* Calendar CTA */}
                 <button 
                   onClick={() => fetchCalendar(result.primaryCrop)}
-                  className="w-full h-20 rounded-[2rem] bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-black uppercase tracking-[0.25em] shadow-2xl shadow-slate-400/20 dark:shadow-none hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4"
+                  className="w-full h-16 rounded-[2rem] bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold shadow-2xl shadow-slate-400/20 dark:shadow-none hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-4"
                 >
                   <Calendar size={28} weight="fill" />
                   <span>{t('crop.view_calendar')}</span>
@@ -426,7 +426,7 @@ export default function CropAdvisor() {
                     <div className="flex items-center justify-between mb-12 border-b border-slate-200/50 dark:border-slate-800/50 pb-8">
                        <div>
                          <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter mb-2 font-outfit">{calendar.crop}</h3>
-                         <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">{t('crop.crop_calendar')}</p>
+                         <p className="text-xs font-semibold text-slate-400">{t('crop.crop_calendar')}</p>
                        </div>
                        <div className="w-16 h-16 rounded-[1.5rem] bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center">
                          <Calendar size={32} weight="duotone" className="text-emerald-600 dark:text-emerald-400" />
@@ -437,12 +437,12 @@ export default function CropAdvisor() {
                       {calendar.activities?.map((a, i) => (
                         <div key={i} className="flex gap-10 text-sm relative z-10 group">
                           <div className="w-28 shrink-0 flex flex-col items-end pt-1">
-                            <span className="font-black text-emerald-600 dark:text-emerald-500 uppercase tracking-tighter text-lg leading-none">{translateOption(a.month)}</span>
-                            <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest mt-1">Phase {i+1}</span>
+                            <span className="font-bold text-emerald-600 dark:text-emerald-500 text-lg leading-none">{translateOption(a.month)}</span>
+                            <span className="text-xs font-semibold text-slate-400 mt-1">Phase {i+1}</span>
                           </div>
                           <div className="relative pt-1">
                             <div className="absolute -left-[61px] top-2.5 w-4 h-4 rounded-full bg-white dark:bg-slate-900 border-4 border-emerald-500 group-hover:scale-125 transition-transform z-20 shadow-md" />
-                            <h4 className="font-black text-slate-900 dark:text-white text-xl leading-none mb-3 tracking-tight group-hover:text-emerald-600 transition-colors uppercase">{a.activity}</h4>
+                            <h4 className="font-bold text-slate-900 dark:text-white text-xl leading-none mb-3 tracking-tight group-hover:text-emerald-600 transition-colors capitalize">{a.activity}</h4>
                             <div className="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 max-w-md">
                                <p className="text-slate-500 dark:text-slate-400 text-xs font-bold leading-relaxed italic">"{a.notes}"</p>
                             </div>

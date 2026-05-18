@@ -69,19 +69,21 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto h-16 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/20 dark:border-slate-800/60 rounded-2xl shadow-sm px-6 flex items-center justify-between gap-4">
           
           <NavLink to="/dashboard" className="flex flex-col leading-none">
-            <span className="text-lg font-black tracking-tighter text-slate-900 dark:text-white uppercase">
+            <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
               Smart<span className="text-indigo-600">Kisan</span>
             </span>
-            <span className="text-[8px] font-black uppercase tracking-[0.3em] text-slate-400 mt-0.5">Agri Intelligence</span>
+            <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 tracking-wider mt-0.5">Agri Intelligence</span>
           </NavLink>
 
           {/* Desktop Nav */}
-          <nav className="hidden xl:flex items-center gap-8">
+          <nav className="hidden xl:flex items-center gap-2">
             {primaryLinks.map(({ to, label }) => (
               <NavLink key={to} to={to}
                 className={({ isActive }) => clsx(
-                  'text-[15px] font-extrabold uppercase tracking-wide transition-all',
-                  isActive ? 'text-indigo-600' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+                  'px-4 py-2 rounded-xl text-base font-semibold transition-all duration-300',
+                  isActive 
+                    ? 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 shadow-sm border border-indigo-500/10' 
+                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50'
                 )}>
                 {label}
               </NavLink>
@@ -90,14 +92,19 @@ export default function Navbar() {
             <div className="relative">
               <button 
                 onClick={() => setMoreOpen(!moreOpen)} 
-                className={clsx("text-[15px] font-extrabold uppercase tracking-wide flex items-center gap-1 transition-colors", moreOpen ? 'text-indigo-600' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white')}
+                className={clsx(
+                  "px-4 py-2 rounded-xl text-base font-semibold flex items-center gap-1 transition-all duration-300",
+                  moreOpen 
+                    ? 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400' 
+                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50'
+                )}
               >
                 {t('common.more')}
               </button>
               {moreOpen && (
-                <div className="absolute top-full right-0 mt-4 w-56 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-2xl p-2 animate-in fade-in slide-in-from-top-2">
+                <div className="absolute top-full right-0 mt-4 w-56 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-2xl p-2 animate-in fade-in slide-in-from-top-2 z-50">
                   {moreLinks.map(({ to, label }) => (
-                    <NavLink key={to} to={to} className="block px-4 py-3 text-sm font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-600 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-all">
+                    <NavLink key={to} to={to} className="block px-4 py-3 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-indigo-600 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-all">
                       {label}
                     </NavLink>
                   ))}
@@ -118,32 +125,32 @@ export default function Navbar() {
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
                 className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center overflow-hidden border border-slate-100 dark:border-slate-700 hover:border-indigo-600/30 transition-all"
               >
-                {user?.image ? (
-                  <img src={user.image} alt="user" className="w-full h-full object-cover" />
+                {user?.image || user?.profilePic ? (
+                  <img src={user.image || user.profilePic} alt="user" className="w-full h-full object-cover" />
                 ) : (
                   <User size={20} weight="bold" className="text-slate-400" />
                 )}
               </button>
 
               {userMenuOpen && (
-                <div className="absolute top-full right-0 mt-4 w-64 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2">
+                <div className="absolute top-full right-0 mt-4 w-64 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 z-50">
                    <div className="p-6 bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
-                      <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-1">{user?.role}</div>
-                      <div className="text-sm font-black text-slate-900 dark:text-white uppercase truncate">{user?.name}</div>
+                      <div className="text-[10px] font-bold tracking-wider text-slate-400 dark:text-slate-500 mb-1 uppercase">{user?.role}</div>
+                      <div className="text-sm font-bold text-slate-900 dark:text-white truncate">{user?.name}</div>
                    </div>
                    <div className="p-2">
-                      <button onClick={() => navigate('/profile')} className="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-600 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-all">
-                        <User size={16} /> PROFILE SETTINGS
+                      <button onClick={() => navigate('/profile')} className="w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-indigo-600 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-all">
+                        <User size={18} /> Profile Settings
                       </button>
-                      <button onClick={toggleTheme} className="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-600 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-all">
-                        {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />} {theme === 'dark' ? 'LIGHT MODE' : 'DARK MODE'}
+                      <button onClick={toggleTheme} className="w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-indigo-600 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-all">
+                        {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />} {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
                       </button>
                       <div className="h-px bg-slate-100 dark:bg-slate-800 my-2 mx-2" />
                       <button 
                         onClick={async () => { await logout(); navigate('/'); }}
-                        className="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold uppercase tracking-wider text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all"
+                        className="w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all"
                       >
-                        <SignOut size={16} /> TERMINATE SESSION
+                        <SignOut size={18} /> Log Out
                       </button>
                    </div>
                 </div>
@@ -162,19 +169,19 @@ export default function Navbar() {
         <div className="absolute inset-0 bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl" onClick={() => setOpen(false)} />
         <div className={clsx("absolute inset-y-0 right-0 w-full sm:w-[400px] bg-white dark:bg-slate-900 shadow-2xl p-8 flex flex-col transition-transform duration-500", open ? "translate-x-0" : "translate-x-full")}>
           <div className="flex justify-between items-center mb-12">
-            <span className="text-xl font-black uppercase tracking-tighter">SmartKisan</span>
-            <button onClick={() => setOpen(false)} className="text-[10px] font-black uppercase tracking-widest text-slate-400">CLOSE</button>
+            <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Smart<span className="text-indigo-600">Kisan</span></span>
+            <button onClick={() => setOpen(false)} className="text-xs font-semibold text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">Close</button>
           </div>
           <nav className="flex-1 space-y-4 overflow-y-auto pr-4 scrollbar-none">
             {[...primaryLinks, ...moreLinks].map(({ to, label }) => (
-              <NavLink key={to} to={to} className="block text-3xl font-black uppercase tracking-tighter text-slate-400 hover:text-indigo-600 transition-colors">
+              <NavLink key={to} to={to} className="block text-2xl font-bold text-slate-600 dark:text-slate-300 hover:text-indigo-600 transition-colors py-1">
                 {label}
               </NavLink>
             ))}
           </nav>
           <div className="pt-8 mt-8 border-t border-slate-100 dark:border-slate-800">
-            <button onClick={async () => { await logout(); navigate('/'); }} className="w-full py-5 text-center text-[10px] font-black uppercase tracking-[0.5em] bg-red-600 text-white rounded-2xl shadow-xl shadow-red-500/20">
-              TERMINATE SESSION
+            <button onClick={async () => { await logout(); navigate('/'); }} className="w-full py-4 text-center text-sm font-semibold bg-red-600 text-white hover:bg-red-700 transition-colors rounded-2xl shadow-xl shadow-red-500/20">
+              Log Out
             </button>
           </div>
         </div>

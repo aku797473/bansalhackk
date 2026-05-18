@@ -174,14 +174,14 @@ export default function Market() {
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-14">
           <div>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-blue-500/30 border border-blue-400/20 flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-3 mb-6">
+              <div className="px-4 py-1.5 bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 text-xs font-semibold rounded-full border border-blue-200/50 dark:border-blue-800/35 flex items-center gap-2">
                 <Storefront size={14} weight="fill" />
-                {t('market.version')}
+                Market Explorer
               </div>
-              <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+              <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2 text-xs font-medium text-slate-500">
                 <ShieldCheck size={14} weight="fill" className="text-emerald-500" />
-                {t('market.real_data')}
+                Government Verified Price Data
               </div>
             </div>
             <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none font-outfit">
@@ -200,14 +200,14 @@ export default function Market() {
             className="h-14 px-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl shadow-slate-200/40 dark:shadow-none hover:-translate-y-1 active:scale-95 transition-all flex items-center gap-3 disabled:opacity-50"
           >
             <ArrowCounterClockwise size={18} weight="bold" className={clsx("text-blue-600", isFetching && "animate-spin")} />
-            <span className="text-xs font-black uppercase tracking-widest text-slate-900 dark:text-white">{isFetching ? t('market.syncing') : t('market.sync_live')}</span>
+            <span className="text-sm font-semibold text-slate-900 dark:text-white">{isFetching ? t('market.syncing') : t('market.sync_live')}</span>
           </button>
         </div>
 
         {/* Search Selectors */}
         <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-8 sm:p-10 rounded-[2.5rem] border border-slate-200/60 dark:border-slate-800/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           <div className="flex flex-col gap-3">
-            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-2">{t('market.select_state')}</label>
+            <label className="text-xs font-semibold text-slate-500 ml-2">{t('market.select_state')}</label>
             <div className="relative group">
               <select className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 dark:text-white appearance-none cursor-pointer focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" value={selState} onChange={(e) => handleStateChange(e.target.value)}>
                 {ALL_STATES.map(s => <option key={s} value={s}>{translateOption(s)}</option>)}
@@ -216,7 +216,7 @@ export default function Market() {
             </div>
           </div>
           <div className="flex flex-col gap-3">
-            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-2">{t('market.choose_district')}</label>
+            <label className="text-xs font-semibold text-slate-500 ml-2">{t('market.choose_district')}</label>
             <div className="relative group">
               <select
                 className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 dark:text-white appearance-none cursor-pointer focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all hover:bg-slate-100 dark:hover:bg-slate-800"
@@ -235,7 +235,7 @@ export default function Market() {
             </div>
           </div>
           <div className="flex flex-col gap-3">
-            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-2">{t('market.select_commodity')}</label>
+            <label className="text-xs font-semibold text-slate-500 ml-2">{t('market.select_commodity')}</label>
             <div className="relative group">
               <select
                 className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 dark:text-white appearance-none cursor-pointer focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all disabled:opacity-30"
@@ -274,9 +274,9 @@ export default function Market() {
                     <h3 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tighter font-outfit">
                       {t('market.trend_title', { district: translateOption(selDistrict), commodity: translateOption(selCommodity) })}
                     </h3>
-                    <div className="flex items-center gap-6">
-                      <div className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest"><div className="w-2.5 h-2.5 rounded-full bg-blue-500" /> {t('market.historical')}</div>
-                      <div className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest"><div className="w-2.5 h-2.5 rounded-full border-2 border-purple-500 border-dashed" /> {t('market.forecast')}</div>
+                     <div className="flex items-center gap-6">
+                      <div className="flex items-center gap-2 text-xs font-semibold text-slate-400"><div className="w-2.5 h-2.5 rounded-full bg-blue-500" /> {t('market.historical')}</div>
+                      <div className="flex items-center gap-2 text-xs font-semibold text-slate-400"><div className="w-2.5 h-2.5 rounded-full border-2 border-purple-500 border-dashed" /> {t('market.forecast')}</div>
                     </div>
                   </div>
                   <div className="h-[350px] w-full">
@@ -308,29 +308,29 @@ export default function Market() {
               <div className="lg:col-span-4 flex flex-col gap-8">
                 <div className="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 rounded-[2.5rem] p-10 text-white shadow-2xl relative overflow-hidden group">
                   <div className="absolute top-0 right-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 pointer-events-none" />
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60 mb-3">{t('market.modal_price')}</p>
+                  <p className="text-xs font-semibold text-white/70 mb-3">{t('market.modal_price')}</p>
                   <div className="flex items-end gap-3 mb-10">
                     <h2 className="text-6xl sm:text-7xl font-black tracking-tighter drop-shadow-lg">₹{analytics?.current.toLocaleString() || '0'}</h2>
                     <span className="text-xl font-bold text-white/50 mb-4">{t('market.unit_qntl')}</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="px-4 py-2 bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest">
-                       <Sparkle size={14} weight="fill" className="text-blue-300 mr-2 inline" />
+                    <div className="px-4 py-1.5 bg-white/10 backdrop-blur-xl border border-white/10 rounded-full text-xs font-medium">
+                       <Sparkle size={14} weight="fill" className="text-blue-300 mr-2 inline animate-pulse" />
                        {t('market.real_data')}
                     </div>
                   </div>
                 </div>
 
                 <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl rounded-[2.5rem] p-10 shadow-premium border border-slate-200/50 dark:border-slate-800/50">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-8">{t('market.price_range')}</p>
+                  <p className="text-xs font-semibold text-slate-500 mb-8">{t('market.price_range')}</p>
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-[10px] font-black text-red-500 uppercase mb-2 tracking-widest">{t('market.low')}</p>
+                      <p className="text-xs font-bold text-red-500 mb-2">{t('market.low')}</p>
                       <p className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">₹{analytics?.low.toLocaleString() || '0'}</p>
                     </div>
                     <div className="h-12 w-px bg-slate-100 dark:bg-slate-800" />
                     <div className="text-right">
-                      <p className="text-[10px] font-black text-emerald-500 uppercase mb-2 tracking-widest">{t('market.high')}</p>
+                      <p className="text-xs font-bold text-emerald-500 mb-2">{t('market.high')}</p>
                       <p className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">₹{analytics?.high.toLocaleString() || '0'}</p>
                     </div>
                   </div>
@@ -338,7 +338,7 @@ export default function Market() {
 
                 <div className="bg-slate-900 dark:bg-indigo-600 rounded-[2.5rem] p-10 text-white shadow-2xl relative overflow-hidden group">
                   <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
-                  <p className="text-[10px] font-black uppercase tracking-widest text-white/60 mb-6">{t('market.ai_forecast')}</p>
+                  <p className="text-xs font-semibold text-white/70 mb-6">{t('market.ai_forecast')}</p>
                   <div className="flex items-center gap-6 mb-8">
                     <h3 className="text-6xl font-black">+{analytics?.change || '0'}%</h3>
                     <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center animate-bounce-sm">
@@ -371,10 +371,10 @@ export default function Market() {
                 <table className="w-full text-left min-w-[800px]">
                   <thead>
                     <tr className="bg-slate-50/50 dark:bg-slate-800/30">
-                      <th className="px-10 py-8 text-[10px] font-black uppercase text-slate-400 tracking-widest">{t('market.commodity_info')}</th>
-                      <th className="px-10 py-8 text-[10px] font-black uppercase text-slate-400 tracking-widest">{t('market.market_label')}</th>
-                      <th className="px-10 py-8 text-[10px] font-black uppercase text-slate-400 tracking-widest text-center">{t('market.modal_rate')}</th>
-                      <th className="px-10 py-8 text-[10px] font-black uppercase text-slate-400 tracking-widest text-right">{t('market.trend')}</th>
+                      <th className="px-10 py-8 text-xs font-semibold text-slate-400">{t('market.commodity_info')}</th>
+                      <th className="px-10 py-8 text-xs font-semibold text-slate-400">{t('market.market_label')}</th>
+                      <th className="px-10 py-8 text-xs font-semibold text-slate-400 text-center">{t('market.modal_rate')}</th>
+                      <th className="px-10 py-8 text-xs font-semibold text-slate-400 text-right">{t('market.trend')}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -387,7 +387,7 @@ export default function Market() {
                             </div>
                             <div>
                               <p className="font-black text-slate-900 dark:text-white text-lg leading-none mb-2">{translateOption(p.commodity)}</p>
-                              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{p.variety}</p>
+                              <p className="text-xs font-semibold text-slate-400">{p.variety}</p>
                             </div>
                           </div>
                         </td>
@@ -401,7 +401,7 @@ export default function Market() {
                         </td>
                         <td className="px-10 py-10 text-center">
                           <p className="text-4xl font-black text-blue-600 dark:text-blue-400 tracking-tighter leading-none">₹{p.modalPrice.toLocaleString()}</p>
-                          <p className="text-[8px] font-black text-slate-400 uppercase mt-2">{t('market.unit_qntl')}</p>
+                          <p className="text-xs font-semibold text-slate-500 mt-2">{t('market.unit_qntl')}</p>
                         </td>
                         <td className="px-10 py-10 text-right">
                           <div className={clsx(

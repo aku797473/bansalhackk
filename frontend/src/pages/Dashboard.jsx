@@ -50,13 +50,13 @@ export default function Dashboard() {
       render: () => (
         <div className="flex flex-col h-full justify-between">
           <div>
-            <div className="text-[10px] font-black uppercase tracking-[0.4em] opacity-60 mb-4">{t('nav.weather')}</div>
-            <div className="text-7xl sm:text-9xl font-black tracking-tighter leading-none">{Math.round(weather?.temperature || 0)}°</div>
-            <div className="text-sm font-bold mt-4 uppercase tracking-widest">{weather?.description || t('dashboard.loading')}</div>
+            <span className="text-xs font-bold text-white/80">{t('nav.weather')}</span>
+            <div className="text-6xl sm:text-7xl font-extrabold tracking-tight mt-2 leading-none">{Math.round(weather?.temperature || 0)}°</div>
+            <div className="text-sm font-medium mt-2 capitalize opacity-90">{weather?.description || t('dashboard.loading')}</div>
           </div>
-          <div className="flex justify-between items-end">
-             <div className="text-[10px] font-black uppercase tracking-widest opacity-60">{weather?.city || 'Satna'}</div>
-             <div className="px-6 py-3 bg-white text-indigo-600 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-xl">VIEW DETAILS</div>
+          <div className="flex justify-between items-center mt-6">
+             <div className="text-xs font-medium opacity-85">{weather?.city || 'Satna'}</div>
+             <div className="px-4 py-2 bg-white text-indigo-600 rounded-full text-xs font-semibold shadow-md transition-all hover:scale-102">View Weather</div>
           </div>
         </div>
       )
@@ -67,10 +67,10 @@ export default function Dashboard() {
       render: () => (
         <div className="flex flex-col h-full justify-between">
           <div>
-            <div className="text-[9px] font-black text-indigo-600 uppercase tracking-[0.4em] mb-6">{t('nav.crop')}</div>
-            <div className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter uppercase leading-none">{t('dashboard.crop_system')}</div>
+            <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">{t('nav.crop')}</span>
+            <div className="text-2xl font-bold text-slate-900 dark:text-white mt-3 leading-tight">{t('dashboard.crop_system')}</div>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-900 dark:text-white self-end font-black shadow-inner">→</div>
+          <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 self-end font-semibold shadow-sm transition-transform group-hover:translate-x-1">→</div>
         </div>
       )
     },
@@ -82,11 +82,11 @@ export default function Dashboard() {
         return (
           <div className="flex flex-col h-full justify-between">
             <div>
-              <div className="text-[9px] font-black text-indigo-600 uppercase tracking-[0.4em] mb-6">{t('nav.market')}</div>
-              <div className="text-5xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">₹{latest?.price?.toLocaleString() || '2,450'}</div>
-              <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mt-4">{t('dashboard.mandi_desc')}</p>
+              <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">{t('nav.market')}</span>
+              <div className="text-3xl font-bold text-slate-900 dark:text-white mt-3 leading-none">₹{latest?.price?.toLocaleString() || '2,450'}</div>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-2">{t('dashboard.mandi_desc')}</p>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-900 dark:text-white self-end font-black shadow-inner">→</div>
+            <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 self-end font-semibold shadow-sm transition-transform group-hover:translate-x-1">→</div>
           </div>
         );
       }
@@ -107,23 +107,27 @@ export default function Dashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-28 sm:pt-40 pb-20 relative z-10">
         
         {/* Balanced Header */}
-        <div className="mb-20">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="h-px w-12 bg-indigo-600" />
-            <div className="text-[10px] font-black uppercase tracking-[0.5em] text-indigo-600">COMMAND CENTER v1.0</div>
+        <div className="mb-14">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">Dashboard</span>
           </div>
           
-          <h1 className="text-6xl sm:text-8xl lg:text-9xl font-black tracking-tighter text-slate-900 dark:text-white leading-[0.8] uppercase">
-            <span className="block opacity-20 text-2xl sm:text-3xl font-black tracking-[0.2em] mb-4">{t(greetingKey)},</span>
+          <h1 className="text-5xl sm:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+            <span className="block text-slate-400 dark:text-slate-500 text-2xl sm:text-3xl font-medium mb-1">{t(greetingKey)},</span>
             {user?.name?.split(' ')[0] || t('auth.farmer')}
           </h1>
           
-          <div className="mt-12 flex flex-wrap items-center gap-8">
-             <p className="text-[11px] text-slate-400 font-black uppercase tracking-[0.4em] border-l-2 border-indigo-600 pl-6">
+          <div className="mt-6 flex flex-wrap items-center gap-4">
+             <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
                 {new Date().toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' })}
              </p>
-             <button onClick={() => navigate('/sos')} className="px-10 py-4 bg-red-600 text-white text-[10px] font-black uppercase tracking-[0.5em] rounded-xl shadow-xl hover:scale-105 active:scale-95 transition-all">
-               EMERGENCY SOS
+             <button 
+               onClick={() => navigate('/sos')} 
+               className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded-full shadow-lg shadow-red-600/10 hover:scale-102 active:scale-98 transition-all flex items-center gap-2"
+             >
+               <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
+               Emergency SOS
              </button>
           </div>
         </div>
@@ -144,46 +148,46 @@ export default function Dashboard() {
               {m.render ? m.render() : (
                 <div className="flex flex-col h-full justify-between">
                   <div>
-                    <div className="text-[9px] font-black text-indigo-600 uppercase tracking-[0.4em] mb-6">{m.label}</div>
-                    {m.desc && <p className="text-xs text-slate-500 dark:text-slate-400 font-bold leading-relaxed uppercase tracking-tight opacity-60">{m.desc}</p>}
+                    <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">{m.label}</span>
+                    {m.desc && <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed mt-2">{m.desc}</p>}
                   </div>
-                  <div className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-900 dark:text-white self-end font-black shadow-inner group-hover:scale-110 transition-transform">→</div>
+                  <div className="w-8 h-8 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 self-end font-semibold shadow-sm transition-transform group-hover:translate-x-1">→</div>
                 </div>
               )}
             </div>
           ))}
 
           {/* Expert Card - Balanced Contrast */}
-          <div className="col-span-1 sm:col-span-2 bg-slate-900 dark:bg-slate-900 rounded-[2.5rem] p-10 sm:p-12 text-white flex flex-col justify-between cursor-pointer hover:-translate-y-2 transition-all shadow-2xl border-2 border-indigo-600/30" onClick={() => navigate('/crop')}>
+          <div className="col-span-1 sm:col-span-2 bg-slate-900 dark:bg-slate-900 rounded-[2.5rem] p-8 sm:p-10 text-white flex flex-col justify-between cursor-pointer hover:-translate-y-1 transition-all shadow-xl border border-indigo-500/20" onClick={() => navigate('/crop')}>
               <div>
-                <div className="text-[10px] font-black uppercase tracking-[0.5em] text-indigo-400 mb-8">ADVISORY LINK</div>
-                <h3 className="text-5xl sm:text-6xl font-black tracking-tighter leading-[0.85] uppercase max-w-sm">{t('dashboard.expert_advisory')}</h3>
+                <div className="text-xs font-bold text-indigo-400 mb-6">Expert Advisory</div>
+                <h3 className="text-3xl sm:text-4xl font-extrabold tracking-tight max-w-sm">{t('dashboard.expert_advisory')}</h3>
               </div>
-              <div className="flex items-center gap-4 text-xs font-black uppercase tracking-[0.5em] mt-12 group">
-                CONSULT NOW <span className="group-hover:translate-x-2 transition-transform">→</span>
+              <div className="flex items-center gap-2 text-sm font-semibold mt-10 group">
+                Consult Now <span className="group-hover:translate-x-1 transition-transform">→</span>
               </div>
           </div>
         </div>
 
         {/* System Architecture Section */}
-        <div className="mt-32 border-t border-slate-200 dark:border-slate-800 pt-16">
-           <div className="flex flex-col md:flex-row items-start justify-between gap-16">
-              <div className="flex flex-col gap-4">
-                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.5em]">{t('dashboard.sync_status')}</span>
-                 <div className="flex items-center gap-4">
-                    <div className="h-2 w-2 rounded-full bg-indigo-600 animate-pulse shadow-[0_0_15px_rgba(79,70,229,1)]" />
-                    <span className="text-sm font-black text-slate-900 dark:text-white tracking-[0.4em] uppercase">SYSTEMS ACTIVE</span>
+        <div className="mt-20 border-t border-slate-200 dark:border-slate-800/80 pt-10">
+           <div className="flex flex-col md:flex-row items-start justify-between gap-8">
+              <div className="flex flex-col gap-2">
+                 <span className="text-xs font-medium text-slate-400">{t('dashboard.sync_status')}</span>
+                 <div className="flex items-center gap-2">
+                    <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-sm font-semibold text-slate-900 dark:text-white">All Systems Operational</span>
                  </div>
               </div>
-              <div className="flex gap-16 sm:gap-24">
+              <div className="flex gap-12 sm:gap-16">
                  {[
-                   { label: t('dashboard.nodes.sat'), status: 'OPTIMAL' },
-                   { label: t('dashboard.nodes.market'), status: 'STABLE' },
-                   { label: t('dashboard.nodes.ai'), status: 'ACTIVE' }
+                   { label: t('dashboard.nodes.sat'), status: 'Optimal' },
+                   { label: t('dashboard.nodes.market'), status: 'Stable' },
+                   { label: t('dashboard.nodes.ai'), status: 'Active' }
                  ].map(node => (
-                   <div key={node.label} className="flex flex-col gap-3">
-                      <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.5em]">{node.label}</span>
-                      <span className="text-base font-black tracking-[0.2em] text-slate-900 dark:text-white">{node.status}</span>
+                   <div key={node.label} className="flex flex-col gap-1">
+                      <span className="text-xs font-medium text-slate-400">{node.label}</span>
+                      <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">{node.status}</span>
                    </div>
                  ))}
               </div>
