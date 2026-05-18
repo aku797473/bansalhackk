@@ -283,7 +283,7 @@ export default function SOS() {
                     </div>
 
                     <div className="space-y-6">
-                      {selectedEmergency.instructions[lang].map((inst, i) => (
+                      {(selectedEmergency.instructions[lang] || selectedEmergency.instructions['hi'] || selectedEmergency.instructions['en']).map((inst, i) => (
                         <div key={i} className="flex gap-6 group/inst">
                           <div className="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 text-red-600 dark:text-red-400 font-black flex items-center justify-center shrink-0 shadow-sm group-hover/inst:scale-110 transition-transform">
                             {i + 1}

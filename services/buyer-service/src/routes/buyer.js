@@ -34,18 +34,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// Get shop details
-router.get('/:id', async (req, res) => {
-  try {
-    const buyer = await Buyer.findById(req.params.id);
-    if (!buyer) return res.status(404).json({ success: false, message: 'Shop not found' });
-    res.json({ success: true, data: buyer });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-});
-
-// Map Markers for Shops
+// Map Markers for Shops (MUST be before /:id wildcard)
 router.get('/map-markers', async (req, res) => {
   try {
     const buyers = await Buyer.find({ 'location.lat': { $exists: true } });
@@ -58,6 +47,17 @@ router.get('/map-markers', async (req, res) => {
       detail: `Owner: ${b.ownerName} · Phone: ${b.phone}`
     }));
     res.json({ success: true, data: markers });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// Get shop details
+router.get('/:id', async (req, res) => {
+  try {
+    const buyer = await Buyer.findById(req.params.id);
+    if (!buyer) return res.status(404).json({ success: false, message: 'Shop not found' });
+    res.json({ success: true, data: buyer });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
