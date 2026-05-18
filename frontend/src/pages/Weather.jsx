@@ -199,7 +199,7 @@ export default function Weather() {
                     </div>
                     <div>
                       <div className="flex items-start">
-                         <h2 className="text-8xl sm:text-[11rem] font-black tracking-tighter drop-shadow-2xl leading-none">{Math.round(displayData.temperature)}°</h2>
+                         <h2 className="text-[5.5rem] sm:text-[11rem] font-black tracking-tighter drop-shadow-2xl leading-none">{Math.round(displayData.temperature)}°</h2>
                          <span className="text-3xl sm:text-5xl font-light opacity-50 mt-4 sm:mt-10 ml-2">C</span>
                       </div>
                       <p className="text-xl sm:text-3xl font-black text-sky-100 capitalize mt-4 flex items-center justify-center lg:justify-start gap-4">
@@ -210,7 +210,7 @@ export default function Weather() {
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-3 lg:flex lg:flex-col gap-6 bg-white/10 backdrop-blur-xl rounded-[2.5rem] p-6 sm:p-10 border border-white/20 w-full lg:w-72 shadow-2xl">
+                <div className="grid grid-cols-3 lg:flex lg:flex-col gap-2 sm:gap-6 bg-white/10 backdrop-blur-xl rounded-[2rem] sm:rounded-[2.5rem] p-4 sm:p-10 border border-white/20 w-full lg:w-72 shadow-2xl">
                   {[
                     { icon: Thermometer, label: t('weather.feels_like'), val: `${Math.round(displayData.feelsLike)}°C`, color: 'text-orange-300' },
                     { icon: Drop,        label: t('weather.humidity'),   val: `${displayData.humidity}%`, color: 'text-blue-300' },

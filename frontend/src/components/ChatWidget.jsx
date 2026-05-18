@@ -71,15 +71,18 @@ export default function ChatWidget() {
       return;
     }
     if (isListening) {
-      recognition.current.stop();
+      try { recognition.current.stop(); } catch(e) {}
     } else {
       try {
         recognition.current.start();
         // State updated in onstart
       } catch (err) {
-        console.error('Failed to start chat recognition:', err);
+        console.warn('Failed to start chat recognition:', err);
+        // If it's already started, stop it and reset state
+        if (err.name === 'NotAllowedError' || err.name === 'SecurityError') {
+          toast.error('Microphone access denied. Please check site permissions.', { id: 'mic-deny' });
+        }
         setIsListening(false);
-        toast.error('Could not start microphone.');
       }
     }
   };
@@ -165,10 +168,10 @@ export default function ChatWidget() {
         )}
       </button>
 
-      {/* Chat window — anchored to bottom LEFT */}
+      {/* Chat window — anchored to bottom */}
       {open && (
-        <div className="fixed bottom-28 left-6 z-50 w-80 sm:w-96 rounded-[2rem] shadow-2xl border border-white/50 dark:border-slate-700/50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl overflow-hidden animate-slide-up flex flex-col transition-colors transform origin-bottom-left"
-          style={{ maxHeight: '70vh' }}>
+        <div className="fixed bottom-24 sm:bottom-28 left-4 right-4 sm:right-auto sm:left-6 z-50 sm:w-96 rounded-[2rem] shadow-2xl border border-white/50 dark:border-slate-700/50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl overflow-hidden animate-slide-up flex flex-col transition-colors transform origin-bottom-left"
+          style={{ maxHeight: '75vh', height: '550px' }}>
           
           {/* Header */}
           <div className="flex items-center gap-4 px-6 py-4 bg-gradient-to-r from-indigo-600 to-blue-600 text-white shrink-0 shadow-md">
