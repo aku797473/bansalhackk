@@ -33,8 +33,12 @@ router.get('/profile', async (req, res) => {
 
     // Try Cache
     if (redis.status === 'ready') {
-      const cached = await redis.get(cacheKey);
-      if (cached) return res.json({ success: true, data: JSON.parse(cached), cached: true });
+      try {
+        const cached = await redis.get(cacheKey);
+        if (cached) return res.json({ success: true, data: JSON.parse(cached), cached: true });
+      } catch (err) {
+        console.warn('⚠️ Redis GET Error (falling back to MongoDB):', err.message);
+      }
     }
 
     let profile = await UserProfile.findOne({ userId });

@@ -114,6 +114,17 @@ async function connectMongo() {
     } catch (e) {
       // Ignore error if index doesn't exist
     }
+
+    try {
+      const UserProfile = mongoose.models.UserProfile || mongoose.model('UserProfile');
+      if (UserProfile) {
+        await UserProfile.collection.dropIndex('email_1').catch(() => {});
+        await UserProfile.collection.dropIndex('phone_1').catch(() => {});
+        console.log('🗑️  Dropped legacy unique email/phone indices in UserProfile collection');
+      }
+    } catch (e) {
+      // Ignore
+    }
   }
   catch (err) { console.error('❌ MongoDB Error:', err.message); }
 }

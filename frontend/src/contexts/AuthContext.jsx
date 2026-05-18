@@ -184,7 +184,7 @@ export function AuthProvider({ children }) {
          }));
        }
     } catch (err) {
-       console.error('Profile sync failed', err);
+       console.error('Profile sync failed', err, err.response?.data);
        throw err;
     }
   };
