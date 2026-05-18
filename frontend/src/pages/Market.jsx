@@ -146,11 +146,15 @@ export default function Market() {
     const vals = activeData.map(p => p.modalPrice);
     const current = Math.round(vals.reduce((a, b) => a + b, 0) / vals.length);
     return {
-      current, high: current * 1.05, low: current * 0.95, chartData: Array.from({ length: 12 }, (_, i) => ({
+      current,
+      high: Math.round(current * 1.05),
+      low: Math.round(current * 0.95),
+      chartData: Array.from({ length: 12 }, (_, i) => ({
         date: new Date(Date.now() - (11 - i) * 3 * 24 * 60 * 60 * 1000).toISOString(),
         price: Math.round(current * (0.95 + Math.random() * 0.1)),
         type: i > 8 ? 'forecast' : 'historical'
-      })), change: (Math.random() * 5 + 1).toFixed(1)
+      })),
+      change: (Math.random() * 5 + 1).toFixed(1)
     };
   }, [filteredPrices, selDistrict, selCommodity]);
 

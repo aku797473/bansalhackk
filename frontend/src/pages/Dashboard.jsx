@@ -154,7 +154,7 @@ export default function Dashboard() {
           ))}
 
           {/* Expert Card - Balanced Contrast */}
-          <div className="col-span-1 sm:col-span-2 bg-slate-900 dark:bg-slate-900 rounded-[2.5rem] p-10 sm:p-12 text-white flex flex-col justify-between cursor-pointer hover:-translate-y-2 transition-all shadow-2xl border-2 border-indigo-600/30" onClick={() => navigate('/chat')}>
+          <div className="col-span-1 sm:col-span-2 bg-slate-900 dark:bg-slate-900 rounded-[2.5rem] p-10 sm:p-12 text-white flex flex-col justify-between cursor-pointer hover:-translate-y-2 transition-all shadow-2xl border-2 border-indigo-600/30" onClick={() => navigate('/crop')}>
               <div>
                 <div className="text-[10px] font-black uppercase tracking-[0.5em] text-indigo-400 mb-8">ADVISORY LINK</div>
                 <h3 className="text-5xl sm:text-6xl font-black tracking-tighter leading-[0.85] uppercase max-w-sm">{t('dashboard.expert_advisory')}</h3>
