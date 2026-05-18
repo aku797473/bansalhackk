@@ -16,10 +16,25 @@ export function AuthProvider({ children }) {
         try {
           const { data } = await authAPI.me();
           if (data.success) {
-            setUser({
+            let fullUser = {
               ...data.user,
               id: data.user._id,
-            });
+            };
+            try {
+              const { data: profileRes } = await userAPI.getProfile();
+              if (profileRes.success && profileRes.data) {
+                fullUser = {
+                  ...fullUser,
+                  ...profileRes.data,
+                  name: profileRes.data.name || fullUser.name,
+                  role: profileRes.data.role || fullUser.role,
+                  location: profileRes.data.location
+                };
+              }
+            } catch (pErr) {
+              console.warn('Profile load failed during initAuth:', pErr.message);
+            }
+            setUser(fullUser);
           }
         } catch (err) {
           localStorage.removeItem('sk_token');
@@ -40,10 +55,24 @@ export function AuthProvider({ children }) {
         localStorage.setItem('sk_refresh', data.refreshToken);
         setTokenProvider(() => Promise.resolve(data.accessToken));
         
-        const userData = { ...data.user, id: data.user.id || data.user._id };
-        setUser(userData);
+        let fullUser = { ...data.user, id: data.user.id || data.user._id };
+        try {
+          const { data: profileRes } = await userAPI.getProfile();
+          if (profileRes.success && profileRes.data) {
+            fullUser = {
+              ...fullUser,
+              ...profileRes.data,
+              name: profileRes.data.name || fullUser.name,
+              role: profileRes.data.role || fullUser.role,
+              location: profileRes.data.location
+            };
+          }
+        } catch (pErr) {
+          console.warn('Profile load failed during login:', pErr.message);
+        }
+        setUser(fullUser);
         toast.success('Access Authenticated');
-        return userData;
+        return fullUser;
       }
     } catch (error) {
       const msg = error.response?.data?.message || 'Authentication failed';
@@ -60,10 +89,24 @@ export function AuthProvider({ children }) {
         localStorage.setItem('sk_refresh', data.refreshToken);
         setTokenProvider(() => Promise.resolve(data.accessToken));
         
-        const userData = { ...data.user, id: data.user.id || data.user._id };
-        setUser(userData);
+        let fullUser = { ...data.user, id: data.user.id || data.user._id };
+        try {
+          const { data: profileRes } = await userAPI.getProfile();
+          if (profileRes.success && profileRes.data) {
+            fullUser = {
+              ...fullUser,
+              ...profileRes.data,
+              name: profileRes.data.name || fullUser.name,
+              role: profileRes.data.role || fullUser.role,
+              location: profileRes.data.location
+            };
+          }
+        } catch (pErr) {
+          console.warn('Profile load failed during registration:', pErr.message);
+        }
+        setUser(fullUser);
         toast.success('Identity Created Successfully');
-        return userData;
+        return fullUser;
       }
     } catch (error) {
       const msg = error.response?.data?.message || 'Registration failed';
@@ -80,10 +123,24 @@ export function AuthProvider({ children }) {
         localStorage.setItem('sk_refresh', data.refreshToken);
         setTokenProvider(() => Promise.resolve(data.accessToken));
         
-        const userData = { ...data.user, id: data.user.id || data.user._id };
-        setUser(userData);
+        let fullUser = { ...data.user, id: data.user.id || data.user._id };
+        try {
+          const { data: profileRes } = await userAPI.getProfile();
+          if (profileRes.success && profileRes.data) {
+            fullUser = {
+              ...fullUser,
+              ...profileRes.data,
+              name: profileRes.data.name || fullUser.name,
+              role: profileRes.data.role || fullUser.role,
+              location: profileRes.data.location
+            };
+          }
+        } catch (pErr) {
+          console.warn('Profile load failed during google auth:', pErr.message);
+        }
+        setUser(fullUser);
         toast.success('Access Authenticated via Google');
-        return userData;
+        return fullUser;
       }
     } catch (error) {
       const msg = error.response?.data?.message || 'Google Authentication failed';

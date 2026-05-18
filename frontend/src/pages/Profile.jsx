@@ -9,21 +9,32 @@ export default function Profile() {
   const fileInputRef = useRef();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    name: user?.name || '',
-    role: user?.role || 'farmer',
-    bio: user?.bio || '',
-    phone: user?.phone || '',
-    location: user?.location || ''
+    name: '',
+    role: 'farmer',
+    bio: '',
+    phone: '',
+    location: ''
   });
 
   useEffect(() => {
     if (user) {
+      let locStr = '';
+      if (user.location && typeof user.location === 'object') {
+        const parts = [];
+        if (user.location.village) parts.push(user.location.village);
+        if (user.location.district && user.location.district !== user.location.village) parts.push(user.location.district);
+        if (user.location.state) parts.push(user.location.state);
+        locStr = parts.join(', ');
+      } else {
+        locStr = user.location || '';
+      }
+
       setFormData({
         name: user.name || '',
         role: user.role || 'farmer',
         bio: user.bio || '',
         phone: user.phone || '',
-        location: user.location || ''
+        location: locStr
       });
     }
   }, [user]);
@@ -35,7 +46,7 @@ export default function Profile() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        updateUser({ image: reader.result });
+        updateUser({ image: reader.result, profilePic: reader.result });
         toast.success('Profile picture updated locally');
       };
       reader.readAsDataURL(file);
@@ -45,7 +56,26 @@ export default function Profile() {
   const handleSave = async () => {
     setLoading(true);
     try {
-      await updateUser(formData);
+      const parts = formData.location.split(',').map(p => p.trim());
+      const village = parts[0] || '';
+      const district = parts[1] || parts[0] || '';
+      const state = parts[2] || parts[1] || 'Madhya Pradesh';
+
+      const payload = {
+        name: formData.name,
+        role: formData.role,
+        bio: formData.bio,
+        phone: formData.phone,
+        location: {
+          village,
+          district,
+          state,
+          lat: user?.location?.lat,
+          lng: user?.location?.lng
+        }
+      };
+
+      await updateUser(payload);
       toast.success('Profile secured and updated');
     } catch (error) {
       toast.error('Failed to update profile');
@@ -72,8 +102,8 @@ export default function Profile() {
                 className="w-40 h-40 mx-auto rounded-[2.5rem] bg-slate-100 dark:bg-slate-800 border-4 border-white/50 dark:border-slate-700 relative overflow-hidden group cursor-pointer"
                 onClick={handleImageClick}
               >
-                {user?.image ? (
-                  <img src={user.image} alt="profile" className="w-full h-full object-cover transition-transform group-hover:scale-110" />
+                {user?.image || user?.profilePic ? (
+                  <img src={user.image || user.profilePic} alt="profile" className="w-full h-full object-cover transition-transform group-hover:scale-110" />
                 ) : (
                   <User size={64} className="text-slate-300 absolute inset-0 m-auto" weight="bold" />
                 )}
@@ -129,11 +159,12 @@ export default function Profile() {
                   <div className="grid grid-cols-3 gap-4">
                     {[
                       { id: 'farmer', icon: IdentificationCard, label: 'Farmer' },
-                      { id: 'seller', icon: Handshake, label: 'Seller' },
-                      { id: 'labor',  icon: Briefcase, label: 'Labor' }
+                      { id: 'buyer',  icon: Handshake, label: 'Seller' },
+                      { id: 'labour', icon: Briefcase, label: 'Labor' }
                     ].map((role) => (
                       <button
                         key={role.id}
+                        type="button"
                         onClick={() => setFormData({...formData, role: role.id})}
                         className={clsx(
                           "flex flex-col items-center justify-center p-6 rounded-2xl border-2 transition-all gap-3",
