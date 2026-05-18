@@ -100,7 +100,21 @@ app.use('*', (req, res) => res.status(404).json({ success: false, message: 'Rout
 async function connectMongo() {
   const uri = process.env.MONGODB_URI;
   if (!uri) return;
-  try { await mongoose.connect(uri); console.log('✅ MongoDB connected'); }
+  try { 
+    await mongoose.connect(uri); 
+    console.log('✅ MongoDB connected'); 
+    
+    // Drop legacy unique email index in production database if it exists
+    try {
+      const AuthUser = mongoose.models.AuthUser || mongoose.model('AuthUser');
+      if (AuthUser) {
+        await AuthUser.collection.dropIndex('email_1');
+        console.log('🗑️  Dropped legacy unique email index in production database');
+      }
+    } catch (e) {
+      // Ignore error if index doesn't exist
+    }
+  }
   catch (err) { console.error('❌ MongoDB Error:', err.message); }
 }
 
