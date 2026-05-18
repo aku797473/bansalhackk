@@ -173,17 +173,17 @@ export default function Login() {
             <div className="space-y-4">
               <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 ml-1">Account Role</label>
               <div className="grid grid-cols-3 gap-3">
-                {['farmer', 'seller', 'labor'].map(r => (
+                {[{val:'farmer',label:'Farmer'},{val:'seller',label:'Seller'},{val:'labour',label:'Labour'}].map(r => (
                   <button
-                    key={r}
+                    key={r.val}
                     type="button"
-                    onClick={() => setRole(r)}
+                    onClick={() => setRole(r.val)}
                     className={clsx(
                       "py-2.5 rounded-xl border text-sm font-semibold capitalize transition-all",
-                      role === r ? "border-emerald-600 bg-emerald-500/5 text-emerald-600 dark:text-emerald-400" : "border-slate-200 dark:border-slate-800 text-slate-400 hover:border-emerald-600/30"
+                      role === r.val ? "border-emerald-600 bg-emerald-500/5 text-emerald-600 dark:text-emerald-400" : "border-slate-200 dark:border-slate-800 text-slate-400 hover:border-emerald-600/30"
                     )}
                   >
-                    {r}
+                    {r.label}
                   </button>
                 ))}
               </div>
