@@ -83,7 +83,7 @@ export default function Weather() {
           while (d.forecast.length < 7) {
             const last = d.forecast[d.forecast.length - 1];
             const prev = d.forecast[d.forecast.length - 2] || last;
-            const nextDate = new Date(last.date);
+            const nextDate = new Date(`${last.date}T12:00:00Z`);
             nextDate.setDate(nextDate.getDate() + 1);
             d.forecast.push({
               date:      nextDate.toISOString().split('T')[0],
@@ -257,7 +257,7 @@ export default function Weather() {
                   )}>
                     {i === 0 && <div className="absolute top-0 right-0 w-16 h-16 bg-sky-500/10 rounded-full blur-xl animate-pulse" />}
                     <p className={clsx("text-xs font-bold mb-4", i === 0 ? "text-sky-600" : "text-slate-400")}>
-                      {i === 0 ? t('common.today') : new Date(day.date).toLocaleDateString(i18n.language === 'hi' ? 'hi-IN' : 'en-IN', { weekday: 'short', day: 'numeric' })}
+                      {i === 0 ? t('common.today') : new Date(`${day.date}T12:00:00Z`).toLocaleDateString(i18n.language === 'hi' ? 'hi-IN' : 'en-IN', { weekday: 'short', day: 'numeric' })}
                     </p>
                     <div className="mb-6 group-hover:scale-110 transition-transform duration-500">{getEmoji(day.icon, 40)}</div>
                     <div className="flex items-center justify-center gap-2 mb-6">
