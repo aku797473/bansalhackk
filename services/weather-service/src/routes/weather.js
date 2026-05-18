@@ -39,6 +39,65 @@ const MOCK_DESCRIPTIONS = {
   hi: ['धूप', 'बादल छाए रहेंगे', 'हल्की बारिश', 'बिजली कड़कना', 'साफ मौसम', 'आंशिक रूप से बादल']
 };
 
+const getWmoIcon = (code) => {
+  if (code === 0) return '01d';
+  if (code === 1) return '02d';
+  if (code === 2) return '03d';
+  if (code === 3) return '04d';
+  if (code >= 45 && code <= 48) return '50d';
+  if (code >= 51 && code <= 67) return '09d';
+  if (code >= 71 && code <= 77) return '13d';
+  if (code >= 80 && code <= 82) return '09d';
+  if (code >= 85 && code <= 86) return '13d';
+  if (code >= 95) return '11d';
+  return '01d';
+};
+
+const getWmoDesc = (code) => {
+  if (code === 0) return 'Clear sky';
+  if (code === 1 || code === 2) return 'Partly cloudy';
+  if (code === 3) return 'Overcast';
+  if (code >= 45 && code <= 48) return 'Fog';
+  if (code >= 51 && code <= 67) return 'Rain';
+  if (code >= 71 && code <= 77) return 'Snow';
+  if (code >= 80 && code <= 82) return 'Rain showers';
+  if (code >= 95) return 'Thunderstorm';
+  return 'Clear';
+};
+
+const getRealWeatherFromOpenMeteo = async (lat, lon, lang, realCity) => {
+  try {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto`;
+    const { data } = await axios.get(url);
+    
+    return {
+      city: realCity || 'Unknown Location',
+      country: 'IN',
+      lat, lon,
+      temperature: data.current.temperature_2m,
+      feelsLike: data.current.apparent_temperature,
+      humidity: data.current.relative_humidity_2m,
+      windSpeed: data.current.wind_speed_10m,
+      description: getWmoDesc(data.current.weather_code),
+      icon: getWmoIcon(data.current.weather_code),
+      alerts: [],
+      forecast: data.daily.time.slice(0, 5).map((date, i) => ({
+        date,
+        tempMax: data.daily.temperature_2m_max[i],
+        tempMin: data.daily.temperature_2m_min[i],
+        description: getWmoDesc(data.daily.weather_code[i]),
+        icon: getWmoIcon(data.daily.weather_code[i]),
+        humidity: data.current.relative_humidity_2m, // fallback daily hum
+        estimated: false
+      })),
+      isMock: false
+    };
+  } catch (err) {
+    console.error('Open-Meteo fallback failed:', err.message);
+    return getMockWeather(lat, lon, lang, realCity); // deep fallback
+  }
+};
+
 const getMockWeather = (lat, lon, lang = 'en', realCity = null) => {
   const isHi = String(lang).startsWith('hi');
   const descList = isHi ? MOCK_DESCRIPTIONS.hi : MOCK_DESCRIPTIONS.en;
@@ -106,7 +165,7 @@ router.get('/current', async (req, res) => {
         console.warn('Reverse geocode failed:', e.message);
       }
 
-      const mock = getMockWeather(lat, lon, activeLang, realCity);
+      const mock = await getRealWeatherFromOpenMeteo(lat, lon, activeLang, realCity);
       await rSet(cacheKey, CACHE_TTL, JSON.stringify(mock));
       WeatherHistory.create({ userId, lat, lon, city: mock.city, temperature: mock.temperature, description: mock.description, searchType: 'current' }).catch(console.error);
       return res.json({ success: true, data: mock });
@@ -188,7 +247,7 @@ router.get('/current', async (req, res) => {
       realCity = geoRes.data.city || geoRes.data.locality || geoRes.data.principalSubdivision;
     } catch(e) {}
 
-    const mock = getMockWeather(lat || 28.6, lon || 77.2, lang || 'en', realCity);
+    const mock = await getRealWeatherFromOpenMeteo(lat || 28.6, lon || 77.2, lang || 'en', realCity);
     res.json({ success: true, data: mock, note: 'Using fallback data due to API error' });
   }
 });
@@ -211,7 +270,7 @@ router.get('/by-city', async (req, res) => {
     }
 
     if (!OWM_KEY || OWM_KEY === 'demo' || OWM_KEY.includes('your_')) {
-      const mock = { ...getMockWeather(28.6, 77.2, activeLang), city };
+      const mock = await getRealWeatherFromOpenMeteo(28.6, 77.2, activeLang, city);
       await rSet(cacheKey, CACHE_TTL, JSON.stringify(mock));
       WeatherHistory.create({ userId, lat: mock.lat, lon: mock.lon, city: mock.city, temperature: mock.temperature, description: mock.description, searchType: 'by-city' }).catch(console.error);
       return res.json({ success: true, data: mock });
@@ -272,7 +331,7 @@ router.get('/by-city', async (req, res) => {
   } catch (err) {
     console.error('Weather API error (city fallback):', err.message);
     const { city, lang } = req.query;
-    const mock = { ...getMockWeather(28.6, 77.2, lang || 'en'), city: city || 'Unknown' };
+    const mock = await getRealWeatherFromOpenMeteo(28.6, 77.2, lang || 'en', city || 'Unknown');
     res.json({ success: true, data: mock, note: 'Using fallback data due to API error' });
   }
 });

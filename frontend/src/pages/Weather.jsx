@@ -46,7 +46,7 @@ export default function Weather() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const { data, isLoading: loading, refetch, isFetching: searching } = useQuery({
-    queryKey: ['weather', searchQuery, i18n.language, 'v9'],
+    queryKey: ['weather', searchQuery, i18n.language, 'v10'],
     queryFn: async () => {
       try {
         const activeLang = i18n.language || 'en';
