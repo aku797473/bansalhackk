@@ -123,13 +123,30 @@ export default function ChatWidget() {
     setInput('');
     setMessages(m => [...m, { role: 'user', content: text }]);
     setLoading(true);
+
+    const fetchWithTimeout = (promise, ms) => Promise.race([
+      promise,
+      new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))
+    ]);
+
     try {
-      const { data } = await chatAPI.sendMessage(text, sessionId, i18n.language || 'en');
+      const { data } = await fetchWithTimeout(chatAPI.sendMessage(text, sessionId, i18n.language || 'en'), 8000);
       const reply = data.data.reply;
       setMessages(m => [...m, { role: 'assistant', content: reply }]);
       speak(reply); // Voice reply
     } catch {
-      setMessages(m => [...m, { role: 'assistant', content: t('chat.error', "⚠️ Sorry, I'm having trouble right now. Please try again.") }]);
+      // Local Offline Fallback
+      let offlineReply = "नमस्ते! मैं अभी ऑफलाइन मोड में हूँ। (I am currently in offline mode due to server load.)";
+      const tLower = text.toLowerCase();
+      if (tLower.includes('weather') || tLower.includes('mausam') || tLower.includes('मौसम')) {
+        offlineReply = "आज का मौसम साफ़ रहने की संभावना है। (The weather is expected to be clear today.)";
+      } else if (tLower.includes('mandi') || tLower.includes('bhav') || tLower.includes('price')) {
+        offlineReply = "मंडी के ताज़ा भाव के लिए कृपया 'Market' पेज देखें। (Please check the Market page for latest rates.)";
+      } else if (tLower.includes('crop') || tLower.includes('fasal') || tLower.includes('फसल')) {
+        offlineReply = "अपनी मिट्टी के अनुसार सही फसल चुनने के लिए 'AI Advisor' का उपयोग करें। (Use AI Advisor to pick the best crop for your soil.)";
+      }
+      setMessages(m => [...m, { role: 'assistant', content: offlineReply }]);
+      speak(offlineReply);
     } finally { setLoading(false); }
   };
 

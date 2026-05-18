@@ -50,8 +50,13 @@ export default function Weather() {
     queryFn: async () => {
       try {
         const activeLang = i18n.language || 'en';
+        const fetchWithTimeout = (promise, ms) => Promise.race([
+          promise,
+          new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))
+        ]);
+
         if (searchQuery) {
-          const res = await weatherAPI.getByCity(searchQuery, activeLang);
+          const res = await fetchWithTimeout(weatherAPI.getByCity(searchQuery, activeLang), 4000);
           return res.data.data || FALLBACK_WEATHER;
         }
 
@@ -69,7 +74,7 @@ export default function Weather() {
         const lat = pos?.lat || 24.6005;
         const lon = pos?.lon || 80.8322;
 
-        const res = await weatherAPI.getCurrent(lat, lon, activeLang);
+        const res = await fetchWithTimeout(weatherAPI.getCurrent(lat, lon, activeLang), 4000);
         const d = res.data.data;
         
         if (d && (!d.forecast || d.forecast.length === 0)) {
