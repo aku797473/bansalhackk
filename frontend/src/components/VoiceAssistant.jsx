@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mic, MicOff, X, Volume2, Languages } from 'lucide-react';
+import { Mic, MicOff, X, Volume2, Languages, Loader2 } from 'lucide-react';
 import clsx from 'clsx';
 import toast from 'react-hot-toast';
+import { chatAPI } from '../services/api';
 
 // ─── Command Maps ─────────────────────────────────────────────────────────────
 // NOTE: hi arrays include BOTH romanized AND Devanagari script because
@@ -105,17 +106,21 @@ export default function VoiceAssistant() {
   const recognitionRef = useRef(null);
   const navigate = useNavigate();
 
-  // ── Build recognition instance ───────────────────────────────────────────
-  const buildRecognition = useCallback(() => {
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SR) return null;
-    const r = new SR();
-    r.continuous      = false;
-    r.interimResults  = true;
-    r.maxAlternatives = 1;
-    r.lang            = lang === 'hi' ? 'hi-IN' : 'en-IN';
-    return r;
-  }, [lang]);
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
+
+  // ── Helper: Blob to Base64 ───────────────────────────────────────────────
+  const blobToBase64 = (blob) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64data = reader.result.split(',')[1];
+        resolve(base64data);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
 
   // ── Speak response ───────────────────────────────────────────────────────
   const speak = (text) => {
@@ -157,76 +162,80 @@ export default function VoiceAssistant() {
     setStatus('idle');
   }, [lang, navigate]);
 
-  // ── Start / Stop listening ───────────────────────────────────────────────
-  const toggleListening = () => {
+  // ── Start / Stop listening using AI API ────────────────────────────────
+  const toggleListening = async () => {
     if (isListening) {
-      recognitionRef.current?.stop();
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+        mediaRecorderRef.current.stop();
+      }
       return;
     }
 
-    const r = buildRecognition();
-    if (!r) { 
-      toast.error('Voice search is not supported in this browser. Try Chrome or Safari.', { id: 'no-sr' });
-      return; 
-    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      audioChunksRef.current = [];
 
-    setTranscript('');
-    setStatus('listening');
-    recognitionRef.current = r;
-
-    r.onstart = () => {
-      setIsListening(true);
-      setStatus('listening');
-      if ('vibrate' in navigator) navigator.vibrate(50); // Subtle haptic feedback
-    };
-
-    r.onresult = (event) => {
-      const current = event.resultIndex;
-      const text    = event.results[current][0].transcript;
-      setTranscript(text);
-      if (event.results[current].isFinal) processCommand(text);
-    };
-
-    r.onend = () => {
-      setIsListening(false);
-      if (status === 'listening') setStatus('idle');
-      console.log('Speech recognition ended');
-    };
-
-    r.onerror = (event) => {
-      console.error('Speech Recognition Error:', event.error);
-      setIsListening(false);
-      setStatus('idle');
-      
-      const errorMessages = {
-        'network': 'Network error. Please check your connection.',
-        'not-allowed': 'Microphone permission denied.',
-        'no-speech': 'No speech detected. Please try again.',
-        'aborted': 'Listening stopped.',
-        'language-not-supported': 'Selected language is not supported.',
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
       };
 
-      const msg = errorMessages[event.error] || `Error: ${event.error}`;
-      toast.error(msg, { id: 'voice-error' });
-    };
+      mediaRecorder.onstart = () => {
+        setIsListening(true);
+        setStatus('listening');
+        setTranscript('');
+        if ('vibrate' in navigator) navigator.vibrate(50);
+      };
 
-    try {
-      r.start();
-      // Status will be set to 'listening' in r.onstart for better sync
+      mediaRecorder.onstop = async () => {
+        setIsListening(false);
+        setStatus('processing');
+        
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        stream.getTracks().forEach(track => track.stop());
+
+        try {
+          const base64 = await blobToBase64(audioBlob);
+          const res = await chatAPI.transcribeVoice(base64, lang);
+          
+          if (res.data?.success && res.data?.text) {
+             const text = res.data.text;
+             setTranscript(text);
+             processCommand(text);
+          } else {
+             throw new Error('Transcription empty');
+          }
+        } catch (err) {
+          console.error('Transcription API Error:', err);
+          toast.error(lang === 'hi' ? 'आवाज़ समझ नहीं आई, फिर प्रयास करें।' : 'Could not transcribe audio. Try again.');
+          setStatus('idle');
+        }
+      };
+
+      mediaRecorder.start();
+      
+      // Auto-stop after 6 seconds if user doesn't tap again
+      setTimeout(() => {
+         if (mediaRecorderRef.current?.state === 'recording') {
+             mediaRecorderRef.current.stop();
+         }
+      }, 6000);
+
     } catch (err) {
-      console.error('Recognition start error:', err);
-      toast.error('Microphone failed. Try refreshing the page.');
+      console.error('Microphone Error:', err);
+      toast.error('Microphone permission denied or not supported.');
       setIsListening(false);
       setStatus('idle');
     }
   };
 
-  // Rebuild recognition when language changes
+  // Rebuild/cancel recording when language changes
   useEffect(() => {
-    if (isListening) {
-      recognitionRef.current?.stop();
-      setIsListening(false);
-      setStatus('idle');
+    if (isListening && mediaRecorderRef.current?.state === 'recording') {
+      mediaRecorderRef.current.stop();
     }
   }, [lang]);
 
@@ -289,6 +298,8 @@ export default function VoiceAssistant() {
               >
                 {isListening
                   ? <Mic size={36} className="text-white drop-shadow-md animate-pulse" />
+                  : status === 'processing' 
+                    ? <Loader2 size={36} className="text-emerald-500 animate-spin" />
                   : status === 'done' 
                     ? <Volume2 size={36} className="text-white drop-shadow-md" />
                     : <MicOff size={36} className="text-slate-400 dark:text-slate-500 transition-colors group-hover:text-emerald-500" />

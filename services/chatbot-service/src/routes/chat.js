@@ -160,4 +160,64 @@ router.post('/message', async (req, res) => {
   }
 });
 
+const fs = require('fs');
+const path = require('path');
+const os = require('os');
+
+// POST /chatbot/voice/transcribe
+router.post('/voice/transcribe', async (req, res) => {
+  try {
+    const { audioBase64, language = 'hi' } = req.body;
+    if (!audioBase64) return res.status(400).json({ success: false, message: 'Audio data missing' });
+
+    // Decode base64 and save to temp file
+    const buffer = Buffer.from(audioBase64, 'base64');
+    const tmpFile = path.join(os.tmpdir(), `audio_${Date.now()}.webm`);
+    fs.writeFileSync(tmpFile, buffer);
+
+    let transcript = '';
+    
+    // Use Groq Whisper for High Quality STT
+    if (groq) {
+      try {
+         const transcription = await groq.audio.transcriptions.create({
+            file: fs.createReadStream(tmpFile),
+            model: "whisper-large-v3-turbo",
+            response_format: "json",
+            language: language === 'hi' ? 'hi' : 'en',
+         });
+         transcript = transcription.text;
+      } catch (e) {
+         console.error('Groq Whisper Error:', e.message);
+      }
+    }
+    
+    // Fallback to OpenAI Whisper if Groq fails
+    if (!transcript && openai) {
+       try {
+         const transcription = await openai.audio.transcriptions.create({
+            file: fs.createReadStream(tmpFile),
+            model: "whisper-1",
+            language: language === 'hi' ? 'hi' : 'en',
+         });
+         transcript = transcription.text;
+       } catch (e) {
+         console.error('OpenAI Whisper Error:', e.message);
+       }
+    }
+
+    // Cleanup temp file
+    if (fs.existsSync(tmpFile)) fs.unlinkSync(tmpFile);
+
+    if (!transcript) {
+       return res.status(500).json({ success: false, message: 'Transcription failed via all AI providers' });
+    }
+
+    res.json({ success: true, text: transcript });
+  } catch (err) {
+    console.error('Transcription Error:', err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 module.exports = router;

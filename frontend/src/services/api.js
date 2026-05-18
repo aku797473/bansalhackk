@@ -64,6 +64,7 @@ export const chatAPI = {
     aiApi.post('/chatbot/message', { message, sessionId, language }),
   getHistory:  (sessionId) => aiApi.get(`/chatbot/history/${sessionId}`),
   clearHistory:(sessionId) => aiApi.delete(`/chatbot/history/${sessionId}`),
+  transcribeVoice: (audioBase64, language) => aiApi.post('/chatbot/voice/transcribe', { audioBase64, language }),
 };
 
 export const cropAPI = {
