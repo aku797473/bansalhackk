@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-  phone:    { type: String, required: true, unique: true, index: true },
-  password: { type: String, required: true },
+  phone:    { type: String, unique: true, sparse: true, index: true }, // Optional, but unique if present
+  password: { type: String }, // Optional for OAuth users
   name:     { type: String, default: '' },
   email:    { type: String, index: { unique: false, sparse: true } }, // Explicitly non-unique and sparse
+  googleId: { type: String, unique: true, sparse: true, index: true }, // Unique ID for Google Login
   role:  { 
     type: String, 
     enum: ['farmer', 'seller', 'labor', 'buyer', 'labour', 'admin'], 

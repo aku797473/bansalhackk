@@ -12,7 +12,8 @@
     { "src": "/api/labour/(.*)", "dest": "/api/labour.js" },
     { "src": "/api/buyer/(.*)", "dest": "/api/buyer.js" },
     { "src": "/api/payment/(.*)", "dest": "/api/payment.js" },
-    { "src": "/api/ai/(.*)", "dest": "/api/ai.js" },
+    { "src": "/api/auth/(.*)", "dest": "/api/auth.js" },
+    { "src": "/api/users/(.*)", "dest": "/api/users.js" },
     { "src": "/api/(.*)", "dest": "/api/$1" },
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }

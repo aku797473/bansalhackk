@@ -76,7 +76,7 @@
     "steps_badge": "Workflow",
     "steps_title": "HOW IT WORKS",
     "steps": {
-      "01": { "title": "Secure Access", "desc": "Create your verified farmer profile in seconds with Clerk security." },
+      "01": { "title": "Secure Access", "desc": "Create your verified farmer profile in seconds with JWT security." },
       "02": { "title": "Data Sync", "desc": "Sync with live IMD weather satellites and Agmarknet mandi nodes." },
       "03": { "title": "Grow Fast", "desc": "Receive AI-driven scientific advice to maximize your crop yields." }
     },
@@ -114,7 +114,7 @@
     "farmer_desc": "I grow crops",
     "buyer_desc": "I buy produce",
     "labour_desc": "I provide work",
-    "secure_by_clerk": "SECURE BY CLERK"
+    "secure_by_clerk": "SECURE BY JWT"
   },
   "dashboard": {
     "greeting_morning": "Good Morning",

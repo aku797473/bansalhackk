@@ -43,7 +43,7 @@ self.addEventListener('fetch', (event) => {
   // Only cache GET requests
   if (request.method !== 'GET') return;
 
-  // Skip cross-origin requests (like Clerk or Gemini API)
+  // Skip cross-origin requests (like external API services)
   // unless they are for images/fonts
   if (!request.url.startsWith(self.location.origin) && 
       !request.url.includes('fonts.googleapis.com') &&

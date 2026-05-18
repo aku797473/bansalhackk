@@ -72,6 +72,26 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const loginWithGoogle = async (email, name, googleId) => {
+    try {
+      const { data } = await authAPI.loginWithGoogle(email, name, googleId);
+      if (data.success) {
+        localStorage.setItem('sk_token', data.accessToken);
+        localStorage.setItem('sk_refresh', data.refreshToken);
+        setTokenProvider(() => Promise.resolve(data.accessToken));
+        
+        const userData = { ...data.user, id: data.user.id || data.user._id };
+        setUser(userData);
+        toast.success('Access Authenticated via Google');
+        return userData;
+      }
+    } catch (error) {
+      const msg = error.response?.data?.message || 'Google Authentication failed';
+      toast.error(msg);
+      throw error;
+    }
+  };
+
   const logout = async () => {
     const refreshToken = localStorage.getItem('sk_refresh');
     try {
@@ -103,6 +123,7 @@ export function AuthProvider({ children }) {
       loading, 
       login,
       register,
+      loginWithGoogle,
       logout, 
       updateUser, 
       isAuth: !!user,

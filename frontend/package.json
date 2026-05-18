@@ -10,7 +10,6 @@
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
-    "@clerk/clerk-react": "^5.61.6",
     "@googlemaps/js-api-loader": "^1.16.2",
     "@gsap/react": "^2.1.2",
     "@phosphor-icons/react": "^2.1.10",

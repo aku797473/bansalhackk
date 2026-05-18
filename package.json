@@ -10,7 +10,6 @@
     "concurrently": "^8.2.2"
   },
   "dependencies": {
-    "@clerk/express": "^2.1.12",
     "@google/generative-ai": "^0.21.0",
     "axios": "^1.6.0",
     "bcryptjs": "^2.4.3",

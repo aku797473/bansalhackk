@@ -74,11 +74,61 @@ router.post('/login', async (req, res) => {
       success: true,
       accessToken,
       refreshToken,
-      user: { id: user._id, phone: user.phone, name: user.name, role: user.role },
+      user: { id: user._id, phone: user.phone || '', name: user.name, role: user.role },
     });
   } catch (err) {
     console.error('login error:', err);
     res.status(500).json({ success: false, message: 'Login failed' });
+  }
+});
+
+// POST /auth/google
+router.post('/google', async (req, res) => {
+  try {
+    const { email, name = '', googleId } = req.body;
+    if (!googleId) {
+      return res.status(400).json({ success: false, message: 'Google ID is required' });
+    }
+    
+    // Find user by Google ID or by Email
+    let user = await AuthUser.findOne({ googleId });
+    if (!user && email) {
+      user = await AuthUser.findOne({ email });
+      if (user) {
+        // Link Google ID to existing user
+        user.googleId = googleId;
+        if (!user.name) user.name = name;
+        await user.save();
+      }
+    }
+    
+    // If user does not exist, create new user
+    if (!user) {
+      user = new AuthUser({
+        email,
+        name,
+        googleId,
+        role: 'farmer' // Default role
+      });
+      await user.save();
+    }
+    
+    const payload = { userId: user._id.toString(), phone: user.phone || '', email: user.email || '', role: user.role };
+    const { accessToken, refreshToken } = generateTokens(payload);
+    
+    user.refreshTokens = [...(user.refreshTokens || []).slice(-4), refreshToken];
+    user.lastLoginAt = new Date();
+    await user.save();
+    
+    res.json({
+      success: true,
+      accessToken,
+      refreshToken,
+      user: { id: user._id, phone: user.phone || '', email: user.email || '', name: user.name, role: user.role },
+    });
+  } catch (err) {
+    console.error('Google Auth Error:', err);
+    res.status(500).json({ success: false, message: 'Google Authentication failed' });
   }
 });
 

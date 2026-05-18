@@ -36,9 +36,9 @@ export const setTokenProvider = (fn) => { tokenProvider = fn; };
 
 // ─── Auth Hub ─────────────────────────────────────
 export const authAPI = {
-  // Updated to use Phone-based authentication
   login:      (phone, password) => authApi.post('/auth/login', { phone, password }),
   register:   (name, phone, password, role) => authApi.post('/auth/register', { name, phone, password, role }),
+  loginWithGoogle: (email, name, googleId) => authApi.post('/auth/google', { email, name, googleId }),
   refresh:    (refreshToken) => authApi.post('/auth/refresh', { refreshToken }),
   logout:     (refreshToken) => authApi.post('/auth/logout', { refreshToken }),
   me:         () => authApi.get('/auth/me'),

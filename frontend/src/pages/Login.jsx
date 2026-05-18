@@ -5,9 +5,11 @@ import ThreeBackground from '../components/ThreeBackground';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { Eye, EyeOff, ShieldCheck, UserPlus, Fingerprint } from 'lucide-react';
+import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { auth as firebaseAuth } from '../config/firebase';
 
 export default function Login() {
-  const { login, register } = useAuth();
+  const { login, register, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState('login'); 
@@ -18,6 +20,26 @@ export default function Login() {
     phone: '',
     password: ''
   });
+
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    const id = toast.loading('Connecting Google Account...');
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(firebaseAuth, provider);
+      const user = result.user;
+      
+      await loginWithGoogle(user.email, user.displayName, user.uid);
+      toast.success('Google Access Verified', { id });
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Google Sign-in failed:', error);
+      const msg = error.response?.data?.message || error.message || 'Google Auth Cancelled';
+      toast.error(msg, { id });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -176,6 +198,33 @@ export default function Login() {
             {loading ? 'WAIT...' : mode === 'login' ? 'LOGIN →' : 'REGISTER →'}
           </button>
         </form>
+
+        <button
+          type="button"
+          onClick={handleGoogleLogin}
+          disabled={loading}
+          className="w-full mb-4 py-4.5 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-white text-[10px] font-black uppercase tracking-[0.4em] rounded-2xl shadow-md hover:scale-102 active:scale-98 transition-all disabled:opacity-50 flex items-center justify-center gap-3"
+        >
+          <svg className="w-5 h-5" viewBox="0 0 24 24">
+            <path
+              fill="#EA4335"
+              d="M12 5.04c1.66 0 3.2.57 4.38 1.69l3.27-3.27C17.67 1.63 14.97 1 12 1 7.35 1 3.39 3.65 1.41 7.54l3.86 3C6.2 7.74 8.89 5.04 12 5.04z"
+            />
+            <path
+              fill="#4285F4"
+              d="M23.49 12.27c0-.81-.07-1.59-.2-2.36H12v4.51h6.46c-.28 1.48-1.12 2.74-2.38 3.58l3.7 2.87c2.16-1.99 3.41-4.91 3.41-8.6z"
+            />
+            <path
+              fill="#FBBC05"
+              d="M5.27 14.26c-.25-.74-.39-1.53-.39-2.36s.14-1.62.39-2.36l-3.86-3C.61 8.08 0 9.96 0 12s.61 3.92 1.41 5.46l3.86-3z"
+            />
+            <path
+              fill="#34A853"
+              d="M12 23c3.24 0 5.97-1.07 7.96-2.91l-3.7-2.87c-1.08.72-2.47 1.15-4.26 1.15-3.11 0-5.8-2.7-6.73-5.5l-3.86 3C3.39 20.35 7.35 23 12 23z"
+            />
+          </svg>
+          Sign In with Google
+        </button>
 
         <button
           onClick={quickLogin}
