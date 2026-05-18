@@ -79,7 +79,12 @@ const buyerRoutes      = safeRequire('./services/buyer-service/src/routes/buyer'
 if (authRoutes) app.use('/api/auth', authRoutes);
 
 app.get('/api/wake', (req, res) => {
-  res.json({ status: 'ok', mode: 'unified' });
+  res.json({ 
+    status: 'ok', 
+    mode: 'unified',
+    dbState: mongoose.connection.readyState,
+    hasMongo: !!process.env.MONGODB_URI
+  });
 });
 
 // ─── Microservice Routes ────────────────────────────
