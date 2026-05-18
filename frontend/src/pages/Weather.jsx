@@ -48,54 +48,60 @@ export default function Weather() {
   const { data, isLoading: loading, refetch, isFetching: searching } = useQuery({
     queryKey: ['weather', searchQuery, i18n.language, 'v9'],
     queryFn: async () => {
-      const activeLang = i18n.language || 'en';
-      if (searchQuery) {
-        const res = await weatherAPI.getByCity(searchQuery, activeLang);
-        return res.data.data;
-      }
-
-      const getPosition = () => new Promise((resolve) => {
-        if (!navigator.geolocation) return resolve(null);
-        const timer = setTimeout(() => resolve(null), 1500);
-        navigator.geolocation.getCurrentPosition(
-          pos => { clearTimeout(timer); resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }); },
-          () => { clearTimeout(timer); resolve(null); },
-          { timeout: 1500, maximumAge: 600000 }
-        );
-      });
-
-      const pos = await getPosition();
-      const lat = pos?.lat || 24.6005;
-      const lon = pos?.lon || 80.8322;
-
-      const res = await weatherAPI.getCurrent(lat, lon, activeLang);
-      const d = res.data.data;
-      
-      if (d && (!d.forecast || d.forecast.length === 0)) {
-        d.forecast = FALLBACK_WEATHER.forecast; 
-      } else if (d && d.forecast && d.forecast.length < 7) {
-        while (d.forecast.length < 7) {
-          const last = d.forecast[d.forecast.length - 1];
-          const prev = d.forecast[d.forecast.length - 2] || last;
-          const nextDate = new Date(last.date);
-          nextDate.setDate(nextDate.getDate() + 1);
-          d.forecast.push({
-            date:      nextDate.toISOString().split('T')[0],
-            tempMax:   Math.round((last.tempMax + prev.tempMax) / 2),
-            tempMin:   Math.round((last.tempMin + prev.tempMin) / 2),
-            description: last.description,
-            icon:        last.icon,
-            humidity:    Math.round((last.humidity + prev.humidity) / 2),
-            estimated: true,
-          });
+      try {
+        const activeLang = i18n.language || 'en';
+        if (searchQuery) {
+          const res = await weatherAPI.getByCity(searchQuery, activeLang);
+          return res.data.data || FALLBACK_WEATHER;
         }
+
+        const getPosition = () => new Promise((resolve) => {
+          if (!navigator.geolocation) return resolve(null);
+          const timer = setTimeout(() => resolve(null), 1500);
+          navigator.geolocation.getCurrentPosition(
+            pos => { clearTimeout(timer); resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }); },
+            () => { clearTimeout(timer); resolve(null); },
+            { timeout: 1500, maximumAge: 600000 }
+          );
+        });
+
+        const pos = await getPosition();
+        const lat = pos?.lat || 24.6005;
+        const lon = pos?.lon || 80.8322;
+
+        const res = await weatherAPI.getCurrent(lat, lon, activeLang);
+        const d = res.data.data;
+        
+        if (d && (!d.forecast || d.forecast.length === 0)) {
+          d.forecast = FALLBACK_WEATHER.forecast; 
+        } else if (d && d.forecast && d.forecast.length < 7) {
+          while (d.forecast.length < 7) {
+            const last = d.forecast[d.forecast.length - 1];
+            const prev = d.forecast[d.forecast.length - 2] || last;
+            const nextDate = new Date(last.date);
+            nextDate.setDate(nextDate.getDate() + 1);
+            d.forecast.push({
+              date:      nextDate.toISOString().split('T')[0],
+              tempMax:   Math.round((last.tempMax + prev.tempMax) / 2),
+              tempMin:   Math.round((last.tempMin + prev.tempMin) / 2),
+              description: last.description,
+              icon:        last.icon,
+              humidity:    Math.round((last.humidity + prev.humidity) / 2),
+              estimated: true,
+            });
+          }
+        }
+        return d || FALLBACK_WEATHER;
+      } catch (err) {
+        console.warn('Weather API unavailable, using fallback:', err.message);
+        return FALLBACK_WEATHER;
       }
-      return d;
     },
     staleTime: 10 * 60 * 1000,
     gcTime:    15 * 60 * 1000,
     refetchOnWindowFocus: false,
     retry: 1,
+    placeholderData: FALLBACK_WEATHER,
   });
 
   const displayData = data || FALLBACK_WEATHER;
