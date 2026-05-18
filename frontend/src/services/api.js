@@ -55,6 +55,7 @@ export const userAPI = {
   saveProfile:    (data) => authApi.post('/users/profile', data),
   updateLanguage: (language) => authApi.patch('/users/language', { language }),
   updateLocation: (loc) => authApi.patch('/users/location', loc),
+  submitFeedback: (data) => authApi.post('/users/feedback', data),
 };
 
 // ─── AI Hub ───────────────────────────────────────

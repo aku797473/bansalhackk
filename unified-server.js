@@ -53,6 +53,7 @@ const safeRequire = (path, name) => {
 // PRE-LOAD ALL MODELS
 safeRequire('./services/auth-service/src/models/AuthUser', 'Model:AuthUser');
 safeRequire('./services/user-service/src/models/UserProfile', 'Model:UserProfile');
+safeRequire('./services/user-service/src/models/Feedback', 'Model:Feedback');
 safeRequire('./services/labour-service/src/models/Job', 'Model:Job');
 safeRequire('./services/chatbot-service/src/models/ChatHistory', 'Model:ChatHistory');
 safeRequire('./services/weather-service/src/models/WeatherHistory', 'Model:WeatherHistory');

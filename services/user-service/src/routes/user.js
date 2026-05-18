@@ -135,4 +135,28 @@ router.get('/all', async (req, res) => {
   }
 });
 
+// POST /users/feedback
+router.post('/feedback', async (req, res) => {
+  try {
+    const { userId } = getUserInfo(req);
+    const { rating, suggestion, feature, name } = req.body;
+    
+    // We import locally to avoid circular dependencies if any
+    const Feedback = require('../models/Feedback');
+    
+    const feedback = new Feedback({
+      userId: userId || 'anonymous',
+      name: name || 'Anonymous Farmer',
+      rating,
+      suggestion,
+      feature: feature || 'general'
+    });
+    
+    await feedback.save();
+    res.status(201).json({ success: true, message: 'Feedback submitted successfully' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 module.exports = router;
