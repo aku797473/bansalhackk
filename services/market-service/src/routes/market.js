@@ -87,6 +87,8 @@ async function fetchAIMarketData(state, district, commodity) {
 // GET /market/prices
 router.get('/prices', async (req, res) => {
   try {
+    const { state, district, commodity } = req.query;
+    const userId = req.headers['x-user-id'] || 'anonymous';
     // 1. Try to get REAL Government data from Redis
     const cacheKey = `market:prices:${(state || '').toLowerCase()}`;
     const isRedisReady = redis.status === 'ready';

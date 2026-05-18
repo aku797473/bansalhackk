@@ -47,7 +47,6 @@ export default function Navbar() {
     { to: '/labour',           label: t('nav.labour') },
     { to: '/buyer',            label: t('nav.buyer') },
     { to: '/profit-predictor', label: t('nav.profit_predictor') },
-    { to: '/feedback',         label: t('nav.feedback') },
     { to: '/map',              label: t('nav.map') },
     { to: '/news',             label: t('nav.news') },
     { to: '/schemes',          label: t('nav.schemes') },

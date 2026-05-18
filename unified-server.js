@@ -57,6 +57,9 @@ safeRequire('./services/labour-service/src/models/Job', 'Model:Job');
 safeRequire('./services/chatbot-service/src/models/ChatHistory', 'Model:ChatHistory');
 safeRequire('./services/weather-service/src/models/WeatherHistory', 'Model:WeatherHistory');
 safeRequire('./services/market-service/src/models/MarketHistory', 'Model:MarketHistory');
+safeRequire('./services/buyer-service/src/models/Buyer', 'Model:Buyer');
+safeRequire('./services/buyer-service/src/models/Listing', 'Model:Listing');
+safeRequire('./services/buyer-service/src/models/Order', 'Model:Order');
 
 const authRoutes       = safeRequire('./services/auth-service/src/routes/auth', 'auth');
 const userRoutes       = safeRequire('./services/user-service/src/routes/user', 'user');

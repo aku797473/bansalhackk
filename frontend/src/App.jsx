@@ -39,7 +39,6 @@ const News        = lazy(() => import('./pages/News'));
 const Schemes     = lazy(() => import('./pages/Schemes'));
 const Buyer       = lazy(() => import('./pages/BuyerPortal'));
 const ProfitPredictor = lazy(() => import('./pages/ProfitPredictor'));
-const Feedback    = lazy(() => import('./pages/Feedback'));
 const SOS         = lazy(() => import('./pages/SOS'));
 
 function ProtectedRoute({ children }) {
@@ -129,7 +128,6 @@ export default function App() {
                   <Route path="/schemes"    element={<ProtectedRoute><Schemes /></ProtectedRoute>} />
                   <Route path="/buyer"      element={<ProtectedRoute><Buyer /></ProtectedRoute>} />
                   <Route path="/profit-predictor" element={<ProtectedRoute><ProfitPredictor /></ProtectedRoute>} />
-                  <Route path="/feedback"   element={<ProtectedRoute><Feedback /></ProtectedRoute>} />
                   <Route path="/sos"        element={<ProtectedRoute><SOS /></ProtectedRoute>} />
                   <Route path="/profile"    element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                   <Route path="*"           element={<Navigate to="/" replace />} />
