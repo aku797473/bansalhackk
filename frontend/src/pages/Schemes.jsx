@@ -29,9 +29,9 @@ export default function Schemes() {
   const lang = i18n.language === 'hi' ? 'hi' : 'en';
 
   const { data: response, isLoading } = useQuery({
-    queryKey: ['schemes'],
+    queryKey: ['schemes', lang],
     queryFn: async () => {
-      const { data } = await schemesAPI.getSchemes();
+      const { data } = await schemesAPI.getSchemes(lang);
       return data;
     },
     retry: 1,

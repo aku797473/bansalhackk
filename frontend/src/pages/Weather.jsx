@@ -46,10 +46,11 @@ export default function Weather() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const { data, isLoading: loading, refetch, isFetching: searching } = useQuery({
-    queryKey: ['weather', searchQuery, 'v8'],
+    queryKey: ['weather', searchQuery, i18n.language, 'v9'],
     queryFn: async () => {
+      const activeLang = i18n.language || 'en';
       if (searchQuery) {
-        const res = await weatherAPI.getByCity(searchQuery);
+        const res = await weatherAPI.getByCity(searchQuery, activeLang);
         return res.data.data;
       }
 
@@ -67,7 +68,7 @@ export default function Weather() {
       const lat = pos?.lat || 24.6005;
       const lon = pos?.lon || 80.8322;
 
-      const res = await weatherAPI.getCurrent(lat, lon);
+      const res = await weatherAPI.getCurrent(lat, lon, activeLang);
       const d = res.data.data;
       
       if (d && (!d.forecast || d.forecast.length === 0)) {

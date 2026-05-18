@@ -428,3 +428,22 @@
 .shadow-3xl {
   box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.3);
 }
+
+/* ─── Custom Loading Animations ─────────────────────────── */
+@keyframes progress-indeterminate {
+  0% { left: -35%; right: 100%; }
+  60% { left: 100%; right: -90%; }
+  100% { left: 100%; right: -90%; }
+}
+.animate-progress-indeterminate {
+  position: absolute;
+  animation: progress-indeterminate 1.8s infinite cubic-bezier(0.65, 0.815, 0.735, 0.395);
+}
+
+.animate-spin-slow {
+  animation: spin 6s linear infinite;
+}
+.duration-3000 {
+  animation-duration: 3s !important;
+}
+

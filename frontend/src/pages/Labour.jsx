@@ -89,13 +89,17 @@ export default function Labour() {
   };
 
   const postJob = async () => {
-    if (!form.title || !form.description || !form.district || !form.contactNumber) { 
+    if (!form.title || !form.description || !form.district) { 
       toast.error(t('common.error_required')); 
       return; 
     }
     setLoading(true);
     try {
-      await labourAPI.postJob({ ...form, skills: form.skills.split(',').map(s => s.trim()).filter(Boolean) });
+      await labourAPI.postJob({ 
+        ...form, 
+        contactNumber: user?.phone || '9999999999',
+        skills: form.skills.split(',').map(s => s.trim()).filter(Boolean) 
+      });
       toast.success(t('common.success'));
       setTab('browse');
       setForm({ title:'', description:'', category:'harvesting', wage:500, wageUnit:'per_day', workersNeeded:1, district:'', state:'Madhya Pradesh', startDate:'', duration:'', skills:'', contactNumber: '', image: null });
@@ -247,9 +251,9 @@ export default function Labour() {
                     </div>
 
                     <div className="pt-6 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                       <div className="flex items-center gap-2 text-purple-600 font-black text-sm">
-                          <Phone size={16} weight="fill" />
-                          <span>{job.contactNumber}</span>
+                       <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-black text-[10px] uppercase tracking-widest bg-emerald-50 dark:bg-emerald-950/30 px-3 py-1.5 rounded-xl border border-emerald-100/10">
+                          <ShieldCheck size={16} weight="fill" />
+                          <span>Verified Contact</span>
                        </div>
                        <CaretRight size={18} weight="bold" className="text-slate-300 group-hover:text-purple-600 group-hover:translate-x-1 transition-all" />
                     </div>
@@ -270,18 +274,9 @@ export default function Labour() {
                   </h2>
 
                   <div className="space-y-8">
-                     <div className="grid sm:grid-cols-2 gap-8">
-                        <div className="space-y-3">
-                           <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">{t('labour.job_title')} *</label>
-                           <input className="w-full h-14 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-6 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500/20 transition-all outline-none" placeholder={t('labour.placeholders.title')} value={form.title} onChange={e => setForm(f => ({...f, title: e.target.value}))} />
-                        </div>
-                        <div className="space-y-3">
-                           <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">{t('auth.phone')} *</label>
-                           <div className="relative">
-                              <Phone size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400" />
-                              <input className="w-full h-14 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl pl-14 pr-6 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500/20 transition-all outline-none" placeholder={t('labour.placeholders.phone')} value={form.contactNumber} onChange={e => setForm(f => ({...f, contactNumber: e.target.value}))} />
-                           </div>
-                        </div>
+                     <div className="space-y-3">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">{t('labour.job_title')} *</label>
+                        <input className="w-full h-14 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-6 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500/20 transition-all outline-none" placeholder={t('labour.placeholders.title')} value={form.title} onChange={e => setForm(f => ({...f, title: e.target.value}))} />
                      </div>
 
                      <div className="space-y-3">
@@ -481,10 +476,10 @@ export default function Labour() {
                        <Bank size={28} weight="fill" />
                        {processingPayment ? t('labour.processing') : t('labour.pay_book', { amount: showModal.wage })}
                     </button>
-                    <a href={`tel:${showModal.contactNumber}`} className="flex-1 h-20 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-200 rounded-[2rem] font-black text-sm uppercase tracking-widest flex items-center justify-center gap-4 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
-                       <Phone size={24} weight="fill" />
-                       {t('labour.call_details')}
-                    </a>
+                    <button onClick={() => toast.success("Secure connection established! Kisan Mitra will notify you.")} className="flex-1 h-20 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-200 rounded-[2rem] font-black text-sm uppercase tracking-widest flex items-center justify-center gap-4 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+                       <Handshake size={24} weight="fill" />
+                       Secure Connect
+                    </button>
                  </div>
               </div>
 

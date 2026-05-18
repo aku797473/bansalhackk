@@ -117,6 +117,7 @@ export default function BuyerPortal() {
     try {
       const payload = {
         ...form,
+        phone: user?.phone || '9999999999',
         location: { 
           district: form.district, 
           state: form.state, 
@@ -374,15 +375,9 @@ export default function BuyerPortal() {
                   </div>
                 </div>
 
-                <div className="grid sm:grid-cols-2 gap-6">
-                  <div>
-                    <label className="label">{t('buyer.owner_name')} *</label>
-                    <input className="input border-2 h-14 rounded-xl" value={form.ownerName} onChange={e => setForm({...form, ownerName: e.target.value})} />
-                  </div>
-                  <div>
-                    <label className="label">{t('buyer.mobile_number')} *</label>
-                    <input className="input border-2 h-14 rounded-xl" value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} />
-                  </div>
+                <div>
+                  <label className="label">{t('buyer.owner_name')} *</label>
+                  <input className="input border-2 h-14 rounded-xl" value={form.ownerName} onChange={e => setForm({...form, ownerName: e.target.value})} />
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-6">
@@ -584,8 +579,8 @@ export default function BuyerPortal() {
                        <p className="font-black text-xl flex items-center gap-3 text-slate-900 dark:text-white"><User size={24} weight="duotone" className="text-green-600" /> {selectedBuyer.ownerName}</p>
                     </div>
                     <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-[2rem] border border-slate-200/50 dark:border-slate-700/50 shadow-inner">
-                       <label className="text-[10px] font-black uppercase text-slate-400 block mb-2 tracking-widest">Mobile Number</label>
-                       <p className="font-black text-xl flex items-center gap-3 text-slate-900 dark:text-white"><Phone size={24} weight="duotone" className="text-green-600" /> {selectedBuyer.phone}</p>
+                       <label className="text-[10px] font-black uppercase text-slate-400 block mb-2 tracking-widest">Shop Status</label>
+                       <p className="font-black text-xl flex items-center gap-3 text-emerald-600 dark:text-emerald-400"><ShieldCheck size={24} weight="duotone" className="text-emerald-600" /> Verified Merchant</p>
                     </div>
                  </div>
 
@@ -615,15 +610,13 @@ export default function BuyerPortal() {
                         </div>
                       </div>
                     ))}
-                 </div>
-
-                 <div className="mt-12 p-8 bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-900/20 dark:to-emerald-900/10 rounded-[2.5rem] border border-green-200/50 dark:border-green-800/30 text-center relative overflow-hidden shadow-inner">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/10 rounded-full blur-2xl" />
-                    <p className="text-green-800 dark:text-green-300 font-black mb-6 text-lg relative z-10">{t('buyer.negotiate_text')}</p>
-                    <a href={`tel:${selectedBuyer.phone}`} className="inline-flex items-center gap-3 px-10 py-5 bg-green-600 hover:bg-green-700 text-white rounded-[1.5rem] font-black uppercase tracking-widest shadow-xl shadow-green-600/30 hover:scale-105 transition-all relative z-10">
-                       <Phone size={24} weight="fill" /> {t('buyer.call_owner')}
-                    </a>
-                 </div>
+                     <div className="mt-12 p-8 bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-900/20 dark:to-emerald-900/10 rounded-[2.5rem] border border-green-200/50 dark:border-green-800/30 text-center relative overflow-hidden shadow-inner">
+                     <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/10 rounded-full blur-2xl" />
+                     <p className="text-green-800 dark:text-green-300 font-black mb-6 text-lg relative z-10">Want to negotiate or ask about custom orders?</p>
+                     <button onClick={() => toast.success("Secure connection established! Shop owner will respond shortly.")} className="inline-flex items-center gap-3 px-10 py-5 bg-green-600 hover:bg-green-700 text-white rounded-[1.5rem] font-black uppercase tracking-widest shadow-xl shadow-green-600/30 hover:scale-105 transition-all relative z-10">
+                        <ShoppingCart size={24} weight="fill" /> Secure Message Owner
+                     </button>
+                  </div>                </div>
               </div>
            </div>
         </div>

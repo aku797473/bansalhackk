@@ -34,27 +34,36 @@ const OWM_KEY = process.env.OPENWEATHER_API_KEY || 'demo';
 const CACHE_TTL = 30 * 60; // 30 minutes
 
 // Mock weather data for demo (when API key not set)
-const getMockWeather = (lat, lon) => ({
-  city:        'Demo Location',
-  country:     'IN',
-  lat, lon,
-  temperature: 32,
-  feelsLike:   35,
-  humidity:    68,
-  windSpeed:   12,
-  description: 'Partly Cloudy',
-  icon:        '02d',
-  alerts:      [],
-  forecast: Array.from({ length: 5 }, (_, i) => ({
-    date:        new Date(Date.now() + i * 86400000).toISOString().split('T')[0],
-    tempMax:     30 + Math.floor(Math.random() * 8),
-    tempMin:     22 + Math.floor(Math.random() * 5),
-    description: ['Sunny', 'Cloudy', 'Light Rain', 'Thunderstorm', 'Clear'][i],
-    icon:        ['01d', '03d', '10d', '11d', '01n'][i],
-    humidity:    60 + Math.floor(Math.random() * 25),
-  })),
-  isMock: true,
-});
+const MOCK_DESCRIPTIONS = {
+  en: ['Sunny', 'Cloudy', 'Light Rain', 'Thunderstorm', 'Clear', 'Partly Cloudy'],
+  hi: ['धूप', 'बादल छाए रहेंगे', 'हल्की बारिश', 'बिजली कड़कना', 'साफ मौसम', 'आंशिक रूप से बादल']
+};
+
+const getMockWeather = (lat, lon, lang = 'en') => {
+  const isHi = String(lang).startsWith('hi');
+  const descList = isHi ? MOCK_DESCRIPTIONS.hi : MOCK_DESCRIPTIONS.en;
+  return {
+    city:        isHi ? 'प्रदर्शनी स्थान' : 'Demo Location',
+    country:     'IN',
+    lat, lon,
+    temperature: 32,
+    feelsLike:   35,
+    humidity:    68,
+    windSpeed:   12,
+    description: isHi ? 'आंशिक रूप से बादल' : 'Partly Cloudy',
+    icon:        '02d',
+    alerts:      [],
+    forecast: Array.from({ length: 5 }, (_, i) => ({
+      date:        new Date(Date.now() + i * 86400000).toISOString().split('T')[0],
+      tempMax:     30 + Math.floor(Math.random() * 8),
+      tempMin:     22 + Math.floor(Math.random() * 5),
+      description: descList[i % descList.length],
+      icon:        ['01d', '03d', '10d', '11d', '01n'][i % 5],
+      humidity:    60 + Math.floor(Math.random() * 25),
+    })),
+    isMock: true,
+  };
+};
 
 // GET /weather/history
 router.get('/history', async (req, res) => {
@@ -70,14 +79,15 @@ router.get('/history', async (req, res) => {
 // GET /weather/current?lat=28.6&lon=77.2
 router.get('/current', async (req, res) => {
   try {
-    const { lat, lon } = req.query;
+    const { lat, lon, lang } = req.query;
     if (!lat || !lon) {
       return res.status(400).json({ success: false, message: 'lat and lon are required' });
     }
 
     const userId = req.headers['x-user-id'] || 'anonymous';
+    const activeLang = lang || 'en';
 
-    const cacheKey = `weather:current:${parseFloat(lat).toFixed(2)}:${parseFloat(lon).toFixed(2)}`;
+    const cacheKey = `weather:current:${parseFloat(lat).toFixed(2)}:${parseFloat(lon).toFixed(2)}:${activeLang}`;
     const cached = await rGet(cacheKey);
     if (cached) {
       const data = JSON.parse(cached);
@@ -87,17 +97,17 @@ router.get('/current', async (req, res) => {
 
     if (!OWM_KEY || OWM_KEY === 'demo' || OWM_KEY.includes('your_')) {
       console.log('☁️ Weather: Using Mock Data (No API Key)');
-      const mock = getMockWeather(lat, lon);
+      const mock = getMockWeather(lat, lon, activeLang);
       await rSet(cacheKey, CACHE_TTL, JSON.stringify(mock));
       WeatherHistory.create({ userId, lat, lon, city: mock.city, temperature: mock.temperature, description: mock.description, searchType: 'current' }).catch(console.error);
       return res.json({ success: true, data: mock });
     }
 
     // Real OpenWeatherMap API (5s timeout)
-    console.log(`📡 Weather: Fetching REAL data for ${lat}, ${lon}...`);
+    console.log(`📡 Weather: Fetching REAL data for ${lat}, ${lon} with lang ${activeLang}...`);
     const [current, forecast] = await Promise.all([
-      owmAxios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OWM_KEY}&units=metric`),
-      owmAxios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${OWM_KEY}&units=metric&cnt=56`),
+      owmAxios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OWM_KEY}&units=metric&lang=${activeLang}`),
+      owmAxios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${OWM_KEY}&units=metric&cnt=56&lang=${activeLang}`),
     ]);
 
     const c = current.data;
@@ -161,8 +171,8 @@ router.get('/current', async (req, res) => {
     res.json({ success: true, data: weatherData });
   } catch (err) {
     console.error('Weather API error (falling back to mock):', err.message);
-    const { lat, lon } = req.query;
-    const mock = getMockWeather(lat || 28.6, lon || 77.2);
+    const { lat, lon, lang } = req.query;
+    const mock = getMockWeather(lat || 28.6, lon || 77.2, lang || 'en');
     res.json({ success: true, data: mock, note: 'Using fallback data due to API error' });
   }
 });
@@ -170,12 +180,13 @@ router.get('/current', async (req, res) => {
 // GET /weather/by-city?city=Delhi
 router.get('/by-city', async (req, res) => {
   try {
-    const { city } = req.query;
+    const { city, lang } = req.query;
     if (!city) return res.status(400).json({ success: false, message: 'city is required' });
 
     const userId = req.headers['x-user-id'] || 'anonymous';
+    const activeLang = lang || 'en';
 
-    const cacheKey = `weather:city:${city.toLowerCase()}`;
+    const cacheKey = `weather:city:${city.toLowerCase()}:${activeLang}`;
     const cached = await rGet(cacheKey);
     if (cached) {
        const data = JSON.parse(cached);
@@ -184,15 +195,15 @@ router.get('/by-city', async (req, res) => {
     }
 
     if (!OWM_KEY || OWM_KEY === 'demo' || OWM_KEY.includes('your_')) {
-      const mock = { ...getMockWeather(28.6, 77.2), city };
+      const mock = { ...getMockWeather(28.6, 77.2, activeLang), city };
       await rSet(cacheKey, CACHE_TTL, JSON.stringify(mock));
       WeatherHistory.create({ userId, lat: mock.lat, lon: mock.lon, city: mock.city, temperature: mock.temperature, description: mock.description, searchType: 'by-city' }).catch(console.error);
       return res.json({ success: true, data: mock });
     }
 
     const [current, forecast] = await Promise.all([
-      owmAxios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${OWM_KEY}&units=metric`),
-      owmAxios.get(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${OWM_KEY}&units=metric&cnt=56`),
+      owmAxios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${OWM_KEY}&units=metric&lang=${activeLang}`),
+      owmAxios.get(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${OWM_KEY}&units=metric&cnt=56&lang=${activeLang}`),
     ]);
 
     const c = current.data;
@@ -244,8 +255,8 @@ router.get('/by-city', async (req, res) => {
     res.json({ success: true, data: result });
   } catch (err) {
     console.error('Weather API error (city fallback):', err.message);
-    const { city } = req.query;
-    const mock = { ...getMockWeather(28.6, 77.2), city: city || 'Unknown' };
+    const { city, lang } = req.query;
+    const mock = { ...getMockWeather(28.6, 77.2, lang || 'en'), city: city || 'Unknown' };
     res.json({ success: true, data: mock, note: 'Using fallback data due to API error' });
   }
 });

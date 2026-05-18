@@ -72,8 +72,8 @@ export const fertilizerAPI = {
 
 // ─── Info Hub ──────────────────────────────────────
 export const weatherAPI = {
-  getCurrent: (lat, lon) => infoApi.get(`/weather/current?lat=${lat}&lon=${lon}`),
-  getByCity:  (city) => infoApi.get(`/weather/by-city?city=${encodeURIComponent(city)}`),
+  getCurrent: (lat, lon, lang = 'en') => infoApi.get(`/weather/current?lat=${lat}&lon=${lon}&lang=${lang}`),
+  getByCity:  (city, lang = 'en') => infoApi.get(`/weather/by-city?city=${encodeURIComponent(city)}&lang=${lang}`),
 };
 
 export const marketAPI = {
@@ -89,7 +89,7 @@ export const newsAPI = {
 };
 
 export const schemesAPI = {
-  getSchemes: () => infoApi.get('/schemes'),
+  getSchemes: (lang = 'en') => infoApi.get(`/schemes?lang=${lang}`),
 };
 
 // ─── Business Hub ──────────────────────────────────

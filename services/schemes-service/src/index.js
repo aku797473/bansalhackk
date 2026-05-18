@@ -70,7 +70,20 @@ const schemes = [
 ];
 
 app.get('/schemes', (req, res) => {
-  res.json({ success: true, data: schemes });
+  const lang = req.query.lang || 'en';
+  const isHi = String(lang).startsWith('hi');
+  const formattedSchemes = schemes.map(s => ({
+    id: s.id,
+    title: isHi ? s.titleHi : s.title,
+    description: isHi ? s.descriptionHi : s.description,
+    benefit: isHi ? s.benefitHi : s.benefit,
+    tags: isHi ? s.tagsHi : s.tags,
+    iconName: s.iconName,
+    color: s.color,
+    bg: s.bg,
+    link: s.link
+  }));
+  res.json({ success: true, data: formattedSchemes });
 });
 
 app.get('/health', (req, res) => res.json({ status: 'ok', service: 'schemes-service' }));
