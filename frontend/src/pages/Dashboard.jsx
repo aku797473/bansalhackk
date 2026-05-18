@@ -30,7 +30,7 @@ export default function Dashboard() {
   const locale = i18n.language === 'hi' ? 'hi-IN' : 'en-US';
 
   const { data: weather } = useQuery({
-    queryKey: ['weather-current'],
+    queryKey: ['weather-current', 'v2'],
     queryFn: async () => {
       try {
         const getPosition = () => new Promise((resolve) => {
@@ -46,8 +46,13 @@ export default function Dashboard() {
         const lat = pos?.lat || 24.6005;
         const lon = pos?.lon || 80.8322;
 
-        const { data } = await weatherAPI.getCurrent(lat, lon);
-        return data.data || FALLBACK_WEATHER;
+        const fetchWithTimeout = (promise, ms) => Promise.race([
+          promise,
+          new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))
+        ]);
+
+        const res = await fetchWithTimeout(weatherAPI.getCurrent(lat, lon), 4000);
+        return res.data?.data || FALLBACK_WEATHER;
       } catch { return FALLBACK_WEATHER; }
     },
     staleTime: 10 * 60 * 1000,

@@ -209,7 +209,7 @@ export default function Weather() {
                       </div>
                       <p className="text-xl sm:text-3xl font-black text-sky-100 capitalize mt-4 flex items-center justify-center lg:justify-start gap-4">
                          {displayData.description} 
-                         <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+                         <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
                       </p>
                     </div>
                   </div>
