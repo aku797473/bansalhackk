@@ -158,8 +158,9 @@ export default function VoiceAssistant() {
     }
 
     // No match
+    toast(lang === 'hi' ? `सुना: "${text}" पर कोई कमांड नहीं मिली` : `Heard: "${text}" but no command matched`, { icon: '🤔' });
     speak(lang === 'hi' ? 'समझ नहीं आया, फिर कोशिश करें' : 'Not understood, please try again');
-    setStatus('idle');
+    setTimeout(() => setStatus('idle'), 2000); // Give user time to read the text
   }, [lang, navigate]);
 
   // ── Start / Stop listening using AI API ────────────────────────────────
@@ -202,8 +203,18 @@ export default function VoiceAssistant() {
           const res = await chatAPI.transcribeVoice(base64, lang);
           
           if (res.data?.success && res.data?.text) {
-             const text = res.data.text;
+             const text = res.data.text.trim();
+             
+             // Ignore known Whisper hallucinations for silence
+             const lower = text.toLowerCase();
+             if (text === "" || lower.includes("thank you") || lower.includes("thanks for watching") || lower.includes("subscribe")) {
+                toast.error(lang === 'hi' ? 'कोई आवाज़ सुनाई नहीं दी।' : 'No speech detected.');
+                setStatus('idle');
+                return;
+             }
+
              setTranscript(text);
+             toast.success(lang === 'hi' ? `सुना: ${text}` : `Heard: ${text}`, { icon: '🎤' });
              processCommand(text);
           } else {
              throw new Error('Transcription empty');
