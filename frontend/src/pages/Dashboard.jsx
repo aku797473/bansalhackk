@@ -30,16 +30,31 @@ export default function Dashboard() {
   const locale = i18n.language === 'hi' ? 'hi-IN' : 'en-US';
 
   const { data: weather } = useQuery({
-    queryKey: ['weather-current', 'v3'],
+    queryKey: ['weather-current', 'v4'],
     queryFn: async () => {
       try {
         const getPosition = () => new Promise((resolve) => {
-          if (!navigator.geolocation) return resolve(null);
-          const timer = setTimeout(() => resolve(null), 10000);
+          if (!navigator.geolocation) {
+            console.log("Dashboard Geolocation not supported by browser");
+            return resolve(null);
+          }
+          const timer = setTimeout(() => {
+            console.log("Dashboard Geolocation timeout triggered");
+            resolve(null);
+          }, 15000);
+          
           navigator.geolocation.getCurrentPosition(
-            pos => { clearTimeout(timer); resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }); },
-            () => { clearTimeout(timer); resolve(null); },
-            { timeout: 10000, maximumAge: 600000 }
+            pos => {
+              clearTimeout(timer);
+              console.log("Dashboard Location success:", pos);
+              resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude });
+            },
+            err => {
+              clearTimeout(timer);
+              console.log("Dashboard Location error:", err);
+              resolve(null);
+            },
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 300000 }
           );
         });
         const pos = await getPosition();
@@ -51,11 +66,16 @@ export default function Dashboard() {
           new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))
         ]);
 
-        const res = await fetchWithTimeout(weatherAPI.getCurrent(lat, lon), 8000);
+        const res = await fetchWithTimeout(weatherAPI.getCurrent(lat, lon), 15000);
+        console.log("Dashboard Weather Data fetched:", res.data?.data);
         return res.data?.data || FALLBACK_WEATHER;
-      } catch { return FALLBACK_WEATHER; }
+      } catch (err) {
+        console.warn('Dashboard weather load failed:', err.message);
+        return FALLBACK_WEATHER;
+      }
     },
     staleTime: 10 * 60 * 1000,
+    initialData: FALLBACK_WEATHER,
   });
 
   const { data: marketData } = useQuery({

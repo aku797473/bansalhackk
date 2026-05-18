@@ -46,7 +46,7 @@ export default function Weather() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const { data, isLoading: loading, refetch, isFetching: searching } = useQuery({
-    queryKey: ['weather', searchQuery, i18n.language, 'v11'],
+    queryKey: ['weather', searchQuery, i18n.language, 'v12'],
     queryFn: async () => {
       try {
         const activeLang = i18n.language || 'en';
@@ -56,17 +56,36 @@ export default function Weather() {
         ]);
 
         if (searchQuery) {
-          const res = await fetchWithTimeout(weatherAPI.getByCity(searchQuery, activeLang), 8000);
+          const res = await fetchWithTimeout(weatherAPI.getByCity(searchQuery, activeLang), 15000);
+          console.log("Weather Data (By City):", res.data?.data);
           return res.data.data || FALLBACK_WEATHER;
         }
 
         const getPosition = () => new Promise((resolve) => {
-          if (!navigator.geolocation) return resolve(null);
-          const timer = setTimeout(() => resolve(null), 10000);
+          if (!navigator.geolocation) {
+            console.log("Geolocation not supported by browser");
+            return resolve(null);
+          }
+          const timer = setTimeout(() => {
+            console.log("Geolocation timeout triggered");
+            resolve(null);
+          }, 15000);
+          
           navigator.geolocation.getCurrentPosition(
-            pos => { clearTimeout(timer); resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }); },
-            () => { clearTimeout(timer); resolve(null); },
-            { timeout: 10000, maximumAge: 600000 }
+            pos => {
+              clearTimeout(timer);
+              console.log("Location success:", pos);
+              resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude });
+            },
+            err => {
+              clearTimeout(timer);
+              console.log("Location error:", err);
+              if (err.code === err.PERMISSION_DENIED) {
+                toast.error("Location permission denied. Showing default weather.");
+              }
+              resolve(null);
+            },
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 300000 }
           );
         });
 
@@ -74,8 +93,9 @@ export default function Weather() {
         const lat = pos?.lat || 24.6005;
         const lon = pos?.lon || 80.8322;
 
-        const res = await fetchWithTimeout(weatherAPI.getCurrent(lat, lon, activeLang), 8000);
+        const res = await fetchWithTimeout(weatherAPI.getCurrent(lat, lon, activeLang), 15000);
         const d = res.data.data;
+        console.log("Weather Data (By Location):", d);
         
         if (d && (!d.forecast || d.forecast.length === 0)) {
           d.forecast = FALLBACK_WEATHER.forecast; 
@@ -92,7 +112,7 @@ export default function Weather() {
               description: last.description,
               icon:        last.icon,
               humidity:    Math.round((last.humidity + prev.humidity) / 2),
-              estimated: true,
+              estimated: false,
             });
           }
         }
@@ -106,7 +126,7 @@ export default function Weather() {
     gcTime:    15 * 60 * 1000,
     refetchOnWindowFocus: false,
     retry: 1,
-    placeholderData: FALLBACK_WEATHER,
+    initialData: FALLBACK_WEATHER,
   });
 
   const displayData = data || FALLBACK_WEATHER;
@@ -152,21 +172,21 @@ export default function Weather() {
             </p>
           </div>
           
-          <div className="flex items-center gap-3">
+          <form onSubmit={(e) => { e.preventDefault(); searchCity(); }} className="flex items-center gap-3 w-full lg:w-auto">
              <div className="relative group flex-1 sm:w-64">
                 <input 
                   className="w-full h-14 bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 rounded-2xl px-12 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all outline-none"
                   placeholder={t('weather.search_placeholder')}
                   value={citySearch} 
                   onChange={e => setCitySearch(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && searchCity()} 
                 />
                 <MagnifyingGlass size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-sky-500 transition-colors" />
              </div>
-             <button onClick={fetchByLocation} className="w-14 h-14 bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 rounded-2xl flex items-center justify-center text-slate-500 hover:text-sky-500 hover:border-sky-500 transition-all shadow-premium">
+             <button type="submit" className="hidden" />
+             <button type="button" onClick={fetchByLocation} className="w-14 h-14 bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 rounded-2xl flex items-center justify-center text-slate-500 hover:text-sky-500 hover:border-sky-500 transition-all shadow-premium">
                 <ArrowCounterClockwise size={22} weight="bold" className={clsx(searching && "animate-spin")} />
              </button>
-          </div>
+          </form>
         </div>
 
         {displayData && (
@@ -186,7 +206,7 @@ export default function Weather() {
 
             {/* Current Weather Card */}
             <div className="bg-gradient-to-br from-sky-400 via-blue-600 to-indigo-700 rounded-[3rem] p-8 sm:p-14 text-white shadow-2xl relative overflow-hidden group">
-              <div className="absolute -top-40 -right-40 w-[600px] h-[600px] bg-white/10 rounded-full blur-[100px] pointer-events-none group-hover:scale-110 transition-transform duration-1000" />
+              <div className="absolute -top-40 -right-40 w-[300px] h-[300px] sm:w-[600px] sm:h-[600px] bg-white/10 rounded-full blur-[60px] sm:blur-[100px] pointer-events-none group-hover:scale-110 transition-transform duration-1000" />
               <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
               
               <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-12 relative z-10">
