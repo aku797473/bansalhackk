@@ -80,8 +80,8 @@ export default function Navbar() {
             {primaryLinks.map(({ to, label }) => (
               <NavLink key={to} to={to}
                 className={({ isActive }) => clsx(
-                  'text-[13px] font-bold uppercase tracking-wider transition-all',
-                  isActive ? 'text-indigo-600 font-extrabold' : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                  'text-[15px] font-extrabold uppercase tracking-wide transition-all',
+                  isActive ? 'text-indigo-600' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
                 )}>
                 {label}
               </NavLink>
@@ -90,14 +90,14 @@ export default function Navbar() {
             <div className="relative">
               <button 
                 onClick={() => setMoreOpen(!moreOpen)} 
-                className={clsx("text-[13px] font-bold uppercase tracking-wider flex items-center gap-1 transition-colors", moreOpen ? 'text-indigo-600 font-extrabold' : 'text-slate-500 hover:text-slate-900 dark:hover:text-white')}
+                className={clsx("text-[15px] font-extrabold uppercase tracking-wide flex items-center gap-1 transition-colors", moreOpen ? 'text-indigo-600' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white')}
               >
                 {t('common.more')}
               </button>
               {moreOpen && (
                 <div className="absolute top-full right-0 mt-4 w-56 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-2xl p-2 animate-in fade-in slide-in-from-top-2">
                   {moreLinks.map(({ to, label }) => (
-                    <NavLink key={to} to={to} className="block px-4 py-3 text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-600 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-all">
+                    <NavLink key={to} to={to} className="block px-4 py-3 text-sm font-bold uppercase tracking-wider text-slate-500 hover:text-indigo-600 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-all">
                       {label}
                     </NavLink>
                   ))}
