@@ -28,6 +28,12 @@ const connectMongo = async () => {
   try {
     await mongoose.connect(uri, options);
     console.log('✅ User Service: MongoDB connected');
+    try {
+      const UserProfile = require('./models/UserProfile');
+      await UserProfile.collection.dropIndex('email_1').catch(() => {});
+      await UserProfile.collection.dropIndex('phone_1').catch(() => {});
+      console.log('🗑️  User Service: Dropped legacy unique email/phone indices in UserProfile');
+    } catch (e) {}
   } catch (err) {
     console.error('❌ User Service: MongoDB connection failed:', err.message);
     console.log('⚠️  Starting server anyway for resilience...');

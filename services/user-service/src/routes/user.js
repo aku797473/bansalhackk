@@ -61,7 +61,12 @@ router.get('/profile', async (req, res) => {
 
     res.json({ success: true, data: profile });
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    console.error('User GET Profile Error:', err);
+    res.status(500).json({ 
+      success: false, 
+      message: err.message, 
+      dbState: require('mongoose').connection.readyState 
+    });
   }
 });
 
@@ -94,7 +99,12 @@ router.post('/profile', async (req, res) => {
 
     res.json({ success: true, data: profile });
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    console.error('User POST Profile Error:', err);
+    res.status(500).json({ 
+      success: false, 
+      message: err.message, 
+      dbState: require('mongoose').connection.readyState 
+    });
   }
 });
 
