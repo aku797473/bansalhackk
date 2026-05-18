@@ -46,7 +46,7 @@ export default function Weather() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const { data, isLoading: loading, refetch, isFetching: searching } = useQuery({
-    queryKey: ['weather', searchQuery, i18n.language, 'v12'],
+    queryKey: ['weather', searchQuery, i18n.language, 'v13'],
     queryFn: async () => {
       try {
         const activeLang = i18n.language || 'en';
@@ -126,7 +126,6 @@ export default function Weather() {
     gcTime:    15 * 60 * 1000,
     refetchOnWindowFocus: false,
     retry: 1,
-    initialData: FALLBACK_WEATHER,
   });
 
   const displayData = data || FALLBACK_WEATHER;
@@ -182,10 +181,15 @@ export default function Weather() {
                 />
                 <MagnifyingGlass size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-sky-500 transition-colors" />
              </div>
-             <button type="submit" className="hidden" />
-             <button type="button" onClick={fetchByLocation} className="w-14 h-14 bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 rounded-2xl flex items-center justify-center text-slate-500 hover:text-sky-500 hover:border-sky-500 transition-all shadow-premium">
-                <ArrowCounterClockwise size={22} weight="bold" className={clsx(searching && "animate-spin")} />
-             </button>
+             {citySearch.trim() ? (
+               <button type="submit" className="w-14 h-14 bg-sky-600 text-white rounded-2xl flex items-center justify-center hover:bg-sky-700 transition-all shadow-premium shrink-0">
+                  <MagnifyingGlass size={22} weight="bold" />
+               </button>
+             ) : (
+               <button type="button" onClick={fetchByLocation} className="w-14 h-14 bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 rounded-2xl flex items-center justify-center text-slate-500 hover:text-sky-500 hover:border-sky-500 transition-all shadow-premium shrink-0">
+                  <ArrowCounterClockwise size={22} weight="bold" className={clsx(searching && "animate-spin")} />
+               </button>
+             )}
           </form>
         </div>
 

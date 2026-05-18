@@ -30,7 +30,7 @@ export default function Dashboard() {
   const locale = i18n.language === 'hi' ? 'hi-IN' : 'en-US';
 
   const { data: weather } = useQuery({
-    queryKey: ['weather-current', 'v4'],
+    queryKey: ['weather-current', 'v5'],
     queryFn: async () => {
       try {
         const getPosition = () => new Promise((resolve) => {
@@ -75,7 +75,6 @@ export default function Dashboard() {
       }
     },
     staleTime: 10 * 60 * 1000,
-    initialData: FALLBACK_WEATHER,
   });
 
   const { data: marketData } = useQuery({
