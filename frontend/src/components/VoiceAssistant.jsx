@@ -215,7 +215,25 @@ export default function VoiceAssistant() {
 
              setTranscript(text);
              toast.success(lang === 'hi' ? `सुना: ${text}` : `Heard: ${text}`, { icon: '🎤' });
-             processCommand(text);
+             
+             // Hybrid Intent Parsing: Try AI-based routing first!
+             const aiRouting = res.data.routing;
+             if (aiRouting && aiRouting.route) {
+                console.log(`[AI-Intent] Matched route: ${aiRouting.route}`);
+                const speakResponse = lang === 'hi' ? aiRouting.responseHi : aiRouting.responseEn;
+                speak(speakResponse);
+                setStatus('done');
+                setTimeout(() => {
+                  setIsOpen(false);
+                  setIsListening(false);
+                  setStatus('idle');
+                  setTranscript('');
+                  navigate(aiRouting.route);
+                }, 1200);
+             } else {
+                // Fallback to local keyword matching
+                processCommand(text);
+             }
           } else {
              throw new Error('Transcription empty');
           }
@@ -228,12 +246,12 @@ export default function VoiceAssistant() {
 
       mediaRecorder.start();
       
-      // Auto-stop after 6 seconds if user doesn't tap again
+      // Auto-stop after 3.5 seconds if user doesn't tap again
       setTimeout(() => {
          if (mediaRecorderRef.current?.state === 'recording') {
              mediaRecorderRef.current.stop();
          }
-      }, 6000);
+      }, 3500);
 
     } catch (err) {
       console.error('Microphone Error:', err);

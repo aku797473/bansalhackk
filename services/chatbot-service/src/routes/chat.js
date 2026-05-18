@@ -213,7 +213,57 @@ router.post('/voice/transcribe', async (req, res) => {
        return res.status(500).json({ success: false, message: 'Transcription failed via all AI providers' });
     }
 
-    res.json({ success: true, text: transcript });
+    // --- LLM Intent Routing ---
+    let routing = { route: null, responseEn: 'Could not understand', responseHi: 'समझ नहीं आया' };
+    
+    if (groq && transcript.trim().length > 0) {
+      try {
+        const classificationPrompt = `You are the voice command router for a smart farming app called Smart Kisan.
+Analyze the user's spoken voice query (which may be in Hindi, Roman Hindi, or English) and classify it into EXACTLY ONE of the following routes:
+- "/weather" : for weather, rain, climate, temperature (Hindi: मौसम, बारिश, तापमान)
+- "/market" : for mandi rates, crop prices, selling bhav, market (Hindi: मंडी भाव, फसल का दाम, रेट)
+- "/crop" : for crop advisory, farming advice, what to grow, sowing, harvesting (Hindi: फसल सलाह, खेती, क्या उगाएं)
+- "/fertilizer" : for fertilizers, urea, khad, pesticides, soil health, crop medicine (Hindi: खाद, यूरिया, कीटनाशक, मिट्टी जांच)
+- "/labour" : for hiring workers, helpers, mazdoor (Hindi: मजदूर, कामगार, मजदूर ढूंढो)
+- "/news" : for agricultural news, updates (Hindi: समाचार, खेती की खबर, न्यूज़)
+- "/map" : for field map, land mapping (Hindi: खेत का नक्शा, जमीन नापना, मैप)
+- "/schemes" : for government schemes, subsidy, PM Kisan yojana (Hindi: सरकारी योजना, सब्सिडी, योजनाएं)
+- "/profile" : for user profile, account settings (Hindi: प्रोफाइल, खाता, सेटिंग्स)
+- "/" : for home, dashboard, going back, exit (Hindi: होम, डैशबोर्ड, वापस)
+
+Response format: Return ONLY a valid JSON object:
+{
+  "route": "/route-name",
+  "confidence": 0.0 to 1.0,
+  "responseEn": "Brief response in English about what you are opening",
+  "responseHi": "Brief response in Hindi about what you are opening"
+}
+If no route fits well (confidence < 0.4), return route: null.
+
+User spoken query: "${transcript}"
+JSON:`;
+
+        const completion = await groq.chat.completions.create({
+          messages: [{ role: "user", content: classificationPrompt }],
+          model: "llama-3.3-70b-versatile",
+          response_format: { type: "json_object" },
+          temperature: 0.1,
+        });
+
+        const resultJson = JSON.parse(completion.choices[0].message.content);
+        if (resultJson && resultJson.confidence >= 0.4) {
+          routing = resultJson;
+        }
+      } catch (err) {
+        console.error('LLM Routing Error:', err.message);
+      }
+    }
+
+    res.json({ 
+      success: true, 
+      text: transcript,
+      routing
+    });
   } catch (err) {
     console.error('Transcription Error:', err);
     res.status(500).json({ success: false, message: err.message });
