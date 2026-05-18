@@ -102,6 +102,11 @@ module.exports = async (req, res) => {
 
     res.status(404).json({ success: false, message: 'Endpoint not found' });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    console.error('API Error:', error);
+    let msg = error.message || 'Internal server error';
+    if (msg.includes('mongodb') || msg.includes('mongodb+srv') || msg.includes('Cluster') || msg.includes('@') || msg.includes('URI')) {
+      msg = 'Database connection error. Please check configuration.';
+    }
+    res.status(500).json({ success: false, message: msg });
   }
 };

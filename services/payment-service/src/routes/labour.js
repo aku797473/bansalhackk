@@ -38,8 +38,7 @@ router.get('/jobs', async (req, res) => {
     console.error('💥 [JOBS ROUTE ERROR]:', err);
     res.status(500).json({ 
       success: false, 
-      message: 'Database error: ' + err.message,
-      stack: err.stack
+      message: 'Database error occurred. Please check database logs.'
     });
   }
 });
@@ -76,8 +75,7 @@ router.post('/jobs', async (req, res) => {
     console.error('💥 [JOB POST ERROR]:', err);
     res.status(500).json({ 
       success: false, 
-      message: 'Failed to post job: ' + err.message,
-      stack: err.stack 
+      message: 'Failed to post job. Please try again.'
     });
   }
 });

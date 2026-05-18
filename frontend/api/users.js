@@ -5,7 +5,8 @@ const jwt = require('jsonwebtoken');
 let cachedDb = null;
 async function connectToDatabase() {
   if (cachedDb && mongoose.connection.readyState === 1) return cachedDb;
-  const uri = process.env.MONGODB_URI || 'mongodb+srv://admin:admin@cluster.mongodb.net/smart-kisan';
+  const uri = process.env.MONGODB_URI;
+  if (!uri) throw new Error('Database connection configuration (MONGODB_URI) is missing.');
   cachedDb = await mongoose.connect(uri, { serverSelectionTimeoutMS: 5000 });
   return cachedDb;
 }
@@ -128,6 +129,10 @@ module.exports = async (req, res) => {
     return res.status(404).json({ success: false, message: 'User endpoint not found' });
   } catch (error) {
     console.error('User serverless error:', error);
-    return res.status(error.message.includes('Unauthorized') ? 401 : 500).json({ success: false, message: error.message });
+    let msg = error.message || 'Internal server error';
+    if (msg.includes('mongodb') || msg.includes('mongodb+srv') || msg.includes('Cluster') || msg.includes('@') || msg.includes('URI')) {
+      msg = 'Database connection error. Please check configuration.';
+    }
+    return res.status(error.message.includes('Unauthorized') ? 401 : 500).json({ success: false, message: msg });
   }
 };

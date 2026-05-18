@@ -116,6 +116,11 @@ module.exports = async (req, res) => {
 
     res.status(404).json({ success: false, message: 'Not found' });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    console.error('Fertilizer API Error:', error);
+    let msg = error.message || 'Internal server error';
+    if (msg.includes('mongodb') || msg.includes('mongodb+srv') || msg.includes('Cluster') || msg.includes('@')) {
+      msg = 'System connection error. Please try again later.';
+    }
+    res.status(500).json({ success: false, message: msg });
   }
 };
