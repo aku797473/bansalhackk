@@ -82,21 +82,24 @@ module.exports = async (req, res) => {
     }
 
     if (req.method === 'POST' && endpoint === 'profile') {
-      const { name, language, location, farmDetails, phone, email } = req.body;
+      const { name, language, location, farmDetails, phone, email, profilePic } = req.body;
+      
+      const updateData = {
+        userId,
+        email: email || userDecoded.email || '',
+        phone: phone || userDecoded.phone || '',
+        role: userDecoded.role || 'farmer'
+      };
+
+      if (name !== undefined) updateData.name = name;
+      if (language !== undefined) updateData.language = language;
+      if (location !== undefined) updateData.location = location;
+      if (farmDetails !== undefined) updateData.farmDetails = farmDetails;
+      if (profilePic !== undefined) updateData.profilePic = profilePic;
+
       const profile = await UserProfile.findOneAndUpdate(
         { userId },
-        { $set: { 
-            userId, 
-            email: email || userDecoded.email || '', 
-            phone: phone || userDecoded.phone || '',
-            role: userDecoded.role || 'farmer', 
-            name, 
-            language, 
-            location, 
-            farmDetails,
-            profilePic: req.body.profilePic 
-          } 
-        },
+        { $set: updateData },
         { new: true, upsert: true, runValidators: true }
       );
       return res.json({ success: true, data: profile });
