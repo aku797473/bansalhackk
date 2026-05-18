@@ -6,9 +6,9 @@ const userSchema = new mongoose.Schema({
   name:     { type: String, default: '' },
   email:    { type: String, index: { unique: false, sparse: true } }, // Explicitly non-unique and sparse
   googleId: { type: String, unique: true, sparse: true, index: true }, // Unique ID for Google Login
-  role:  { 
+  role: { 
     type: String, 
-    enum: ['farmer', 'seller', 'labor', 'buyer', 'labour', 'admin'], 
+    enum: ['farmer', 'buyer', 'labour', 'seller', 'admin'], 
     default: 'farmer' 
   },
   isActive:      { type: Boolean, default: true },

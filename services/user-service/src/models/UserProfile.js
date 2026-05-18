@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
   phone:    { type: String },
   name:     { type: String, default: '' },
   email:    { type: String, default: '' },
-  role:     { type: String, enum: ['farmer', 'buyer', 'labour', 'admin'], default: 'farmer' },
+  role:     { type: String, enum: ['farmer', 'buyer', 'labour', 'seller', 'admin'], default: 'farmer' },
   language: { type: String, enum: ['en', 'hi', 'pa', 'ta', 'te'], default: 'hi' },
   location: {
     lat:      { type: Number },
