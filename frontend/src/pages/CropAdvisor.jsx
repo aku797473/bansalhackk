@@ -277,7 +277,7 @@ export default function CropAdvisor() {
                     </div>
                   ) : (
                     <>
-                      <Robot size={22} weight="duotone" />
+                      <Plant size={22} weight="duotone" />
                       <span>{t('crop.recommend_btn')}</span>
                     </>
                   )}
@@ -383,7 +383,7 @@ export default function CropAdvisor() {
                   <div className="flex items-center justify-between mb-8">
                      <h3 className="text-xs font-bold text-slate-400 flex items-center gap-3">
                        <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center">
-                         <Robot size={20} weight="fill" className="text-emerald-600 dark:text-emerald-400" />
+                         <Plant size={20} weight="fill" className="text-emerald-600 dark:text-emerald-400" />
                        </div>
                        {t('crop.expert_insights')}
                      </h3>

@@ -251,8 +251,6 @@ function AppLayout({ children }) {
         </main>
         <Footer />
       </div>
-      {isAuth && <ChatWidget />}
-      {isAuth && <VoiceAssistant />}
       {isAuth && (
         <Link 
           to="/sos"

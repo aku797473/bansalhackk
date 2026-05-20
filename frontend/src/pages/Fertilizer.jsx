@@ -192,7 +192,7 @@ export default function Fertilizer() {
 
                <div className="mt-4 flex flex-col gap-3">
                  <button onClick={analyze} disabled={!file || loading} className="w-full h-14 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-2xl font-bold text-sm shadow-xl shadow-amber-500/30 flex items-center justify-center gap-3 hover:-translate-y-1 transition-all disabled:opacity-50 disabled:translate-y-0">
-                    {loading ? <ArrowsClockwise size={18} className="animate-spin" /> : <Sparkle size={18} weight="fill" />}
+                    {loading ? <ArrowsClockwise size={18} className="animate-spin" /> : <Flask size={18} weight="fill" />}
                     {loading ? t('fertilizer.analyzing') : t('fertilizer.analyze_health')}
                  </button>
                  <button className="w-full h-14 bg-slate-50 dark:bg-slate-800/50 text-slate-500 rounded-2xl font-bold text-sm flex items-center justify-center gap-3 border border-slate-100 dark:border-slate-800 hover:bg-slate-100 transition-all">
@@ -241,7 +241,7 @@ export default function Fertilizer() {
             {!result ? (
                <div className="h-full flex flex-col items-center justify-center p-12 text-center bg-white/40 dark:bg-slate-900/40 backdrop-blur-md rounded-[3rem] border border-dashed border-slate-300 dark:border-slate-700 group hover:border-amber-400/50 transition-all duration-500 py-32">
                   <div className="w-24 h-24 rounded-[2rem] bg-white dark:bg-slate-800 flex items-center justify-center shadow-xl mb-8 group-hover:scale-110 transition-transform">
-                    <Sparkle size={48} weight="duotone" className="text-slate-300 dark:text-slate-600 group-hover:text-amber-500 transition-colors" />
+                    <Flask size={48} weight="duotone" className="text-slate-300 dark:text-slate-600 group-hover:text-amber-500 transition-colors" />
                   </div>
                   <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter mb-4">{t('fertilizer.select_for_report')}</h3>
                   <p className="text-sm text-slate-500 dark:text-slate-400 font-bold max-w-xs leading-relaxed italic">
