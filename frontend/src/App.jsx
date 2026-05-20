@@ -149,83 +149,77 @@ function DesktopHeader() {
   };
 
   return (
-    <header className="hidden xl:flex items-center justify-between h-20 px-8 bg-white/30 dark:bg-slate-900/30 border-b border-slate-200/40 dark:border-slate-800/80 transition-colors duration-500">
-      <div>
-        <h2 className="text-lg font-black text-slate-800 dark:text-slate-100 font-outfit tracking-wide leading-none uppercase">
-          {getPageTitle()}
-        </h2>
-      </div>
-
-      <div className="flex items-center gap-6">
+    <header className="hidden xl:flex items-center justify-end h-24 px-8 bg-transparent transition-colors duration-500 z-40 relative">
+      <div className="flex items-center gap-5">
         {/* Search */}
-        <div className="relative w-60 group">
-          <MagnifyingGlass className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+        <div className="relative w-64 group">
+          <MagnifyingGlass className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={18} />
           <input 
             type="text" 
             placeholder="Search platform..." 
             onKeyDown={handleGlobalSearch}
-            className="w-full pl-10 pr-4 py-2 bg-slate-50/50 dark:bg-slate-800/20 rounded-xl border border-slate-200/50 dark:border-slate-800/60 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/5 transition-all text-xs font-bold text-slate-700 dark:text-slate-200 placeholder:text-slate-400"
+            className="w-full pl-11 pr-4 py-3 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl border-0 shadow-sm focus:ring-2 focus:ring-indigo-500/20 transition-all text-sm font-semibold text-slate-800 dark:text-slate-200 placeholder:text-slate-400"
           />
         </div>
 
         {/* Date Display */}
-        <div className="flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-800/20 px-3.5 py-2.5 rounded-xl border border-slate-200/50 dark:border-slate-800/60">
-          <Calendar size={16} className="text-indigo-500 shrink-0" />
+        <div className="flex items-center gap-2.5 text-sm font-bold text-slate-600 dark:text-slate-300 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl px-4 py-3 rounded-2xl shadow-sm">
+          <Calendar size={18} className="text-indigo-500 shrink-0" />
           <span>{formattedDate}</span>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           {/* Notification Bell */}
           <div className="relative">
             <button 
               onClick={() => toast.success(t('common.caught_up', 'You are all caught up!'))}
-              className="w-10 h-10 flex items-center justify-center bg-slate-50/50 dark:bg-slate-800/20 hover:bg-indigo-50 dark:hover:bg-indigo-950/20 text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-all rounded-xl border border-slate-200/50 dark:border-slate-800/60"
+              className="w-12 h-12 flex items-center justify-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl hover:bg-indigo-50 dark:hover:bg-indigo-500/10 text-slate-500 hover:text-indigo-600 dark:text-slate-400 transition-all rounded-2xl shadow-sm active:scale-95"
             >
-              <Bell size={18} weight="bold" />
+              <Bell size={20} weight="bold" />
             </button>
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+            <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full animate-pulse shadow-sm shadow-red-500/50" />
           </div>
 
           {/* User Profile Dropdown Menu */}
           <div className="relative" ref={dropdownRef}>
             <button 
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="flex items-center gap-2 p-1 bg-slate-50/50 dark:bg-slate-800/20 hover:bg-slate-100/50 dark:hover:bg-slate-800/30 border border-slate-200/50 dark:border-slate-800/60 rounded-xl transition-all focus:outline-none"
+              className="flex items-center gap-2.5 p-1.5 pr-3 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 rounded-2xl shadow-sm transition-all active:scale-95 focus:outline-none group"
             >
-              <div className="w-8 h-8 rounded-lg bg-slate-250 dark:bg-slate-850 border border-slate-200/50 dark:border-slate-850 overflow-hidden shrink-0">
+              <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 overflow-hidden shrink-0">
                 {user?.image || user?.profilePic ? (
                   <img src={user.image || user.profilePic} alt="user" className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-slate-400">
-                    <User size={16} weight="bold" />
+                    <User size={18} weight="bold" />
                   </div>
                 )}
               </div>
-              <CaretDown size={14} className={clsx("text-slate-500 mr-1.5 transition-transform duration-300", dropdownOpen ? "rotate-180" : "")} />
+              <CaretDown size={14} className={clsx("text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300 transition-transform duration-300", dropdownOpen ? "rotate-180" : "")} />
             </button>
 
             {dropdownOpen && (
-              <div className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 rounded-2xl shadow-2xl p-2 animate-in fade-in slide-in-from-bottom-2 z-[100]">
-                <div className="p-4 bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800 rounded-xl mb-1 text-left leading-tight">
-                  <div className="text-[9px] font-black text-slate-400 dark:text-slate-500 tracking-wider uppercase">{user?.role || 'Farmer'}</div>
-                  <div className="text-sm font-extrabold text-slate-800 dark:text-slate-200 truncate mt-0.5">{user?.name}</div>
+              <div className="absolute right-0 top-full mt-3 w-60 bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl border border-slate-100 dark:border-slate-800 rounded-3xl shadow-2xl p-2.5 animate-in fade-in slide-in-from-top-4 z-[100]">
+                <div className="p-4 bg-slate-50/80 dark:bg-slate-800/80 rounded-2xl mb-2 text-left">
+                  <div className="text-[10px] font-black text-slate-400 dark:text-slate-500 tracking-widest uppercase">{user?.role || 'Farmer'}</div>
+                  <div className="text-sm font-extrabold text-slate-800 dark:text-slate-100 truncate mt-1">{user?.name || 'User'}</div>
                 </div>
                 
                 <button 
                   onClick={() => { setDropdownOpen(false); navigate('/profile'); }}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-indigo-600 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-all text-left"
+                  className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50/50 dark:hover:bg-indigo-500/10 rounded-2xl transition-colors text-left"
                 >
-                  <User size={16} weight="bold" /> {t('nav.profile', 'Profile Settings')}
+                  <User size={18} weight="bold" /> {t('nav.profile', 'Profile Settings')}
                 </button>
                 
-                <div className="h-px bg-slate-100 dark:bg-slate-800 my-1.5 mx-2" />
+                <div className="h-px bg-slate-100 dark:bg-slate-800/80 my-1 mx-3" />
                 
                 <button 
                   onClick={async () => { setDropdownOpen(false); await logout(); navigate('/'); }}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all text-left"
+                  className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-red-500 hover:text-red-600 hover:bg-red-50/50 dark:hover:bg-red-500/10 rounded-2xl transition-colors text-left"
                 >
-                  <SignOut size={16} weight="bold" /> {t('common.logout', 'Log Out')}
+                  <SignOut size={18} weight="bold" /> {t('common.logout', 'Log Out')}
                 </button>
               </div>
             )}
