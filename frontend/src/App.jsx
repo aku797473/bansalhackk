@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from 'react';
+import { lazy, Suspense, useEffect, useState, useRef } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Link, useLocation, useNavigate } from 'react-router-dom';
 import { Toaster, toast } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
@@ -11,7 +11,7 @@ import Footer from './components/Footer';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { HeartPulse } from 'lucide-react';
-import { Bell, MagnifyingGlass, Calendar, SignOut } from '@phosphor-icons/react';
+import { Bell, MagnifyingGlass, Calendar, SignOut, User, CaretDown } from '@phosphor-icons/react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import axios from 'axios';
@@ -76,6 +76,18 @@ function DesktopHeader() {
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const getPageTitle = () => {
     switch (location.pathname) {
@@ -97,13 +109,6 @@ function DesktopHeader() {
     }
   };
 
-  const getGreeting = () => {
-    const hours = new Date().getHours();
-    if (hours < 12) return t('common.good_morning', 'Good Morning');
-    if (hours < 17) return t('common.good_afternoon', 'Good Afternoon');
-    return t('common.good_evening', 'Good Evening');
-  };
-
   const formattedDate = new Date().toLocaleDateString(undefined, {
     weekday: 'short',
     month: 'short',
@@ -113,12 +118,9 @@ function DesktopHeader() {
   return (
     <header className="hidden xl:flex items-center justify-between h-20 px-8 bg-white/30 dark:bg-slate-900/30 border-b border-slate-200/40 dark:border-slate-800/80 transition-colors duration-500">
       <div>
-        <h2 className="text-lg font-black text-slate-800 dark:text-slate-100 font-outfit tracking-wide leading-none mb-1 uppercase">
+        <h2 className="text-lg font-black text-slate-800 dark:text-slate-100 font-outfit tracking-wide leading-none uppercase">
           {getPageTitle()}
         </h2>
-        <p className="text-xs font-semibold text-slate-400 dark:text-slate-500">
-          {getGreeting()}, {user?.name || 'Farmer'} 👋
-        </p>
       </div>
 
       <div className="flex items-center gap-6">
@@ -139,7 +141,7 @@ function DesktopHeader() {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           {/* Notification Bell */}
           <div className="relative">
             <button 
@@ -151,14 +153,49 @@ function DesktopHeader() {
             <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
           </div>
 
-          {/* Log Out */}
-          <button 
-            onClick={async () => { await logout(); navigate('/'); }}
-            className="w-10 h-10 flex items-center justify-center bg-slate-50/50 dark:bg-slate-800/20 hover:bg-red-50 dark:hover:bg-red-950/20 text-slate-500 hover:text-red-500 dark:text-slate-400 dark:hover:text-red-400 transition-all rounded-xl border border-slate-200/50 dark:border-slate-800/60"
-            title={t('common.logout', 'Log Out')}
-          >
-            <SignOut size={18} weight="bold" />
-          </button>
+          {/* User Profile Dropdown Menu */}
+          <div className="relative" ref={dropdownRef}>
+            <button 
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              className="flex items-center gap-2 p-1 bg-slate-50/50 dark:bg-slate-800/20 hover:bg-slate-100/50 dark:hover:bg-slate-800/30 border border-slate-200/50 dark:border-slate-800/60 rounded-xl transition-all focus:outline-none"
+            >
+              <div className="w-8 h-8 rounded-lg bg-slate-250 dark:bg-slate-850 border border-slate-200/50 dark:border-slate-850 overflow-hidden shrink-0">
+                {user?.image || user?.profilePic ? (
+                  <img src={user.image || user.profilePic} alt="user" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-slate-400">
+                    <User size={16} weight="bold" />
+                  </div>
+                )}
+              </div>
+              <CaretDown size={14} className={clsx("text-slate-500 mr-1.5 transition-transform duration-300", dropdownOpen ? "rotate-180" : "")} />
+            </button>
+
+            {dropdownOpen && (
+              <div className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 rounded-2xl shadow-2xl p-2 animate-in fade-in slide-in-from-bottom-2 z-[100]">
+                <div className="p-4 bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800 rounded-xl mb-1 text-left leading-tight">
+                  <div className="text-[9px] font-black text-slate-400 dark:text-slate-500 tracking-wider uppercase">{user?.role || 'Farmer'}</div>
+                  <div className="text-sm font-extrabold text-slate-800 dark:text-slate-200 truncate mt-0.5">{user?.name}</div>
+                </div>
+                
+                <button 
+                  onClick={() => { setDropdownOpen(false); navigate('/profile'); }}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-indigo-600 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-all text-left"
+                >
+                  <User size={16} weight="bold" /> {t('nav.profile', 'Profile Settings')}
+                </button>
+                
+                <div className="h-px bg-slate-100 dark:bg-slate-800 my-1.5 mx-2" />
+                
+                <button 
+                  onClick={async () => { setDropdownOpen(false); await logout(); navigate('/'); }}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all text-left"
+                >
+                  <SignOut size={16} weight="bold" /> {t('common.logout', 'Log Out')}
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </header>

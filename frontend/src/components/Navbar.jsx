@@ -161,8 +161,8 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Footer controls & Profile menu */}
-        <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800/60">
+        {/* Footer controls */}
+        <div className="pt-4 border-t border-slate-100 dark:border-slate-800/60">
           {/* Quick Settings Bar (Theme & Language) */}
           <div className="flex items-center justify-between gap-2 p-1.5 bg-slate-50/60 dark:bg-slate-800/30 rounded-2xl border border-slate-100/50 dark:border-slate-800/40">
             <button 
@@ -174,23 +174,6 @@ export default function Navbar() {
             </button>
             <div className="flex-1 flex justify-center">
               <LanguageSelector showLabel={false} />
-            </div>
-          </div>
-
-          {/* Profile Card */}
-          <div className="w-full flex items-center gap-3 p-3 bg-slate-50/50 dark:bg-slate-800/30 border border-slate-200/50 dark:border-slate-850 rounded-2xl">
-            <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-850 border border-slate-200/50 dark:border-slate-800 overflow-hidden shrink-0">
-              {user?.image || user?.profilePic ? (
-                <img src={user.image || user.profilePic} alt="user" className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-slate-400">
-                  <User size={18} weight="bold" />
-                </div>
-              )}
-            </div>
-            <div className="flex-grow text-left truncate leading-tight">
-              <div className="text-[9px] font-black text-slate-400 dark:text-slate-500 tracking-wider uppercase">{user?.role || 'Farmer'}</div>
-              <div className="text-sm font-extrabold text-slate-800 dark:text-slate-200 truncate">{user?.name}</div>
             </div>
           </div>
         </div>
