@@ -83,7 +83,7 @@ export default function Navbar() {
 
   const moreLinks = [
     { to: '/labour',           label: t('nav.labour'), icon: Briefcase },
-    { to: '/buyer',            label: t('nav.buyer'), icon: Handshake },
+    { to: '/seller',           label: t('nav.buyer'), icon: Handshake },
     { to: '/profit-predictor', label: t('nav.profit_predictor'), icon: ChartLineUp },
     { to: '/map',              label: t('nav.map'), icon: MapPin },
     { to: '/news',             label: t('nav.news'), icon: Newspaper },

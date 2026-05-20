@@ -15,7 +15,7 @@
     "light": "Light Mode",
     "dark": "Dark Mode",
     "slogan": "Farm Smarter",
-    "buyer": "Buyer Portal",
+    "buyer": "Seller Portal",
     "profit_predictor": "Profit Predictor",
     "community": "Kisan Community"
   },
@@ -730,7 +730,7 @@
     }
   },
   "buyer": {
-    "marketplace_title": "Agri Marketplace v5",
+    "marketplace_title": "Seller Portal",
     "marketplace_subtitle": "Connect with verified traders, seed shops, and fertilizer centers near you.",
     "tabs": {
       "browse": "Browse Shops",
