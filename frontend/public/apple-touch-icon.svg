@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#16a34a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0d6a31;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="192" height="192" rx="38" fill="url(#bg)"/>
+  <text x="96" y="131" 
+    font-size="100" 
+    text-anchor="middle" 
+    dominant-baseline="middle"
+    fill="white"
+    font-family="Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, sans-serif">🌾</text>
+  <text x="96" y="173" 
+    font-size="15" 
+    text-anchor="middle" 
+    fill="rgba(255,255,255,0.8)"
+    font-family="Arial, sans-serif"
+    font-weight="bold">SMART KISAN</text>
+</svg>

@@ -4,6 +4,8 @@ const ASSETS_TO_CACHE = [
   '/index.html',
   '/favicon.svg',
   '/logo.png',
+  '/logo-192.png',
+  '/logo-512.png',
   '/manifest.json'
 ];
 
