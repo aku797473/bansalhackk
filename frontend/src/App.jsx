@@ -10,7 +10,7 @@ import VoiceAssistant from './components/VoiceAssistant';
 import Footer from './components/Footer';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { HeartPulse } from 'lucide-react';
+import { HeartPulse, MessageCircle, Mic } from 'lucide-react';
 import { Bell, MagnifyingGlass, Calendar, SignOut, User, CaretDown } from '@phosphor-icons/react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
@@ -170,6 +170,24 @@ function DesktopHeader() {
 
         {/* Action Buttons */}
         <div className="flex items-center gap-3">
+          {/* Kisan Mitra Chat Toggle */}
+          <button 
+            onClick={() => window.dispatchEvent(new CustomEvent('toggle-kisan-chat'))}
+            className="w-12 h-12 flex items-center justify-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl hover:bg-indigo-50 dark:hover:bg-indigo-500/10 text-slate-500 hover:text-indigo-600 dark:text-slate-400 transition-all rounded-2xl shadow-sm active:scale-95"
+            title="Kisan Mitra Chat"
+          >
+            <MessageCircle size={20} />
+          </button>
+
+          {/* Voice Assistant Toggle */}
+          <button 
+            onClick={() => window.dispatchEvent(new CustomEvent('toggle-voice-assistant'))}
+            className="w-12 h-12 flex items-center justify-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl hover:bg-emerald-50 dark:hover:bg-emerald-500/10 text-slate-500 hover:text-emerald-600 dark:text-slate-400 transition-all rounded-2xl shadow-sm active:scale-95"
+            title="Voice Assistant"
+          >
+            <Mic size={20} />
+          </button>
+
           {/* Notification Bell */}
           <div className="relative">
             <button 
@@ -252,13 +270,17 @@ function AppLayout({ children }) {
         <Footer />
       </div>
       {isAuth && (
-        <Link 
-          to="/sos"
-          className="fixed bottom-24 right-6 md:right-8 z-40 w-14 h-14 bg-red-600 rounded-full flex items-center justify-center text-white shadow-lg shadow-red-600/30 hover:scale-110 active:scale-95 transition-all animate-bounce"
-          title="Emergency SOS"
-        >
-          <HeartPulse size={28} className="animate-pulse" />
-        </Link>
+        <>
+          <ChatWidget />
+          <VoiceAssistant />
+          <Link 
+            to="/sos"
+            className="fixed bottom-24 right-6 md:right-8 z-40 w-14 h-14 bg-red-600 rounded-full flex items-center justify-center text-white shadow-lg shadow-red-600/30 hover:scale-110 active:scale-95 transition-all animate-bounce"
+            title="Emergency SOS"
+          >
+            <HeartPulse size={28} className="animate-pulse" />
+          </Link>
+        </>
       )}
     </div>
   );

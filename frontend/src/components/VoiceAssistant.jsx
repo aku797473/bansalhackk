@@ -106,6 +106,16 @@ export default function VoiceAssistant() {
   const recognitionRef = useRef(null);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const handleToggle = () => {
+      setIsOpen(prev => !prev);
+    };
+    window.addEventListener('toggle-voice-assistant', handleToggle);
+    return () => {
+      window.removeEventListener('toggle-voice-assistant', handleToggle);
+    };
+  }, []);
+
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
 
@@ -158,7 +168,7 @@ export default function VoiceAssistant() {
     }
 
     // No match
-    toast(lang === 'hi' ? `सुना: "${text}" पर कोई कमांड नहीं मिली` : `Heard: "${text}" but no command matched`, { icon: '🤔' });
+    toast(lang === 'hi' ? `सुना: "${text}" पर कोई कमांड नहीं मिली` : `Heard: "${text}" but no command matched`);
     speak(lang === 'hi' ? 'समझ नहीं आया, फिर कोशिश करें' : 'Not understood, please try again');
     setTimeout(() => setStatus('idle'), 2000); // Give user time to read the text
   }, [lang, navigate]);
@@ -214,7 +224,7 @@ export default function VoiceAssistant() {
              }
 
              setTranscript(text);
-             toast.success(lang === 'hi' ? `सुना: ${text}` : `Heard: ${text}`, { icon: '🎤' });
+             toast.success(lang === 'hi' ? `सुना: ${text}` : `Heard: ${text}`);
              
              // Hybrid Intent Parsing: Try AI-based routing first!
              const aiRouting = res.data.routing;
@@ -272,13 +282,13 @@ export default function VoiceAssistant() {
     idle:       lang === 'hi' ? 'बोलने के लिए दबाएं' : 'Tap to speak',
     listening:  lang === 'hi' ? 'सुन रहे हैं...'   : 'Listening...',
     processing: lang === 'hi' ? 'समझ रहे हैं...'    : 'Processing...',
-    done:       lang === 'hi' ? 'हो गया! ✅'        : 'Done! ✅',
+    done:       lang === 'hi' ? 'हो गया!'        : 'Done!',
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
-      {isOpen ? (
-        <div className="mb-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-2xl rounded-[2rem] shadow-2xl p-7 w-80 border border-white/50 dark:border-slate-700/50 animate-slide-up transform origin-bottom-right">
+    <>
+      {isOpen && (
+        <div className="fixed bottom-24 right-4 sm:right-6 z-[110] bg-white/90 dark:bg-slate-900/90 backdrop-blur-2xl rounded-[2rem] shadow-2xl p-7 w-80 border border-white/50 dark:border-slate-700/50 animate-slide-up transform origin-bottom-right">
 
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
@@ -353,18 +363,7 @@ export default function VoiceAssistant() {
             </p>
           </div>
         </div>
-      ) : (
-        <button
-          onClick={() => setIsOpen(true)}
-          className="bg-white dark:bg-slate-800 text-emerald-600 border border-slate-200 dark:border-slate-700 w-16 h-16 rounded-full flex items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_40px_rgb(16,185,129,0.2)] transition-all duration-300 hover:-translate-y-1 active:scale-95 group relative overflow-hidden"
-        >
-          <div className="absolute inset-0 bg-gradient-to-tr from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          <Mic size={26} className="relative z-10 group-hover:scale-110 transition-transform duration-300" />
-          
-          {/* Notification dot */}
-          <span className="absolute top-3 right-3 w-3.5 h-3.5 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full border-2 border-white dark:border-slate-800 shadow-sm animate-pulse" />
-        </button>
       )}
-    </div>
+    </>
   );
 }

@@ -12,7 +12,7 @@ export default function ChatWidget() {
   const { user }    = useAuth();
   const [open, setOpen]       = useState(false);
   const [messages, setMessages] = useState([
-    { role: 'assistant', content: t('chat.welcome', 'Hi! I am Kisan Mitra. Ask me anything about farming! 🌾') }
+    { role: 'assistant', content: t('chat.welcome', 'Hi! I am Kisan Mitra. Ask me anything about farming!') }
   ]);
   const [input, setInput]     = useState('');
   const [loading, setLoading] = useState(false);
@@ -117,6 +117,16 @@ export default function ChatWidget() {
     }
   }, [open, messages]);
 
+  useEffect(() => {
+    const handleToggle = () => {
+      setOpen(prev => !prev);
+    };
+    window.addEventListener('toggle-kisan-chat', handleToggle);
+    return () => {
+      window.removeEventListener('toggle-kisan-chat', handleToggle);
+    };
+  }, []);
+
   const send = async (overrideText) => {
     const text = typeof overrideText === 'string' ? overrideText : input.trim();
     if (!text || loading) return;
@@ -153,7 +163,7 @@ export default function ChatWidget() {
   const clearChat = () => {
     const newId = uuid();
     chatAPI.clearHistory(sessionId).catch(() => {});
-    setMessages([{ role: 'assistant', content: t('chat.welcome', 'Hi! I am Kisan Mitra. Ask me anything about farming! 🌾') }]);
+    setMessages([{ role: 'assistant', content: t('chat.welcome', 'Hi! I am Kisan Mitra. Ask me anything about farming!') }]);
     setSessionId(newId);
     localStorage.setItem('kisan_chat_session_id', newId);
   };
@@ -167,24 +177,6 @@ export default function ChatWidget() {
 
   return (
     <>
-      {/* Floating button — bottom LEFT */}
-      <button
-        onClick={() => setOpen(!open)}
-        className={clsx(
-          'fixed bottom-6 left-6 xl:left-[300px] z-[110] w-16 h-16 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_40px_rgb(79,70,229,0.3)] transition-all duration-300 flex items-center justify-center group overflow-hidden',
-          open ? 'bg-slate-800 dark:bg-slate-700 rotate-0' : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:-translate-y-1 active:scale-95'
-        )}
-        aria-label="Open Kisan Mitra chat">
-        {!open && <div className="absolute inset-0 bg-gradient-to-tr from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />}
-        
-        {open ? <X size={24} className="text-white relative z-10" /> : (
-          <div className="relative z-10 flex items-center justify-center">
-            <MessageCircle size={28} className="text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-transform duration-300" />
-            <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full border-2 border-white dark:border-slate-800 animate-pulse" />
-          </div>
-        )}
-      </button>
-
       {/* Chat window — anchored to bottom */}
       {open && (
         <div className="fixed bottom-24 sm:bottom-28 left-4 right-4 sm:right-auto sm:left-6 xl:left-[284px] z-[110] sm:w-96 rounded-[2rem] shadow-2xl border border-white/50 dark:border-slate-700/50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl overflow-hidden animate-slide-up flex flex-col transition-colors transform origin-bottom-left"
@@ -217,8 +209,8 @@ export default function ChatWidget() {
             {messages.map((msg, i) => (
               <div key={i} className={clsx('flex gap-3', msg.role === 'user' ? 'justify-end' : 'justify-start')}>
                 {msg.role === 'assistant' && (
-                  <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center shrink-0 mt-1 shadow-sm border border-indigo-200 dark:border-indigo-800">
-                    <span className="text-sm">🌾</span>
+                  <div className="w-8 h-8 rounded-full bg-indigo-50 dark:bg-indigo-950/30 flex items-center justify-center shrink-0 mt-1 shadow-sm border border-indigo-100 dark:border-indigo-900">
+                    <Bot size={16} className="text-indigo-600 dark:text-indigo-400" />
                   </div>
                 )}
                 <div className={clsx(
@@ -234,8 +226,8 @@ export default function ChatWidget() {
 
             {loading && (
               <div className="flex gap-3 items-center">
-                <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center shrink-0 shadow-sm border border-indigo-200 dark:border-indigo-800">
-                  <span className="text-sm">🌾</span>
+                <div className="w-8 h-8 rounded-full bg-indigo-50 dark:bg-indigo-950/30 flex items-center justify-center shrink-0 shadow-sm border border-indigo-100 dark:border-indigo-900">
+                  <Bot size={16} className="text-indigo-600 dark:text-indigo-400" />
                 </div>
                 <div className="bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 px-4 py-3.5 rounded-2xl rounded-bl-sm shadow-sm">
                   <div className="flex gap-1.5 items-center">

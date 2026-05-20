@@ -329,14 +329,14 @@ export default function CropAdvisor() {
 
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                       {[
-                        { icon: '🌱', label: t('crop.sowing_time'), val: result.sowingTime },
-                        { icon: '🌾', label: t('crop.harvest_time'), val: result.harvestTime },
-                        { icon: '💧', label: t('crop.water_req'), val: result.waterRequirement },
-                        { icon: '📦', label: t('crop.expected_yield'), val: result.expectedYield || t('crop.high') }
+                        { label: t('crop.sowing_time'), val: result.sowingTime },
+                        { label: t('crop.harvest_time'), val: result.harvestTime },
+                        { label: t('crop.water_req'), val: result.waterRequirement },
+                        { label: t('crop.expected_yield'), val: result.expectedYield || t('crop.high') }
                       ].map((item, idx) => (
                         <div key={idx} className="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-3xl border border-slate-100 dark:border-slate-800 transition-colors hover:border-emerald-200 dark:hover:border-emerald-800/50">
-                          <p className="text-slate-400 text-xs font-bold mb-2 flex items-center gap-2">
-                             <span className="text-sm">{item.icon}</span> {item.label}
+                          <p className="text-slate-400 text-xs font-bold mb-2">
+                            {item.label}
                           </p>
                           <p className="font-black text-slate-900 dark:text-white text-xs sm:text-sm tracking-tight leading-tight">{translateOption(item.val)}</p>
                         </div>
@@ -348,8 +348,7 @@ export default function CropAdvisor() {
                 {/* Fertilizers & AI Insight */}
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 rounded-[2rem] p-8 shadow-premium">
-                    <h3 className="text-xs font-bold text-slate-400 mb-6 flex items-center gap-2">
-                      <Flask size={16} weight="fill" className="text-indigo-500" />
+                    <h3 className="text-xs font-bold text-slate-400 mb-6">
                       {t('crop.fertilizers')}
                     </h3>
                     <div className="flex flex-wrap gap-2">
@@ -362,8 +361,7 @@ export default function CropAdvisor() {
                   </div>
 
                   <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 rounded-[2rem] p-8 shadow-premium">
-                    <h3 className="text-xs font-bold text-slate-400 mb-4 flex items-center gap-2">
-                      <CheckCircle size={16} weight="fill" className="text-emerald-500" />
+                    <h3 className="text-xs font-bold text-slate-400 mb-4">
                       {t('crop.confidence')}
                     </h3>
                     <div className="flex flex-col gap-4">
@@ -381,10 +379,7 @@ export default function CropAdvisor() {
                 {/* AI Tips Section */}
                 <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 rounded-[2.5rem] p-8 sm:p-10 shadow-premium relative overflow-hidden">
                   <div className="flex items-center justify-between mb-8">
-                     <h3 className="text-xs font-bold text-slate-400 flex items-center gap-3">
-                       <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center">
-                         <Plant size={20} weight="fill" className="text-emerald-600 dark:text-emerald-400" />
-                       </div>
+                     <h3 className="text-xs font-bold text-slate-400">
                        {t('crop.expert_insights')}
                      </h3>
                   </div>
