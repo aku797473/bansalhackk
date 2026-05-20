@@ -77,7 +77,13 @@ router.post('/profile', async (req, res) => {
     
     const updateData = { userId };
     if (email) updateData.email = email;
-    if (role) updateData.role = role;
+    
+    // Support role update from request body
+    if (req.body.role !== undefined) {
+      updateData.role = req.body.role;
+    } else if (role) {
+      updateData.role = role;
+    }
     
     if (req.body.name !== undefined) updateData.name = req.body.name;
     if (req.body.phone !== undefined) updateData.phone = req.body.phone;
@@ -92,12 +98,52 @@ router.post('/profile', async (req, res) => {
       { new: true, upsert: true, runValidators: true }
     );
 
+    // Sync changes to AuthUser model if it exists
+    const mongoose = require('mongoose');
+    let newAccessToken = null;
+    try {
+      const AuthUser = mongoose.models.AuthUser || mongoose.model('AuthUser');
+      if (AuthUser) {
+        const authUpdate = {};
+        if (req.body.name !== undefined) authUpdate.name = req.body.name;
+        if (req.body.phone !== undefined) authUpdate.phone = req.body.phone;
+        if (req.body.role !== undefined) authUpdate.role = req.body.role;
+        
+        if (Object.keys(authUpdate).length > 0) {
+          const updatedAuth = await AuthUser.findByIdAndUpdate(
+            userId,
+            { $set: authUpdate },
+            { new: true }
+          );
+          
+          if (updatedAuth) {
+            const jwt = require('jsonwebtoken');
+            const jwtPayload = {
+              userId: updatedAuth._id.toString(),
+              phone: updatedAuth.phone || '',
+              email: updatedAuth.email || '',
+              role: updatedAuth.role
+            };
+            newAccessToken = jwt.sign(jwtPayload, process.env.JWT_SECRET || 'smart_kisan_secret_123', {
+              expiresIn: process.env.JWT_EXPIRES_IN || '7d',
+            });
+          }
+        }
+      }
+    } catch (authErr) {
+      console.warn('⚠️ AuthUser DB sync failed:', authErr.message);
+    }
+
     // Invalidate Cache
     if (redis.status === 'ready') {
       await redis.del(`user:profile:${userId}`).catch(() => {});
     }
 
-    res.json({ success: true, data: profile });
+    res.json({ 
+      success: true, 
+      data: profile,
+      accessToken: newAccessToken
+    });
   } catch (err) {
     console.error('User POST Profile Error:', err);
     res.status(500).json({ 

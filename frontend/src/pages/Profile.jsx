@@ -13,7 +13,8 @@ import {
   ArrowRight, 
   ShieldCheck, 
   Calendar, 
-  MapPin 
+  MapPin,
+  ShoppingBag
 } from '@phosphor-icons/react';
 
 export default function Profile() {
@@ -283,10 +284,11 @@ export default function Profile() {
 
                 <div className="space-y-2">
                   <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 ml-1">Operational Role</label>
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     {[
                       { id: 'farmer', icon: IdentificationCard, label: 'Farmer' },
-                      { id: 'buyer',  icon: Handshake, label: 'Seller' },
+                      { id: 'seller', icon: Handshake, label: 'Seller' },
+                      { id: 'buyer',  icon: ShoppingBag, label: 'Buyer' },
                       { id: 'labour', icon: Briefcase, label: 'Labor' }
                     ].map((role) => (
                       <button

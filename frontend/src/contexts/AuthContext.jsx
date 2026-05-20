@@ -182,6 +182,11 @@ export function AuthProvider({ children }) {
            ...data.data,
            image: data.data.profilePic || prev.image || prev.profilePic
          }));
+
+         if (data.accessToken) {
+           localStorage.setItem('sk_token', data.accessToken);
+           setTokenProvider(() => Promise.resolve(data.accessToken));
+         }
        }
     } catch (err) {
        console.error('Profile sync failed', err, err.response?.data);
