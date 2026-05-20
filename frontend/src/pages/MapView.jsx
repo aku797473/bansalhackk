@@ -311,7 +311,7 @@ export default function MapView() {
               {t('map.gps_active')}
             </div>
           </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight font-outfit">
+          <h1 className="text-3xl font-bold tracking-tight text-black dark:text-white leading-tight font-outfit">
             <span className="bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400 bg-clip-text text-transparent">
               {t('map.title')}
             </span>

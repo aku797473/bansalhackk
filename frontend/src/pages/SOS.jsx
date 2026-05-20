@@ -154,7 +154,7 @@ export default function SOS() {
                 GPS Radar Active
               </div>
             </div>
-            <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight font-outfit">
+            <h1 className="text-3xl font-bold tracking-tight text-black dark:text-white leading-tight font-outfit">
               <span className="bg-gradient-to-r from-red-600 to-rose-600 dark:from-red-400 dark:to-rose-400 bg-clip-text text-transparent">
                 {t('sos.title')}
               </span>
