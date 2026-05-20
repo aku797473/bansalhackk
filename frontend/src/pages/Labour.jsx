@@ -208,10 +208,12 @@ export default function Labour() {
 
   // Client-side search logic on current jobs list
   const filteredJobs = jobs.filter(job => {
-    const jobTitle = job.key ? t(`labour.fallback.${job.key}.title`) : job.title;
-    const jobDesc = job.key ? t(`labour.fallback.${job.key}.desc`) : job.description;
-    const searchString = `${jobTitle} ${jobDesc} ${job.location?.district || ''} ${job.location?.state || ''}`.toLowerCase();
-    return searchString.includes(searchTerm.toLowerCase());
+    const jobTitle = job.key ? t(`labour.fallback.${job.key}.title`) : (job.title || '');
+    const jobDesc = job.key ? t(`labour.fallback.${job.key}.desc`) : (job.description || '');
+    const district = job.location?.district || '';
+    const state = job.location?.state || '';
+    const searchString = `${jobTitle} ${jobDesc} ${district} ${state}`.toLowerCase();
+    return searchString.includes((searchTerm || '').toLowerCase());
   });
 
   return (

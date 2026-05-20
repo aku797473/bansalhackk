@@ -215,10 +215,16 @@ export default function BuyerPortal() {
     }
   };
 
-  const filteredBuyers = buyers.filter(b => 
-    b.shopName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    b.location.district.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredBuyers = buyers.filter(b => {
+    const shop = (b.shopName || '').toLowerCase();
+    const district = (b.location?.district || '').toLowerCase();
+    const state = (b.location?.state || '').toLowerCase();
+    const search = (searchTerm || '').toLowerCase();
+    
+    return shop.includes(search) || 
+           district.includes(search) ||
+           state.includes(search);
+  });
 
   return (
     <div ref={ref} className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] transition-colors duration-500 font-sans selection:bg-green-100 selection:text-green-900 pt-24 sm:pt-28 pb-10">

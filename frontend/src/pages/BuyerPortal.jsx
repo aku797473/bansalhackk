@@ -262,11 +262,18 @@ export default function BuyerPortal() {
     }
   };
 
-  const filteredListings = listings.filter(l => 
-    l.produceName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    l.farmerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    l.location.district.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredListings = listings.filter(l => {
+    const produce = (l.produceName || '').toLowerCase();
+    const farmer = (l.farmerName || '').toLowerCase();
+    const district = (l.location?.district || '').toLowerCase();
+    const state = (l.location?.state || '').toLowerCase();
+    const search = (searchTerm || '').toLowerCase();
+    
+    return produce.includes(search) ||
+           farmer.includes(search) ||
+           district.includes(search) ||
+           state.includes(search);
+  });
 
   return (
     <div ref={ref} className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] transition-colors duration-500 font-sans selection:bg-sky-100 selection:text-sky-900 pt-24 sm:pt-28 pb-10">

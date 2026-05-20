@@ -130,6 +130,11 @@ function DesktopHeader() {
           <input 
             type="text" 
             placeholder="Search platform..." 
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                import('react-hot-toast').then(m => m.default.info('Global Search is coming in the next update!'));
+              }
+            }}
             className="w-full pl-10 pr-4 py-2 bg-slate-50/50 dark:bg-slate-800/20 rounded-xl border border-slate-200/50 dark:border-slate-800/60 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/5 transition-all text-xs font-bold text-slate-700 dark:text-slate-200 placeholder:text-slate-400"
           />
         </div>
