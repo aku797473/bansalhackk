@@ -27,7 +27,8 @@ import {
   Gear,
   CaretRight,
   ChatCircleText,
-  ShoppingBag
+  ShoppingBag,
+  Microphone
 } from '@phosphor-icons/react';
 
 export default function Navbar() {
@@ -201,7 +202,25 @@ export default function Navbar() {
             <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 tracking-wider mt-0.5">Agri Intelligence</span>
           </NavLink>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Kisan Mitra Chat Toggle */}
+            <button 
+              onClick={() => window.dispatchEvent(new CustomEvent('toggle-kisan-chat'))}
+              className="w-10 h-10 flex items-center justify-center bg-slate-50 dark:bg-slate-800 text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/20 transition-all rounded-xl border border-slate-100 dark:border-slate-700 active:scale-95"
+              title="Kisan Mitra Chat"
+            >
+              <ChatCircleText size={20} weight="bold" />
+            </button>
+
+            {/* Voice Assistant Toggle */}
+            <button 
+              onClick={() => window.dispatchEvent(new CustomEvent('toggle-voice-assistant'))}
+              className="w-10 h-10 flex items-center justify-center bg-slate-50 dark:bg-slate-800 text-slate-500 hover:text-emerald-600 dark:text-slate-400 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition-all rounded-xl border border-slate-100 dark:border-slate-700 active:scale-95"
+              title="Voice Assistant"
+            >
+              <Microphone size={20} weight="bold" />
+            </button>
+
             <div className="hidden sm:block">
               <LanguageSelector showLabel={false} />
             </div>
