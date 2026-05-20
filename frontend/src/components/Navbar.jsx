@@ -134,7 +134,6 @@ export default function Navbar() {
                       ? 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 shadow-sm border border-indigo-500/10' 
                       : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50/50 dark:hover:bg-slate-800/50'
                   )}>
-                  <Icon size={18} weight="duotone" className="shrink-0" />
                   <span>{label}</span>
                 </NavLink>
               ))}
@@ -153,7 +152,6 @@ export default function Navbar() {
                       ? 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 shadow-sm border border-indigo-500/10' 
                       : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50/50 dark:hover:bg-slate-800/50'
                   )}>
-                  <Icon size={18} weight="duotone" className="shrink-0" />
                   <span>{label}</span>
                 </NavLink>
               ))}
@@ -294,7 +292,6 @@ export default function Navbar() {
                         : "text-slate-600 dark:text-slate-300 hover:text-indigo-600 hover:bg-slate-50 dark:hover:bg-slate-800/30"
                     )}
                   >
-                    <Icon size={20} weight="duotone" className="shrink-0" />
                     <span>{label}</span>
                   </NavLink>
                 ))}
@@ -317,7 +314,6 @@ export default function Navbar() {
                         : "text-slate-600 dark:text-slate-300 hover:text-indigo-600 hover:bg-slate-50 dark:hover:bg-slate-800/30"
                     )}
                   >
-                    <Icon size={20} weight="duotone" className="shrink-0" />
                     <span>{label}</span>
                   </NavLink>
                 ))}
