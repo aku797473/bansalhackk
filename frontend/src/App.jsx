@@ -40,6 +40,7 @@ const Schemes     = lazy(() => import('./pages/Schemes'));
 const Buyer       = lazy(() => import('./pages/BuyerPortal'));
 const ProfitPredictor = lazy(() => import('./pages/ProfitPredictor'));
 const SOS         = lazy(() => import('./pages/SOS'));
+const Community   = lazy(() => import('./pages/Community'));
 
 function ProtectedRoute({ children }) {
   const { isAuth, loading } = useAuth();
@@ -129,6 +130,7 @@ export default function App() {
                   <Route path="/buyer"      element={<ProtectedRoute><Buyer /></ProtectedRoute>} />
                   <Route path="/profit-predictor" element={<ProtectedRoute><ProfitPredictor /></ProtectedRoute>} />
                   <Route path="/sos"        element={<ProtectedRoute><SOS /></ProtectedRoute>} />
+                  <Route path="/community"  element={<ProtectedRoute><Community /></ProtectedRoute>} />
                   <Route path="/profile"    element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                   <Route path="*"           element={<Navigate to="/" replace />} />
                 </Routes>

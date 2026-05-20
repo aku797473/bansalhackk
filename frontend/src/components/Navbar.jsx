@@ -25,7 +25,8 @@ import {
   Newspaper, 
   Sparkle,
   Gear,
-  CaretRight
+  CaretRight,
+  ChatCircleText
 } from '@phosphor-icons/react';
 
 export default function Navbar() {
@@ -77,6 +78,7 @@ export default function Navbar() {
     { to: '/crop',       label: t('nav.crop'), icon: Plant },
     { to: '/market',     label: t('nav.market'), icon: Storefront },
     { to: '/fertilizer', label: t('nav.fertilizer'), icon: Flask },
+    { to: '/community',  label: t('nav.community'), icon: ChatCircleText },
   ];
 
   const moreLinks = [
