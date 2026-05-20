@@ -264,28 +264,6 @@ export default function Navbar() {
             </button>
           </div>
 
-          {/* User profile */}
-          {user && (
-            <div className="my-6 p-4 bg-slate-50/50 dark:bg-slate-800/40 rounded-2xl border border-slate-100 dark:border-slate-800/60 flex items-center gap-4">
-              <div 
-                onClick={() => { setOpen(false); navigate('/profile'); }}
-                className="w-14 h-14 rounded-2xl bg-white dark:bg-slate-850 border border-slate-100 dark:border-slate-750 shadow-sm relative overflow-hidden group cursor-pointer"
-              >
-                {user.image || user.profilePic ? (
-                  <img src={user.image || user.profilePic} alt="profile" className="w-full h-full object-cover" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600">
-                    <User size={24} weight="bold" />
-                  </div>
-                )}
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="text-[10px] font-bold tracking-wider text-slate-400 dark:text-slate-500 uppercase">{user.role || 'Farmer'}</div>
-                <div className="text-base font-bold text-slate-900 dark:text-white truncate">{user.name || 'Smart Farmer'}</div>
-              </div>
-            </div>
-          )}
-
           {/* Links */}
           <div className="flex-1 overflow-y-auto my-2 pr-2 space-y-6 scrollbar-none hide-scrollbar">
             {/* Core Modules */}
@@ -360,16 +338,7 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Logout */}
-          <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
-            <button 
-              onClick={async () => { setOpen(false); await logout(); navigate('/'); }} 
-              className="w-full flex items-center justify-center gap-2 py-3.5 text-base font-bold bg-red-50 hover:bg-red-100 dark:bg-red-500/10 dark:hover:bg-red-500/20 text-red-600 dark:text-red-400 transition-colors rounded-2xl shadow-sm"
-            >
-              <SignOut size={20} weight="bold" />
-              Log Out
-            </button>
-          </div>
+
         </div>
       </div>
     </>
