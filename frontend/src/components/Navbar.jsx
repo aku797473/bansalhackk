@@ -26,7 +26,8 @@ import {
   Sparkle,
   Gear,
   CaretRight,
-  ChatCircleText
+  ChatCircleText,
+  ShoppingBag
 } from '@phosphor-icons/react';
 
 export default function Navbar() {
@@ -83,7 +84,8 @@ export default function Navbar() {
 
   const moreLinks = [
     { to: '/labour',           label: t('nav.labour'), icon: Briefcase },
-    { to: '/seller',           label: t('nav.buyer'), icon: Handshake },
+    { to: '/seller',           label: t('nav.seller'), icon: Handshake },
+    { to: '/buyer',            label: t('nav.buyer'), icon: ShoppingBag },
     { to: '/profit-predictor', label: t('nav.profit_predictor'), icon: ChartLineUp },
     { to: '/map',              label: t('nav.map'), icon: MapPin },
     { to: '/news',             label: t('nav.news'), icon: Newspaper },

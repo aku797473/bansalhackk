@@ -37,6 +37,7 @@ const MapView     = lazy(() => import('./pages/MapView'));
 const Profile     = lazy(() => import('./pages/Profile'));
 const News        = lazy(() => import('./pages/News'));
 const Schemes     = lazy(() => import('./pages/Schemes'));
+const Seller      = lazy(() => import('./pages/SellerPortal'));
 const Buyer       = lazy(() => import('./pages/BuyerPortal'));
 const ProfitPredictor = lazy(() => import('./pages/ProfitPredictor'));
 const SOS         = lazy(() => import('./pages/SOS'));
@@ -127,7 +128,8 @@ export default function App() {
                   <Route path="/map"        element={<ProtectedRoute><MapView /></ProtectedRoute>} />
                   <Route path="/news"       element={<ProtectedRoute><News /></ProtectedRoute>} />
                   <Route path="/schemes"    element={<ProtectedRoute><Schemes /></ProtectedRoute>} />
-                  <Route path="/seller"     element={<ProtectedRoute><Buyer /></ProtectedRoute>} />
+                  <Route path="/seller"     element={<ProtectedRoute><Seller /></ProtectedRoute>} />
+                  <Route path="/buyer"      element={<ProtectedRoute><Buyer /></ProtectedRoute>} />
                   <Route path="/profit-predictor" element={<ProtectedRoute><ProfitPredictor /></ProtectedRoute>} />
                   <Route path="/sos"        element={<ProtectedRoute><SOS /></ProtectedRoute>} />
                   <Route path="/community"  element={<ProtectedRoute><Community /></ProtectedRoute>} />

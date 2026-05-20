@@ -121,6 +121,8 @@ export const buyerAPI = {
   getMarkers:   () => businessApi.get('/buyer/map-markers'),
   createOrder:  (data) => businessApi.post('/buyer/orders', data),
   updatePayment: (id, data) => businessApi.patch(`/buyer/orders/${id}/payment`, data),
+  getListings:   (params) => businessApi.get('/buyer/listings', { params }),
+  createListing: (data) => businessApi.post('/buyer/listings', data),
 };
 
 export default authApi;

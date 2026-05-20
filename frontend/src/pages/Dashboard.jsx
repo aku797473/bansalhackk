@@ -140,7 +140,8 @@ export default function Dashboard() {
     { id: 'news', to: '/news', size: 'sm', label: t('nav.news') },
     { id: 'schemes', to: '/schemes', size: 'sm', label: t('nav.schemes') },
     { id: 'map', to: '/map', size: 'md', label: t('nav.map'), desc: t('dashboard.map_desc') },
-    { id: 'buyer', to: '/seller', size: 'sm', label: t('nav.buyer') },
+    { id: 'seller', to: '/seller', size: 'sm', label: t('nav.seller') },
+    { id: 'buyer', to: '/buyer', size: 'sm', label: t('nav.buyer') },
     { id: 'profit_predictor', to: '/profit-predictor', size: 'sm', label: t('nav.profit_predictor') },
   ];
 

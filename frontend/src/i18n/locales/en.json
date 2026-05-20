@@ -15,7 +15,8 @@
     "light": "Light Mode",
     "dark": "Dark Mode",
     "slogan": "Farm Smarter",
-    "buyer": "Seller Portal",
+    "seller": "Seller Portal",
+    "buyer": "Buyer Portal",
     "profit_predictor": "Profit Predictor",
     "community": "Kisan Community"
   },
@@ -830,5 +831,35 @@
     "error_rating": "Please select a star rating",
     "error_suggestion": "Please write a suggestion",
     "success": "Thank you for your valuable feedback!"
+  },
+  "buyer_portal": {
+    "title": "Buyer Portal",
+    "subtitle": "Browse crop listings posted by local farmers or sell your own yield directly.",
+    "tabs": {
+      "browse": "Browse Crops",
+      "post": "Sell Your Yield"
+    },
+    "search_placeholder": "Search crops, districts, or farmers...",
+    "categories": {
+      "all": "All Produce",
+      "grains": "Grains",
+      "vegetables": "Vegetables",
+      "fruits": "Fruits",
+      "pulses": "Pulses",
+      "oilseeds": "Oilseeds",
+      "spices": "Spices"
+    },
+    "post_title": "List Your Crop Yield for Sale",
+    "produce_name": "Produce / Crop Name",
+    "category": "Category",
+    "quantity": "Available Quantity",
+    "unit": "Unit",
+    "price_per_unit": "Expected Price (per unit)",
+    "village": "Village / Area Address",
+    "state": "State",
+    "district": "District",
+    "description": "Crop Quality & Details",
+    "create_listing": "List Produce for Sale",
+    "fields_required": "Please fill all required fields"
   }
 }
