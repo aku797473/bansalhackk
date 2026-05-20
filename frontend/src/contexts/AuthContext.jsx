@@ -180,7 +180,17 @@ export function AuthProvider({ children }) {
   };
 
   const logout = () => {
-    setShowFeedback(true);
+    const lastPrompt = localStorage.getItem('sk_last_feedback_prompt');
+    const now = Date.now();
+    const sevenDays = 7 * 24 * 60 * 60 * 1000;
+    
+    // Only show feedback modal if it's the first time or 7 days have passed
+    if (!lastPrompt || (now - parseInt(lastPrompt, 10)) > sevenDays) {
+      localStorage.setItem('sk_last_feedback_prompt', now.toString());
+      setShowFeedback(true);
+    } else {
+      confirmLogout();
+    }
   };
 
   const handleSubmitFeedback = async () => {
