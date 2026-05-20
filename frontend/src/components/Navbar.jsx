@@ -90,6 +90,7 @@ export default function Navbar() {
     { to: '/map',              label: t('nav.map', 'Map View'), icon: MapPin },
     { to: '/news',             label: t('nav.news', 'News'), icon: Newspaper },
     { to: '/schemes',          label: t('nav.schemes', 'Government Schemes'), icon: Sparkle },
+    { to: '/profile',          label: t('nav.profile', 'Profile Settings'), icon: Gear },
   ];
 
   useEffect(() => {
@@ -176,12 +177,9 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Profile Popover Toggle */}
-          <div className="relative" ref={userMenuRef}>
-            <button 
-              onClick={() => setUserMenuOpen(!userMenuOpen)}
-              className="w-full flex items-center gap-3 p-3 bg-slate-50/50 dark:bg-slate-800/30 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border border-slate-200/50 dark:border-slate-800 rounded-2xl transition-all hover:border-indigo-600/30 focus:outline-none"
-            >
+          {/* Profile Card & Logout Button */}
+          <div className="w-full flex items-center justify-between p-3 bg-slate-50/50 dark:bg-slate-800/30 border border-slate-200/50 dark:border-slate-800 rounded-2xl">
+            <div className="flex items-center gap-3 truncate">
               <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-850 border border-slate-200/50 dark:border-slate-800 overflow-hidden shrink-0">
                 {user?.image || user?.profilePic ? (
                   <img src={user.image || user.profilePic} alt="user" className="w-full h-full object-cover" />
@@ -195,23 +193,15 @@ export default function Navbar() {
                 <div className="text-[9px] font-black text-slate-400 dark:text-slate-500 tracking-wider uppercase">{user?.role || 'Farmer'}</div>
                 <div className="text-sm font-extrabold text-slate-800 dark:text-slate-200 truncate">{user?.name}</div>
               </div>
-              <CaretRight size={14} className={clsx("text-slate-400 transition-transform duration-300", userMenuOpen ? "rotate-90" : "")} />
+            </div>
+            
+            <button 
+              onClick={async () => { await logout(); navigate('/'); }}
+              className="p-2.5 text-slate-400 hover:text-red-500 dark:text-slate-500 dark:hover:text-red-400 bg-white dark:bg-slate-900 hover:bg-red-50 dark:hover:bg-red-950/20 border border-slate-200/50 dark:border-slate-800 shadow-sm rounded-xl transition-all active:scale-95 shrink-0"
+              title="Log Out"
+            >
+              <SignOut size={16} weight="bold" />
             </button>
-
-            {userMenuOpen && (
-              <div className="absolute bottom-full left-0 mb-3 w-56 bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 rounded-2xl shadow-2xl p-2 animate-in fade-in slide-in-from-bottom-2 z-50">
-                 <button onClick={() => { setUserMenuOpen(false); navigate('/profile'); }} className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-indigo-600 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-all">
-                   <User size={16} weight="bold" /> Profile Settings
-                 </button>
-                 <div className="h-px bg-slate-100 dark:bg-slate-800 my-1.5 mx-2" />
-                 <button 
-                   onClick={async () => { setUserMenuOpen(false); await logout(); navigate('/'); }}
-                   className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all"
-                 >
-                   <SignOut size={16} weight="bold" /> Log Out
-                 </button>
-              </div>
-            )}
           </div>
         </div>
       </aside>
