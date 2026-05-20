@@ -233,7 +233,7 @@ export default function Labour() {
                 Active Contracts
               </div>
             </div>
-            <h1 className="text-3xl font-bold tracking-tight text-black dark:text-white leading-tight font-outfit">
+            <h1 className="text-3xl font-bold tracking-tight text-black dark:text-black leading-tight font-outfit">
               <span className="bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400 bg-clip-text text-transparent">
                 {t('labour.title')}
               </span>

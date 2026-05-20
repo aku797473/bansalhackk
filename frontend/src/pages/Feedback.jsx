@@ -48,7 +48,7 @@ export default function Feedback() {
             <Sparkle size={14} weight="fill" className="animate-pulse" />
             {t('feedback.badge')}
           </div>
-          <h1 className="text-3xl font-bold tracking-tight text-black dark:text-white leading-tight font-outfit mb-3">
+          <h1 className="text-3xl font-bold tracking-tight text-black dark:text-black leading-tight font-outfit mb-3">
             <span className="bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">
               {t('feedback.title')}
             </span>

@@ -159,7 +159,7 @@ export default function Weather() {
                 Radar Connected
               </div>
             </div>
-            <h1 className="text-3xl font-bold tracking-tight text-black dark:text-white leading-tight font-outfit">
+            <h1 className="text-3xl font-bold tracking-tight text-black dark:text-black leading-tight font-outfit">
               <span className="bg-gradient-to-r from-sky-600 to-blue-600 dark:from-sky-400 dark:to-blue-400 bg-clip-text text-transparent">
                 {t('weather.title')}
               </span>

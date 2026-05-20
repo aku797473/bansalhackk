@@ -57,7 +57,7 @@ export default function Schemes() {
                 Verified Government Scheme
               </div>
             </div>
-            <h1 className="text-3xl font-bold tracking-tight text-black dark:text-white leading-tight font-outfit">
+            <h1 className="text-3xl font-bold tracking-tight text-black dark:text-black leading-tight font-outfit">
               <span className="bg-gradient-to-r from-amber-600 to-orange-600 dark:from-amber-400 dark:to-orange-400 bg-clip-text text-transparent">
                 {t('schemes.title')}
               </span>

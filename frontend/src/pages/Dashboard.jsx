@@ -189,7 +189,7 @@ export default function Dashboard() {
             <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">Dashboard</span>
           </div>
           
-          <h1 className="text-3xl font-bold tracking-tight text-black dark:text-white leading-tight">
+          <h1 className="text-3xl font-bold tracking-tight text-black dark:text-black leading-tight">
             <span className="block text-slate-400 dark:text-slate-500 text-lg sm:text-xl font-medium mb-1">{t(greetingKey)},</span>
             {user?.name?.split(' ')[0] || t('auth.farmer')}
           </h1>

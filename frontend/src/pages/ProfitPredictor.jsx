@@ -157,7 +157,7 @@ export default function ProfitPredictor() {
                 Analysis Engine Connected
               </div>
             </div>
-            <h1 className="text-3xl font-bold tracking-tight text-black dark:text-white leading-tight font-outfit">
+            <h1 className="text-3xl font-bold tracking-tight text-black dark:text-black leading-tight font-outfit">
               <span className="bg-gradient-to-r from-emerald-600 to-green-600 dark:from-emerald-400 dark:to-green-400 bg-clip-text text-transparent">
                 {t('profit_predictor.title')}
               </span>
