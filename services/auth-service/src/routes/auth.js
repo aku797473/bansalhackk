@@ -184,4 +184,69 @@ router.get('/me', async (req, res) => {
   }
 });
 
+// Mock OTP Storage for hackathon
+const otpStore = new Map();
+
+// POST /auth/forgot-password/request
+router.post('/forgot-password/request', async (req, res) => {
+  try {
+    const { phone } = req.body;
+    if (!phone) return res.status(400).json({ success: false, message: 'Phone number required' });
+    
+    const user = await AuthUser.findOne({ phone });
+    if (!user) return res.status(404).json({ success: false, message: 'Account not found for this number' });
+    
+    // Generate 6 digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = Date.now() + 5 * 60 * 1000; // 5 mins
+    
+    otpStore.set(phone, { otp, expiresAt });
+    console.log(`[SIMULATED SMS to ${phone}] Your SmartKisan reset OTP is: ${otp}`);
+    
+    res.json({ success: true, mockOtp: otp, message: 'OTP sent successfully' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Failed to request OTP' });
+  }
+});
+
+// POST /auth/forgot-password/reset
+router.post('/forgot-password/reset', async (req, res) => {
+  try {
+    const { phone, otp, newPassword } = req.body;
+    if (!phone || !otp || !newPassword) {
+      return res.status(400).json({ success: false, message: 'Phone, OTP, and new password required' });
+    }
+    
+    const stored = otpStore.get(phone);
+    if (!stored || stored.otp !== otp || Date.now() > stored.expiresAt) {
+      return res.status(400).json({ success: false, message: 'Invalid or expired OTP' });
+    }
+    
+    // Validate new password format
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(newPassword)) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character.' 
+      });
+    }
+    
+    const user = await AuthUser.findOne({ phone });
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+    
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    // Optionally invalidate all refresh tokens on password reset for security
+    user.refreshTokens = [];
+    await user.save();
+    
+    // Clear OTP
+    otpStore.delete(phone);
+    
+    res.json({ success: true, message: 'Password reset successfully. Please login with your new password.' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Failed to reset password' });
+  }
+});
+
 module.exports = router;

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { authAPI } from '../services/api';
 import ThreeBackground from '../components/ThreeBackground';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
@@ -13,12 +14,14 @@ export default function Login() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState('login'); 
+  const [otpStep, setOtpStep] = useState(false);
   const [role, setRole] = useState('farmer');
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
-    password: ''
+    password: '',
+    otp: ''
   });
 
   const handleGoogleLogin = async () => {
@@ -44,17 +47,30 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const id = toast.loading(mode === 'login' ? 'Validating Identity...' : 'Initializing Identity...');
+    const id = toast.loading(mode === 'login' ? 'Validating Identity...' : mode === 'register' ? 'Initializing Identity...' : 'Processing Request...');
     
     try {
       if (mode === 'login') {
         await login(formData.phone, formData.password);
-      } else {
+        toast.success('Identity Verified', { id });
+        navigate('/dashboard');
+      } else if (mode === 'register') {
         if (!formData.name) throw new Error("Full Name is required");
         await register(formData.name, formData.phone, formData.password, role);
+        toast.success('Identity Verified', { id });
+        navigate('/dashboard');
+      } else if (mode === 'forgot-password') {
+        if (!otpStep) {
+          const res = await authAPI.requestPasswordReset(formData.phone);
+          toast.success(`Demo Mode: Your OTP is ${res.data.mockOtp}`, { id, duration: 8000 });
+          setOtpStep(true);
+        } else {
+          await authAPI.resetPassword(formData.phone, formData.otp, formData.password);
+          toast.success('Password Reset Successfully. Please Login.', { id });
+          setMode('login');
+          setOtpStep(false);
+        }
       }
-      toast.success('Identity Verified', { id });
-      navigate('/dashboard');
     } catch (error) {
       const msg = error.response?.data?.message || error.message || 'Operation failed';
       toast.error(msg, { id });
@@ -82,37 +98,39 @@ export default function Login() {
              SMART KISAN
           </h1>
           <p className="text-xs font-bold text-slate-450 dark:text-slate-400 mt-2.5 uppercase tracking-widest">
-            {mode === 'login' ? 'Next-Gen Gateway Authentication' : 'Establish New Secure Identity'}
+            {mode === 'login' ? 'Next-Gen Gateway Authentication' : mode === 'register' ? 'Establish New Secure Identity' : 'Account Recovery Mode'}
           </p>
         </div>
 
         {/* Tab Selection */}
-        <div className="flex bg-slate-100/60 dark:bg-slate-800/40 p-1.5 rounded-2xl mb-8 border border-slate-200/20 shadow-inner">
-          <button 
-            type="button"
-            onClick={() => setMode('login')}
-            className={clsx(
-              "flex-1 py-3 text-xs font-bold rounded-xl transition-all duration-300 flex items-center justify-center gap-2",
-              mode === 'login' 
-                ? "bg-white dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 shadow-sm border border-slate-200/10" 
-                : "text-slate-450 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
-            )}
-          >
-            <ShieldCheck size={14} /> Sign In
-          </button>
-          <button 
-            type="button"
-            onClick={() => setMode('register')}
-            className={clsx(
-              "flex-1 py-3 text-xs font-bold rounded-xl transition-all duration-300 flex items-center justify-center gap-2",
-              mode === 'register' 
-                ? "bg-white dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 shadow-sm border border-slate-200/10" 
-                : "text-slate-450 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
-            )}
-          >
-            <UserPlus size={14} /> Create Account
-          </button>
-        </div>
+        {mode !== 'forgot-password' && (
+          <div className="flex bg-slate-100/60 dark:bg-slate-800/40 p-1.5 rounded-2xl mb-8 border border-slate-200/20 shadow-inner">
+            <button 
+              type="button"
+              onClick={() => setMode('login')}
+              className={clsx(
+                "flex-1 py-3 text-xs font-bold rounded-xl transition-all duration-300 flex items-center justify-center gap-2",
+                mode === 'login' 
+                  ? "bg-white dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 shadow-sm border border-slate-200/10" 
+                  : "text-slate-450 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
+              )}
+            >
+              <ShieldCheck size={14} /> Sign In
+            </button>
+            <button 
+              type="button"
+              onClick={() => setMode('register')}
+              className={clsx(
+                "flex-1 py-3 text-xs font-bold rounded-xl transition-all duration-300 flex items-center justify-center gap-2",
+                mode === 'register' 
+                  ? "bg-white dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 shadow-sm border border-slate-200/10" 
+                  : "text-slate-450 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
+              )}
+            >
+              <UserPlus size={14} /> Create Account
+            </button>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-6 mb-8">
           
@@ -135,47 +153,80 @@ export default function Login() {
           )}
           
           {/* Phone Number */}
-          <div className="space-y-2">
-            <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 ml-1">Phone Number</label>
-            <div className="relative">
-              <input 
-                required
-                type="tel" 
-                pattern="[0-9]{10}"
-                title="10 digit phone number"
-                placeholder="98XXXXXXXX"
-                value={formData.phone}
-                onChange={e => setFormData({...formData, phone: e.target.value})}
-                className="w-full h-14 bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 rounded-2xl pl-12 pr-5 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500/20 transition-all outline-none"
-              />
-              <Phone size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+          {(!otpStep || mode !== 'forgot-password') && (
+            <div className="space-y-2">
+              <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 ml-1">Phone Number</label>
+              <div className="relative">
+                <input 
+                  required
+                  type="tel" 
+                  pattern="[0-9]{10}"
+                  title="10 digit phone number"
+                  placeholder="98XXXXXXXX"
+                  value={formData.phone}
+                  onChange={e => setFormData({...formData, phone: e.target.value})}
+                  className="w-full h-14 bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 rounded-2xl pl-12 pr-5 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500/20 transition-all outline-none"
+                />
+                <Phone size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+              </div>
             </div>
-          </div>
+          )}
+
+          {/* OTP Field for Forgot Password */}
+          {mode === 'forgot-password' && otpStep && (
+            <div className="space-y-2">
+              <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 ml-1">OTP Code</label>
+              <div className="relative">
+                <input 
+                  required
+                  type="text" 
+                  pattern="[0-9]{6}"
+                  title="6 digit OTP"
+                  placeholder="123456"
+                  value={formData.otp}
+                  onChange={e => setFormData({...formData, otp: e.target.value})}
+                  className="w-full h-14 bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 rounded-2xl pl-12 pr-5 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500/20 transition-all outline-none tracking-[0.5em] font-mono text-center"
+                />
+                <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+              </div>
+            </div>
+          )}
 
           {/* Password */}
-          <div className="space-y-2 relative">
-            <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 ml-1">Password</label>
-            <div className="relative">
-              <input 
-                required
-                type={showPassword ? "text" : "password"} 
-                pattern={mode === 'register' ? "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$" : undefined}
-                title={mode === 'register' ? "Must be at least 8 characters, 1 uppercase, 1 lowercase, 1 number, and 1 special character" : undefined}
-                placeholder="Secret Key"
-                value={formData.password}
-                onChange={e => setFormData({...formData, password: e.target.value})}
-                className="w-full h-14 bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 rounded-2xl pl-12 pr-12 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500/20 transition-all outline-none"
-              />
-              <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-              <button 
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-500 transition-colors"
-              >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
+          {((mode !== 'forgot-password') || (mode === 'forgot-password' && otpStep)) && (
+            <div className="space-y-2 relative">
+              <div className="flex items-center justify-between ml-1">
+                <label className="text-xs font-semibold text-slate-600 dark:text-slate-400">
+                  {mode === 'forgot-password' ? 'New Password' : 'Password'}
+                </label>
+                {mode === 'login' && (
+                  <button type="button" onClick={() => { setMode('forgot-password'); setOtpStep(false); setFormData({...formData, otp: '', password: ''}); }} className="text-[10px] font-bold text-indigo-500 hover:text-indigo-600 transition-colors">
+                    Forgot Password?
+                  </button>
+                )}
+              </div>
+              <div className="relative">
+                <input 
+                  required
+                  type={showPassword ? "text" : "password"} 
+                  pattern={mode === 'register' || mode === 'forgot-password' ? "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$" : undefined}
+                  title={mode === 'register' || mode === 'forgot-password' ? "Must be at least 8 characters, 1 uppercase, 1 lowercase, 1 number, and 1 special character" : undefined}
+                  placeholder="Secret Key"
+                  value={formData.password}
+                  onChange={e => setFormData({...formData, password: e.target.value})}
+                  className="w-full h-14 bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 rounded-2xl pl-12 pr-12 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500/20 transition-all outline-none"
+                />
+                <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                <button 
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-500 transition-colors"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Account Role Card Grid (For Register Only) */}
           {mode === 'register' && (
@@ -209,11 +260,27 @@ export default function Login() {
           <button
             disabled={loading}
             type="submit"
-            className="w-full h-14 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-2xl font-bold text-sm shadow-lg shadow-emerald-500/20 hover:-translate-y-0.5 active:scale-[0.99] transition-all disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full h-14 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-2xl font-bold text-sm shadow-lg shadow-emerald-500/20 hover:-translate-y-0.5 active:scale-[0.99] transition-all disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer mt-4"
           >
-            <span>{loading ? 'Authenticating...' : mode === 'login' ? 'Access Portal' : 'Register Identity'}</span>
+            <span>
+              {loading 
+                ? 'Processing...' 
+                : mode === 'login' 
+                  ? 'Access Portal' 
+                  : mode === 'register' 
+                    ? 'Register Identity' 
+                    : !otpStep ? 'Send OTP' : 'Reset Password'}
+            </span>
             {!loading && <ArrowRight size={16} />}
           </button>
+          
+          {mode === 'forgot-password' && (
+            <div className="text-center mt-4">
+              <button type="button" onClick={() => { setMode('login'); setOtpStep(false); }} className="text-xs font-bold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors">
+                &larr; Back to Login
+              </button>
+            </div>
+          )}
         </form>
 
         {/* Divider */}

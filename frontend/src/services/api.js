@@ -48,6 +48,8 @@ export const authAPI = {
   refresh:    (refreshToken) => authApi.post('/auth/refresh', { refreshToken }),
   logout:     (refreshToken) => authApi.post('/auth/logout', { refreshToken }),
   me:         () => authApi.get('/auth/me'),
+  requestPasswordReset: (phone) => authApi.post('/auth/forgot-password/request', { phone }),
+  resetPassword: (phone, otp, newPassword) => authApi.post('/auth/forgot-password/reset', { phone, otp, newPassword }),
 };
 
 export const userAPI = {
