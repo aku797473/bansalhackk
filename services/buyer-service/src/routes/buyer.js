@@ -52,16 +52,7 @@ router.get('/map-markers', async (req, res) => {
   }
 });
 
-// Get shop details
-router.get('/:id', async (req, res) => {
-  try {
-    const buyer = await Buyer.findById(req.params.id);
-    if (!buyer) return res.status(404).json({ success: false, message: 'Shop not found' });
-    res.json({ success: true, data: buyer });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-});
+
 
 // ─── Direct Farmer Marketplace (Existing Buyer Service) ───────────────
 
@@ -149,6 +140,17 @@ router.patch('/orders/:id/payment', async (req, res) => {
     }
 
     res.json({ success: true, data: order });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// Get shop details (Wildcard route MUST be at the bottom)
+router.get('/:id', async (req, res) => {
+  try {
+    const buyer = await Buyer.findById(req.params.id);
+    if (!buyer) return res.status(404).json({ success: false, message: 'Shop not found' });
+    res.json({ success: true, data: buyer });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

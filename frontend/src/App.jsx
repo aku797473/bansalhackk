@@ -209,6 +209,12 @@ function DesktopHeader() {
 
 function AppLayout({ children }) {
   const { isAuth } = useAuth();
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   return (
     <div className="min-h-screen bg-surface dark:bg-slate-900 transition-colors duration-200 flex flex-col">
       <KeepAlive />
