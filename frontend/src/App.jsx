@@ -75,12 +75,14 @@ function AppLayout({ children }) {
     <div className="min-h-screen bg-surface dark:bg-slate-900 transition-colors duration-200 flex flex-col">
       <KeepAlive />
       {isAuth && <Navbar />}
-      <main className={clsx("flex-grow transition-all duration-200", isAuth ? 'pt-16' : '')}>
-        <Suspense fallback={<LoadingScreen />}>
-          {children}
-        </Suspense>
-      </main>
-      <Footer />
+      <div className={clsx("flex-grow flex flex-col transition-all duration-300", isAuth ? 'xl:pl-80' : '')}>
+        <main className={clsx("flex-grow transition-all duration-200", isAuth ? 'pt-16 xl:pt-6' : '')}>
+          <Suspense fallback={<LoadingScreen />}>
+            {children}
+          </Suspense>
+        </main>
+        <Footer />
+      </div>
       {isAuth && <ChatWidget />}
       {isAuth && <VoiceAssistant />}
       {isAuth && (

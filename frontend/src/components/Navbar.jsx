@@ -74,22 +74,22 @@ export default function Navbar() {
   }, [i18n.language, user]);
 
   const primaryLinks = [
-    { to: '/dashboard',  label: t('nav.home'), icon: House },
-    { to: '/weather',    label: t('nav.weather'), icon: CloudSun },
-    { to: '/crop',       label: t('nav.crop'), icon: Plant },
-    { to: '/market',     label: t('nav.market'), icon: Storefront },
-    { to: '/fertilizer', label: t('nav.fertilizer'), icon: Flask },
-    { to: '/community',  label: t('nav.community'), icon: ChatCircleText },
+    { to: '/dashboard',  label: t('nav.home', 'Home'), icon: House },
+    { to: '/weather',    label: t('nav.weather', 'Weather'), icon: CloudSun },
+    { to: '/crop',       label: t('nav.crop', 'Crop Advisor'), icon: Plant },
+    { to: '/market',     label: t('nav.market', 'Market Trends'), icon: Storefront },
+    { to: '/fertilizer', label: t('nav.fertilizer', 'Fertilizer'), icon: Flask },
+    { to: '/community',  label: t('nav.community', 'Kisan Community'), icon: ChatCircleText },
   ];
 
   const moreLinks = [
-    { to: '/labour',           label: t('nav.labour'), icon: Briefcase },
-    { to: '/seller',           label: t('nav.seller'), icon: Handshake },
-    { to: '/buyer',            label: t('nav.buyer'), icon: ShoppingBag },
-    { to: '/profit-predictor', label: t('nav.profit_predictor'), icon: ChartLineUp },
-    { to: '/map',              label: t('nav.map'), icon: MapPin },
-    { to: '/news',             label: t('nav.news'), icon: Newspaper },
-    { to: '/schemes',          label: t('nav.schemes'), icon: Sparkle },
+    { to: '/labour',           label: t('nav.labour', 'Labour Marketplace'), icon: Briefcase },
+    { to: '/seller',           label: t('nav.seller', 'Seller Portal'), icon: Handshake },
+    { to: '/buyer',            label: t('nav.buyer', 'Buyer Portal'), icon: ShoppingBag },
+    { to: '/profit-predictor', label: t('nav.profit_predictor', 'Profit Predictor'), icon: ChartLineUp },
+    { to: '/map',              label: t('nav.map', 'Map View'), icon: MapPin },
+    { to: '/news',             label: t('nav.news', 'News'), icon: Newspaper },
+    { to: '/schemes',          label: t('nav.schemes', 'Government Schemes'), icon: Sparkle },
   ];
 
   useEffect(() => {
@@ -105,9 +105,122 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="fixed top-4 inset-x-0 z-[100] px-4 sm:px-6">
+      {/* ========================================================
+          DESKTOP LAYOUT: Sticky/Floating Left-Side Sidebar
+          ======================================================== */}
+      <aside className="hidden xl:flex fixed left-6 top-6 bottom-6 w-64 bg-white/70 dark:bg-slate-900/70 border border-slate-200/50 dark:border-slate-800/60 backdrop-blur-xl rounded-[2.25rem] shadow-premium p-6 flex-col justify-between z-[100] transition-colors duration-500">
+        <div className="flex flex-col">
+          {/* Logo */}
+          <NavLink to="/dashboard" className="flex flex-col leading-none mb-6">
+            <span className="text-2xl font-black tracking-tight text-slate-900 dark:text-white font-outfit">
+              Smart<span className="text-indigo-600">Kisan</span>
+            </span>
+            <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 tracking-widest mt-1.5 uppercase">Agri Intelligence</span>
+          </NavLink>
+
+          {/* Links scroll container */}
+          <div className="flex flex-col space-y-6 overflow-y-auto max-h-[calc(100vh-270px)] pr-1 scrollbar-thin hide-scrollbar">
+            {/* Core Links */}
+            <div className="space-y-1">
+              <span className="text-[9px] font-black text-slate-400 dark:text-slate-500 tracking-widest uppercase block mb-2 px-1">
+                Core Modules
+              </span>
+              {primaryLinks.map(({ to, label, icon: Icon }) => (
+                <NavLink key={to} to={to}
+                  className={({ isActive }) => clsx(
+                    'flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-bold transition-all duration-300',
+                    isActive 
+                      ? 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 shadow-sm border border-indigo-500/10' 
+                      : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50/50 dark:hover:bg-slate-800/50'
+                  )}>
+                  <Icon size={18} weight="duotone" className="shrink-0" />
+                  <span>{label}</span>
+                </NavLink>
+              ))}
+            </div>
+
+            {/* Additional Modules */}
+            <div className="space-y-1">
+              <span className="text-[9px] font-black text-slate-400 dark:text-slate-500 tracking-widest uppercase block mb-2 px-1">
+                Portals & Tools
+              </span>
+              {moreLinks.map(({ to, label, icon: Icon }) => (
+                <NavLink key={to} to={to}
+                  className={({ isActive }) => clsx(
+                    'flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-bold transition-all duration-300',
+                    isActive 
+                      ? 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 shadow-sm border border-indigo-500/10' 
+                      : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50/50 dark:hover:bg-slate-800/50'
+                  )}>
+                  <Icon size={18} weight="duotone" className="shrink-0" />
+                  <span>{label}</span>
+                </NavLink>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Footer controls & Profile menu */}
+        <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800/60">
+          {/* Quick Settings Bar (Theme & Language) */}
+          <div className="flex items-center justify-between gap-2 p-1.5 bg-slate-50/60 dark:bg-slate-800/30 rounded-2xl border border-slate-100/50 dark:border-slate-800/40">
+            <button 
+              onClick={toggleTheme} 
+              className="p-2 text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 bg-white dark:bg-slate-900 shadow-sm rounded-xl border border-slate-100 dark:border-slate-800 transition-all hover:scale-105 active:scale-95 flex items-center justify-center flex-1"
+              title={theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+            >
+              {theme === 'dark' ? <Sun size={16} weight="bold" /> : <Moon size={16} weight="bold" />}
+            </button>
+            <div className="flex-1 flex justify-center">
+              <LanguageSelector showLabel={false} />
+            </div>
+          </div>
+
+          {/* Profile Popover Toggle */}
+          <div className="relative" ref={userMenuRef}>
+            <button 
+              onClick={() => setUserMenuOpen(!userMenuOpen)}
+              className="w-full flex items-center gap-3 p-3 bg-slate-50/50 dark:bg-slate-800/30 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border border-slate-200/50 dark:border-slate-800 rounded-2xl transition-all hover:border-indigo-600/30 focus:outline-none"
+            >
+              <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-850 border border-slate-200/50 dark:border-slate-800 overflow-hidden shrink-0">
+                {user?.image || user?.profilePic ? (
+                  <img src={user.image || user.profilePic} alt="user" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-slate-400">
+                    <User size={18} weight="bold" />
+                  </div>
+                )}
+              </div>
+              <div className="flex-grow text-left truncate leading-tight">
+                <div className="text-[9px] font-black text-slate-400 dark:text-slate-500 tracking-wider uppercase">{user?.role || 'Farmer'}</div>
+                <div className="text-sm font-extrabold text-slate-800 dark:text-slate-200 truncate">{user?.name}</div>
+              </div>
+              <CaretRight size={14} className={clsx("text-slate-400 transition-transform duration-300", userMenuOpen ? "rotate-90" : "")} />
+            </button>
+
+            {userMenuOpen && (
+              <div className="absolute bottom-full left-0 mb-3 w-56 bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 rounded-2xl shadow-2xl p-2 animate-in fade-in slide-in-from-bottom-2 z-50">
+                 <button onClick={() => { setUserMenuOpen(false); navigate('/profile'); }} className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-indigo-600 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-all">
+                   <User size={16} weight="bold" /> Profile Settings
+                 </button>
+                 <div className="h-px bg-slate-100 dark:bg-slate-800 my-1.5 mx-2" />
+                 <button 
+                   onClick={async () => { setUserMenuOpen(false); await logout(); navigate('/'); }}
+                   className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all"
+                 >
+                   <SignOut size={16} weight="bold" /> Log Out
+                 </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </aside>
+
+      {/* ========================================================
+          MOBILE LAYOUT: Floating Top Header
+          ======================================================== */}
+      <header className="fixed top-4 inset-x-0 z-[100] px-4 sm:px-6 xl:hidden">
         <div className="max-w-7xl mx-auto h-16 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/20 dark:border-slate-800/60 rounded-2xl shadow-sm px-6 flex items-center justify-between gap-4">
-          
           <NavLink to="/dashboard" className="flex flex-col leading-none">
             <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
               Smart<span className="text-indigo-600">Kisan</span>
@@ -115,45 +228,6 @@ export default function Navbar() {
             <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 tracking-wider mt-0.5">Agri Intelligence</span>
           </NavLink>
 
-          {/* Desktop Nav */}
-          <nav className="hidden xl:flex items-center gap-2">
-            {primaryLinks.map(({ to, label }) => (
-              <NavLink key={to} to={to}
-                className={({ isActive }) => clsx(
-                  'px-4 py-2 rounded-xl text-base font-semibold transition-all duration-300',
-                  isActive 
-                    ? 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 shadow-sm border border-indigo-500/10' 
-                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50'
-                )}>
-                {label}
-              </NavLink>
-            ))}
-
-            <div className="relative" ref={moreMenuRef}>
-              <button 
-                onClick={() => setMoreOpen(!moreOpen)} 
-                className={clsx(
-                  "px-4 py-2 rounded-xl text-base font-semibold flex items-center gap-1 transition-all duration-300",
-                  moreOpen 
-                    ? 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400' 
-                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50'
-                )}
-              >
-                {t('common.more')}
-              </button>
-              {moreOpen && (
-                <div className="absolute top-full right-0 mt-4 w-56 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-2xl p-2 animate-in fade-in slide-in-from-top-2 z-50">
-                  {moreLinks.map(({ to, label }) => (
-                    <NavLink key={to} to={to} className="block px-4 py-3 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-indigo-600 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-all">
-                      {label}
-                    </NavLink>
-                  ))}
-                </div>
-              )}
-            </div>
-          </nav>
-
-          {/* Right Actions */}
           <div className="flex items-center gap-4">
             <div className="hidden sm:block">
               <LanguageSelector showLabel={false} />
@@ -211,7 +285,6 @@ export default function Navbar() {
       <div className={clsx("fixed inset-0 z-[200] xl:hidden transition-all duration-500", open ? "opacity-100 visible" : "opacity-0 invisible")}>
         <div className="absolute inset-0 bg-slate-950/40 dark:bg-slate-950/60 backdrop-blur-md" onClick={() => setOpen(false)} />
         <div className={clsx("absolute inset-y-0 right-0 w-full sm:w-[420px] bg-white dark:bg-slate-900 shadow-2xl p-6 flex flex-col transition-transform duration-500 border-l border-slate-100 dark:border-slate-800", open ? "translate-x-0" : "translate-x-full")}>
-          
           {/* Header */}
           <div className="flex justify-between items-center pb-6 border-b border-slate-100 dark:border-slate-800">
             <div className="flex flex-col leading-none">
@@ -228,12 +301,12 @@ export default function Navbar() {
             </button>
           </div>
 
-          {/* User profile section if logged in */}
+          {/* User profile */}
           {user && (
             <div className="my-6 p-4 bg-slate-50/50 dark:bg-slate-800/40 rounded-2xl border border-slate-100 dark:border-slate-800/60 flex items-center gap-4">
               <div 
                 onClick={() => { setOpen(false); navigate('/profile'); }}
-                className="w-14 h-14 rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-sm relative overflow-hidden group cursor-pointer"
+                className="w-14 h-14 rounded-2xl bg-white dark:bg-slate-850 border border-slate-100 dark:border-slate-750 shadow-sm relative overflow-hidden group cursor-pointer"
               >
                 {user.image || user.profilePic ? (
                   <img src={user.image || user.profilePic} alt="profile" className="w-full h-full object-cover" />
@@ -256,10 +329,9 @@ export default function Navbar() {
             </div>
           )}
 
-          {/* Navigation Links Scrollable */}
-          <div className="flex-1 overflow-y-auto my-2 pr-2 space-y-6 scrollbar-none">
-            
-            {/* Core Services */}
+          {/* Links */}
+          <div className="flex-1 overflow-y-auto my-2 pr-2 space-y-6 scrollbar-none hide-scrollbar">
+            {/* Core Modules */}
             <div className="space-y-2">
               <div className="text-[10px] font-bold tracking-widest text-slate-400 dark:text-slate-500 uppercase px-2">Core Modules</div>
               <div className="space-y-1">
@@ -282,7 +354,7 @@ export default function Navbar() {
               </div>
             </div>
 
-            {/* Additional Tools */}
+            {/* Additional Modules */}
             <div className="space-y-2">
               <div className="text-[10px] font-bold tracking-widest text-slate-400 dark:text-slate-500 uppercase px-2">Tools & Services</div>
               <div className="space-y-1">
@@ -305,10 +377,10 @@ export default function Navbar() {
               </div>
             </div>
 
-            {/* Actions Panel */}
+            {/* Settings */}
             <div className="space-y-2">
               <div className="text-[10px] font-bold tracking-widest text-slate-400 dark:text-slate-500 uppercase px-2">Settings</div>
-              <div className="space-y-1 p-2 bg-slate-50/50 dark:bg-slate-850 dark:bg-slate-800/20 rounded-2xl border border-slate-100/50 dark:border-slate-800/40">
+              <div className="space-y-1 p-2 bg-slate-50/50 dark:bg-slate-800/20 rounded-2xl border border-slate-100/50 dark:border-slate-800/40">
                 <button 
                   onClick={toggleTheme} 
                   className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-indigo-600 rounded-xl transition-all"
@@ -329,10 +401,9 @@ export default function Navbar() {
                 </div>
               </div>
             </div>
-
           </div>
 
-          {/* Footer Actions */}
+          {/* Logout */}
           <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
             <button 
               onClick={async () => { setOpen(false); await logout(); navigate('/'); }} 
@@ -342,7 +413,6 @@ export default function Navbar() {
               Log Out
             </button>
           </div>
-
         </div>
       </div>
     </>
