@@ -223,16 +223,7 @@ export default function Labour() {
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-10">
           <div>
-            <div className="flex flex-wrap items-center gap-3 mb-4">
-              <div className="px-3.5 py-1 bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-xs font-bold rounded-full border border-purple-200/50 dark:border-purple-800/35 flex items-center gap-2">
-                <Users size={14} weight="fill" className="animate-pulse" />
-                Verified Posts
-              </div>
-              <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-3.5 py-1 rounded-full border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2 text-xs font-bold text-slate-500">
-                <Handshake size={14} weight="fill" className="text-indigo-500" />
-                Active Contracts
-              </div>
-            </div>
+
             <h1 className="text-3xl font-bold tracking-tight text-black dark:text-black leading-tight font-outfit">
               {t('labour.title')}
             </h1>

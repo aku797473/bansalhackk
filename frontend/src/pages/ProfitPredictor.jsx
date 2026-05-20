@@ -147,16 +147,7 @@ export default function ProfitPredictor() {
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-10">
           <div>
-            <div className="flex flex-wrap items-center gap-3 mb-4">
-              <div className="px-3.5 py-1 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 text-xs font-bold rounded-full border border-emerald-200/50 dark:border-emerald-800/35 flex items-center gap-2">
-                <Sparkle size={14} weight="fill" className="animate-pulse" />
-                AI-Powered Predictor
-              </div>
-              <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-3.5 py-1 rounded-full border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2 text-xs font-bold text-slate-500">
-                <Lightning size={14} weight="fill" className="text-amber-500" />
-                Analysis Engine Connected
-              </div>
-            </div>
+
             <h1 className="text-3xl font-bold tracking-tight text-black dark:text-black leading-tight font-outfit">
               {t('profit_predictor.title')}
             </h1>

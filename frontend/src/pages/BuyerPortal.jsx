@@ -282,13 +282,8 @@ export default function BuyerPortal() {
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10 relative z-10">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-black dark:text-black flex items-center gap-4 mb-3">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-sky-500 to-indigo-600 rounded-2xl shadow-lg shadow-sky-500/20 flex items-center justify-center transform -rotate-3 hover:rotate-0 transition-transform duration-500">
-              <ShoppingBag className="text-white" size={24} weight="duotone" />
-            </div>
-            <span>
-              {t('buyer_portal.title', 'Buyer Portal')}
-            </span>
+          <h1 className="text-3xl font-bold tracking-tight text-black dark:text-black leading-tight font-outfit mb-3">
+            {t('buyer_portal.title', 'Buyer Portal')}
           </h1>
           <p className="text-slate-500 dark:text-slate-400 font-bold max-w-xl leading-relaxed text-sm">
             {t('buyer_portal.subtitle', 'Browse premium crop listings posted by local farmers or sell your own harvests directly.')}

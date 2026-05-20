@@ -233,13 +233,8 @@ export default function BuyerPortal() {
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10 relative z-10">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-black dark:text-black flex items-center gap-4 mb-3">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl shadow-lg shadow-green-500/20 flex items-center justify-center transform -rotate-3 hover:rotate-0 transition-transform duration-500">
-              <Storefront className="text-white" size={24} weight="duotone" />
-            </div>
-            <span>
-              {t('buyer.marketplace_title')}
-            </span>
+          <h1 className="text-3xl font-bold tracking-tight text-black dark:text-black leading-tight font-outfit mb-3">
+            {t('buyer.marketplace_title')}
           </h1>
           <p className="text-slate-500 dark:text-slate-400 font-bold max-w-xl leading-relaxed text-sm">
             {t('buyer.marketplace_subtitle')}

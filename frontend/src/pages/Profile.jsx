@@ -154,11 +154,8 @@ export default function Profile() {
       
       <div className="max-w-5xl mx-auto relative z-10">
         {/* Cover Banner Header */}
-        <div className="relative h-56 rounded-[2.5rem] bg-gradient-to-r from-emerald-500/10 via-green-600/5 to-amber-500/10 border border-emerald-500/10 overflow-visible mb-20 shadow-sm">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(16,185,129,0.05),transparent)]" />
-          <div className="absolute right-10 bottom-6 opacity-20">
-            <Sparkle size={120} className="text-emerald-600/15" weight="duotone" />
-          </div>
+        <div className="relative h-56 rounded-[2.5rem] bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-visible mb-20 shadow-sm">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(0,0,0,0.02),transparent)]" />
 
           {/* Avatar overlapping cover banner */}
           <div className="absolute -bottom-14 left-8 right-8 flex flex-col sm:flex-row items-center sm:items-end gap-6 text-center sm:text-left">
@@ -177,13 +174,13 @@ export default function Profile() {
             </div>
             <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageChange} />
             <div className="mb-4 space-y-1">
-              <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">{formData.name || user?.name || 'Smart Farmer'}</h2>
+              <h2 className="text-3xl font-extrabold text-black dark:text-black tracking-tight">{formData.name || user?.name || 'Smart Farmer'}</h2>
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 mt-2">
-                <div className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1 rounded-full border border-emerald-100/50 dark:border-emerald-900/30 shadow-sm capitalize">
+                <div className="text-xs font-semibold text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-900 px-3 py-1 rounded-full border border-slate-200 dark:border-slate-800 shadow-sm capitalize">
                   {user?.role || 'farmer'}
                 </div>
                 <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-medium">
-                  <MapPin size={14} className="text-emerald-500" />
+                  <MapPin size={14} className="text-slate-500" />
                   {formData.location || 'India'}
                 </div>
               </div>

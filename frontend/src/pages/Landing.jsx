@@ -36,14 +36,12 @@ export default function Landing() {
          {/* Side 1: Content (Heading size refined and inline-blocked) */}
          <div className="w-full lg:w-1/2 min-h-[70vh] lg:min-h-screen flex items-center px-6 sm:px-12 lg:px-24 pt-32 sm:pt-36 lg:pt-24 relative z-20 bg-white dark:bg-slate-950">
             <div className="max-w-xl w-full">
-               <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-500/10 text-emerald-600 rounded-full mb-6 border border-emerald-500/20">
+               <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-slate-100 text-slate-800 rounded-full mb-6 border border-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-800">
                   <span className="text-xs font-semibold tracking-wide capitalize">{t('landing.hero_badge')}</span>
                </div>
 
-               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight mb-6 sm:mb-8 uppercase">
-                  {t('landing.title').split(' ').map((word, i) => (
-                     <span key={i} className={clsx("inline-block mr-2.5", i % 2 !== 0 && "text-emerald-600")}>{word}</span>
-                  ))}
+               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight mb-6 sm:mb-8 uppercase text-black dark:text-black">
+                  {t('landing.title')}
                </h1>
 
                <p className="text-base sm:text-lg lg:text-xl text-slate-500 dark:text-slate-400 font-medium max-w-lg mb-8 sm:mb-12 leading-relaxed tracking-tight">

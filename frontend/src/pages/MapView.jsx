@@ -305,12 +305,7 @@ export default function MapView() {
       {/* ── Header ───────────────────────────────────── */}
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-10">
         <div>
-          <div className="flex items-center gap-3 mb-4">
-            <div className="px-3.5 py-1 bg-indigo-600 dark:bg-indigo-500 text-white text-[10px] font-bold uppercase tracking-widest rounded-xl shadow-lg shadow-indigo-500/20 border border-indigo-400/20 flex items-center gap-2">
-              <NavigationArrow size={14} weight="fill" className="animate-pulse" />
-              {t('map.gps_active')}
-            </div>
-          </div>
+
           <h1 className="text-3xl font-bold tracking-tight text-black dark:text-black leading-tight font-outfit">
             {t('map.title')}
           </h1>

@@ -188,16 +188,7 @@ export default function CropAdvisor() {
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-10">
           <div>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="px-3.5 py-1 bg-emerald-600 dark:bg-emerald-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-emerald-500/20 border border-emerald-400/20 flex items-center gap-2">
-                <Sparkle size={14} weight="fill" className="animate-pulse" />
-                {t('crop.scientific_rec')}
-              </div>
-              <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-3.5 py-1 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2 text-xs font-bold text-slate-500">
-                <ShieldCheck size={14} weight="fill" className="text-emerald-500" />
-                {t('crop.imd_verified')}
-              </div>
-            </div>
+
             <h1 className="text-3xl font-bold tracking-tight text-black dark:text-black leading-tight font-outfit">
               {t('crop.title')}
             </h1>

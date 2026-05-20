@@ -208,15 +208,12 @@ export default function Community() {
             "lg:col-span-4 bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl rounded-3xl lg:rounded-[2.5rem] border border-slate-200/50 dark:border-slate-800/50 p-4 lg:p-6 flex flex-col shadow-sm h-full",
             mobileView === 'chat' ? 'hidden lg:flex' : 'flex'
           )}>
-            <div className="flex items-center gap-3.5 mb-6 px-2">
-              <div className="w-11 h-11 bg-indigo-500 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                <ChatCircleText size={22} weight="bold" />
-              </div>
+            <div className="flex flex-col gap-1.5 mb-6 px-2">
               <div>
-                <h2 className="text-xl font-black text-slate-900 dark:text-white leading-tight font-outfit">
+                <h2 className="text-xl font-bold text-black dark:text-black leading-tight font-outfit">
                   {i18n.language === 'hi' ? 'किसान समुदाय' : 'Kisan Community'}
                 </h2>
-                <div className="flex items-center gap-1.5 mt-0.5">
+                <div className="flex items-center gap-1.5 mt-1">
                   <span className={clsx("w-2 h-2 rounded-full", connected ? "bg-emerald-500 animate-ping" : "bg-rose-500")} />
                   <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase">
                     {connected ? (i18n.language === 'hi' ? 'कनेक्टेड' : 'Connected') : (i18n.language === 'hi' ? 'डिस्कनेक्टेड' : 'Disconnected')}

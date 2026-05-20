@@ -44,10 +44,7 @@ export default function Feedback() {
         
         {/* Header Section */}
         <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-indigo-600 dark:bg-indigo-500 text-white text-[10px] font-bold uppercase tracking-widest rounded-xl shadow-lg shadow-indigo-500/20 border border-indigo-400/20 mb-4 mx-auto">
-            <Sparkle size={14} weight="fill" className="animate-pulse" />
-            {t('feedback.badge')}
-          </div>
+
           <h1 className="text-3xl font-bold tracking-tight text-black dark:text-black leading-tight font-outfit mb-3">
             {t('feedback.title')}
           </h1>
