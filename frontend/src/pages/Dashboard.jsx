@@ -138,14 +138,14 @@ export default function Dashboard() {
         );
       }
     },
-    { id: 'fertilizer', to: '/fertilizer', size: 'sm', label: t('nav.fertilizer'), icon: Drop },
-    { id: 'labour', to: '/labour', size: 'sm', label: t('nav.labour'), icon: Users },
-    { id: 'news', to: '/news', size: 'sm', label: t('nav.news'), icon: Newspaper },
-    { id: 'schemes', to: '/schemes', size: 'sm', label: t('nav.schemes'), icon: ShieldCheck },
-    { id: 'map', to: '/map', size: 'md', label: t('nav.map'), desc: t('dashboard.map_desc'), icon: MapTrifold },
-    { id: 'seller', to: '/seller', size: 'sm', label: t('nav.seller'), icon: Storefront },
-    { id: 'buyer', to: '/buyer', size: 'sm', label: t('nav.buyer'), icon: ShoppingCart },
-    { id: 'profit_predictor', to: '/profit-predictor', size: 'sm', label: t('nav.profit_predictor'), icon: ChartBar },
+    { id: 'fertilizer', to: '/fertilizer', size: 'sm', label: t('nav.fertilizer') },
+    { id: 'labour', to: '/labour', size: 'sm', label: t('nav.labour') },
+    { id: 'news', to: '/news', size: 'sm', label: t('nav.news') },
+    { id: 'schemes', to: '/schemes', size: 'sm', label: t('nav.schemes') },
+    { id: 'map', to: '/map', size: 'md', label: t('nav.map'), desc: t('dashboard.map_desc') },
+    { id: 'seller', to: '/seller', size: 'sm', label: t('nav.seller') },
+    { id: 'buyer', to: '/buyer', size: 'sm', label: t('nav.buyer') },
+    { id: 'profit_predictor', to: '/profit-predictor', size: 'sm', label: t('nav.profit_predictor') },
     { 
       id: 'profile', to: '/profile', size: 'sm', 
       label: t('nav.profile', 'Profile Settings'),
@@ -224,11 +224,6 @@ export default function Dashboard() {
               {m.render ? m.render() : (
                 <div className="flex flex-col h-full justify-between">
                   <div>
-                    {m.icon && (
-                      <div className="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 mb-5 shadow-sm ring-1 ring-indigo-500/10">
-                        <m.icon size={24} weight="duotone" />
-                      </div>
-                    )}
                     <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">{m.label}</span>
                     {m.desc && <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed mt-2">{m.desc}</p>}
                   </div>
