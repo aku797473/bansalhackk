@@ -18,9 +18,27 @@ const generateTokens = (payload) => {
 router.post('/register', async (req, res) => {
   try {
     const { phone, password, name = '', role = 'farmer' } = req.body;
+    
     if (!phone || !password) {
       return res.status(400).json({ success: false, message: 'Phone number and password required' });
     }
+
+    // Phone Validation (Basic 10 digit check for India)
+    const phoneRegex = /^[0-9]{10}$/;
+    if (!phoneRegex.test(phone)) {
+      return res.status(400).json({ success: false, message: 'Invalid phone number format. Must be 10 digits.' });
+    }
+
+    // SaaS Standard Password Validation
+    // Minimum 8 characters, at least 1 uppercase, 1 lowercase, 1 number, and 1 special character
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character.' 
+      });
+    }
+
     let user = await AuthUser.findOne({ phone });
     if (user) {
       return res.status(400).json({ success: false, message: 'Account already exists for this number' });

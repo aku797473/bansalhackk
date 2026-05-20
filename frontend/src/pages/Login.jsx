@@ -141,6 +141,8 @@ export default function Login() {
               <input 
                 required
                 type="tel" 
+                pattern="[0-9]{10}"
+                title="10 digit phone number"
                 placeholder="98XXXXXXXX"
                 value={formData.phone}
                 onChange={e => setFormData({...formData, phone: e.target.value})}
@@ -157,6 +159,8 @@ export default function Login() {
               <input 
                 required
                 type={showPassword ? "text" : "password"} 
+                pattern={mode === 'register' ? "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$" : undefined}
+                title={mode === 'register' ? "Must be at least 8 characters, 1 uppercase, 1 lowercase, 1 number, and 1 special character" : undefined}
                 placeholder="Secret Key"
                 value={formData.password}
                 onChange={e => setFormData({...formData, password: e.target.value})}
