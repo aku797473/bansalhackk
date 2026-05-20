@@ -135,10 +135,6 @@ export default function Fertilizer() {
                 <Flask size={14} weight="fill" className="animate-pulse" />
                 {t('fertilizer.seed_iq')}
               </div>
-              <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                <ShieldCheck size={14} weight="fill" className="text-emerald-500" />
-                {t('fertilizer.ai_verified')}
-              </div>
             </div>
             <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none font-outfit">
               <span className="bg-gradient-to-r from-amber-600 to-orange-600 dark:from-amber-400 dark:to-orange-400 bg-clip-text text-transparent">
