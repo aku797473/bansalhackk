@@ -137,9 +137,7 @@ export default function Fertilizer() {
               </div>
             </div>
             <h1 className="text-3xl font-bold tracking-tight text-black dark:text-black leading-tight font-outfit">
-              <span className="bg-gradient-to-r from-amber-600 to-orange-600 dark:from-amber-400 dark:to-orange-400 bg-clip-text text-transparent">
-                {t('fertilizer.title')}
-              </span>
+              {t('fertilizer.title')}
             </h1>
             <p className="text-sm text-slate-500 dark:text-slate-400 font-bold mt-3 max-w-lg leading-relaxed">
               {t('fertilizer.ai_desc')}

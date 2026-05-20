@@ -185,9 +185,7 @@ export default function Market() {
               </div>
             </div>
             <h1 className="text-3xl font-bold tracking-tight text-black dark:text-black leading-tight font-outfit">
-              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
-                {t('market.title')}
-              </span>
+              {t('market.title')}
             </h1>
             <p className="text-sm text-slate-500 dark:text-slate-400 font-bold mt-3 max-w-lg leading-relaxed">
               {t('market.explorer_desc')}

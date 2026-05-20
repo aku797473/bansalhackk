@@ -286,7 +286,7 @@ export default function BuyerPortal() {
             <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-sky-500 to-indigo-600 rounded-2xl shadow-lg shadow-sky-500/20 flex items-center justify-center transform -rotate-3 hover:rotate-0 transition-transform duration-500">
               <ShoppingBag className="text-white" size={24} weight="duotone" />
             </div>
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-sky-600 to-indigo-600 dark:from-sky-400 dark:to-indigo-400 font-outfit">
+            <span>
               {t('buyer_portal.title', 'Buyer Portal')}
             </span>
           </h1>

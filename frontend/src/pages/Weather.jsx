@@ -160,9 +160,7 @@ export default function Weather() {
               </div>
             </div>
             <h1 className="text-3xl font-bold tracking-tight text-black dark:text-black leading-tight font-outfit">
-              <span className="bg-gradient-to-r from-sky-600 to-blue-600 dark:from-sky-400 dark:to-blue-400 bg-clip-text text-transparent">
-                {t('weather.title')}
-              </span>
+              {t('weather.title')}
             </h1>
             <p className="text-sm text-slate-500 dark:text-slate-400 font-bold mt-3 max-w-lg leading-relaxed flex items-center gap-3">
               {t('weather.current')}

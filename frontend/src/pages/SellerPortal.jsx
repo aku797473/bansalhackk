@@ -237,7 +237,7 @@ export default function BuyerPortal() {
             <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl shadow-lg shadow-green-500/20 flex items-center justify-center transform -rotate-3 hover:rotate-0 transition-transform duration-500">
               <Storefront className="text-white" size={24} weight="duotone" />
             </div>
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-400 dark:to-emerald-400 font-outfit">
+            <span>
               {t('buyer.marketplace_title')}
             </span>
           </h1>

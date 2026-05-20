@@ -234,9 +234,7 @@ export default function Labour() {
               </div>
             </div>
             <h1 className="text-3xl font-bold tracking-tight text-black dark:text-black leading-tight font-outfit">
-              <span className="bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400 bg-clip-text text-transparent">
-                {t('labour.title')}
-              </span>
+              {t('labour.title')}
             </h1>
             <p className="text-sm text-slate-500 dark:text-slate-400 font-bold mt-3 max-w-lg leading-relaxed">
               {t('labour.subtitle')}
