@@ -46,7 +46,7 @@ router.post('/register', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     user = new AuthUser({ phone, password: hashedPassword, name, role });
     
-    const payload = { userId: user._id.toString(), phone: user.phone, role: user.role };
+    const payload = { userId: user._id.toString(), phone: user.phone, role: user.role, name: user.name };
     const { accessToken, refreshToken } = generateTokens(payload);
     
     user.refreshTokens = [refreshToken];
@@ -81,7 +81,7 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ success: false, message: 'Invalid phone or password' });
     }
     
-    const payload = { userId: user._id.toString(), phone: user.phone, role: user.role };
+    const payload = { userId: user._id.toString(), phone: user.phone, role: user.role, name: user.name };
     const { accessToken, refreshToken } = generateTokens(payload);
     
     user.refreshTokens = [...(user.refreshTokens || []).slice(-4), refreshToken];
@@ -131,7 +131,7 @@ router.post('/google', async (req, res) => {
       await user.save();
     }
     
-    const payload = { userId: user._id.toString(), phone: user.phone || '', email: user.email || '', role: user.role };
+    const payload = { userId: user._id.toString(), phone: user.phone || '', email: user.email || '', role: user.role, name: user.name };
     const { accessToken, refreshToken } = generateTokens(payload);
     
     user.refreshTokens = [...(user.refreshTokens || []).slice(-4), refreshToken];
@@ -159,7 +159,7 @@ router.post('/refresh', async (req, res) => {
     if (!user || !user.refreshTokens.includes(refreshToken)) {
       return res.status(401).json({ success: false, message: 'Refresh token revoked' });
     }
-    const payload = { userId: user._id.toString(), phone: user.phone, role: user.role };
+    const payload = { userId: user._id.toString(), phone: user.phone, role: user.role, name: user.name };
     const { accessToken, refreshToken: newRefresh } = generateTokens(payload);
     user.refreshTokens = user.refreshTokens.filter(t => t !== refreshToken);
     user.refreshTokens.push(newRefresh);

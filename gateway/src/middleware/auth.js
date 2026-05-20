@@ -20,6 +20,7 @@ const verifyToken = async (req, res, next) => {
     req.headers['x-user-id']    = decoded.userId;
     req.headers['x-user-email'] = decoded.email || '';
     req.headers['x-user-role']  = decoded.role || 'farmer'; 
+    req.headers['x-user-name']  = decoded.name || '';
     
     next();
   } catch (err) {

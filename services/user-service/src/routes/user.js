@@ -23,6 +23,7 @@ const getUserInfo = (req) => ({
   userId: req.headers['x-user-id'],
   email:  req.headers['x-user-email'] || req.headers['x-user-phone'],
   role:   req.headers['x-user-role'],
+  name:   req.headers['x-user-name'] || '',
 });
 
 // GET /users/profile
@@ -48,10 +49,15 @@ router.get('/profile', async (req, res) => {
         userId, 
         email, 
         role, 
-        name: 'Smart Farmer',
+        name: name || 'Smart Farmer',
         location: { village: 'Satna', district: 'Satna', state: 'Madhya Pradesh' }
       });
       await profile.save();
+    } else if (!profile.name || profile.name === 'Smart Farmer') {
+      if (name && name !== 'Smart Farmer') {
+        profile.name = name;
+        await profile.save();
+      }
     }
     
     // Set Cache
@@ -122,7 +128,8 @@ router.post('/profile', async (req, res) => {
               userId: updatedAuth._id.toString(),
               phone: updatedAuth.phone || '',
               email: updatedAuth.email || '',
-              role: updatedAuth.role
+              role: updatedAuth.role,
+              name: updatedAuth.name || ''
             };
             newAccessToken = jwt.sign(jwtPayload, process.env.JWT_SECRET || 'smart_kisan_secret_123', {
               expiresIn: process.env.JWT_EXPIRES_IN || '7d',
