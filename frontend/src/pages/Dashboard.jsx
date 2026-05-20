@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { weatherAPI, marketAPI } from '../services/api';
 import ThreeBackground from '../components/ThreeBackground';
 import clsx from 'clsx';
+import { UserCircle } from '@phosphor-icons/react';
 
 function getGreetingKey() {
   const h = new Date().getHours();
@@ -143,6 +144,31 @@ export default function Dashboard() {
     { id: 'seller', to: '/seller', size: 'sm', label: t('nav.seller') },
     { id: 'buyer', to: '/buyer', size: 'sm', label: t('nav.buyer') },
     { id: 'profit_predictor', to: '/profit-predictor', size: 'sm', label: t('nav.profit_predictor') },
+    { 
+      id: 'profile', to: '/profile', size: 'sm', 
+      label: t('nav.profile', 'Profile Settings'),
+      render: () => (
+        <div className="flex flex-col h-full justify-between">
+          <div className="flex flex-col">
+            <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">{t('nav.profile', 'Profile Settings')}</span>
+            <div className="flex items-center gap-3 mt-3 overflow-hidden">
+              <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-800/40 overflow-hidden flex items-center justify-center text-slate-400 dark:text-slate-500 shrink-0">
+                {user?.image || user?.profilePic ? (
+                  <img src={user.image || user.profilePic} alt="avatar" className="w-full h-full object-cover" />
+                ) : (
+                  <UserCircle size={22} weight="duotone" className="text-slate-400" />
+                )}
+              </div>
+              <div className="leading-tight truncate">
+                <div className="text-xs font-extrabold text-slate-800 dark:text-slate-100 truncate">{user?.name || 'Smart Farmer'}</div>
+                <div className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider capitalize mt-0.5">{user?.role || 'farmer'}</div>
+              </div>
+            </div>
+          </div>
+          <div className="w-8 h-8 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 self-end font-semibold shadow-sm transition-transform group-hover:translate-x-1">→</div>
+        </div>
+      )
+    },
   ];
 
   return (

@@ -80,6 +80,7 @@ export default function Navbar() {
     { to: '/market',     label: t('nav.market', 'Market Trends'), icon: Storefront },
     { to: '/fertilizer', label: t('nav.fertilizer', 'Fertilizer'), icon: Flask },
     { to: '/community',  label: t('nav.community', 'Kisan Community'), icon: ChatCircleText },
+    { to: '/profile',    label: t('nav.profile', 'Profile Settings'), icon: User },
   ];
 
   const moreLinks = [
@@ -90,7 +91,6 @@ export default function Navbar() {
     { to: '/map',              label: t('nav.map', 'Map View'), icon: MapPin },
     { to: '/news',             label: t('nav.news', 'News'), icon: Newspaper },
     { to: '/schemes',          label: t('nav.schemes', 'Government Schemes'), icon: Sparkle },
-    { to: '/profile',          label: t('nav.profile', 'Profile Settings'), icon: Gear },
   ];
 
   useEffect(() => {
