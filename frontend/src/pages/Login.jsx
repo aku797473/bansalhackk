@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import ThreeBackground from '../components/ThreeBackground';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
-import { Eye, EyeOff, ShieldCheck, UserPlus, Fingerprint } from 'lucide-react';
+import { Eye, EyeOff, ShieldCheck, UserPlus, Fingerprint, Lock, Phone, User, Globe, ArrowRight } from 'lucide-react';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth as firebaseAuth } from '../config/firebase';
 
@@ -63,39 +63,39 @@ export default function Login() {
     }
   };
 
-  const quickLogin = async () => {
-    setLoading(true);
-    const id = toast.loading('Bypassing System...');
-    try {
-      await login('9999999999', 'kisan123');
-      toast.success('Bypass Successful', { id });
-      navigate('/dashboard');
-    } catch (err) {
-      try {
-        await register('Smart Farmer', '9999999999', 'kisan123', 'farmer');
-        toast.success('New Identity Established', { id });
-        navigate('/dashboard');
-      } catch (inner) {
-        toast.error('Quick Access Revoked', { id });
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 relative overflow-hidden bg-slate-50 dark:bg-slate-950">
+    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 relative overflow-hidden bg-slate-50 dark:bg-slate-950 transition-colors duration-500 font-sans select-none">
       <ThreeBackground key="login-secure-v3" />
       
-      <div className="w-full max-w-xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-3xl rounded-[2.5rem] sm:rounded-[3.5rem] p-8 sm:p-16 border border-white/20 shadow-2xl relative z-10">
+      {/* Background radial glow lights */}
+      <div className="absolute top-[-20%] left-[-20%] w-[60%] h-[60%] rounded-full bg-emerald-500/10 dark:bg-emerald-500/5 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-20%] right-[-20%] w-[60%] h-[60%] rounded-full bg-indigo-500/10 dark:bg-indigo-500/5 blur-[120px] pointer-events-none" />
+
+      <div className="w-full max-w-xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-3xl rounded-[2.5rem] sm:rounded-[3.5rem] p-8 sm:p-14 border border-slate-200/50 dark:border-slate-800/50 shadow-2xl relative z-10 animate-in fade-in zoom-in-95 duration-500">
         
-        <div className="flex bg-slate-100/50 dark:bg-slate-800/50 p-1.5 rounded-2xl mb-10 border border-slate-200/20 shadow-inner">
+        {/* Top Branding Section */}
+        <div className="text-center mb-8">
+          <div className="inline-flex w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white items-center justify-center shadow-lg shadow-emerald-500/20 mb-4 animate-pulse">
+            <Fingerprint size={32} />
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-none font-outfit">
+             SMART KISAN
+          </h1>
+          <p className="text-xs font-bold text-slate-450 dark:text-slate-400 mt-2.5 uppercase tracking-widest">
+            {mode === 'login' ? 'Next-Gen Gateway Authentication' : 'Establish New Secure Identity'}
+          </p>
+        </div>
+
+        {/* Tab Selection */}
+        <div className="flex bg-slate-100/60 dark:bg-slate-800/40 p-1.5 rounded-2xl mb-8 border border-slate-200/20 shadow-inner">
           <button 
             type="button"
             onClick={() => setMode('login')}
             className={clsx(
-              "flex-1 py-3 text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-2",
-              mode === 'login' ? "bg-white dark:bg-slate-750 text-emerald-600 shadow-md" : "text-slate-400 hover:text-slate-500"
+              "flex-1 py-3 text-xs font-bold rounded-xl transition-all duration-300 flex items-center justify-center gap-2",
+              mode === 'login' 
+                ? "bg-white dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 shadow-sm border border-slate-200/10" 
+                : "text-slate-450 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
             )}
           >
             <ShieldCheck size={14} /> Sign In
@@ -104,50 +104,53 @@ export default function Login() {
             type="button"
             onClick={() => setMode('register')}
             className={clsx(
-              "flex-1 py-3 text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-2",
-              mode === 'register' ? "bg-white dark:bg-slate-750 text-emerald-600 shadow-md" : "text-slate-400 hover:text-slate-500"
+              "flex-1 py-3 text-xs font-bold rounded-xl transition-all duration-300 flex items-center justify-center gap-2",
+              mode === 'register' 
+                ? "bg-white dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 shadow-sm border border-slate-200/10" 
+                : "text-slate-450 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
             )}
           >
-            <UserPlus size={14} /> Create
+            <UserPlus size={14} /> Create Account
           </button>
         </div>
 
-        <div className="text-center mb-10">
-          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center justify-center gap-3">
-             {mode === 'login' ? 'Sign In' : 'Create Account'} <Fingerprint className="text-emerald-600" size={32} />
-          </h1>
-          <p className="text-xs text-slate-500 mt-2">
-            {mode === 'login' ? 'Access your Smart Kisan account' : 'Register a new secure account'}
-          </p>
-        </div>
-
         <form onSubmit={handleSubmit} className="space-y-6 mb-8">
+          
+          {/* Full Name (For Register Only) */}
           {mode === 'register' && (
             <div className="space-y-2">
               <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 ml-1">Full Name</label>
-              <input 
-                required
-                type="text" 
-                placeholder="Ramesh Kumar"
-                value={formData.name}
-                onChange={e => setFormData({...formData, name: e.target.value})}
-                className="w-full bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 rounded-2xl px-5 py-3 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all dark:text-white font-medium"
-              />
+              <div className="relative">
+                <input 
+                  required
+                  type="text" 
+                  placeholder="Ramesh Kumar"
+                  value={formData.name}
+                  onChange={e => setFormData({...formData, name: e.target.value})}
+                  className="w-full h-14 bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 rounded-2xl pl-12 pr-5 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500/20 transition-all outline-none"
+                />
+                <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+              </div>
             </div>
           )}
           
+          {/* Phone Number */}
           <div className="space-y-2">
             <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 ml-1">Phone Number</label>
-            <input 
-              required
-              type="tel" 
-              placeholder="98XXXXXXXX"
-              value={formData.phone}
-              onChange={e => setFormData({...formData, phone: e.target.value})}
-              className="w-full bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 rounded-2xl px-5 py-3 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all dark:text-white font-medium"
-            />
+            <div className="relative">
+              <input 
+                required
+                type="tel" 
+                placeholder="98XXXXXXXX"
+                value={formData.phone}
+                onChange={e => setFormData({...formData, phone: e.target.value})}
+                className="w-full h-14 bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 rounded-2xl pl-12 pr-5 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500/20 transition-all outline-none"
+              />
+              <Phone size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+            </div>
           </div>
 
+          {/* Password */}
           <div className="space-y-2 relative">
             <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 ml-1">Password</label>
             <div className="relative">
@@ -157,30 +160,38 @@ export default function Login() {
                 placeholder="Secret Key"
                 value={formData.password}
                 onChange={e => setFormData({...formData, password: e.target.value})}
-                className="w-full bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 rounded-2xl px-5 py-3 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all dark:text-white font-medium pr-12"
+                className="w-full h-14 bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 rounded-2xl pl-12 pr-12 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500/20 transition-all outline-none"
               />
+              <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
               <button 
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-600 transition-colors"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-500 transition-colors"
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
           </div>
 
+          {/* Account Role Card Grid (For Register Only) */}
           {mode === 'register' && (
-            <div className="space-y-4">
+            <div className="space-y-3">
               <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 ml-1">Account Role</label>
               <div className="grid grid-cols-3 gap-3">
-                {[{val:'farmer',label:'Farmer'},{val:'seller',label:'Seller'},{val:'labour',label:'Labour'}].map(r => (
+                {[
+                  {val:'farmer', label:'Farmer'},
+                  {val:'buyer', label:'Buyer'},
+                  {val:'labour', label:'Labour'}
+                ].map(r => (
                   <button
                     key={r.val}
                     type="button"
                     onClick={() => setRole(r.val)}
                     className={clsx(
-                      "py-2.5 rounded-xl border text-sm font-semibold capitalize transition-all",
-                      role === r.val ? "border-emerald-600 bg-emerald-500/5 text-emerald-600 dark:text-emerald-400" : "border-slate-200 dark:border-slate-800 text-slate-400 hover:border-emerald-600/30"
+                      "py-3 rounded-2xl border text-xs font-bold capitalize transition-all duration-300",
+                      role === r.val 
+                        ? "border-emerald-500 bg-emerald-500/5 text-emerald-600 dark:text-emerald-400 shadow-sm" 
+                        : "border-slate-200 dark:border-slate-800 text-slate-400 hover:border-emerald-500/30"
                     )}
                   >
                     {r.label}
@@ -190,20 +201,30 @@ export default function Login() {
             </div>
           )}
 
+          {/* Submit Button */}
           <button
             disabled={loading}
             type="submit"
-            className="w-full py-4 bg-slate-900 dark:bg-white text-white dark:text-black text-sm font-semibold rounded-2xl shadow-lg hover:scale-[1.005] active:scale-[0.995] transition-all disabled:opacity-50"
+            className="w-full h-14 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-2xl font-bold text-sm shadow-lg shadow-emerald-500/20 hover:-translate-y-0.5 active:scale-[0.99] transition-all disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
           >
-            {loading ? 'Wait...' : mode === 'login' ? 'Login' : 'Register'}
+            <span>{loading ? 'Authenticating...' : mode === 'login' ? 'Access Portal' : 'Register Identity'}</span>
+            {!loading && <ArrowRight size={16} />}
           </button>
         </form>
 
+        {/* Divider */}
+        <div className="relative flex py-2 items-center mb-8">
+          <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
+          <span className="flex-shrink mx-4 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">or continue with</span>
+          <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
+        </div>
+
+        {/* Google Authentication Button */}
         <button
           type="button"
           onClick={handleGoogleLogin}
           disabled={loading}
-          className="w-full mb-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-sm font-semibold rounded-2xl shadow-sm hover:scale-[1.005] active:scale-[0.995] transition-all disabled:opacity-50 flex items-center justify-center gap-3"
+          className="w-full h-14 bg-white dark:bg-slate-800 border border-slate-250 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-sm font-bold rounded-2xl shadow-sm hover:-translate-y-0.5 active:scale-[0.99] transition-all disabled:opacity-50 flex items-center justify-center gap-3 cursor-pointer"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path
@@ -223,19 +244,11 @@ export default function Login() {
               d="M12 23c3.24 0 5.97-1.07 7.96-2.91l-3.7-2.87c-1.08.72-2.47 1.15-4.26 1.15-3.11 0-5.8-2.7-6.73-5.5l-3.86 3C3.39 20.35 7.35 23 12 23z"
             />
           </svg>
-          Sign In with Google
+          Google Account
         </button>
 
-        <button
-          onClick={quickLogin}
-          disabled={loading}
-          className="w-full py-3 border border-emerald-600/20 text-emerald-600 text-sm font-semibold rounded-2xl hover:bg-emerald-500/5 transition-all active:scale-[0.99] flex items-center justify-center gap-3"
-        >
-          <ShieldCheck size={16} /> Bypass Identity Verification
-        </button>
-
-        <p className="mt-8 text-center text-xs text-slate-400 font-medium">
-           Smart Kisan Secured Vault
+        <p className="mt-10 text-center text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
+           🔒 Smart Kisan Secured Vault
         </p>
       </div>
     </div>
