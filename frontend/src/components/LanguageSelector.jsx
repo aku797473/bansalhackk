@@ -11,7 +11,7 @@ const LANGUAGES = [
   { code: 'te', label: 'తెలుగు',   flag: '🇮🇳' },
 ];
 
-export default function LanguageSelector({ showLabel = true, align = 'right' }) {
+export default function LanguageSelector({ showLabel = true, align = 'right', dropDirection = 'down' }) {
   const { i18n } = useTranslation();
   const [langOpen, setLangOpen] = useState(false);
   const langRef = useRef(null);
@@ -44,7 +44,8 @@ export default function LanguageSelector({ showLabel = true, align = 'right' }) 
 
       {langOpen && (
         <div className={clsx(
-          "absolute mt-3 w-44 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-[24px] shadow-2xl border border-white/20 dark:border-white/5 p-2 z-[60] animate-scale-up",
+          "absolute w-44 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-[24px] shadow-2xl border border-white/20 dark:border-white/5 p-2 z-[60] animate-scale-up",
+          dropDirection === 'up' ? 'bottom-full mb-3' : 'top-full mt-3',
           align === 'right' ? 'right-0' : 'left-0'
         )}>
           <div className="text-[10px] font-black text-gray-400 dark:text-slate-500 px-3 py-2 uppercase tracking-widest">Select Language</div>

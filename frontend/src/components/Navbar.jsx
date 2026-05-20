@@ -163,18 +163,30 @@ export default function Navbar() {
 
         {/* Footer controls */}
         <div className="pt-4 border-t border-slate-100 dark:border-slate-800/60">
-          {/* Quick Settings Bar (Theme & Language) */}
+          {/* Quick Settings Bar (Theme, Language, Logout) */}
           <div className="flex items-center justify-between gap-2 p-1.5 bg-slate-50/60 dark:bg-slate-800/30 rounded-2xl border border-slate-100/50 dark:border-slate-800/40">
+            {/* Theme Toggle */}
             <button 
               onClick={toggleTheme} 
-              className="p-2 text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 bg-white dark:bg-slate-900 shadow-sm rounded-xl border border-slate-100 dark:border-slate-800 transition-all hover:scale-105 active:scale-95 flex items-center justify-center flex-1"
+              className="p-2.5 text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 bg-white dark:bg-slate-900 shadow-sm rounded-xl border border-slate-100 dark:border-slate-800 transition-all hover:scale-105 active:scale-95 flex items-center justify-center flex-1"
               title={theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
             >
               {theme === 'dark' ? <Sun size={16} weight="bold" /> : <Moon size={16} weight="bold" />}
             </button>
+
+            {/* Language Selector */}
             <div className="flex-1 flex justify-center">
-              <LanguageSelector showLabel={false} />
+              <LanguageSelector showLabel={false} dropDirection="up" align="left" />
             </div>
+
+            {/* Log Out */}
+            <button 
+              onClick={async () => { await logout(); navigate('/'); }}
+              className="p-2.5 text-slate-500 hover:text-red-500 dark:text-slate-400 dark:hover:text-red-400 bg-white dark:bg-slate-900 shadow-sm rounded-xl border border-slate-100/50 dark:border-slate-800 transition-all hover:scale-105 active:scale-95 flex items-center justify-center flex-1"
+              title="Log Out"
+            >
+              <SignOut size={16} weight="bold" />
+            </button>
           </div>
         </div>
       </aside>
