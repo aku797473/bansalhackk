@@ -148,27 +148,27 @@ export default function Dashboard() {
     <div className="min-h-screen transition-colors duration-500 font-sans selection:bg-indigo-100 selection:text-indigo-900 relative">
       <ThreeBackground />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-28 sm:pt-40 pb-20 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 sm:pt-28 pb-10 relative z-10">
         
         {/* Balanced Header */}
-        <div className="mb-14">
-          <div className="flex items-center gap-2 mb-4">
+        <div className="mb-10">
+          <div className="flex items-center gap-2 mb-3">
             <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
             <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">Dashboard</span>
           </div>
           
-          <h1 className="text-5xl sm:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
-            <span className="block text-slate-400 dark:text-slate-500 text-2xl sm:text-3xl font-medium mb-1">{t(greetingKey)},</span>
+          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+            <span className="block text-slate-400 dark:text-slate-500 text-lg sm:text-xl font-medium mb-1">{t(greetingKey)},</span>
             {user?.name?.split(' ')[0] || t('auth.farmer')}
           </h1>
           
-          <div className="mt-6 flex flex-wrap items-center gap-4">
+          <div className="mt-4 flex flex-wrap items-center gap-4">
              <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
                 {new Date().toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' })}
              </p>
              <button 
                onClick={() => navigate('/sos')} 
-               className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded-full shadow-lg shadow-red-600/10 hover:scale-102 active:scale-98 transition-all flex items-center gap-2"
+               className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded-full shadow-lg shadow-red-600/10 hover:scale-102 active:scale-98 transition-all flex items-center gap-2"
              >
                <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
                Emergency SOS

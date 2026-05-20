@@ -124,24 +124,24 @@ export default function Fertilizer() {
   };
 
   return (
-    <div ref={ref} className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] transition-colors duration-500 font-sans selection:bg-amber-100 selection:text-amber-900 pt-28 sm:pt-36 pb-20">
+    <div ref={ref} className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] transition-colors duration-500 font-sans selection:bg-amber-100 selection:text-amber-900 pt-24 sm:pt-28 pb-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         
         {/* Header Section */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-14">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-10">
           <div>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="px-4 py-2 bg-amber-600 dark:bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-amber-500/30 border border-amber-400/20 flex items-center gap-2">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="px-3.5 py-1 bg-amber-600 dark:bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-lg shadow-amber-500/20 border border-amber-400/20 flex items-center gap-2">
                 <Flask size={14} weight="fill" className="animate-pulse" />
                 {t('fertilizer.seed_iq')}
               </div>
             </div>
-            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none font-outfit">
+            <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight font-outfit">
               <span className="bg-gradient-to-r from-amber-600 to-orange-600 dark:from-amber-400 dark:to-orange-400 bg-clip-text text-transparent">
                 {t('fertilizer.title')}
               </span>
             </h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400 font-bold mt-5 max-w-lg leading-relaxed">
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-bold mt-3 max-w-lg leading-relaxed">
               {t('fertilizer.ai_desc')}
             </p>
           </div>

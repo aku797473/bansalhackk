@@ -221,21 +221,21 @@ export default function BuyerPortal() {
   );
 
   return (
-    <div ref={ref} className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] transition-colors duration-500 font-sans selection:bg-green-100 selection:text-green-900 pt-28 sm:pt-36 pb-20">
+    <div ref={ref} className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] transition-colors duration-500 font-sans selection:bg-green-100 selection:text-green-900 pt-24 sm:pt-28 pb-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
       
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14 relative z-10">
+      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10 relative z-10">
         <div>
-          <h1 className="text-4xl sm:text-7xl font-black tracking-tighter flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-[2rem] shadow-lg shadow-green-500/30 flex items-center justify-center transform -rotate-3 hover:rotate-0 transition-transform duration-500">
-              <Storefront className="text-white" size={36} weight="duotone" />
+          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight flex items-center gap-4 mb-3">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl shadow-lg shadow-green-500/20 flex items-center justify-center transform -rotate-3 hover:rotate-0 transition-transform duration-500">
+              <Storefront className="text-white" size={24} weight="duotone" />
             </div>
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-400 dark:to-emerald-400 font-outfit">
               {t('buyer.marketplace_title')}
             </span>
           </h1>
-          <p className="text-slate-500 dark:text-slate-400 font-bold max-w-xl leading-relaxed">
+          <p className="text-slate-500 dark:text-slate-400 font-bold max-w-xl leading-relaxed text-sm">
             {t('buyer.marketplace_subtitle')}
           </p>
         </div>

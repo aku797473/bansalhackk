@@ -143,28 +143,28 @@ export default function Weather() {
   };
 
   return (
-    <div ref={ref} className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] transition-colors duration-500 font-sans selection:bg-sky-100 selection:text-sky-900 pt-28 sm:pt-36 pb-20">
+    <div ref={ref} className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] transition-colors duration-500 font-sans selection:bg-sky-100 selection:text-sky-900 pt-24 sm:pt-28 pb-10">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         
         {/* Header Section */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-14">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-10">
           <div>
-            <div className="flex flex-wrap items-center gap-3 mb-6">
-              <div className="px-4 py-1.5 bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 text-xs font-semibold rounded-full border border-sky-200/50 dark:border-sky-800/35 flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-3 mb-4">
+              <div className="px-3.5 py-1 bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 text-xs font-bold rounded-full border border-sky-200/50 dark:border-sky-800/35 flex items-center gap-2">
                 <Sparkle size={14} weight="fill" className="animate-pulse" />
                 Real-Time Weather
               </div>
-              <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2 text-xs font-medium text-slate-500">
+              <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-3.5 py-1 rounded-full border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2 text-xs font-bold text-slate-500">
                 <Lightning size={14} weight="fill" className="text-amber-500" />
                 Radar Connected
               </div>
             </div>
-            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none font-outfit">
+            <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight font-outfit">
               <span className="bg-gradient-to-r from-sky-600 to-blue-600 dark:from-sky-400 dark:to-blue-400 bg-clip-text text-transparent">
                 {t('weather.title')}
               </span>
             </h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400 font-bold mt-5 max-w-lg leading-relaxed flex items-center gap-3">
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-bold mt-3 max-w-lg leading-relaxed flex items-center gap-3">
               {t('weather.current')}
               {searching && <span className="text-sky-500 animate-pulse text-xs font-semibold ml-2">Updating...</span>}
               {(displayData?.isFallback || displayData?.isMock) && !searching && <span className="text-amber-500 text-xs font-semibold ml-2">Estimated</span>}

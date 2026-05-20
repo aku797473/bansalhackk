@@ -39,16 +39,16 @@ export default function Feedback() {
   };
 
   return (
-    <div ref={ref} className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] transition-colors duration-500 font-sans selection:bg-indigo-100 selection:text-indigo-900 pt-28 sm:pt-36 pb-20">
+    <div ref={ref} className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] transition-colors duration-500 font-sans selection:bg-indigo-100 selection:text-indigo-900 pt-24 sm:pt-28 pb-10">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         
         {/* Header Section */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-indigo-500/30 border border-indigo-400/20 mb-6 mx-auto">
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-indigo-600 dark:bg-indigo-500 text-white text-[10px] font-bold uppercase tracking-widest rounded-xl shadow-lg shadow-indigo-500/20 border border-indigo-400/20 mb-4 mx-auto">
             <Sparkle size={14} weight="fill" className="animate-pulse" />
             {t('feedback.badge')}
           </div>
-          <h1 className="text-4xl sm:text-6xl font-black tracking-tighter text-slate-900 dark:text-white leading-none font-outfit mb-5">
+          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight font-outfit mb-3">
             <span className="bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">
               {t('feedback.title')}
             </span>

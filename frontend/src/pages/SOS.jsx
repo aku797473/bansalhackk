@@ -140,26 +140,26 @@ export default function SOS() {
   };
 
   return (
-    <div className={`min-h-screen bg-slate-50 dark:bg-slate-950 py-12 px-4 sm:px-6 lg:px-8 pb-24 ${animateClass}`}>
+    <div className={`min-h-screen bg-slate-50 dark:bg-slate-950 pt-24 sm:pt-28 px-4 sm:px-6 lg:px-8 pb-10 ${animateClass}`}>
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-14">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-10">
           <div>
-            <div className="flex flex-wrap items-center gap-3 mb-6">
-              <div className="px-4 py-1.5 bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 text-xs font-semibold rounded-full border border-red-200/50 dark:border-red-800/35 flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-3 mb-4">
+              <div className="px-3.5 py-1 bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 text-xs font-bold rounded-full border border-red-200/50 dark:border-red-800/35 flex items-center gap-2">
                 <Siren size={14} weight="fill" className="animate-pulse" />
                 Emergency Services
               </div>
-              <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2 text-xs font-medium text-slate-500">
+              <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-3.5 py-1 rounded-full border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-2 text-xs font-bold text-slate-500">
                 <Lightning size={14} weight="fill" className="text-amber-500" />
                 GPS Radar Active
               </div>
             </div>
-            <h1 className="text-4xl sm:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-none font-outfit">
+            <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight font-outfit">
               <span className="bg-gradient-to-r from-red-600 to-rose-600 dark:from-red-400 dark:to-rose-400 bg-clip-text text-transparent">
                 {t('sos.title')}
               </span>
             </h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400 font-bold mt-5 max-w-lg leading-relaxed">
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-bold mt-3 max-w-lg leading-relaxed">
               {t('sos.subtitle')}
             </p>
           </div>
