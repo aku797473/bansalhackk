@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Link, useLocation, useNavigate } from 'react-router-dom';
 import { Toaster, toast } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { MapProvider } from './contexts/MapContext';
@@ -11,7 +11,7 @@ import Footer from './components/Footer';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { HeartPulse } from 'lucide-react';
-import { Bell, MagnifyingGlass, Calendar } from '@phosphor-icons/react';
+import { Bell, MagnifyingGlass, Calendar, SignOut } from '@phosphor-icons/react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import axios from 'axios';
@@ -72,8 +72,9 @@ function KeepAlive() {
 }
 
 function DesktopHeader() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const { t } = useTranslation();
 
   const getPageTitle = () => {
@@ -137,15 +138,27 @@ function DesktopHeader() {
           <span>{formattedDate}</span>
         </div>
 
-        {/* Notification Bell */}
-        <div className="relative">
+        {/* Action Buttons */}
+        <div className="flex items-center gap-3">
+          {/* Notification Bell */}
+          <div className="relative">
+            <button 
+              onClick={() => toast.success(t('common.caught_up', 'You are all caught up!'))}
+              className="w-10 h-10 flex items-center justify-center bg-slate-50/50 dark:bg-slate-800/20 hover:bg-indigo-50 dark:hover:bg-indigo-950/20 text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-all rounded-xl border border-slate-200/50 dark:border-slate-800/60"
+            >
+              <Bell size={18} weight="bold" />
+            </button>
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+          </div>
+
+          {/* Log Out */}
           <button 
-            onClick={() => toast.success(t('common.caught_up', 'You are all caught up!'))}
-            className="w-10 h-10 flex items-center justify-center bg-slate-50/50 dark:bg-slate-800/20 hover:bg-indigo-50 dark:hover:bg-indigo-950/20 text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-all rounded-xl border border-slate-200/50 dark:border-slate-800/60"
+            onClick={async () => { await logout(); navigate('/'); }}
+            className="w-10 h-10 flex items-center justify-center bg-slate-50/50 dark:bg-slate-800/20 hover:bg-red-50 dark:hover:bg-red-950/20 text-slate-500 hover:text-red-500 dark:text-slate-400 dark:hover:text-red-400 transition-all rounded-xl border border-slate-200/50 dark:border-slate-800/60"
+            title={t('common.logout', 'Log Out')}
           >
-            <Bell size={18} weight="bold" />
+            <SignOut size={18} weight="bold" />
           </button>
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
         </div>
       </div>
     </header>

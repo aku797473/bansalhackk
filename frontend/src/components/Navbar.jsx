@@ -177,31 +177,21 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Profile Card & Logout Button */}
-          <div className="w-full flex items-center justify-between p-3 bg-slate-50/50 dark:bg-slate-800/30 border border-slate-200/50 dark:border-slate-800 rounded-2xl">
-            <div className="flex items-center gap-3 truncate">
-              <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-850 border border-slate-200/50 dark:border-slate-800 overflow-hidden shrink-0">
-                {user?.image || user?.profilePic ? (
-                  <img src={user.image || user.profilePic} alt="user" className="w-full h-full object-cover" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-slate-400">
-                    <User size={18} weight="bold" />
-                  </div>
-                )}
-              </div>
-              <div className="flex-grow text-left truncate leading-tight">
-                <div className="text-[9px] font-black text-slate-400 dark:text-slate-500 tracking-wider uppercase">{user?.role || 'Farmer'}</div>
-                <div className="text-sm font-extrabold text-slate-800 dark:text-slate-200 truncate">{user?.name}</div>
-              </div>
+          {/* Profile Card */}
+          <div className="w-full flex items-center gap-3 p-3 bg-slate-50/50 dark:bg-slate-800/30 border border-slate-200/50 dark:border-slate-850 rounded-2xl">
+            <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-850 border border-slate-200/50 dark:border-slate-800 overflow-hidden shrink-0">
+              {user?.image || user?.profilePic ? (
+                <img src={user.image || user.profilePic} alt="user" className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-slate-400">
+                  <User size={18} weight="bold" />
+                </div>
+              )}
             </div>
-            
-            <button 
-              onClick={async () => { await logout(); navigate('/'); }}
-              className="p-2.5 text-slate-400 hover:text-red-500 dark:text-slate-500 dark:hover:text-red-400 bg-white dark:bg-slate-900 hover:bg-red-50 dark:hover:bg-red-950/20 border border-slate-200/50 dark:border-slate-800 shadow-sm rounded-xl transition-all active:scale-95 shrink-0"
-              title="Log Out"
-            >
-              <SignOut size={16} weight="bold" />
-            </button>
+            <div className="flex-grow text-left truncate leading-tight">
+              <div className="text-[9px] font-black text-slate-400 dark:text-slate-500 tracking-wider uppercase">{user?.role || 'Farmer'}</div>
+              <div className="text-sm font-extrabold text-slate-800 dark:text-slate-200 truncate">{user?.name}</div>
+            </div>
           </div>
         </div>
       </aside>
@@ -309,12 +299,6 @@ export default function Navbar() {
               <div className="flex-1 min-w-0">
                 <div className="text-[10px] font-bold tracking-wider text-slate-400 dark:text-slate-500 uppercase">{user.role || 'Farmer'}</div>
                 <div className="text-base font-bold text-slate-900 dark:text-white truncate">{user.name || 'Smart Farmer'}</div>
-                <button 
-                  onClick={() => { setOpen(false); navigate('/profile'); }}
-                  className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 mt-0.5"
-                >
-                  Edit Profile <CaretRight size={10} weight="bold" />
-                </button>
               </div>
             </div>
           )}
