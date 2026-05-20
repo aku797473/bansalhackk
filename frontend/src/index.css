@@ -447,3 +447,12 @@
   animation-duration: 3s !important;
 }
 
+/* ─── Desktop Layout Spacing Reset ──────────────────────────────── */
+@media (min-width: 1280px) {
+  main .max-w-7xl,
+  main .page-wrapper,
+  main .page-wrapper-sm {
+    padding-top: 2rem !important;
+  }
+}
+

@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
+import { BrowserRouter, Routes, Route, Navigate, Link, useLocation } from 'react-router-dom';
+import { Toaster, toast } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { MapProvider } from './contexts/MapContext';
 import Navbar from './components/Navbar';
@@ -11,6 +11,8 @@ import Footer from './components/Footer';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { HeartPulse } from 'lucide-react';
+import { Bell, MagnifyingGlass, Calendar } from '@phosphor-icons/react';
+import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import axios from 'axios';
 
@@ -69,6 +71,87 @@ function KeepAlive() {
   return null;
 }
 
+function DesktopHeader() {
+  const { user } = useAuth();
+  const location = useLocation();
+  const { t } = useTranslation();
+
+  const getPageTitle = () => {
+    switch (location.pathname) {
+      case '/dashboard': return t('nav.home', 'Dashboard');
+      case '/weather': return t('nav.weather', 'Weather');
+      case '/crop': return t('nav.crop', 'Crop Advisor');
+      case '/fertilizer': return t('nav.fertilizer', 'Fertilizer');
+      case '/market': return t('nav.market', 'Market Trends');
+      case '/community': return t('nav.community', 'Kisan Community');
+      case '/labour': return t('nav.labour', 'Labour Marketplace');
+      case '/seller': return t('nav.seller', 'Seller Portal');
+      case '/buyer': return t('nav.buyer', 'Buyer Portal');
+      case '/profit-predictor': return t('nav.profit_predictor', 'Profit Predictor');
+      case '/map': return t('nav.map', 'Map View');
+      case '/news': return t('nav.news', 'News');
+      case '/schemes': return t('nav.schemes', 'Schemes');
+      case '/profile': return t('nav.profile', 'Profile Settings');
+      default: return 'Smart Kisan';
+    }
+  };
+
+  const getGreeting = () => {
+    const hours = new Date().getHours();
+    if (hours < 12) return t('common.good_morning', 'Good Morning');
+    if (hours < 17) return t('common.good_afternoon', 'Good Afternoon');
+    return t('common.good_evening', 'Good Evening');
+  };
+
+  const formattedDate = new Date().toLocaleDateString(undefined, {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric'
+  });
+
+  return (
+    <header className="hidden xl:flex items-center justify-between h-20 px-8 bg-white/30 dark:bg-slate-900/30 border-b border-slate-200/40 dark:border-slate-800/80 transition-colors duration-500">
+      <div>
+        <h2 className="text-lg font-black text-slate-800 dark:text-slate-100 font-outfit tracking-wide leading-none mb-1 uppercase">
+          {getPageTitle()}
+        </h2>
+        <p className="text-xs font-semibold text-slate-400 dark:text-slate-500">
+          {getGreeting()}, {user?.name || 'Farmer'} 👋
+        </p>
+      </div>
+
+      <div className="flex items-center gap-6">
+        {/* Search */}
+        <div className="relative w-60 group">
+          <MagnifyingGlass className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+          <input 
+            type="text" 
+            placeholder="Search platform..." 
+            className="w-full pl-10 pr-4 py-2 bg-slate-50/50 dark:bg-slate-800/20 rounded-xl border border-slate-200/50 dark:border-slate-800/60 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/5 transition-all text-xs font-bold text-slate-700 dark:text-slate-200 placeholder:text-slate-400"
+          />
+        </div>
+
+        {/* Date Display */}
+        <div className="flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-800/20 px-3.5 py-2.5 rounded-xl border border-slate-200/50 dark:border-slate-800/60">
+          <Calendar size={16} className="text-indigo-500 shrink-0" />
+          <span>{formattedDate}</span>
+        </div>
+
+        {/* Notification Bell */}
+        <div className="relative">
+          <button 
+            onClick={() => toast.success(t('common.caught_up', 'You are all caught up!'))}
+            className="w-10 h-10 flex items-center justify-center bg-slate-50/50 dark:bg-slate-800/20 hover:bg-indigo-50 dark:hover:bg-indigo-950/20 text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-all rounded-xl border border-slate-200/50 dark:border-slate-800/60"
+          >
+            <Bell size={18} weight="bold" />
+          </button>
+          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+        </div>
+      </div>
+    </header>
+  );
+}
+
 function AppLayout({ children }) {
   const { isAuth } = useAuth();
   return (
@@ -76,7 +159,8 @@ function AppLayout({ children }) {
       <KeepAlive />
       {isAuth && <Navbar />}
       <div className={clsx("flex-grow flex flex-col transition-all duration-300", isAuth ? 'xl:pl-80' : '')}>
-        <main className={clsx("flex-grow transition-all duration-200", isAuth ? 'pt-16 xl:pt-6' : '')}>
+        {isAuth && <DesktopHeader />}
+        <main className={clsx("flex-grow transition-all duration-200", isAuth ? 'pt-16 xl:pt-0' : '')}>
           <Suspense fallback={<LoadingScreen />}>
             {children}
           </Suspense>
