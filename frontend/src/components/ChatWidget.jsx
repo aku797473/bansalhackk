@@ -171,7 +171,7 @@ export default function ChatWidget() {
       <button
         onClick={() => setOpen(!open)}
         className={clsx(
-          'fixed bottom-6 left-6 z-50 w-16 h-16 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_40px_rgb(79,70,229,0.3)] transition-all duration-300 flex items-center justify-center group overflow-hidden',
+          'fixed bottom-6 left-6 xl:left-[300px] z-[110] w-16 h-16 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_40px_rgb(79,70,229,0.3)] transition-all duration-300 flex items-center justify-center group overflow-hidden',
           open ? 'bg-slate-800 dark:bg-slate-700 rotate-0' : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:-translate-y-1 active:scale-95'
         )}
         aria-label="Open Kisan Mitra chat">
@@ -187,7 +187,7 @@ export default function ChatWidget() {
 
       {/* Chat window — anchored to bottom */}
       {open && (
-        <div className="fixed bottom-24 sm:bottom-28 left-4 right-4 sm:right-auto sm:left-6 z-50 sm:w-96 rounded-[2rem] shadow-2xl border border-white/50 dark:border-slate-700/50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl overflow-hidden animate-slide-up flex flex-col transition-colors transform origin-bottom-left"
+        <div className="fixed bottom-24 sm:bottom-28 left-4 right-4 sm:right-auto sm:left-6 xl:left-[284px] z-[110] sm:w-96 rounded-[2rem] shadow-2xl border border-white/50 dark:border-slate-700/50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl overflow-hidden animate-slide-up flex flex-col transition-colors transform origin-bottom-left"
           style={{ maxHeight: '75vh', height: '550px' }}>
           
           {/* Header */}
