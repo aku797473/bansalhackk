@@ -115,6 +115,39 @@ function DesktopHeader() {
     day: 'numeric'
   });
 
+  const handleGlobalSearch = (e) => {
+    if (e.key === 'Enter') {
+      const val = e.target.value.toLowerCase().trim();
+      if (!val) return;
+      
+      const routes = {
+        'weather': '/weather', 'mausam': '/weather', 'forecast': '/weather',
+        'crop': '/crop', 'disease': '/crop', 'advisory': '/crop', 'fasal': '/crop',
+        'fertilizer': '/fertilizer', 'khad': '/fertilizer',
+        'market': '/market', 'mandi': '/market', 'price': '/market',
+        'community': '/community', 'chat': '/community', 'forum': '/community', 'kisan': '/community',
+        'labour': '/labour', 'job': '/labour', 'work': '/labour', 'mazdoor': '/labour',
+        'seller': '/seller', 'sell': '/seller', 'shop': '/seller',
+        'buyer': '/buyer', 'buy': '/buyer', 'purchase': '/buyer',
+        'profit': '/profit-predictor', 'margin': '/profit-predictor',
+        'map': '/map', 'gps': '/map', 'location': '/map',
+        'news': '/news', 'samachar': '/news',
+        'scheme': '/schemes', 'yojana': '/schemes', 'government': '/schemes',
+        'profile': '/profile', 'setting': '/profile'
+      };
+
+      for (const [key, path] of Object.entries(routes)) {
+        if (val.includes(key)) {
+          navigate(path);
+          e.target.value = '';
+          return;
+        }
+      }
+      
+      import('react-hot-toast').then(m => m.default.error('Module not found. Try "weather", "mandi", "labour", etc.'));
+    }
+  };
+
   return (
     <header className="hidden xl:flex items-center justify-between h-20 px-8 bg-white/30 dark:bg-slate-900/30 border-b border-slate-200/40 dark:border-slate-800/80 transition-colors duration-500">
       <div>
@@ -130,11 +163,7 @@ function DesktopHeader() {
           <input 
             type="text" 
             placeholder="Search platform..." 
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                import('react-hot-toast').then(m => m.default.info('Global Search is coming in the next update!'));
-              }
-            }}
+            onKeyDown={handleGlobalSearch}
             className="w-full pl-10 pr-4 py-2 bg-slate-50/50 dark:bg-slate-800/20 rounded-xl border border-slate-200/50 dark:border-slate-800/60 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/5 transition-all text-xs font-bold text-slate-700 dark:text-slate-200 placeholder:text-slate-400"
           />
         </div>
