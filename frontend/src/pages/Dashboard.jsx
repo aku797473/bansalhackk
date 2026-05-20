@@ -4,9 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import { weatherAPI, marketAPI } from '../services/api';
-import ThreeBackground from '../components/ThreeBackground';
 import clsx from 'clsx';
-import { UserCircle } from '@phosphor-icons/react';
+import { 
+  UserCircle, Drop, Users, Newspaper, MapTrifold, 
+  Storefront, ShoppingCart, ChartBar, ShieldCheck
+} from '@phosphor-icons/react';
 
 function getGreetingKey() {
   const h = new Date().getHours();
@@ -136,14 +138,14 @@ export default function Dashboard() {
         );
       }
     },
-    { id: 'fertilizer', to: '/fertilizer', size: 'sm', label: t('nav.fertilizer') },
-    { id: 'labour', to: '/labour', size: 'sm', label: t('nav.labour') },
-    { id: 'news', to: '/news', size: 'sm', label: t('nav.news') },
-    { id: 'schemes', to: '/schemes', size: 'sm', label: t('nav.schemes') },
-    { id: 'map', to: '/map', size: 'md', label: t('nav.map'), desc: t('dashboard.map_desc') },
-    { id: 'seller', to: '/seller', size: 'sm', label: t('nav.seller') },
-    { id: 'buyer', to: '/buyer', size: 'sm', label: t('nav.buyer') },
-    { id: 'profit_predictor', to: '/profit-predictor', size: 'sm', label: t('nav.profit_predictor') },
+    { id: 'fertilizer', to: '/fertilizer', size: 'sm', label: t('nav.fertilizer'), icon: Drop },
+    { id: 'labour', to: '/labour', size: 'sm', label: t('nav.labour'), icon: Users },
+    { id: 'news', to: '/news', size: 'sm', label: t('nav.news'), icon: Newspaper },
+    { id: 'schemes', to: '/schemes', size: 'sm', label: t('nav.schemes'), icon: ShieldCheck },
+    { id: 'map', to: '/map', size: 'md', label: t('nav.map'), desc: t('dashboard.map_desc'), icon: MapTrifold },
+    { id: 'seller', to: '/seller', size: 'sm', label: t('nav.seller'), icon: Storefront },
+    { id: 'buyer', to: '/buyer', size: 'sm', label: t('nav.buyer'), icon: ShoppingCart },
+    { id: 'profit_predictor', to: '/profit-predictor', size: 'sm', label: t('nav.profit_predictor'), icon: ChartBar },
     { 
       id: 'profile', to: '/profile', size: 'sm', 
       label: t('nav.profile', 'Profile Settings'),
@@ -173,7 +175,10 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen transition-colors duration-500 font-sans selection:bg-indigo-100 selection:text-indigo-900 relative">
-      <ThreeBackground />
+      <div className="fixed inset-0 z-0 pointer-events-none bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 overflow-hidden">
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-indigo-500/5 dark:bg-indigo-500/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/4" />
+      </div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 sm:pt-28 pb-10 relative z-10">
         
@@ -219,7 +224,12 @@ export default function Dashboard() {
               {m.render ? m.render() : (
                 <div className="flex flex-col h-full justify-between">
                   <div>
-                    <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">{m.label}</span>
+                    {m.icon && (
+                      <div className="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 mb-5 shadow-sm ring-1 ring-indigo-500/10">
+                        <m.icon size={24} weight="duotone" />
+                      </div>
+                    )}
+                    <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">{m.label}</span>
                     {m.desc && <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed mt-2">{m.desc}</p>}
                   </div>
                   <div className="w-8 h-8 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 self-end font-semibold shadow-sm transition-transform group-hover:translate-x-1">→</div>
