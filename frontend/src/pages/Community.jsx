@@ -17,7 +17,8 @@ import {
   CaretRight, 
   ShieldCheck,
   Translate,
-  ArrowClockwise
+  ArrowClockwise,
+  ArrowLeft
 } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
@@ -64,6 +65,7 @@ export default function Community() {
   const [socket, setSocket] = useState(null);
   const [connected, setConnected] = useState(false);
   const [loadingHistory, setLoadingHistory] = useState(false);
+  const [mobileView, setMobileView] = useState('channels'); // 'channels' or 'chat'
 
   // Construct Socket Server URL
   useEffect(() => {
@@ -202,7 +204,10 @@ export default function Community() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-[calc(100vh-160px)] min-h-[600px]">
           
           {/* LEFT PANEL: Rooms / Channels Selector */}
-          <div className="lg:col-span-4 bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl rounded-[2.5rem] border border-slate-200/50 dark:border-slate-800/50 p-6 flex flex-col shadow-sm">
+          <div className={clsx(
+            "lg:col-span-4 bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl rounded-[2.5rem] border border-slate-200/50 dark:border-slate-800/50 p-6 flex flex-col shadow-sm h-full",
+            mobileView === 'chat' ? 'hidden lg:flex' : 'flex'
+          )}>
             <div className="flex items-center gap-3.5 mb-6 px-2">
               <div className="w-11 h-11 bg-indigo-500 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
                 <ChatCircleText size={22} weight="bold" />
@@ -232,7 +237,10 @@ export default function Community() {
                 return (
                   <button
                     key={room.id}
-                    onClick={() => setCurrentRoom(room.id)}
+                    onClick={() => {
+                      setCurrentRoom(room.id);
+                      setMobileView('chat');
+                    }}
                     className={clsx(
                       "w-full text-left p-4 rounded-2xl border transition-all duration-300 flex items-center gap-4 group",
                       isSelected
@@ -298,11 +306,22 @@ export default function Community() {
           </div>
 
           {/* RIGHT PANEL: Chat Area */}
-          <div className="lg:col-span-8 bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl rounded-[2.5rem] border border-slate-200/50 dark:border-slate-800/50 flex flex-col shadow-sm overflow-hidden h-full">
+          <div className={clsx(
+            "lg:col-span-8 bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl rounded-[2.5rem] border border-slate-200/50 dark:border-slate-800/50 flex flex-col shadow-sm overflow-hidden h-full",
+            mobileView === 'channels' ? 'hidden lg:flex' : 'flex'
+          )}>
             
             {/* Chat Room Header */}
             <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0 bg-white/40 dark:bg-slate-900/40">
               <div className="flex items-center gap-4">
+                {/* Mobile Back Button */}
+                <button
+                  onClick={() => setMobileView('channels')}
+                  className="lg:hidden p-2.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl text-slate-600 dark:text-slate-300 shrink-0 transition-colors"
+                >
+                  <ArrowLeft size={20} weight="bold" />
+                </button>
+
                 <div className={clsx("w-12 h-12 rounded-xl flex items-center justify-center text-xl shrink-0", currentRoomInfo?.color)}>
                   {currentRoomInfo && (() => {
                     const Icon = currentRoomInfo.icon;
