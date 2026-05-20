@@ -1,10 +1,31 @@
-# 🌾 Smart Kisan (स्मार्ट किसान) — Agricultural Intelligence Platform
+# 🌾 Smart Kisan (स्मार्ट किसान) — Intelligent Agri-Tech Platform
 
 [![CI/CD](https://img.shields.io/github/actions/workflow/status/aku797473/bansalhackk/deploy.yml?label=CI%2FCD)](https://github.com/aku797473/bansalhackk/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Status: Production-Grade](https://img.shields.io/badge/Status-Production--Grade-blue.svg)](#)
 
-**Smart Kisan** is a cloud-native, microservices-based agricultural ecosystem designed to empower Indian farmers with real-time intelligence, marketplace connectivity, and AI-driven advisory.
+**Smart Kisan** is a next-generation, cloud-native agricultural ecosystem designed to empower Indian farmers, buyers, and agricultural laborers. By combining modern UI/UX principles with cutting-edge Microservices and AI, Smart Kisan provides real-time market intelligence, localized weather forecasting, AI-driven crop advisory, and a unified marketplace.
+
+---
+
+## ✨ Key Features & Innovations
+
+1. **State-of-the-art Authentication & Security**
+   - Implements robust **JWT-based Authentication** with long-lived Refresh Tokens.
+   - Enforces **SaaS-Standard Password Policies** (Min 8 chars, Uppercase, Lowercase, Number, Special Character).
+   - Seamless **Google OAuth Integration** using Firebase Auth.
+   - Free **Simulated OTP Flow** for Account Recovery & Password Resets.
+
+2. **Premium Floating UI & UX Design**
+   - Features a clean, **Glassmorphism-inspired Dashboard** with a floating right-aligned header.
+   - Intelligent **Throttled Feedback System**: A beautiful `Rate Your Experience` modal pops up upon logout, smartly throttled to once every 7 days to maintain a frictionless user experience.
+   - Dynamic Dark/Light mode support with smooth tailwind transitions.
+
+3. **Microservices-Driven Architecture**
+   - **Market Service:** Fetches real-time Mandi prices using Government APIs (data.gov.in) with Upstash Redis caching.
+   - **AI Chatbot Service:** A multilingual smart assistant built on Gemini Pro to answer farming queries instantly.
+   - **Crop & Fertilizer Service:** Soil analysis and data-driven recommendations.
+   - **Labour Service:** Geospatial job matching for farm laborers.
 
 ---
 
@@ -15,7 +36,7 @@ Smart Kisan follows a **Cloud-Native Microservices Architecture** designed for h
 ```mermaid
 graph TD
     A[React Web App] -->|HTTPS| B(API Gateway)
-    B -->|Auth| C{Clerk Auth}
+    B -->|JWT Auth Validation| C{Auth Service}
     C -->|Verified| D[Internal Proxy]
     
     D --> E[Market Service]
@@ -23,6 +44,7 @@ graph TD
     D --> G[Crop Service]
     D --> H[Weather Service]
     D --> I[Labour Service]
+    D --> X[User & Feedback Service]
     
     E -->|Real Data| J[(Redis Cache)]
     E -->|Government API| K[data.gov.in]
@@ -30,40 +52,6 @@ graph TD
     G -->|AI Hub| M[Google Gemini Pro]
     H -->|Forecasting| N[OpenWeatherMap]
 ```
-
----
-
-## 🧩 Microservice Catalog
-
-| Service | Port | Responsibility |
-| :--- | :--- | :--- |
-| **API Gateway** | 5000 | Central routing, security hardening, rate limiting, and auth validation. |
-| **Market Service** | 5006 | Real-time Mandi price tracking (Agmarknet) with AI-driven trend analysis. |
-| **Buyer Service** | 5012 | Unified marketplace for shop registration, inventory management, and orders. |
-| **Crop Service** | 5004 | AI soil analysis and personalized crop recommendations using Gemini Pro. |
-| **Weather Service**| 5003 | Hyper-local weather forecasting with agricultural alerts and Redis caching. |
-| **Labour Service** | 5007 | Geospatial matching for agricultural workers and farmers using MongoDB GeoJSON. |
-| **Chatbot Service**| 5008 | Multilingual (Hindi/English) AI assistant for instant agricultural support. |
-
----
-
-## 🚀 Startup Roadmap (Phased Development)
-
-### ✅ Phase 1: Infrastructure & Reliability (Current)
-- Unified microservices architecture.
-- Real-time Government data integration for Mandis.
-- Hardened security with strict CORS and rate limiting.
-- Automated CI/CD pipelines via GitHub Actions.
-
-### ⏳ Phase 2: User Growth & Offline Experience
-- **PWA Integration:** Full offline support for remote farm locations.
-- **Advanced Search:** Integration with Meilisearch for high-speed commodity discovery.
-- **Farmer Profiles:** Personalized dashboards with NPK soil history.
-
-### 🔮 Phase 3: Financial & Supply Chain Scale
-- **Direct-to-Buyer:** Peer-to-peer logistics tracking for bulk orders.
-- **Micro-Insurance:** Weather-linked crop insurance advisory.
-- **B2B Analytics:** Dashboards for Mandi traders and bulk buyers.
 
 ---
 
@@ -75,13 +63,18 @@ graph TD
 - MongoDB Atlas & Redis (Upstash recommended)
 
 ### Local Development
-1. Clone the repository.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/aku797473/bansalhackk.git
+   cd smart-kisan
+   ```
 2. Create a root `.env` based on `.env.example`.
-3. Spin up the entire ecosystem:
+3. Spin up the entire ecosystem via Docker:
    ```bash
    docker-compose up --build
    ```
-4. Access the frontend at `http://localhost:5173` and Gateway at `http://localhost:5000`.
+   *Alternatively, run `npm run dev` in the root directory to spin up all microservices and the frontend concurrently.*
+4. Access the frontend at `http://localhost:5173` and the Unified Gateway at `http://localhost:5000`.
 
 ---
 
@@ -89,4 +82,4 @@ graph TD
 Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
-*Developed with ❤️ for the Indian Farming Community — Smart Kisan v1.5*
+*Developed with ❤️ for the Indian Farming Community — Smart Kisan v2.0*
