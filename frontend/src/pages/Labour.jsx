@@ -2,18 +2,18 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { labourAPI, paymentAPI } from '../services/api';
-import { Users, Plus, MapPin, Bank, X, Briefcase, Phone, User, Camera, WifiSlash, ShieldCheck, Star, Clock, CheckCircle, Plant, Drop, Flask, Truck, Warehouse, SpinnerGap, CaretRight, Sparkle, Lightning, Info, Handshake, ArrowCounterClockwise, FileText } from '@phosphor-icons/react';
+import { Users, Plus, MapPin, Bank, X, Briefcase, Phone, User, Camera, WifiSlash, ShieldCheck, Star, Clock, CheckCircle, Plant, Drop, Flask, Truck, Warehouse, SpinnerGap, CaretRight, Sparkle, Lightning, Info, Handshake, ArrowCounterClockwise, FileText, MagnifyingGlass } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { usePageAnimation } from '../hooks/usePageAnimation';
 
 const FALLBACK_JOBS = [
-  { _id: 'seed-1', key: 'wheat', category: 'harvesting', wage: 500, wageUnit: 'per_day', workersNeeded: 10, contactNumber: '9876543210', status: 'open', location: { district: 'Rewa', state: 'Madhya Pradesh' }, createdAt: new Date().toISOString() },
-  { _id: 'seed-2', key: 'soybean', category: 'sowing', wage: 450, wageUnit: 'per_day', workersNeeded: 5, contactNumber: '9988776655', status: 'open', location: { district: 'Indore', state: 'Madhya Pradesh' }, createdAt: new Date().toISOString() },
-  { _id: 'seed-3', key: 'sugarcane', category: 'harvesting', wage: 600, wageUnit: 'per_day', workersNeeded: 20, contactNumber: '8877665544', status: 'open', location: { district: 'Pune', state: 'Maharashtra' }, createdAt: new Date().toISOString() },
-  { _id: 'seed-4', key: 'irrigation', category: 'irrigation', wage: 550, wageUnit: 'per_day', workersNeeded: 3, contactNumber: '7766554433', status: 'open', location: { district: 'Ambala', state: 'Haryana' }, createdAt: new Date().toISOString() },
-  { _id: 'seed-5', key: 'potato', category: 'storage', wage: 400, wageUnit: 'per_day', workersNeeded: 15, contactNumber: '6655443322', status: 'open', location: { district: 'Jalandhar', state: 'Punjab' }, createdAt: new Date().toISOString() },
-  { _id: 'seed-6', key: 'pesticide', category: 'pesticide', wage: 480, wageUnit: 'per_day', workersNeeded: 8, contactNumber: '9911223344', status: 'open', location: { district: 'Nagpur', state: 'Maharashtra' }, createdAt: new Date().toISOString() }
+  { _id: 'seed-1', key: 'wheat', category: 'harvesting', wage: 500, wageUnit: 'per_day', workersNeeded: 10, contactNumber: '9876543210', status: 'open', location: { district: 'Rewa', state: 'Madhya Pradesh', lat: 24.5373, lng: 81.3039 }, createdAt: new Date().toISOString() },
+  { _id: 'seed-2', key: 'soybean', category: 'sowing', wage: 450, wageUnit: 'per_day', workersNeeded: 5, contactNumber: '9988776655', status: 'open', location: { district: 'Indore', state: 'Madhya Pradesh', lat: 22.7500, lng: 75.9000 }, createdAt: new Date().toISOString() },
+  { _id: 'seed-3', key: 'sugarcane', category: 'harvesting', wage: 600, wageUnit: 'per_day', workersNeeded: 20, contactNumber: '8877665544', status: 'open', location: { district: 'Pune', state: 'Maharashtra', lat: 18.5000, lng: 73.9000 }, createdAt: new Date().toISOString() },
+  { _id: 'seed-4', key: 'irrigation', category: 'irrigation', wage: 550, wageUnit: 'per_day', workersNeeded: 3, contactNumber: '7766554433', status: 'open', location: { district: 'Ambala', state: 'Haryana', lat: 30.3300, lng: 76.8300 }, createdAt: new Date().toISOString() },
+  { _id: 'seed-5', key: 'potato', category: 'storage', wage: 400, wageUnit: 'per_day', workersNeeded: 15, contactNumber: '6655443322', status: 'open', location: { district: 'Jalandhar', state: 'Punjab', lat: 31.3200, lng: 75.5700 }, createdAt: new Date().toISOString() },
+  { _id: 'seed-6', key: 'pesticide', category: 'pesticide', wage: 480, wageUnit: 'per_day', workersNeeded: 8, contactNumber: '9911223344', status: 'open', location: { district: 'Nagpur', state: 'Maharashtra', lat: 21.1458, lng: 79.0882 }, createdAt: new Date().toISOString() }
 ];
 
 const CATEGORIES = ['harvesting','sowing','irrigation','pesticide','transport','storage','other'];
@@ -30,22 +30,47 @@ const CATEGORY_COLORS = {
   other: 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400 border-purple-200 dark:border-purple-900/30'
 };
 
+const CATEGORY_IMAGES = {
+  harvesting: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?q=80&w=600&auto=format&fit=crop',
+  sowing: 'https://images.unsplash.com/photo-1592417817098-8f3d6eb19675?q=80&w=600&auto=format&fit=crop',
+  irrigation: 'https://images.unsplash.com/photo-1563514223727-6fc964d306a7?q=80&w=600&auto=format&fit=crop',
+  pesticide: 'https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?q=80&w=600&auto=format&fit=crop',
+  transport: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=600&auto=format&fit=crop',
+  storage: 'https://images.unsplash.com/photo-1595275372297-f0d8601116f3?q=80&w=600&auto=format&fit=crop',
+  other: 'https://images.unsplash.com/photo-1500937386664-56d159f87b81?q=80&w=600&auto=format&fit=crop'
+};
+
+const getFilterCategories = (t) => [
+  { id: 'all', name: t('buyer.categories.all', 'All'), icon: '💼' },
+  { id: 'harvesting', name: t('labour.categories.harvesting', 'Harvesting'), icon: '🌾' },
+  { id: 'sowing', name: t('labour.categories.sowing', 'Sowing'), icon: '🌱' },
+  { id: 'irrigation', name: t('labour.categories.irrigation', 'Irrigation'), icon: '💧' },
+  { id: 'pesticide', name: t('labour.categories.pesticide', 'Pesticide'), icon: '🧪' },
+  { id: 'transport', name: t('labour.categories.transport', 'Transport'), icon: '🚜' },
+  { id: 'storage', name: t('labour.categories.storage', 'Storage'), icon: '🏢' },
+  { id: 'other', name: t('labour.categories.other', 'Other'), icon: '🛠️' }
+];
+
 export default function Labour() {
   const { t } = useTranslation();
   const ref = usePageAnimation();
   const { user } = useAuth();
-  const [tab, setTab]       = useState('browse');
-  const [jobs, setJobs]       = useState(FALLBACK_JOBS);
-  const [myJobs, setMyJobs]   = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [apiDown, setApiDown] = useState(false);
-  const [showModal, setShowModal] = useState(null);
+  
+  const [tab, setTab]               = useState('browse');
+  const [jobs, setJobs]             = useState(FALLBACK_JOBS);
+  const [myJobs, setMyJobs]         = useState([]);
+  const [loading, setLoading]       = useState(false);
+  const [apiDown, setApiDown]       = useState(false);
+  const [showModal, setShowModal]   = useState(null);
   const [processingPayment, setProcessingPayment] = useState(false);
+  
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
   
   const [form, setForm] = useState({
     title:'', description:'', category:'harvesting', wage: 500, wageUnit:'per_day',
     workersNeeded:1, district:'', state:'Madhya Pradesh', startDate:'', duration:'', skills:'',
-    contactNumber: '', image: null
+    contactNumber: '', image: null, lat: null, lng: null
   });
 
   useEffect(() => {
@@ -59,12 +84,16 @@ export default function Labour() {
 
   useEffect(() => {
     fetchJobs();
-  }, []);
+  }, [selectedCategory]);
 
   const fetchJobs = (showLoading = false) => {
     if (showLoading) setLoading(true);
     setApiDown(false);
-    labourAPI.getJobs()
+    
+    const params = {};
+    if (selectedCategory !== 'all') params.category = selectedCategory;
+
+    labourAPI.getJobs(params)
       .then(r => {
         const data = r.data?.data || [];
         setJobs(data.length > 0 ? data : FALLBACK_JOBS);
@@ -88,6 +117,27 @@ export default function Labour() {
     }
   };
 
+  const captureLocation = () => {
+    if (!navigator.geolocation) {
+      toast.error('Geolocation is not supported by your browser');
+      return;
+    }
+
+    const toastId = toast.loading('Capturing precise location... Please allow GPS access.');
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        setForm(prev => ({ ...prev, lat: latitude, lng: longitude }));
+        toast.success('Exact Location Captured!', { id: toastId });
+      },
+      (err) => {
+        console.error('GPS Error:', err);
+        toast.error('Location Access Denied or Timeout. Please enable GPS and Refresh.', { id: toastId });
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+    );
+  };
+
   const postJob = async () => {
     if (!form.title || !form.description || !form.district) { 
       toast.error(t('common.error_required')); 
@@ -97,12 +147,19 @@ export default function Labour() {
     try {
       await labourAPI.postJob({ 
         ...form, 
+        location: {
+          district: form.district,
+          state: form.state,
+          village: form.district,
+          lat: form.lat,
+          lng: form.lng
+        },
         contactNumber: user?.phone || '9999999999',
-        skills: form.skills.split(',').map(s => s.trim()).filter(Boolean) 
+        skills: typeof form.skills === 'string' ? form.skills.split(',').map(s => s.trim()).filter(Boolean) : []
       });
       toast.success(t('common.success'));
       setTab('browse');
-      setForm({ title:'', description:'', category:'harvesting', wage:500, wageUnit:'per_day', workersNeeded:1, district:'', state:'Madhya Pradesh', startDate:'', duration:'', skills:'', contactNumber: '', image: null });
+      setForm({ title:'', description:'', category:'harvesting', wage:500, wageUnit:'per_day', workersNeeded:1, district:'', state:'Madhya Pradesh', startDate:'', duration:'', skills:'', contactNumber: '', image: null, lat: null, lng: null });
       fetchJobs();
     } catch (err) { toast.error(t('common.error')); } 
     finally { setLoading(false); }
@@ -146,6 +203,16 @@ export default function Labour() {
      if (ns === 'state') return t(`crop.states.${opt}`, opt);
      return t(`labour.categories.${opt}`, opt);
   };
+
+  const FILTER_CATEGORIES = getFilterCategories(t);
+
+  // Client-side search logic on current jobs list
+  const filteredJobs = jobs.filter(job => {
+    const jobTitle = job.key ? t(`labour.fallback.${job.key}.title`) : job.title;
+    const jobDesc = job.key ? t(`labour.fallback.${job.key}.desc`) : job.description;
+    const searchString = `${jobTitle} ${jobDesc} ${job.location?.district || ''} ${job.location?.state || ''}`.toLowerCase();
+    return searchString.includes(searchTerm.toLowerCase());
+  });
 
   return (
     <div ref={ref} className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] transition-colors duration-500 font-sans selection:bg-purple-100 selection:text-purple-900 pt-24 sm:pt-28 pb-10">
@@ -193,7 +260,7 @@ export default function Labour() {
         )}
 
         {/* Navigation Tabs */}
-        <div className="flex gap-4 mb-14 border-b border-slate-200 dark:border-slate-800 overflow-x-auto scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div className="flex gap-4 mb-8 border-b border-slate-200 dark:border-slate-800 overflow-x-auto scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0">
           {[
             { id: 'browse', label: t('labour.tabs.browse'), icon: Briefcase },
             { id: 'post', label: t('labour.tabs.post'), icon: Plus },
@@ -209,57 +276,149 @@ export default function Labour() {
         {/* Content Sections */}
         <div className="animate-in fade-in slide-in-from-bottom-10 duration-700">
           {tab === 'browse' && (
-             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-               {jobs.map(job => (
-                 <div key={job._id} onClick={() => setShowModal(job)} className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl rounded-[2.5rem] border border-slate-200/50 dark:border-slate-800/50 p-8 shadow-sm hover:shadow-premium hover:-translate-y-2 hover:border-purple-500/50 transition-all duration-500 group cursor-pointer relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 dark:bg-purple-900/20 rounded-bl-[4rem] -mr-8 -mt-8 transition-transform group-hover:scale-110 blur-xl opacity-0 group-hover:opacity-100 duration-500" />
-                    
-                    <div className="flex items-start justify-between mb-8 relative z-10">
-                       <div className={clsx("w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shadow-lg transition-transform group-hover:rotate-12 duration-500", CATEGORY_COLORS[job.category] || CATEGORY_COLORS.other)}>
-                          {(() => { const Icon = CATEGORY_ICON[job.category] || CATEGORY_ICON.other; return <Icon weight="duotone" />; })()}
-                       </div>
-                       <div className="text-right">
-                          <p className="text-[11px] font-semibold text-slate-400 dark:text-slate-500 mb-1">{t('labour.wage')}</p>
-                          <p className="text-2xl font-black text-emerald-600 dark:text-emerald-400 leading-none">₹{job.wage}<span className="text-[10px] font-bold text-slate-400 ml-1">/{t(`labour.wage_units.${job.wageUnit}`)}</span></p>
-                       </div>
-                    </div>
+             <div>
+               {/* Search Bar */}
+               <div className="relative mb-8">
+                 <input
+                   type="text"
+                   placeholder="Search by job title, description, district, or state..."
+                   value={searchTerm}
+                   onChange={(e) => setSearchTerm(e.target.value)}
+                   className="w-full h-16 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full pl-14 pr-6 text-sm font-bold text-slate-950 dark:text-white shadow-md shadow-slate-100/50 dark:shadow-none focus:ring-2 focus:ring-purple-500/20 transition-all outline-none"
+                 />
+                 <MagnifyingGlass size={22} className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400" />
+               </div>
 
-                    <div className="mb-8">
-                       <h3 className="text-xl font-black text-slate-900 dark:text-white leading-tight mb-2 group-hover:text-purple-600 transition-colors font-outfit">
-                          {job.key ? t(`labour.fallback.${job.key}.title`) : job.title}
-                       </h3>
-                       <div className="flex items-center gap-2.5 mb-4">
-                          <div className={clsx("px-2.5 py-0.5 rounded-full text-[11px] font-semibold border", CATEGORY_COLORS[job.category] || CATEGORY_COLORS.other)}>
-                             {t(`labour.categories.${job.category}`)}
-                          </div>
-                          <span className="text-xs text-slate-400 dark:text-slate-500 flex items-center gap-1.5"><Clock size={14} weight="bold" /> {new Date(job.createdAt).toLocaleDateString()}</span>
-                       </div>
-                       <p className="text-xs font-bold text-slate-500 dark:text-slate-400 line-clamp-2 italic leading-relaxed">
-                          "{job.key ? t(`labour.fallback.${job.key}.desc`) : job.description}"
-                       </p>
-                    </div>
+               {/* Category Filters List */}
+               <div className="flex gap-3 mb-10 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-800 -mx-4 px-4 sm:mx-0 sm:px-0">
+                 {FILTER_CATEGORIES.map(cat => (
+                   <button
+                     key={cat.id}
+                     onClick={() => setSelectedCategory(cat.id)}
+                     className={clsx(
+                       "px-5 py-3 rounded-2xl text-xs font-bold border transition-all duration-300 flex items-center gap-2.5 shrink-0 shadow-sm",
+                       selectedCategory === cat.id
+                         ? "bg-purple-600 border-purple-500 text-white shadow-purple-500/20 scale-105"
+                         : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-650 dark:text-slate-400 hover:border-purple-500/30"
+                     )}
+                   >
+                     <span className="text-sm">{cat.icon}</span>
+                     {cat.name}
+                   </button>
+                 ))}
+               </div>
 
-                    <div className="grid grid-cols-2 gap-4 mb-8">
-                       <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 flex items-center gap-3">
-                          <MapPin size={16} weight="fill" className="text-red-500" />
-                          <span className="text-xs font-semibold text-slate-700 dark:text-slate-200 truncate">{job.location?.district}</span>
-                       </div>
-                       <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 flex items-center gap-3">
-                          <Users size={16} weight="fill" className="text-blue-500" />
-                          <span className="text-xs font-semibold text-slate-700 dark:text-slate-200 truncate">{job.workersNeeded} {t('labour.needed')}</span>
-                       </div>
-                    </div>
-
-                    <div className="pt-6 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                       <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold text-xs bg-emerald-50 dark:bg-emerald-950/30 px-3 py-1.5 rounded-full border border-emerald-100/10">
-                          <ShieldCheck size={16} weight="fill" />
-                          <span>Verified Contact</span>
-                       </div>
-                       <CaretRight size={18} weight="bold" className="text-slate-300 group-hover:text-purple-600 group-hover:translate-x-1 transition-all" />
-                    </div>
+               {/* Jobs Grid */}
+               {filteredJobs.length === 0 ? (
+                 <div className="bg-white/40 dark:bg-slate-900/40 backdrop-blur-md rounded-[3rem] p-32 text-center border border-dashed border-slate-200 dark:border-slate-800">
+                    <Briefcase size={64} className="mx-auto text-slate-200 dark:text-slate-700 mb-6 animate-bounce" weight="duotone" />
+                    <p className="text-xl font-black text-slate-400 italic">No job postings match your search.</p>
                  </div>
-               ))}
-            </div>
+               ) : (
+                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                   {filteredJobs.map(job => {
+                     const jobTitle = job.key ? t(`labour.fallback.${job.key}.title`) : job.title;
+                     const jobDesc = job.key ? t(`labour.fallback.${job.key}.desc`) : job.description;
+                     const categoryImg = job.image || CATEGORY_IMAGES[job.category] || CATEGORY_IMAGES.other;
+                     const IconComponent = CATEGORY_ICON[job.category] || CATEGORY_ICON.other;
+                     const formattedDate = new Date(job.createdAt).toLocaleDateString();
+
+                     return (
+                       <div 
+                         key={job._id} 
+                         onClick={() => setShowModal(job)} 
+                         className="group bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-200/50 dark:border-slate-800/50 p-0 shadow-sm hover:shadow-premium hover:-translate-y-2 hover:border-purple-500/40 transition-all duration-500 cursor-pointer overflow-hidden flex flex-col h-full relative"
+                       >
+                         {/* Top Image Banner */}
+                         <div className="h-48 w-full relative overflow-hidden shrink-0">
+                           <img 
+                             src={categoryImg} 
+                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                             alt={jobTitle} 
+                           />
+                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90" />
+                           
+                           {/* Category Badge */}
+                           <div className="absolute top-4 left-4 px-3.5 py-1 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md rounded-full text-[10px] font-black uppercase tracking-widest text-purple-600 dark:text-purple-400 border border-white/20 shadow-md flex items-center gap-1.5">
+                             <IconComponent size={12} weight="fill" />
+                             {t(`labour.categories.${job.category}`)}
+                           </div>
+
+                           {/* Wage display pill */}
+                           <div className="absolute bottom-4 right-4 bg-emerald-500 text-white px-4 py-1.5 rounded-full text-xs font-black shadow-lg shadow-emerald-550/20 border border-emerald-400/20 flex items-center gap-1">
+                             ₹{job.wage} <span className="text-[10px] font-medium opacity-90">/{t(`labour.wage_units.${job.wageUnit}`)}</span>
+                           </div>
+                         </div>
+
+                         {/* Card Body */}
+                         <div className="p-8 flex-1 flex flex-col justify-between">
+                           <div>
+                             {/* User Avatar details row */}
+                             <div className="flex items-center gap-3 mb-4">
+                               <div className="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold text-xs uppercase shadow-sm">
+                                 {job.contactNumber ? job.contactNumber.slice(-2) : 'K'}
+                               </div>
+                               <div className="text-[10px] uppercase font-black tracking-widest text-slate-400 dark:text-slate-500">
+                                 {formattedDate}
+                               </div>
+                             </div>
+
+                             <h3 className="text-xl font-black text-slate-900 dark:text-white leading-snug mb-3 group-hover:text-purple-600 transition-colors font-outfit line-clamp-1">
+                               {jobTitle}
+                             </h3>
+
+                             <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 leading-relaxed mb-6 line-clamp-2 italic">
+                               "{jobDesc}"
+                             </p>
+                           </div>
+
+                           <div>
+                             {/* Small Map Embed (if GPS tagged) */}
+                             {job.location?.lat && job.location?.lng && (
+                               <div className="h-28 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 mb-6 relative group/map">
+                                 <iframe
+                                   title={`Map location for ${jobTitle}`}
+                                   className="w-full h-full grayscale dark:invert-[0.9] dark:hue-rotate-180"
+                                   src={`https://maps.google.com/maps?q=${job.location.lat},${job.location.lng}&z=13&output=embed`}
+                                   loading="lazy"
+                                 />
+                                 <div className="absolute inset-0 bg-slate-950/20 group-hover/map:bg-transparent transition-colors duration-300 flex items-center justify-center">
+                                   <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 text-[10px] font-black tracking-widest uppercase text-slate-750 dark:text-slate-200 shadow-xl flex items-center gap-1.5 pointer-events-none">
+                                     <MapPin size={12} weight="fill" className="text-red-500 animate-bounce" />
+                                     Live GPS Location
+                                   </div>
+                                 </div>
+                               </div>
+                             )}
+
+                             {/* Location & Workers needed */}
+                             <div className="grid grid-cols-2 gap-3 mb-6">
+                               <div className="bg-slate-50 dark:bg-slate-850 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-800/60 flex items-center gap-2.5 min-w-0">
+                                 <MapPin size={16} weight="fill" className="text-red-500 shrink-0" />
+                                 <span className="text-xs font-bold text-slate-700 dark:text-slate-200 truncate">{job.location?.district}</span>
+                               </div>
+                               <div className="bg-slate-50 dark:bg-slate-850 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-800/60 flex items-center gap-2.5 min-w-0">
+                                 <Users size={16} weight="fill" className="text-blue-500 shrink-0" />
+                                 <span className="text-xs font-bold text-slate-700 dark:text-slate-200 truncate">{job.workersNeeded} {t('labour.needed')}</span>
+                               </div>
+                             </div>
+
+                             {/* Card footer details */}
+                             <div className="pt-5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                               <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold text-xs bg-emerald-50 dark:bg-emerald-950/20 px-3 py-1.5 rounded-full border border-emerald-100/10">
+                                 <ShieldCheck size={16} weight="fill" />
+                                 <span>Verified Contact</span>
+                               </div>
+                               <CaretRight size={18} weight="bold" className="text-slate-300 group-hover:text-purple-600 group-hover:translate-x-1 transition-all" />
+                             </div>
+                           </div>
+                         </div>
+                       </div>
+                     );
+                   })}
+                 </div>
+               )}
+             </div>
           )}
 
           {tab === 'post' && (
@@ -324,6 +483,43 @@ export default function Labour() {
                            </div>
                         </div>
                      </div>
+
+                     {/* GPS Location Capture Container */}
+                     <div className="space-y-4 p-6 bg-slate-50 dark:bg-slate-800/40 rounded-[2rem] border border-slate-100 dark:border-slate-800/60">
+                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                         <div>
+                           <p className="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                             <MapPin size={18} weight="fill" className="text-red-500" />
+                             Capture GPS Coordinates (Optional)
+                           </p>
+                           <p className="text-xs font-semibold text-slate-550 dark:text-slate-400 mt-1">
+                             Tag coordinates to map this job listing on the Live Map.
+                           </p>
+                         </div>
+                         <button 
+                           type="button" 
+                           onClick={captureLocation} 
+                           className="h-12 px-6 bg-purple-655 text-white bg-purple-600 rounded-xl text-xs font-bold hover:bg-purple-700 transition-all flex items-center gap-2 shadow-md shadow-purple-500/10 cursor-pointer"
+                         >
+                           <Lightning size={14} weight="fill" className="text-amber-400 animate-pulse" />
+                           Get Current Location
+                         </button>
+                       </div>
+
+                       {form.lat && form.lng && (
+                         <div className="grid grid-cols-2 gap-4 animate-in fade-in duration-300">
+                           <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Latitude</p>
+                             <p className="text-xs font-bold text-slate-800 dark:text-slate-200 mt-1">{form.lat.toFixed(6)}</p>
+                           </div>
+                           <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Longitude</p>
+                             <p className="text-xs font-bold text-slate-800 dark:text-slate-200 mt-1">{form.lng.toFixed(6)}</p>
+                           </div>
+                         </div>
+                       )}
+                     </div>
+
                   </div>
 
                   <button onClick={postJob} disabled={loading} className="w-full h-16 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-[2rem] font-bold text-lg shadow-2xl shadow-purple-500/30 flex items-center justify-center gap-4 mt-14 hover:-translate-y-1 transition-all active:scale-95 disabled:opacity-50">
@@ -375,8 +571,8 @@ export default function Labour() {
           {tab === 'my-jobs' && (
             <div className="space-y-6">
                {myJobs.length === 0 ? (
-                 <div className="bg-white/40 dark:bg-slate-900/40 backdrop-blur-md rounded-[3rem] p-32 text-center border-2 border-dashed border-slate-200 dark:border-slate-800">
-                    <Briefcase size={64} className="mx-auto text-slate-200 mb-6" weight="duotone" />
+                 <div className="bg-white/40 dark:bg-slate-900/40 backdrop-blur-md rounded-[3rem] p-32 text-center border border-dashed border-slate-200 dark:border-slate-800">
+                    <Briefcase size={64} className="mx-auto text-slate-200 dark:text-slate-705 mb-6" weight="duotone" />
                     <p className="text-xl font-black text-slate-400 italic">{t('common.no_data')}</p>
                  </div>
                ) : (
@@ -413,17 +609,22 @@ export default function Labour() {
            <div className="bg-white dark:bg-slate-900 rounded-[3rem] w-full max-w-2xl overflow-hidden shadow-2xl border border-white/10 relative animate-in zoom-in-95 slide-in-from-bottom-10 duration-500 max-h-[90vh] flex flex-col">
               
               <div className="relative h-64 sm:h-80 shrink-0">
-                 <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-indigo-900" />
-                 <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
+                 <img 
+                   src={showModal.image || CATEGORY_IMAGES[showModal.category] || CATEGORY_IMAGES.other} 
+                   alt="Header visual" 
+                   className="absolute inset-0 w-full h-full object-cover" 
+                 />
+                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+                 
                  <button onClick={() => setShowModal(null)} className="absolute top-8 right-8 w-12 h-12 bg-white/20 backdrop-blur-md text-white rounded-2xl flex items-center justify-center hover:bg-white/40 transition-all z-20">
                     <X size={24} weight="bold" />
                  </button>
                  
-                 <div className="absolute bottom-0 left-0 w-full p-10 flex items-end justify-between bg-gradient-to-t from-black/60 to-transparent">
+                 <div className="absolute bottom-0 left-0 w-full p-10 flex items-end justify-between">
                     <div className="flex items-center gap-8">
-                       <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-[2rem] bg-white dark:bg-slate-800 shadow-2xl flex items-center justify-center overflow-hidden border-4 border-white dark:border-slate-700 shrink-0">
+                       <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-[1.8rem] bg-white dark:bg-slate-800 shadow-2xl flex items-center justify-center overflow-hidden border-4 border-white dark:border-slate-700 shrink-0">
                           {showModal.image ? <img src={showModal.image} alt="Poster" className="w-full h-full object-cover" /> : (
-                            <div className="text-5xl text-purple-600">
+                            <div className="text-4xl text-purple-600">
                                {(() => { const Icon = CATEGORY_ICON[showModal.category] || CATEGORY_ICON.other; return <Icon weight="duotone" />; })()}
                             </div>
                           )}
@@ -432,10 +633,10 @@ export default function Labour() {
                           <div className={clsx("inline-flex px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest mb-3", CATEGORY_COLORS[showModal.category] || CATEGORY_COLORS.other)}>
                              {t(`labour.categories.${showModal.category}`)}
                           </div>
-                          <h3 className="text-3xl sm:text-4xl font-black text-white tracking-tighter leading-none mb-2">
+                          <h3 className="text-3xl font-black text-white tracking-tighter leading-none mb-2">
                              {showModal.key ? t(`labour.fallback.${showModal.key}.title`) : showModal.title}
                           </h3>
-                          <div className="flex items-center gap-4 text-white/60 font-black text-[10px] uppercase tracking-widest">
+                          <div className="flex items-center gap-4 text-white/70 font-black text-[10px] uppercase tracking-widest">
                              <span className="flex items-center gap-2"><MapPin size={14} weight="fill" className="text-red-400" /> {showModal.location?.district}, {translateOption(showModal.location?.state, 'state')}</span>
                              <span className="flex items-center gap-2"><Clock size={14} weight="fill" className="text-blue-400" /> {new Date(showModal.createdAt).toLocaleDateString()}</span>
                           </div>
@@ -458,25 +659,43 @@ export default function Labour() {
                     </div>
                  </div>
 
+                 {/* Detailed Location Map Embed inside Modal */}
+                 {showModal.location?.lat && showModal.location?.lng && (
+                   <div className="mb-12">
+                     <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-3">
+                       <MapPin size={16} weight="fill" className="text-red-500" />
+                       Job Location Map
+                     </h4>
+                     <div className="h-64 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm relative">
+                       <iframe
+                         title={`Detailed map location for ${showModal.title}`}
+                         className="w-full h-full grayscale dark:invert-[0.9] dark:hue-rotate-180"
+                         src={`https://maps.google.com/maps?q=${showModal.location.lat},${showModal.location.lng}&z=14&output=embed`}
+                         loading="lazy"
+                       />
+                     </div>
+                   </div>
+                 )}
+
                  <div className="mb-12">
                     <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center gap-3">
                        <Info size={16} weight="fill" className="text-slate-300" />
                        {t('labour.job_description')}
                     </h4>
                     <div className="bg-slate-50 dark:bg-slate-800/50 rounded-[2rem] p-10 border border-slate-100 dark:border-slate-800 relative group">
-                       <div className="absolute -top-4 -left-4 w-12 h-12 bg-white dark:bg-slate-900 rounded-2xl flex items-center justify-center text-4xl text-slate-200">“</div>
-                       <p className="text-base font-bold text-slate-700 dark:text-slate-300 leading-relaxed italic relative z-10">
+                       <div className="absolute -top-4 -left-4 w-12 h-12 bg-white dark:bg-slate-900 rounded-2xl flex items-center justify-center text-4xl text-slate-250 dark:text-slate-700 select-none">“</div>
+                       <p className="text-base font-bold text-slate-705 dark:text-slate-300 leading-relaxed italic relative z-10">
                           {showModal.key ? t(`labour.fallback.${showModal.key}.desc`) : showModal.description}
                        </p>
                     </div>
                  </div>
 
                  <div className="flex flex-col sm:flex-row gap-5">
-                    <button onClick={() => handlePayment(showModal)} disabled={processingPayment} className="flex-[2] h-20 bg-gradient-to-r from-emerald-600 to-green-700 text-white rounded-[2rem] font-black text-xl uppercase tracking-widest shadow-2xl shadow-emerald-500/30 flex items-center justify-center gap-4 hover:-translate-y-1 transition-all active:scale-95 disabled:opacity-50">
+                    <button onClick={() => handlePayment(showModal)} disabled={processingPayment} className="flex-[2] h-20 bg-gradient-to-r from-emerald-600 to-green-700 text-white rounded-[2rem] font-black text-lg uppercase tracking-widest shadow-2xl shadow-emerald-500/30 flex items-center justify-center gap-4 hover:-translate-y-1 transition-all active:scale-95 disabled:opacity-50 cursor-pointer">
                        <Bank size={28} weight="fill" />
                        {processingPayment ? t('labour.processing') : t('labour.pay_book', { amount: showModal.wage })}
                     </button>
-                    <button onClick={() => toast.success("Secure connection established! Kisan Mitra will notify you.")} className="flex-1 h-20 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-200 rounded-[2rem] font-black text-sm uppercase tracking-widest flex items-center justify-center gap-4 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+                    <button onClick={() => toast.success("Secure connection established! Kisan Mitra will notify you.")} className="flex-1 h-20 bg-slate-100 dark:bg-slate-800 text-slate-650 dark:text-slate-205 rounded-[2rem] font-black text-xs uppercase tracking-widest flex items-center justify-center gap-4 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all cursor-pointer">
                        <Handshake size={24} weight="fill" />
                        Secure Connect
                     </button>
