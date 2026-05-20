@@ -77,6 +77,7 @@ const paymentRoutes = safeRequire('./services/payment-service/src/routes/payment
 const schemesRoutes = safeRequire('./services/schemes-service/src/routes/schemes', 'schemes');
 const newsRoutes = safeRequire('./services/news-service/src/routes/news', 'news');
 const buyerRoutes = safeRequire('./services/buyer-service/src/routes/buyer', 'buyer');
+const communityRoutes = safeRequire('./services/community-service/src/routes/community', 'community');
 
 // ─── Public Routes ───────────────────────────────
 if (authRoutes) app.use('/api/auth', authRoutes);
@@ -102,6 +103,7 @@ if (paymentRoutes) app.use('/api/payment', verifyToken, paymentRoutes);
 if (schemesRoutes) app.use('/api/schemes', verifyToken, schemesRoutes);
 if (newsRoutes) app.use('/api/news', verifyToken, newsRoutes);
 if (buyerRoutes) app.use('/api/buyer', verifyToken, buyerRoutes);
+if (communityRoutes) app.use('/api/community', verifyToken, communityRoutes);
 
 app.use('*', (req, res) => res.status(404).json({ success: false, message: 'Route not found' }));
 

@@ -197,15 +197,15 @@ export default function Community() {
   const currentRoomInfo = ROOMS.find(r => r.id === currentRoom);
 
   return (
-    <div ref={ref} className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] transition-colors duration-500 font-sans selection:bg-purple-100 selection:text-purple-900 pt-24 sm:pt-28 pb-10">
+    <div ref={ref} className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] transition-colors duration-500 font-sans selection:bg-purple-100 selection:text-purple-900 pt-20 sm:pt-28 pb-4 lg:pb-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         
         {/* Main Grid Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-[calc(100vh-160px)] min-h-[600px]">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 h-[calc(100vh-120px)] lg:h-[calc(100vh-160px)] min-h-0 lg:min-h-[600px]">
           
           {/* LEFT PANEL: Rooms / Channels Selector */}
           <div className={clsx(
-            "lg:col-span-4 bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl rounded-[2.5rem] border border-slate-200/50 dark:border-slate-800/50 p-6 flex flex-col shadow-sm h-full",
+            "lg:col-span-4 bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl rounded-3xl lg:rounded-[2.5rem] border border-slate-200/50 dark:border-slate-800/50 p-4 lg:p-6 flex flex-col shadow-sm h-full",
             mobileView === 'chat' ? 'hidden lg:flex' : 'flex'
           )}>
             <div className="flex items-center gap-3.5 mb-6 px-2">
@@ -307,7 +307,7 @@ export default function Community() {
 
           {/* RIGHT PANEL: Chat Area */}
           <div className={clsx(
-            "lg:col-span-8 bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl rounded-[2.5rem] border border-slate-200/50 dark:border-slate-800/50 flex flex-col shadow-sm overflow-hidden h-full",
+            "lg:col-span-8 bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl rounded-3xl lg:rounded-[2.5rem] border border-slate-200/50 dark:border-slate-800/50 flex flex-col shadow-sm overflow-hidden h-full",
             mobileView === 'channels' ? 'hidden lg:flex' : 'flex'
           )}>
             
@@ -347,7 +347,7 @@ export default function Community() {
             </div>
 
             {/* Chat Messages Body */}
-            <div className="flex-1 p-6 overflow-y-auto space-y-6 bg-slate-50/30 dark:bg-slate-950/10 scrollbar-thin">
+            <div className="flex-1 p-4 lg:p-6 overflow-y-auto space-y-4 lg:space-y-6 bg-slate-50/30 dark:bg-slate-950/10 scrollbar-thin">
               {loadingHistory ? (
                 <div className="flex flex-col items-center justify-center h-full gap-3 text-slate-400">
                   <SpinnerGap size={28} className="animate-spin text-indigo-500" />
@@ -452,7 +452,7 @@ export default function Community() {
             </div>
 
             {/* Quick Replies chips */}
-            <div className="px-6 py-3 border-t border-slate-100 dark:border-slate-800/60 flex gap-2.5 overflow-x-auto scrollbar-none bg-white/20 dark:bg-slate-900/20 shrink-0">
+            <div className="px-4 lg:px-6 py-2.5 lg:py-3 border-t border-slate-100 dark:border-slate-800/60 flex gap-2 overflow-x-auto scrollbar-none bg-white/20 dark:bg-slate-900/20 shrink-0">
               {getQuickReplies().map((reply, i) => (
                 <button
                   key={i}
@@ -465,7 +465,7 @@ export default function Community() {
             </div>
 
             {/* Chat Input Footer */}
-            <div className="p-6 border-t border-slate-100 dark:border-slate-800 shrink-0 bg-white dark:bg-slate-900 flex flex-col gap-2">
+            <div className="p-4 lg:p-6 border-t border-slate-100 dark:border-slate-800 shrink-0 bg-white dark:bg-slate-900 flex flex-col gap-2">
               <div className="flex gap-4">
                 <input
                   type="text"
