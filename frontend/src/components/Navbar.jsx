@@ -193,20 +193,20 @@ export default function Navbar() {
       {/* ========================================================
           MOBILE LAYOUT: Floating Top Header
           ======================================================== */}
-      <header className="fixed top-4 inset-x-0 z-[100] px-4 sm:px-6 xl:hidden">
-        <div className="max-w-7xl mx-auto h-16 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/20 dark:border-slate-800/60 rounded-2xl shadow-sm px-6 flex items-center justify-between gap-4">
-          <NavLink to="/dashboard" className="flex flex-col leading-none">
+      <header className="fixed top-4 inset-x-0 z-[100] px-3 xs:px-4 sm:px-6 xl:hidden">
+        <div className="max-w-7xl mx-auto h-16 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/20 dark:border-slate-800/60 rounded-2xl shadow-sm px-3 xs:px-4 sm:px-6 flex items-center justify-between gap-2 xs:gap-4">
+          <NavLink to="/dashboard" className="flex flex-col leading-none shrink-0">
             <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
               Smart<span className="text-indigo-600">Kisan</span>
             </span>
             <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 tracking-wider mt-0.5">Agri Intelligence</span>
           </NavLink>
 
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1.5 xs:gap-2 sm:gap-3 shrink-0">
             {/* Kisan Mitra Chat Toggle */}
             <button 
               onClick={() => window.dispatchEvent(new CustomEvent('toggle-kisan-chat'))}
-              className="w-10 h-10 flex items-center justify-center bg-slate-50 dark:bg-slate-800 text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/20 transition-all rounded-xl border border-slate-100 dark:border-slate-700 active:scale-95"
+              className="hidden xs:flex w-10 h-10 items-center justify-center bg-slate-50 dark:bg-slate-800 text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/20 transition-all rounded-xl border border-slate-100 dark:border-slate-700 active:scale-95 shrink-0"
               title="Kisan Mitra Chat"
             >
               <ChatCircleText size={20} weight="bold" />
@@ -215,18 +215,18 @@ export default function Navbar() {
             {/* Voice Assistant Toggle */}
             <button 
               onClick={() => window.dispatchEvent(new CustomEvent('toggle-voice-assistant'))}
-              className="w-10 h-10 flex items-center justify-center bg-slate-50 dark:bg-slate-800 text-slate-500 hover:text-emerald-600 dark:text-slate-400 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition-all rounded-xl border border-slate-100 dark:border-slate-700 active:scale-95"
+              className="hidden xs:flex w-10 h-10 items-center justify-center bg-slate-50 dark:bg-slate-800 text-slate-500 hover:text-emerald-600 dark:text-slate-400 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition-all rounded-xl border border-slate-100 dark:border-slate-700 active:scale-95 shrink-0"
               title="Voice Assistant"
             >
               <Microphone size={20} weight="bold" />
             </button>
 
-            <div className="hidden sm:block">
+            <div className="hidden sm:block shrink-0">
               <LanguageSelector showLabel={false} />
             </div>
 
             {/* Custom User Menu */}
-            <div className="relative" ref={userMenuRef}>
+            <div className="relative shrink-0" ref={userMenuRef}>
               <button 
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
                 className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center overflow-hidden border border-slate-100 dark:border-slate-700 hover:border-indigo-600/30 transition-all focus:outline-none"
@@ -265,7 +265,7 @@ export default function Navbar() {
 
             <button 
               onClick={() => setOpen(true)} 
-              className="xl:hidden w-10 h-10 flex items-center justify-center text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/20 active:scale-95 transition-all rounded-xl border border-indigo-50 dark:border-indigo-950/20"
+              className="xl:hidden w-10 h-10 flex items-center justify-center text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/20 active:scale-95 transition-all rounded-xl border border-indigo-50 dark:border-indigo-950/20 shrink-0"
             >
               <List size={22} weight="bold" />
             </button>
@@ -295,6 +295,27 @@ export default function Navbar() {
 
           {/* Links */}
           <div className="flex-1 overflow-y-auto my-2 pr-2 space-y-6 scrollbar-none hide-scrollbar">
+            {/* AI Assistants Module */}
+            <div className="space-y-2">
+              <div className="text-[10px] font-bold tracking-widest text-slate-400 dark:text-slate-500 uppercase px-2">AI Assistants</div>
+              <div className="grid grid-cols-2 gap-2 p-1.5 bg-slate-50/50 dark:bg-slate-800/20 rounded-2xl border border-slate-100/50 dark:border-slate-800/40">
+                <button 
+                  onClick={() => { setOpen(false); window.dispatchEvent(new CustomEvent('toggle-kisan-chat')); }}
+                  className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-bold bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 border border-slate-100/50 dark:border-slate-800/60 shadow-sm transition-all hover:scale-[1.02] active:scale-95"
+                >
+                  <ChatCircleText size={18} className="text-indigo-600 dark:text-indigo-400 shrink-0" weight="bold" />
+                  <span>Kisan Mitra</span>
+                </button>
+                <button 
+                  onClick={() => { setOpen(false); window.dispatchEvent(new CustomEvent('toggle-voice-assistant')); }}
+                  className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-bold bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:text-emerald-600 dark:hover:text-emerald-400 border border-slate-100/50 dark:border-slate-800/60 shadow-sm transition-all hover:scale-[1.02] active:scale-95"
+                >
+                  <Microphone size={18} className="text-emerald-600 dark:text-emerald-400 shrink-0" weight="bold" />
+                  <span>Voice Assistant</span>
+                </button>
+              </div>
+            </div>
+
             {/* Core Modules */}
             <div className="space-y-2">
               <div className="text-[10px] font-bold tracking-widest text-slate-400 dark:text-slate-500 uppercase px-2">Core Modules</div>
