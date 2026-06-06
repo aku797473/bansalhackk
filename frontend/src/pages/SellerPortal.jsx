@@ -182,13 +182,35 @@ export default function BuyerPortal() {
   const handlePurchase = async (item, shop) => {
     setProcessingPayment(true);
     try {
+      const { data: order } = await paymentAPI.createOrder(item.price);
+
+      if (order.id && order.id.startsWith('order_mock_')) {
+        const toastId = toast.loading('Demo Mode: Simulating secure payment...');
+        setTimeout(async () => {
+          try {
+            const { data: verifyRes } = await paymentAPI.verifyPayment({ 
+              razorpay_order_id: order.id, 
+              razorpay_payment_id: 'pay_mock_' + Math.random().toString(36).substring(2, 15), 
+              razorpay_signature: 'mock_signature' 
+            });
+            if (verifyRes.status === 'success' || verifyRes.success) { 
+              toast.success('Payment Successful! Order Placed.', { id: toastId }); 
+              setSelectedBuyer(null); 
+            } else {
+              toast.error('Payment failed', { id: toastId });
+            }
+          } catch (err) { 
+            toast.error('Payment failed', { id: toastId }); 
+          }
+        }, 1500);
+        return;
+      }
+
       const isLoaded = await loadRazorpay();
       if (!isLoaded) {
         toast.error('Razorpay failed to load');
         return;
       }
-
-      const { data: order } = await paymentAPI.createOrder(item.price);
 
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_placeholder',
@@ -199,8 +221,21 @@ export default function BuyerPortal() {
         image: '/logo.png',
         order_id: order.id,
         handler: async (response) => {
-          toast.success('Payment Successful! Order Placed.');
-          setSelectedBuyer(null);
+          try {
+            const { data: verifyRes } = await paymentAPI.verifyPayment({ 
+              razorpay_order_id: response.razorpay_order_id, 
+              razorpay_payment_id: response.razorpay_payment_id, 
+              razorpay_signature: response.razorpay_signature 
+            });
+            if (verifyRes.status === 'success' || verifyRes.success) {
+              toast.success('Payment Successful! Order Placed.');
+              setSelectedBuyer(null);
+            } else {
+              toast.error('Payment verification failed');
+            }
+          } catch (err) {
+            toast.error('Payment verification failed');
+          }
         },
         prefill: { name: user?.name, email: user?.email, contact: user?.phone },
         theme: { color: '#15803d' }

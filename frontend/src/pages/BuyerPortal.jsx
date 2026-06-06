@@ -213,18 +213,47 @@ export default function BuyerPortal() {
   const handleBuyCrop = async (listing) => {
     setProcessingPayment(true);
     try {
-      const isLoaded = await loadRazorpay();
-      if (!isLoaded) {
-        toast.error('Razorpay failed to load');
-        return;
-      }
-
       // Calculate total amount
       const totalCost = listing.price * listing.quantity;
       // We take a 10% advance/booking deposit for security
       const depositAmount = Math.round(totalCost * 0.1);
 
       const { data: order } = await paymentAPI.createOrder(depositAmount);
+
+      if (order.id && order.id.startsWith('order_mock_')) {
+        const toastId = toast.loading('Demo Mode: Simulating secure payment...');
+        setTimeout(async () => {
+          try {
+            const { data: verifyRes } = await paymentAPI.verifyPayment({ 
+              razorpay_order_id: order.id, 
+              razorpay_payment_id: 'pay_mock_' + Math.random().toString(36).substring(2, 15), 
+              razorpay_signature: 'mock_signature' 
+            });
+            if (verifyRes.status === 'success' || verifyRes.success) { 
+              await buyerAPI.createOrder({
+                listingId: listing._id,
+                quantity: listing.quantity,
+                totalAmount: totalCost,
+                razorpayOrderId: order.id
+              });
+              toast.success('Payment Successful! Crop Booking Confirmed.', { id: toastId }); 
+              setSelectedListing(null); 
+              fetchListings();
+            } else {
+              toast.error('Payment failed', { id: toastId });
+            }
+          } catch (err) { 
+            toast.error('Payment failed: ' + (err.response?.data?.message || err.message), { id: toastId }); 
+          }
+        }, 1500);
+        return;
+      }
+
+      const isLoaded = await loadRazorpay();
+      if (!isLoaded) {
+        toast.error('Razorpay failed to load');
+        return;
+      }
 
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_placeholder',
@@ -236,15 +265,24 @@ export default function BuyerPortal() {
         order_id: order.id,
         handler: async (response) => {
           try {
-            await buyerAPI.createOrder({
-              listingId: listing._id,
-              quantity: listing.quantity,
-              totalAmount: totalCost,
-              razorpayOrderId: order.id
+            const { data: verifyRes } = await paymentAPI.verifyPayment({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature
             });
-            toast.success('Payment Successful! Crop Booking Confirmed.');
-            setSelectedListing(null);
-            fetchListings();
+            if (verifyRes.status === 'success' || verifyRes.success) {
+              await buyerAPI.createOrder({
+                listingId: listing._id,
+                quantity: listing.quantity,
+                totalAmount: totalCost,
+                razorpayOrderId: order.id
+              });
+              toast.success('Payment Successful! Crop Booking Confirmed.');
+              setSelectedListing(null);
+              fetchListings();
+            } else {
+              toast.error('Payment verification failed');
+            }
           } catch (err) {
             toast.error('Order creation failed on server');
           }
