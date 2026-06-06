@@ -12,6 +12,8 @@
   "dependencies": {
     "@googlemaps/js-api-loader": "^1.16.2",
     "@gsap/react": "^2.1.2",
+    "@langchain/core": "^1.1.48",
+    "@langchain/groq": "^1.2.1",
     "@phosphor-icons/react": "^2.1.10",
     "@react-three/drei": "^9.57.0",
     "@react-three/fiber": "^8.12.0",
@@ -26,6 +28,7 @@
     "i18next": "^23.7.6",
     "i18next-browser-languagedetector": "^7.2.0",
     "ioredis": "^5.10.1",
+    "langchain": "^1.4.4",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.303.0",
     "mongoose": "^8.3.2",

@@ -22,6 +22,7 @@ import {
   CheckCircle
 } from '@phosphor-icons/react';
 import { cropAPI } from '../services/api';
+import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { usePageAnimation } from '../hooks/usePageAnimation';
 import clsx from 'clsx';
@@ -78,63 +79,48 @@ export default function ProfitPredictor() {
     setLoading(true);
     setPrediction(null);
 
-    // Map form data to crop recommendation payload
-    const payload = {
-      soilType: form.soilType,
-      temperature: 28,
-      humidity: 65,
-      rainfall: 600,
-      season: 'rabi',
-      state: form.location,
-      district: form.location,
-      language: lang,
-    };
-
     try {
-      const { data } = await cropAPI.recommend(payload);
+      // Call LangChain-powered AI profit prediction endpoint
+      const { data } = await axios.post('/api/ai', {
+        landSize: form.landSize,
+        cropType: form.cropType,
+        soilType: form.soilType,
+        location: form.location,
+        budget: form.budget,
+        fertilizers: form.fertilizers || 'Not specified',
+        weather: form.weather,
+      });
+
       if (data.success) {
-        const rec = data.data;
-        const result = [
-          `🌾 ${t('profit_predictor.planned_crop')}: ${rec.primaryCrop}`,
-          `⏰ ${t('profit_predictor.sowing')}: ${rec.sowingTime}`,
-          `🌊 ${t('profit_predictor.water_req')}: ${rec.waterRequirement}`,
-          ``,
-          `📈 ${t('profit_predictor.estimate')}:`,
-          `   • ${t('profit_predictor.land_size')}: ${form.landSize} acres`,
-          `   • ${t('profit_predictor.budget')}: ₹${Number(form.budget).toLocaleString('en-IN')}`,
-          `   • Gross Revenue (est.): ₹${Math.round(Number(form.budget) * 3.5).toLocaleString('en-IN')}`,
-          `   • Net Profit (est.): ₹${Math.round(Number(form.budget) * 2.8).toLocaleString('en-IN')}`,
-          `   • ROI: ~${Math.round(180 + Math.random() * 80)}%`,
-          ``,
-          `💡 ${t('profit_predictor.tips')}:`,
-          ...(rec.tips || []).map(tip => `   • ${tip}`),
-          ``,
-          `🌿 ${t('profit_predictor.alt_crops')}: ${(rec.alternativeCrops || []).join(', ')}`,
-        ].join('\n');
-        setPrediction(result);
-        toast.success(t('common.success'));
+        setPrediction(data.data);
+        toast.success('LangChain AI Analysis Complete! 🤖');
       } else {
         throw new Error(data.message);
       }
     } catch (error) {
       console.error(error);
-      // Smart fallback with user's actual inputs
-      const budget = Number(form.budget) || 50000;
-      setPrediction([
-        `🌾 ${t('profit_predictor.planned_crop')}: ${form.cropType}`,
-        `📍 ${t('profit_predictor.location')}: ${form.location}`,
-        `🏔️ ${t('profit_predictor.soil_type')}: ${form.soilType}`,
-        ``,
-        `📈 ${t('profit_predictor.estimate')} (${form.landSize} acres):`,
-        `   • ${t('profit_predictor.budget')}: ₹${budget.toLocaleString('en-IN')}`,
-        `   • Expected Yield: ${Math.round(Number(form.landSize) * 12)} - ${Math.round(Number(form.landSize) * 15)} quintals`,
-        `   • Gross Revenue (est.): ₹${Math.round(budget * 3.5).toLocaleString('en-IN')}`,
-        `   • Net Profit (est.): ₹${Math.round(budget * 2.8).toLocaleString('en-IN')}`,
-        `   • ROI: ~${Math.round(200 + Math.random() * 160)}%`,
-        ``,
-        `💡 Key Strategy: Focus on micro-irrigation and timely NPK application to maximize yield.`,
-      ].join('\n'));
       toast('AI service warming up — showing smart estimate', { icon: '⚡' });
+      // Fallback prediction object
+      const budget = Number(form.budget) || 50000;
+      setPrediction({
+        profitPotential: `₹${Math.round(budget * 2.5).toLocaleString('en-IN')} – ₹${Math.round(budget * 4).toLocaleString('en-IN')}`,
+        roi: `${Math.round(150 + Math.random() * 150)}%`,
+        grossRevenue: `₹${Math.round(budget * 3.5).toLocaleString('en-IN')}`,
+        netProfit: `₹${Math.round(budget * 2.8).toLocaleString('en-IN')}`,
+        recommendedCrop: form.cropType,
+        fertilizerAdvice: 'Use Urea (N), DAP (P), and MOP (K) in split doses.',
+        weatherStrategy: 'Monitor forecasts. Use drip irrigation to conserve water.',
+        keyRisks: ['Unseasonal rainfall', 'Pest attacks', 'Market price drops'],
+        actionPlan: [
+          'Prepare soil with proper ploughing',
+          'Use certified seeds from government suppliers',
+          'Apply fertilizers in 3 split doses',
+          'Monitor weekly for pests',
+        ],
+        marketInsight: 'Market demand is moderate. Check local mandi prices before selling.',
+        hinglishSummary: `Aapki ${form.landSize} acre zameen par estimated ₹${Math.round(budget * 2.5).toLocaleString('en-IN')} tak ka profit ho sakta hai. Certified seeds aur timely irrigation se yield badh sakti hai.`,
+        isFallback: true,
+      });
     } finally {
       setLoading(false);
     }
@@ -303,26 +289,80 @@ export default function ProfitPredictor() {
           <div className="lg:col-span-7 h-full">
             {prediction ? (
               <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 rounded-[2.5rem] p-8 sm:p-12 shadow-premium h-full flex flex-col animate-in fade-in slide-in-from-right-5 duration-700">
-                 <div className="flex items-center justify-between mb-10 pb-8 border-b border-slate-200/50 dark:border-slate-800/50">
+                 <div className="flex items-center justify-between mb-8 pb-6 border-b border-slate-200/50 dark:border-slate-800/50">
                     <div className="flex items-center gap-4">
                        <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center border border-emerald-100 dark:border-emerald-500/20">
                           <Gauge size={28} weight="duotone" className="text-emerald-600 dark:text-emerald-400" />
                        </div>
-                       <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter uppercase font-outfit">{t('profit_predictor.analysis_result')}</h3>
+                       <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter font-outfit">LangChain AI Analysis</h3>
                     </div>
-                    <div className="px-4 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-500 text-xs font-medium rounded-full flex items-center gap-2">
-                       <CheckCircle size={14} weight="fill" className="text-emerald-500" />
-                       AI Recommendation
-                    </div>
-                 </div>
-
-                 <div className="flex-1">
-                    <div className="bg-slate-50 dark:bg-slate-800/30 p-8 rounded-[2rem] border border-slate-100 dark:border-slate-800 leading-relaxed font-bold text-slate-700 dark:text-slate-300 whitespace-pre-wrap text-sm sm:text-base">
-                       {prediction}
+                    <div className="px-4 py-1.5 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold rounded-full flex items-center gap-2">
+                       <Sparkle size={12} weight="fill" />
+                       {prediction.isFallback ? 'Smart Estimate' : 'LangChain + Groq'}
                     </div>
                  </div>
 
-                 <div className="mt-10 grid sm:grid-cols-2 gap-4">
+                 <div className="flex-1 space-y-5">
+                   {/* Hinglish Summary */}
+                   {prediction.hinglishSummary && (
+                     <div className="bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-800/30 rounded-2xl p-5">
+                       <p className="text-sm font-bold text-amber-800 dark:text-amber-300 leading-relaxed">💬 {prediction.hinglishSummary}</p>
+                     </div>
+                   )}
+
+                   {/* Profit Stats */}
+                   <div className="grid grid-cols-2 gap-3">
+                     <div className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 rounded-2xl p-4 text-center">
+                       <p className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold mb-1">💰 Net Profit</p>
+                       <p className="text-base font-black text-emerald-700 dark:text-emerald-300">{prediction.netProfit}</p>
+                     </div>
+                     <div className="bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20 rounded-2xl p-4 text-center">
+                       <p className="text-xs text-blue-600 dark:text-blue-400 font-semibold mb-1">📈 ROI</p>
+                       <p className="text-base font-black text-blue-700 dark:text-blue-300">{prediction.roi}</p>
+                     </div>
+                     <div className="bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 rounded-2xl p-4 text-center">
+                       <p className="text-xs text-slate-500 font-semibold mb-1">🌾 Recommended Crop</p>
+                       <p className="text-sm font-black text-slate-700 dark:text-slate-200">{prediction.recommendedCrop}</p>
+                     </div>
+                     <div className="bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 rounded-2xl p-4 text-center">
+                       <p className="text-xs text-slate-500 font-semibold mb-1">💵 Gross Revenue</p>
+                       <p className="text-sm font-black text-slate-700 dark:text-slate-200">{prediction.grossRevenue}</p>
+                     </div>
+                   </div>
+
+                   {/* Action Plan */}
+                   {prediction.actionPlan && prediction.actionPlan.length > 0 && (
+                     <div className="bg-slate-50 dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800 rounded-2xl p-5">
+                       <h4 className="text-xs font-bold text-slate-400 mb-3 flex items-center gap-2"><Lightning size={14} weight="fill" className="text-yellow-500" /> ACTION PLAN</h4>
+                       <ol className="space-y-2">
+                         {prediction.actionPlan.map((step, i) => (
+                           <li key={i} className="flex gap-3 text-sm font-semibold text-slate-700 dark:text-slate-300">
+                             <span className="w-5 h-5 bg-emerald-100 dark:bg-emerald-500/20 rounded-full flex items-center justify-center text-emerald-600 text-xs font-black shrink-0 mt-0.5">{i+1}</span>
+                             {step}
+                           </li>
+                         ))}
+                       </ol>
+                     </div>
+                   )}
+
+                   {/* Market Insight + Risks */}
+                   <div className="grid grid-cols-1 gap-3">
+                     {prediction.marketInsight && (
+                       <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-800/30 rounded-2xl p-4">
+                         <p className="text-xs font-bold text-blue-500 mb-1">📊 Market Insight</p>
+                         <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">{prediction.marketInsight}</p>
+                       </div>
+                     )}
+                     {prediction.fertilizerAdvice && (
+                       <div className="bg-green-50 dark:bg-green-900/10 border border-green-100 dark:border-green-800/30 rounded-2xl p-4">
+                         <p className="text-xs font-bold text-green-500 mb-1">🌿 Fertilizer Advice</p>
+                         <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">{prediction.fertilizerAdvice}</p>
+                       </div>
+                     )}
+                   </div>
+                 </div>
+
+                 <div className="mt-6 grid sm:grid-cols-2 gap-4">
                     <button className="h-14 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-bold text-slate-900 dark:text-white flex items-center justify-center gap-3 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all">
                        <FilePdf size={20} weight="bold" className="text-red-500" />
                        {t('profit_predictor.download_pdf')}
