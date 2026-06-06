@@ -29,25 +29,7 @@ router.post('/order', async (req, res) => {
       receipt,
     };
 
-    let order;
-    try {
-      order = await razorpay.orders.create(options);
-    } catch (error) {
-      console.warn('Real Razorpay order creation failed, falling back to mock order. Error:', error.message || error);
-      order = {
-        id: 'order_mock_' + Math.random().toString(36).substring(2, 15),
-        entity: 'order',
-        amount: options.amount,
-        amount_paid: 0,
-        amount_due: options.amount,
-        currency: options.currency || 'INR',
-        receipt: options.receipt,
-        status: 'created',
-        attempts: 0,
-        notes: {},
-        created_at: Math.floor(Date.now() / 1000)
-      };
-    }
+    const order = await razorpay.orders.create(options);
     
     if (!order) {
       return res.status(500).json({ message: 'Failed to create order' });
@@ -72,14 +54,6 @@ router.post('/verify', async (req, res) => {
       razorpay_payment_id, 
       razorpay_signature 
     } = req.body;
-
-    if (razorpay_order_id && razorpay_order_id.startsWith('order_mock_')) {
-      return res.json({ 
-        status: 'success', 
-        message: 'Mock payment verified successfully (Mock Bypass)',
-        data: { razorpay_payment_id: razorpay_payment_id || 'pay_mock_' + Math.random().toString(36).substring(2, 15) }
-      });
-    }
 
     const body = razorpay_order_id + "|" + razorpay_payment_id;
 

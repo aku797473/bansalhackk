@@ -178,34 +178,9 @@ export default function Labour() {
   const handlePayment = async (job) => {
     setProcessingPayment(true);
     try {
-      const { data: order } = await paymentAPI.createOrder(job.wage);
-      
-      if (order.id && order.id.startsWith('order_mock_')) {
-        const toastId = toast.loading('Demo Mode: Simulating secure payment...');
-        setTimeout(async () => {
-          try {
-            const { data: verifyRes } = await paymentAPI.verifyPayment({ 
-              razorpay_order_id: order.id, 
-              razorpay_payment_id: 'pay_mock_' + Math.random().toString(36).substring(2, 15), 
-              razorpay_signature: 'mock_signature' 
-            });
-            if (verifyRes.status === 'success' || verifyRes.success) { 
-              toast.success(t('common.success'), { id: toastId }); 
-              setShowModal(null); 
-              fetchJobs(); 
-            } else {
-              toast.error(t('common.error'), { id: toastId });
-            }
-          } catch (err) { 
-            toast.error(t('common.error'), { id: toastId }); 
-          }
-        }, 1500);
-        return;
-      }
-
       const res = await loadRazorpay();
       if (!res) { toast.error('Razorpay SDK failed to load'); return; }
-      
+      const { data: order } = await paymentAPI.createOrder(job.wage);
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_placeholder', 
         amount: order.amount, currency: order.currency, name: 'Smart Kisan',
@@ -213,7 +188,7 @@ export default function Labour() {
         handler: async (response) => {
           try {
             const { data: verifyRes } = await paymentAPI.verifyPayment({ razorpay_order_id: response.razorpay_order_id, razorpay_payment_id: response.razorpay_payment_id, razorpay_signature: response.razorpay_signature });
-            if (verifyRes.status === 'success' || verifyRes.success) { toast.success(t('common.success')); setShowModal(null); fetchJobs(); }
+            if (verifyRes.status === 'success') { toast.success(t('common.success')); setShowModal(null); fetchJobs(); }
           } catch (err) { toast.error(t('common.error')); }
         },
         prefill: { name: user?.name, email: user?.email, contact: user?.phone || job.contactNumber },

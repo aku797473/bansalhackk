@@ -19,44 +19,23 @@ module.exports = async (req, res) => {
     // POST /api/payment/order
     if (req.method === 'POST' && endpoint === 'order') {
       const { amount } = req.body;
-      let order;
-      try {
-        order = await razorpay.orders.create({
-          amount: Math.round(amount * 100), // in paise
-          currency: 'INR',
-          receipt: `receipt_${Date.now()}`,
-        });
-      } catch (err) {
-        console.warn('Real Razorpay order creation failed, falling back to mock order. Error:', err.message || err);
-        order = {
-          id: 'order_mock_' + Math.random().toString(36).substring(2, 15),
-          entity: 'order',
-          amount: Math.round(amount * 100),
-          amount_paid: 0,
-          amount_due: Math.round(amount * 100),
-          currency: 'INR',
-          receipt: `receipt_${Date.now()}`,
-          status: 'created',
-          attempts: 0,
-          notes: {},
-          created_at: Math.floor(Date.now() / 1000)
-        };
-      }
+      const order = await razorpay.orders.create({
+        amount: Math.round(amount * 100), // in paise
+        currency: 'INR',
+        receipt: `receipt_${Date.now()}`,
+      });
       return res.json(order);
     }
 
     // POST /api/payment/verify
     if (req.method === 'POST' && endpoint === 'verify') {
       const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
-      if (razorpay_order_id && razorpay_order_id.startsWith('order_mock_')) {
-        return res.json({ success: true, status: 'success', message: 'Mock payment verified' });
-      }
       const key_secret = process.env.RAZORPAY_KEY_SECRET || 'N0r1zmsMjmPFmxP0PaIexyep';
       const hmac = crypto.createHmac('sha256', key_secret);
       hmac.update(`${razorpay_order_id}|${razorpay_payment_id}`);
       const digest = hmac.digest('hex');
       if (digest === razorpay_signature) {
-        return res.json({ success: true, status: 'success', message: 'Payment verified' });
+        return res.json({ success: true, message: 'Payment verified' });
       } else {
         return res.status(400).json({ success: false, message: 'Invalid signature' });
       }
