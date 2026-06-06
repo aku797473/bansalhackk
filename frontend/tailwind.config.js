@@ -9,6 +9,19 @@ export default {
         'sky-brand': { DEFAULT: '#0369a1', light: '#0ea5e9', dark: '#075985' },
         harvest:  { DEFAULT: '#ca8a04', light: '#eab308', dark: '#a16207' },
         surface:  '#f8fafc',
+        slate: {
+          50: '#f8fafc',
+          100: '#f1f5f9',
+          200: '#e2e8f0',
+          300: '#cbd5e1',
+          400: '#94a3b8',
+          500: '#64748b',
+          600: '#475569',
+          700: '#334155',
+          800: '#141416', // Sleek border and element dark background
+          900: '#090a0c', // Deeper card and menu background
+          950: '#020203', // Pitch black layout/page background
+        }
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],

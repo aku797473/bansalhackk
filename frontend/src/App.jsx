@@ -257,7 +257,7 @@ function AppLayout({ children }) {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen bg-surface dark:bg-slate-900 transition-colors duration-200 flex flex-col">
+    <div className="min-h-screen bg-surface dark:bg-slate-950 transition-colors duration-200 flex flex-col">
       <KeepAlive />
       {isAuth && <Navbar />}
       <div className={clsx("flex-grow flex flex-col transition-all duration-300", isAuth ? 'xl:pl-80' : '')}>
