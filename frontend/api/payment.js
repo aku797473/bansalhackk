@@ -8,8 +8,8 @@ module.exports = async (req, res) => {
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_SkpLj2akq4jVdI',
-    key_secret: process.env.RAZORPAY_KEY_SECRET || 'N0r1zmsMjmPFmxP0PaIexyep',
+    key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_SyRJc29QP0jOWL',
+    key_secret: process.env.RAZORPAY_KEY_SECRET || 'rhjhnX8t3qkMHUAnRDvjE5Fd',
   });
 
   const segments = req.url.split('?')[0].split('/').filter(Boolean);
@@ -30,7 +30,7 @@ module.exports = async (req, res) => {
     // POST /api/payment/verify
     if (req.method === 'POST' && endpoint === 'verify') {
       const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
-      const key_secret = process.env.RAZORPAY_KEY_SECRET || 'N0r1zmsMjmPFmxP0PaIexyep';
+      const key_secret = process.env.RAZORPAY_KEY_SECRET || 'rhjhnX8t3qkMHUAnRDvjE5Fd';
       const hmac = crypto.createHmac('sha256', key_secret);
       hmac.update(`${razorpay_order_id}|${razorpay_payment_id}`);
       const digest = hmac.digest('hex');
