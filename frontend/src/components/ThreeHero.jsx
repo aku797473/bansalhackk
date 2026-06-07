@@ -1,6 +1,6 @@
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, PresentationControls, Sky, Stars } from '@react-three/drei';
-import { useRef, Suspense, useMemo } from 'react';
+import { useRef, Suspense, useMemo, useEffect } from 'react';
 import * as THREE from 'three';
 
 // Helper to generate a glowing green circular particle texture dynamically
@@ -13,7 +13,7 @@ const createCircleTexture = () => {
   // Create a nice radial gradient for a soft glowing circular point
   const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
   gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-  gradient.addColorStop(0.2, 'rgba(52, 211, 153, 0.8)'); // Emerald/mint glow
+  gradient.addColorStop(0.2, 'rgba(52, 211, 153, 0.8)'); // Emerald glow
   gradient.addColorStop(0.6, 'rgba(16, 185, 129, 0.2)');
   gradient.addColorStop(1, 'rgba(16, 185, 129, 0)');
   
@@ -25,7 +25,232 @@ const createCircleTexture = () => {
 };
 
 /**
- * InteractiveParticles (Particle Attractor / Mouse Ripple Effect)
+ * CursorBubbleTrail (Interactive Bubble Emitter)
+ * Spawns circular floating bubbles right under the cursor as the mouse moves.
+ * When clicking or touching, it triggers a beautiful dynamic burst of particles.
+ */
+function CursorBubbleTrail() {
+  const count = 250; // Maximum active particles in the pool
+  const geomRef = useRef();
+  const isPressed = useRef(false);
+  const lastMousePos = useRef({ x: 0, y: 0 });
+
+  // Generate circular glow texture
+  const texture = useMemo(() => createCircleTexture(), []);
+
+  // Set up particle pool
+  const particles = useMemo(() => {
+    const arr = [];
+    for (let i = 0; i < count; i++) {
+      arr.push({
+        x: 0,
+        y: 0,
+        z: 0,
+        vx: 0,
+        vy: 0,
+        vz: 0,
+        age: 0, // 0 means inactive
+        maxAge: 40 + Math.random() * 30, // particle lifespan (frames)
+        size: 0.15 + Math.random() * 0.35,
+      });
+    }
+    return arr;
+  }, []);
+
+  // Allocate typed arrays for position, size, and color attributes
+  const [positions, sizes, colors] = useMemo(() => {
+    return [
+      new Float32Array(count * 3),
+      new Float32Array(count),
+      new Float32Array(count * 3)
+    ];
+  }, []);
+
+  // Track click/touch events to spawn bursts
+  useEffect(() => {
+    const handleDown = () => {
+      isPressed.current = true;
+    };
+    const handleUp = () => {
+      isPressed.current = false;
+    };
+    window.addEventListener('mousedown', handleDown);
+    window.addEventListener('mouseup', handleUp);
+    window.addEventListener('touchstart', handleDown);
+    window.addEventListener('touchend', handleUp);
+
+    return () => {
+      window.removeEventListener('mousedown', handleDown);
+      window.removeEventListener('mouseup', handleUp);
+      window.removeEventListener('touchstart', handleDown);
+      window.removeEventListener('touchend', handleUp);
+    };
+  }, []);
+
+  useFrame((state) => {
+    if (!geomRef.current) return;
+
+    const positionsAttr = geomRef.current.attributes.position;
+    const sizesAttr = geomRef.current.attributes.size;
+    const colorsAttr = geomRef.current.attributes.color;
+
+    const posArr = positionsAttr.array;
+    const sizeArr = sizesAttr.array;
+    const colorArr = colorsAttr.array;
+
+    // Convert mouse normalized coords to 3D viewport coords
+    const mouseX = (state.pointer.x * state.viewport.width) / 2;
+    const mouseY = (state.pointer.y * state.viewport.height) / 2;
+
+    const isPointerActive = Math.abs(state.pointer.x) > 0.0001 || Math.abs(state.pointer.y) > 0.0001;
+    const mouseMoved = Math.abs(mouseX - lastMousePos.current.x) > 0.03 || Math.abs(mouseY - lastMousePos.current.y) > 0.03;
+
+    // 1. Spawn particles on movement (Trail Effect)
+    if (isPointerActive && mouseMoved) {
+      // Spawn 2 particles per movement frame
+      let spawned = 0;
+      for (let i = 0; i < count; i++) {
+        if (spawned >= 2) break;
+        const p = particles[i];
+        if (p.age <= 0) {
+          p.x = mouseX;
+          p.y = mouseY;
+          p.z = (Math.random() - 0.5) * 1.5;
+
+          // Drift direction outwards + slightly upwards
+          const angle = Math.random() * Math.PI * 2;
+          const speed = 0.01 + Math.random() * 0.03;
+          p.vx = Math.cos(angle) * speed;
+          p.vy = Math.sin(angle) * speed + 0.015; // float up
+          p.vz = (Math.random() - 0.5) * 0.01;
+
+          p.age = p.maxAge;
+          p.size = 0.15 + Math.random() * 0.3;
+          spawned++;
+        }
+      }
+      lastMousePos.current = { x: mouseX, y: mouseY };
+    }
+
+    // 2. Spawn particles on Click/Touch (Burst Effect)
+    if (isPointerActive && isPressed.current) {
+      let spawned = 0;
+      for (let i = 0; i < count; i++) {
+        if (spawned >= 6) break; // Spawn a burst of 6 particles per click frame
+        const p = particles[i];
+        if (p.age <= 0) {
+          p.x = mouseX;
+          p.y = mouseY;
+          p.z = (Math.random() - 0.5) * 2;
+
+          // Rapid radial dispersion velocity
+          const angle = Math.random() * Math.PI * 2;
+          const speed = 0.06 + Math.random() * 0.1;
+          p.vx = Math.cos(angle) * speed;
+          p.vy = Math.sin(angle) * speed;
+          p.vz = (Math.random() - 0.5) * 0.04;
+
+          p.age = p.maxAge * 0.7; // shorter life for burst
+          p.size = 0.25 + Math.random() * 0.35;
+          spawned++;
+        }
+      }
+    }
+
+    // 3. Update active particles positions and visual states
+    for (let i = 0; i < count; i++) {
+      const p = particles[i];
+      const idx = i * 3;
+
+      if (p.age > 0) {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.z += p.vz;
+
+        // Apply friction damping
+        p.vx *= 0.96;
+        p.vy *= 0.96;
+        p.vz *= 0.96;
+
+        p.age -= 1;
+
+        const lifeFactor = p.age / p.maxAge;
+
+        // Set position coords
+        posArr[idx] = p.x;
+        posArr[idx + 1] = p.y;
+        posArr[idx + 2] = p.z;
+
+        // Animate scale (swell, then shrink to 0 at the end of lifecycle)
+        sizeArr[i] = p.size * Math.sin(lifeFactor * Math.PI);
+
+        // Dynamic transition color: gold (start) -> green (fading)
+        const transition = 1 - lifeFactor;
+        colorArr[idx] = 0.9 - transition * 0.8; // red drops
+        colorArr[idx + 1] = 0.7 + transition * 0.2; // green rises
+        colorArr[idx + 2] = 0.2 + transition * 0.3; // blue rises
+      } else {
+        // Position inactive particles far out of screen space
+        posArr[idx] = 99999;
+        posArr[idx + 1] = 99999;
+        posArr[idx + 2] = 99999;
+        sizeArr[i] = 0;
+      }
+    }
+
+    positionsAttr.needsUpdate = true;
+    sizesAttr.needsUpdate = true;
+    colorsAttr.needsUpdate = true;
+  });
+
+  return (
+    <points>
+      <bufferGeometry ref={geomRef}>
+        <bufferAttribute
+          attach="attributes-position"
+          args={[positions, 3]}
+        />
+        <bufferAttribute
+          attach="attributes-size"
+          args={[sizes, 1]}
+        />
+        <bufferAttribute
+          attach="attributes-color"
+          args={[colors, 3]}
+        />
+      </bufferGeometry>
+      <shaderMaterial
+        transparent
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+        vertexShader={`
+          attribute float size;
+          attribute vec3 color;
+          varying vec3 vColor;
+          void main() {
+            vColor = color;
+            vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+            gl_PointSize = size * (280.0 / -mvPosition.z);
+            gl_Position = projectionMatrix * mvPosition;
+          }
+        `}
+        fragmentShader={`
+          uniform sampler2D pointTexture;
+          varying vec3 vColor;
+          void main() {
+            gl_FragColor = vec4(vColor, 1.0) * texture2D(pointTexture, gl_PointCoord);
+          }
+        `}
+        uniforms={{
+          pointTexture: { value: texture }
+        }}
+      />
+    </points>
+  );
+}
+
+/**
+ * InteractiveParticles (Particle Attractor / Grid Distortion)
  * Renders 1,200 particle points in a floating dust field.
  * Calculates repulsion forces in real-time when the cursor hovers/touches nearby,
  * creating an elastic fluid bubble deformation effect.
@@ -227,8 +452,11 @@ export default function ThreeHero() {
             </Float>
           </PresentationControls>
 
-          {/* Render our interactive particle attractor system */}
+          {/* Render our interactive particle attractor grid system */}
           <InteractiveParticles />
+
+          {/* Render our custom cursor bubble trail and burst emitter system */}
+          <CursorBubbleTrail />
 
           <Stars radius={80} depth={40} count={1200} factor={3} saturation={0} fade speed={0.5} />
           <fog attach="fog" args={['#064e3b', 18, 50]} />
