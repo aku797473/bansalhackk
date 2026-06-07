@@ -1,30 +1,80 @@
 {
+  "id": "/",
   "short_name": "Smart Kisan",
   "name": "Smart Kisan — किसान का डिजिटल साथी",
+  "description": "AI-powered agricultural platform for Indian farmers. Get crop recommendations, weather alerts, and market prices — even offline.",
+  "lang": "hi",
+  "dir": "ltr",
   "icons": [
     {
       "src": "/favicon.svg",
       "type": "image/svg+xml",
-      "sizes": "any"
+      "sizes": "any",
+      "purpose": "any"
     },
     {
       "src": "/logo-192.png",
       "type": "image/png",
       "sizes": "192x192",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/logo-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "maskable"
     },
     {
       "src": "/logo-512.png",
       "type": "image/png",
       "sizes": "512x512",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/logo-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "theme_color": "#15803d",
-  "background_color": "#f8fafc",
-  "description": "AI-powered agricultural platform for Indian farmers. Get crop recommendations, weather alerts, and market prices even in low network areas.",
+  "background_color": "#030712",
   "orientation": "portrait-primary",
-  "categories": ["agriculture", "productivity", "utilities"]
+  "categories": ["agriculture", "productivity", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Weather",
+      "short_name": "मौसम",
+      "description": "Check today's weather forecast",
+      "url": "/weather",
+      "icons": [{ "src": "/logo-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Market Prices",
+      "short_name": "मंडी",
+      "description": "Live mandi prices",
+      "url": "/market",
+      "icons": [{ "src": "/logo-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Crop Advisor",
+      "short_name": "फसल",
+      "description": "AI crop recommendations",
+      "url": "/crop",
+      "icons": [{ "src": "/logo-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "SOS",
+      "short_name": "SOS",
+      "description": "Emergency help",
+      "url": "/sos",
+      "icons": [{ "src": "/logo-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": []
 }

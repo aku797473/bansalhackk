@@ -8,6 +8,7 @@ import ChatWidget from './components/ChatWidget';
 import LoadingScreen from './components/LoadingScreen';
 import VoiceAssistant from './components/VoiceAssistant';
 import Footer from './components/Footer';
+import PWAInstallBanner from './components/PWAInstallBanner';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { HeartPulse, MessageCircle, Mic } from 'lucide-react';
@@ -282,6 +283,7 @@ function AppLayout({ children }) {
           </Link>
         </>
       )}
+      <PWAInstallBanner />
     </div>
   );
 }

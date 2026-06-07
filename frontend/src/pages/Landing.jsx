@@ -20,6 +20,12 @@ export default function Landing() {
           </div>
 
           <div className="flex items-center gap-4 sm:gap-8">
+             <button 
+               onClick={() => window.dispatchEvent(new CustomEvent('trigger-pwa-install'))}
+               className="hidden xs:flex px-4 py-2 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 text-xs font-semibold rounded-full hover:scale-102 transition-all shadow-sm items-center gap-1.5"
+             >
+               📥 Install App
+             </button>
              <LanguageSelector showLabel={false} align="right" />
              <button 
                onClick={() => navigate('/login')}
@@ -54,6 +60,12 @@ export default function Landing() {
                      className="w-full sm:w-auto h-12 px-8 bg-slate-900 dark:bg-white text-white dark:text-black text-sm font-semibold rounded-full shadow-md hover:scale-102 active:scale-98 transition-all"
                   >
                      {t('landing.get_started')}
+                  </button>
+                  <button 
+                     onClick={() => window.dispatchEvent(new CustomEvent('trigger-pwa-install'))}
+                     className="w-full sm:w-auto h-12 px-8 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold rounded-full shadow-md hover:scale-102 active:scale-98 transition-all flex items-center justify-center gap-2"
+                  >
+                     📥 Download App
                   </button>
                   <button onClick={() => { document.querySelector('.features-section').scrollIntoView({ behavior: 'smooth' }); }} className="text-sm font-semibold text-slate-500 hover:text-slate-900 dark:hover:text-white transition-all group py-2">
                      Learn More ↓
