@@ -267,6 +267,21 @@ export default function BuyerPortal() {
         theme: { color: '#0ea5e9' }
       };
 
+      if (order.isMock) {
+        const confirmPayment = window.confirm(
+          `[DEMO MODE] Simulate payment of ₹${(order.amount / 100).toFixed(2)}?\n\nReal Razorpay keys are not configured or invalid, so payment is simulated.`
+        );
+        if (confirmPayment) {
+          const mockResponse = {
+            razorpay_order_id: order.id,
+            razorpay_payment_id: 'pay_mock_' + Date.now(),
+            razorpay_signature: 'mock_signature',
+          };
+          await options.handler(mockResponse);
+        }
+        return;
+      }
+
       const paymentObject = new window.Razorpay(options);
       paymentObject.open();
     } catch (err) {
