@@ -102,7 +102,7 @@ if (chatRoutes) app.use('/api/chatbot', verifyToken, chatRoutes);
 if (paymentRoutes) app.use('/api/payment', verifyToken, paymentRoutes);
 if (schemesRoutes) app.use('/api/schemes', verifyToken, schemesRoutes);
 if (newsRoutes) app.use('/api/news', verifyToken, newsRoutes);
-if (buyerRoutes) app.use('/api/buyer', verifyToken, buyerRoutes);
+if (buyerRoutes) app.use('/api/buyer', (req, res, next) => (req.method === 'GET' ? next() : verifyToken(req, res, next)), buyerRoutes);
 if (communityRoutes) app.use('/api/community', verifyToken, communityRoutes);
 
 app.use('*', (req, res) => res.status(404).json({ success: false, message: 'Route not found' }));

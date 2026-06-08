@@ -33,7 +33,10 @@ app.use('/api/labour', (req, res, next) => {
   return verifyToken(req, res, next);
 }, labourRoutes);
 app.use('/api/payment', verifyToken, paymentRoutes);
-app.use('/api/buyer', verifyToken, buyerRoutes);
+app.use('/api/buyer', (req, res, next) => {
+  if (req.method === 'GET') return next();
+  return verifyToken(req, res, next);
+}, buyerRoutes);
 
 app.get('/test-direct', (req, res) => res.send('Direct test working!'));
 app.get('/api/labour/test-direct', (req, res) => res.send('API Labour test direct working!'));

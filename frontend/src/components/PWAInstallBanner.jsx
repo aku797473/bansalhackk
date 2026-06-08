@@ -14,6 +14,7 @@ export default function PWAInstallBanner() {
   const [installing, setInstalling] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
   const [showIOSGuide, setShowIOSGuide] = useState(false);
+  const [showAndroidGuide, setShowAndroidGuide] = useState(false);
 
   useEffect(() => {
     // Don't show if already installed
@@ -90,7 +91,10 @@ export default function PWAInstallBanner() {
       setShowIOSGuide(true);
       return;
     }
-    if (!deferredPrompt) return;
+    if (!deferredPrompt) {
+      setShowAndroidGuide(true);
+      return;
+    }
 
     setInstalling(true);
     deferredPrompt.prompt();
@@ -138,6 +142,39 @@ export default function PWAInstallBanner() {
             <span className="text-4xl">⬆️</span>
             <p className="text-slate-400 text-xs mt-1">Look for this icon in Safari's toolbar</p>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ---- Android Guide Overlay ----
+  if (showAndroidGuide) {
+    return (
+      <div className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm flex items-end justify-center p-4">
+        <div className="bg-slate-900 border border-slate-700 rounded-3xl p-6 w-full max-w-md animate-slide-up">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-white font-bold text-lg">Install App Manually</h3>
+            <button onClick={() => { setShowAndroidGuide(false); setShowBanner(false); }} className="text-slate-400 hover:text-white">
+              <X size={20} />
+            </button>
+          </div>
+          <p className="text-slate-300 text-sm mb-4">To install on your device, please follow these steps:</p>
+          {[
+            { step: 1, text: 'Tap the 3-dots menu (⋮) in your browser (top right)' },
+            { step: 2, text: 'Select "Install App" or "Add to Home screen"' },
+            { step: 3, text: 'Follow the prompt to add it to your home screen! 📱' },
+          ].map(({ step, text }) => (
+            <div key={step} className="flex items-start gap-3 mb-3">
+              <span className="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-600 text-white text-xs font-bold flex items-center justify-center">{step}</span>
+              <p className="text-slate-200 text-sm leading-relaxed">{text}</p>
+            </div>
+          ))}
+          <button 
+            onClick={() => { setShowAndroidGuide(false); setShowBanner(false); }}
+            className="w-full mt-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-2xl transition-all"
+          >
+            Got it
+          </button>
         </div>
       </div>
     );

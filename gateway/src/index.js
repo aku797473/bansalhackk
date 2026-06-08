@@ -108,12 +108,12 @@ app.use('/api/users',       verifyToken, createProxyMiddleware(proxyOptions(serv
 app.use('/api/weather',     verifyToken, createProxyMiddleware(proxyOptions(services.weather)));
 app.use('/api/crop',        verifyToken, createProxyMiddleware(proxyOptions(services.crop)));
 app.use('/api/fertilizer',  verifyToken, createProxyMiddleware(proxyOptions(services.fertilizer)));
-app.use('/api/labour',      verifyToken, createProxyMiddleware(proxyOptions(services.labour)));
+app.use('/api/labour',      (req, res, next) => (req.method === 'GET' ? next() : verifyToken(req, res, next)), createProxyMiddleware(proxyOptions(services.labour)));
 app.use('/api/chatbot',     verifyToken, strictLimiter, createProxyMiddleware(proxyOptions(services.chatbot)));
 app.use('/api/news',        verifyToken, createProxyMiddleware(proxyOptions(services.news)));
 app.use('/api/payment',     verifyToken, createProxyMiddleware(proxyOptions(services.payment)));
 app.use('/api/schemes',     verifyToken, createProxyMiddleware(proxyOptions(services.schemes)));
-app.use('/api/buyer',      verifyToken, createProxyMiddleware(proxyOptions(services.buyer)));
+app.use('/api/buyer',       (req, res, next) => (req.method === 'GET' ? next() : verifyToken(req, res, next)), createProxyMiddleware(proxyOptions(services.buyer)));
 
 // ─── Gateway Internal Routes (Parsing JSON here is OK) ──
 app.use(express.json());

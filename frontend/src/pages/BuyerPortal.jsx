@@ -236,17 +236,31 @@ export default function BuyerPortal() {
         order_id: order.id,
         handler: async (response) => {
           try {
+            // Step 1: Verify payment signature first
+            const { data: verifyRes } = await paymentAPI.verifyPayment({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            });
+
+            if (verifyRes.status !== 'success' && !verifyRes.success) {
+              toast.error('Payment verification failed! Contact support.');
+              return;
+            }
+
+            // Step 2: Create order record after successful verification
             await buyerAPI.createOrder({
               listingId: listing._id,
               quantity: listing.quantity,
               totalAmount: totalCost,
-              razorpayOrderId: order.id
+              razorpayOrderId: order.id,
+              razorpayPaymentId: response.razorpay_payment_id,
             });
             toast.success('Payment Successful! Crop Booking Confirmed.');
             setSelectedListing(null);
             fetchListings();
           } catch (err) {
-            toast.error('Order creation failed on server');
+            toast.error('Payment verification or order creation failed: ' + (err.response?.data?.message || err.message));
           }
         },
         prefill: { name: user?.name, email: user?.email, contact: user?.phone },
