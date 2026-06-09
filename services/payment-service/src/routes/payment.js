@@ -60,20 +60,10 @@ router.post('/order', async (req, res) => {
 
       res.json(order);
     } catch (razorpayError) {
-      console.warn('Razorpay order creation failed, falling back to mock mode:', razorpayError.message);
-      res.json({
-        id: 'order_mock_' + Date.now(),
-        entity: 'order',
-        amount: Math.round(amount * 100),
-        amount_paid: 0,
-        amount_due: Math.round(amount * 100),
-        currency,
-        receipt,
-        status: 'created',
-        attempts: 0,
-        notes: [],
-        created_at: Math.floor(Date.now() / 1000),
-        isMock: true
+      console.error('Razorpay order creation failed:', razorpayError.message);
+      return res.status(400).json({ 
+        message: 'Razorpay order creation failed: ' + razorpayError.message,
+        error: razorpayError.message 
       });
     }
   } catch (error) {
