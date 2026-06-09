@@ -171,6 +171,15 @@ export default function BuyerPortal() {
 
   const loadRazorpay = () => {
     return new Promise((resolve) => {
+      // If already loaded, resolve immediately
+      if (window.Razorpay) return resolve(true);
+      // If script tag already in DOM, wait for it
+      const existing = document.querySelector('script[src="https://checkout.razorpay.com/v1/checkout.js"]');
+      if (existing) {
+        existing.onload = () => resolve(true);
+        existing.onerror = () => resolve(false);
+        return;
+      }
       const script = document.createElement('script');
       script.src = 'https://checkout.razorpay.com/v1/checkout.js';
       script.onload = () => resolve(true);
