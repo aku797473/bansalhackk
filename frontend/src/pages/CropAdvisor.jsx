@@ -199,24 +199,26 @@ export default function CropAdvisor() {
       });
 
       // 6. Auto-fill all detected fields
-      setForm(f => {
-        const newState = detectedState || f.state;
-        const newDistrict = detectedDistrict || (detectedState ? (DISTRICTS_DATA[detectedState]?.[0] || f.district) : f.district);
-        return {
-          ...f,
-          temperature: Math.round(d.temperature),
-          humidity: d.humidity,
-          rainfall: estimatedRainfall,
-          state: newState,
-          district: newDistrict,
-        };
-      });
+      const newState = detectedState || form.state;
+      const newDistrict = detectedDistrict || (detectedState ? (DISTRICTS_DATA[detectedState]?.[0] || form.district) : form.district);
+      const updatedForm = {
+        ...form,
+        temperature: Math.round(d.temperature),
+        humidity: d.humidity,
+        rainfall: estimatedRainfall,
+        state: newState,
+        district: newDistrict,
+      };
+      setForm(updatedForm);
 
       // 7. Toast summary
       const parts = [`🌡️ ${Math.round(d.temperature)}°C`, `💧 ${d.humidity}%`];
       if (detectedState) parts.push(`📍 ${detectedState}`);
       if (detectedDistrict) parts.push(`🏘️ ${detectedDistrict}`);
       toast.success(`✅ Live data filled! ${parts.join('  ')}`);
+
+      // 8. Auto-submit recommendation
+      handleSubmit(updatedForm);
 
     } catch (err) {
       if (err.message !== 'Geolocation not supported' && err.code !== 1) {
@@ -246,11 +248,12 @@ export default function CropAdvisor() {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (formOverride = null) => {
     setLoading(true);
     setResult(null);
     try {
-      const { data } = await cropAPI.recommend({ ...form, language: i18n.language || 'en' });
+      const dataToSubmit = formOverride || form;
+      const { data } = await cropAPI.recommend({ ...dataToSubmit, language: i18n.language || 'en' });
       setResult(data.data);
       toast.success(t('common.success'));
     } catch {
