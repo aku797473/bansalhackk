@@ -406,24 +406,6 @@ export default function CropAdvisor() {
                   <Select label={t('crop.season')} value={form.season} onChange={v => set('season', v)} options={SEASONS} icon={Calendar} />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="relative">
-                    <Select label={t('crop.state')} value={form.state} onChange={v => set('state', v)} options={STATES} icon={MapPin} />
-                    {liveWeather?.state && <span className="absolute -top-1 -right-1 px-1.5 py-0.5 bg-sky-500 text-white text-[8px] font-black rounded-full">GPS</span>}
-                  </div>
-                  <div className="relative">
-                    <Select label={t('crop.district_label')} value={form.district} onChange={v => set('district', v)} options={districts} icon={MapPin} />
-                    {liveWeather?.district && <span className="absolute -top-1 -right-1 px-1.5 py-0.5 bg-sky-500 text-white text-[8px] font-black rounded-full">GPS</span>}
-                  </div>
-                </div>
-
-
-
-                <div className="relative">
-                  <NumberInput label={t('crop.rainfall')} value={form.rainfall} onChange={v => set('rainfall', v)} min={0} max={3000} unit="mm" icon={Wind} />
-                  {liveWeather && <span className="absolute -top-1 -right-1 px-1.5 py-0.5 bg-amber-500 text-white text-[8px] font-black rounded-full">EST</span>}
-                </div>
-
                 {/* Soil nutrients */}
                 <div>
                   <label className="text-xs font-semibold text-slate-500 mb-4 block">{t('crop.soil_nutrients')}</label>
