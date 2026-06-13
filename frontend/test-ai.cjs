@@ -1,13 +1,21 @@
-const handler = require('./api/ai.js');
-const req = {
-  method: 'POST',
-  body: { landSize: '5', cropType: 'Wheat', soilType: 'Black', location: 'Pune', budget: '50000' },
-  headers: {}
-};
-const res = {
-  setHeader: () => {},
-  status: function(code) { console.log('Status:', code); return this; },
-  json: function(data) { console.log('JSON:', data); return this; },
-  end: () => {}
-};
-handler(req, res).catch(console.error);
+async function testRegister() {
+  try {
+    const res = await fetch('http://localhost:5000/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        phone: '9876543211',
+        password: 'Password123!',
+        name: 'Test Farmer 2',
+        role: 'farmer'
+      })
+    });
+    const data = await res.json();
+    console.log('Status:', res.status);
+    console.log('Data:', data);
+  } catch (err) {
+    console.error('Fetch Error:', err.message);
+  }
+}
+
+testRegister();

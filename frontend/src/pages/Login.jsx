@@ -254,8 +254,8 @@ export default function Login() {
                   <input 
                     required
                     type={showPassword ? "text" : "password"} 
-                    pattern={mode === 'register' || mode === 'forgot-password' ? "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$" : undefined}
-                    title={mode === 'register' || mode === 'forgot-password' ? "Must be at least 8 characters, 1 uppercase, 1 lowercase, 1 number, and 1 special character" : undefined}
+                    minLength={6}
+                    title={mode === 'register' || mode === 'forgot-password' ? "Minimum 6 characters" : undefined}
                     placeholder="••••••••"
                     value={formData.password}
                     onChange={e => setFormData({...formData, password: e.target.value})}
