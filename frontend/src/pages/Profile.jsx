@@ -14,13 +14,16 @@ import {
   ShieldCheck, 
   Calendar, 
   MapPin,
-  ShoppingBag
+  ShoppingBag,
+  Crown
 } from '@phosphor-icons/react';
+import GoldPaywall from '../components/GoldPaywall';
 
 export default function Profile() {
   const { user, updateUser } = useAuth();
   const fileInputRef = useRef();
   const [loading, setLoading] = useState(false);
+  const [showPaywall, setShowPaywall] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     role: 'farmer',
@@ -174,11 +177,22 @@ export default function Profile() {
             </div>
             <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageChange} />
             <div className="mb-4 space-y-1">
-              <h2 className="text-3xl font-extrabold text-black dark:text-black tracking-tight">{formData.name || user?.name || 'Smart Farmer'}</h2>
+              <h2 className="text-3xl font-extrabold text-black dark:text-black tracking-tight flex items-center justify-center sm:justify-start gap-2">
+                {formData.name || user?.name || 'Smart Farmer'}
+                {user?.isPremium && (
+                  <Crown size={24} className="text-amber-500 drop-shadow-[0_0_8px_rgba(245,158,11,0.5)] animate-pulse" weight="fill" />
+                )}
+              </h2>
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 mt-2">
                 <div className="text-xs font-semibold text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-900 px-3 py-1 rounded-full border border-slate-200 dark:border-slate-800 shadow-sm capitalize">
                   {user?.role || 'farmer'}
                 </div>
+                {user?.isPremium && (
+                  <div className="text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 dark:bg-amber-500/20 px-3 py-1 rounded-full border border-amber-500/30 shadow-sm flex items-center gap-1">
+                    <Crown size={12} weight="fill" />
+                    Kisan Gold
+                  </div>
+                )}
                 <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-medium">
                   <MapPin size={14} className="text-slate-500" />
                   {formData.location || 'India'}
@@ -221,6 +235,50 @@ export default function Profile() {
                 </div>
               </div>
             </div>
+
+            {/* Kisan Gold Upgrade Card */}
+            {!user?.isPremium ? (
+              <div className="bg-gradient-to-br from-amber-500/10 via-yellow-500/5 to-transparent rounded-[2rem] p-6 border border-amber-500/30 shadow-lg space-y-5 relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
+                    <Crown size={22} weight="fill" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-black text-amber-800 dark:text-amber-300">Kisan Gold</h4>
+                    <p className="text-[10px] text-amber-600/80 dark:text-amber-400/80 font-semibold">Unlock Premium Power</p>
+                  </div>
+                </div>
+                
+                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
+                  Get premium AI crop advice, zero-commission marketplace selling, and 24/7 priority veterinary support.
+                </p>
+
+                <button
+                  onClick={() => setShowPaywall(true)}
+                  className="w-full py-3 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-950 text-xs font-extrabold rounded-2xl shadow-md transition-all flex items-center justify-center gap-1.5 hover:scale-[1.01]"
+                >
+                  Upgrade to Kisan Gold 👑
+                </button>
+              </div>
+            ) : (
+              /* Kisan Gold Active Badge Card */
+              <div className="bg-gradient-to-br from-slate-900 to-slate-950 rounded-[2rem] p-6 border border-amber-500/20 shadow-xl space-y-4 relative overflow-hidden">
+                <div className="absolute -top-10 -right-10 w-24 h-24 bg-amber-500/20 rounded-full blur-2xl pointer-events-none" />
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
+                    <Crown size={22} weight="fill" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-200">Kisan Gold Member</h4>
+                    <p className="text-[10px] text-emerald-400 font-bold">Premium Status Active</p>
+                  </div>
+                </div>
+                <p className="text-xs text-slate-400 leading-relaxed font-medium">
+                  You have full access to advanced AI crop forecasting, 0% commission sales, and veterinary portals.
+                </p>
+              </div>
+            )}
 
             {/* Verification Info Card */}
             <div className="bg-gradient-to-br from-slate-900 to-slate-950 rounded-[2rem] p-6 text-white shadow-xl border border-white/5 space-y-5">
@@ -330,6 +388,18 @@ export default function Profile() {
           </div>
         </div>
       </div>
+
+      <GoldPaywall 
+        isOpen={showPaywall} 
+        onClose={() => setShowPaywall(false)} 
+        onUnlock={async () => {
+          try {
+            await updateUser({ isPremium: true });
+          } catch (err) {
+            toast.error('Failed to sync premium status with backend');
+          }
+        }} 
+      />
     </div>
   );
 }

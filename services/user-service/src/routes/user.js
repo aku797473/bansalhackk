@@ -97,6 +97,7 @@ router.post('/profile', async (req, res) => {
     if (req.body.location !== undefined) updateData.location = req.body.location;
     if (req.body.farmDetails !== undefined) updateData.farmDetails = req.body.farmDetails;
     if (req.body.profilePic !== undefined) updateData.profilePic = req.body.profilePic;
+    if (req.body.isPremium !== undefined) updateData.isPremium = req.body.isPremium;
 
     const profile = await UserProfile.findOneAndUpdate(
       { userId },
