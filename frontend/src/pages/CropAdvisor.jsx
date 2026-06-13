@@ -78,7 +78,7 @@ export default function CropAdvisor() {
   const [liveWeather, setLiveWeather] = useState(null);
   const [fetchingWeather, setFetchingWeather] = useState(false);
 
-  // Load from localStorage
+  // Load from localStorage & Auto-detect Live Location on mount
   useEffect(() => {
     const f = localStorage.getItem('sk_crop_form');
     const r = localStorage.getItem('sk_crop_result');
@@ -86,6 +86,9 @@ export default function CropAdvisor() {
     if (f) setForm(JSON.parse(f));
     if (r) setResult(JSON.parse(r));
     if (c) setCalendar(JSON.parse(c));
+    
+    // Auto fill state, district and weather info from GPS location
+    fetchLiveWeather();
   }, []);
 
   // Save to localStorage
