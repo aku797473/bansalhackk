@@ -35,6 +35,7 @@ const BuyerSchema = new mongoose.Schema({
   }],
   rating: { type: Number, default: 4.5 },
   userId: { type: String },
+  ownerIsPremium: { type: Boolean, default: false },
 }, { timestamps: true });
 
 // --- Listing Schema (Farmer's Produce) ---
@@ -56,6 +57,7 @@ const ListingSchema = new mongoose.Schema({
     lng: { type: Number },
   },
   status: { type: String, enum: ['available', 'sold_out', 'expired'], default: 'available' },
+  farmerIsPremium: { type: Boolean, default: false },
 }, { timestamps: true });
 
 // --- Order Schema ---

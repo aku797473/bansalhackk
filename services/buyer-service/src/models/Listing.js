@@ -16,6 +16,7 @@ const listingSchema = new mongoose.Schema({
   },
   images: [String],
   status: { type: String, enum: ['available', 'sold_out', 'archived'], default: 'available' },
+  farmerIsPremium: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now }
 });
 

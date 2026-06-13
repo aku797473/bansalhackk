@@ -7,12 +7,13 @@ import {
   Trash, ArrowRight, CheckCircle, Package, 
   MapPin, Phone, Truck, Calendar, ShoppingCart,
   ShoppingBag, MagnifyingGlass, Tag, CaretRight, 
-  Star, Clock, ShieldCheck, ArrowLeft, Camera, Briefcase, MapTrifold, User
+  Star, Clock, ShieldCheck, ArrowLeft, Camera, Briefcase, MapTrifold, User, Crown
 } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { usePageAnimation } from '../hooks/usePageAnimation';
 import { STATES_DATA } from '../data/regions';
+import GoldPaywall from '../components/GoldPaywall';
 
 const getCategories = (t) => [
   { id: 'all', name: t('buyer_portal.categories.all', 'All Produce'), icon: '🌾' },
@@ -79,7 +80,7 @@ const UNSPLASH_IMAGES = {
 export default function BuyerPortal() {
   const { t } = useTranslation();
   const ref = usePageAnimation();
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   
   const [tab, setTab] = useState('browse');
   const [listings, setListings] = useState([]);
@@ -89,6 +90,7 @@ export default function BuyerPortal() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedListing, setSelectedListing] = useState(null);
   const [processingPayment, setProcessingPayment] = useState(false);
+  const [showPaywall, setShowPaywall] = useState(false);
 
   // Form State for Listing Creation
   const [form, setForm] = useState({
@@ -132,6 +134,17 @@ export default function BuyerPortal() {
       toast.error(t('buyer_portal.fields_required', 'Please fill all required fields'));
       return;
     }
+
+    // Check Kisan Gold limits: limit free tier farmers to 2 active crop listings
+    const myName = user?.name || 'Anonymous Farmer';
+    const myId = user?.id || user?._id;
+    const activeMyListings = listings.filter(l => l.farmerId === myId || l.farmerName === myName);
+    if (activeMyListings.length >= 2 && !user?.isPremium) {
+      setShowPaywall(true);
+      toast.error('Free tier is limited to 2 active crop listings. Upgrade to Kisan Gold for unlimited listings!');
+      return;
+    }
+
     setLoading(true);
     try {
       const payload = {
@@ -143,6 +156,7 @@ export default function BuyerPortal() {
         price: Number(form.price),
         description: form.description,
         images: form.image ? [form.image] : [],
+        farmerIsPremium: user?.isPremium || false,
         location: {
           district: form.district,
           state: form.state,
@@ -228,8 +242,9 @@ export default function BuyerPortal() {
 
       // Calculate total amount
       const totalCost = listing.price * listing.quantity;
-      // We take a 10% advance/booking deposit for security
-      const depositAmount = Math.round(totalCost * 0.1);
+      // We take a 10% advance/booking deposit for security (reduced to 5% for Gold members)
+      const depositRate = user?.isPremium ? 0.05 : 0.1;
+      const depositAmount = Math.round(totalCost * depositRate);
 
       const { data: order } = await paymentAPI.createOrder(depositAmount);
 
@@ -238,7 +253,7 @@ export default function BuyerPortal() {
         amount: order.amount,
         currency: order.currency,
         name: 'Smart Kisan',
-        description: `10% Deposit for ${listing.produceName} (${listing.quantity} ${listing.unit})`,
+        description: `${user?.isPremium ? '5%' : '10%'} Deposit for ${listing.produceName} (${listing.quantity} ${listing.unit})`,
         image: '/logo.png',
         order_id: order.id,
         handler: async (response) => {
@@ -380,15 +395,29 @@ export default function BuyerPortal() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredListings.map(listing => {
                 const imageUrl = listing.images?.[0] || UNSPLASH_IMAGES[listing.category] || UNSPLASH_IMAGES.other;
+                const isListingPremium = listing.farmerIsPremium === true;
                 return (
                   <div 
                     key={listing._id} 
-                    className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl group p-0 overflow-hidden border border-slate-200/50 dark:border-slate-800/50 hover:border-sky-500/50 shadow-sm hover:shadow-premium transition-all duration-500 rounded-[2.5rem] cursor-pointer" 
+                    className={clsx(
+                      "backdrop-blur-2xl group p-0 overflow-hidden shadow-sm transition-all duration-500 rounded-[2.5rem] cursor-pointer relative",
+                      isListingPremium 
+                        ? "bg-gradient-to-b from-amber-500/5 to-yellow-500/5 dark:from-amber-500/10 dark:to-yellow-500/5 border-2 border-amber-400 dark:border-amber-500/60 hover:border-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.1)] hover:shadow-[0_0_25px_rgba(245,158,11,0.2)]" 
+                        : "bg-white/60 dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:border-sky-500/50 hover:shadow-premium"
+                    )}
                     onClick={() => setSelectedListing(listing)}
                   >
                     <div className="h-52 relative overflow-hidden">
                       <img src={imageUrl} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={listing.produceName} />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      
+                      {isListingPremium && (
+                        <div className="absolute top-5 left-5 px-3 py-1.5 bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-1 shadow-xl border border-amber-300/30">
+                          <Crown weight="fill" size={12} className="text-slate-950 animate-pulse" />
+                          Gold Crop
+                        </div>
+                      )}
+                      
                       <div className="absolute top-5 right-5 px-4 py-1.5 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md rounded-full text-[10px] font-black uppercase tracking-widest text-sky-600 shadow-xl border border-white/20">
                         {listing.category}
                       </div>
@@ -447,8 +476,29 @@ export default function BuyerPortal() {
 
       {/* Post Yield View */}
       {tab === 'post' && (
-        <div className="grid lg:grid-cols-12 gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-           <div className="lg:col-span-8 card border-none shadow-premium p-8 sm:p-10">
+        <div className="space-y-6 w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
+           {/* Kisan Gold Promo Banner */}
+           {!user?.isPremium && (
+             <div className="bg-gradient-to-r from-amber-500/10 via-yellow-500/5 to-transparent border border-amber-500/30 rounded-[2rem] p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+               <div className="flex items-center gap-3">
+                 <div className="p-3 bg-amber-500/20 rounded-2xl text-amber-600 dark:text-amber-400">
+                   <Crown size={28} weight="fill" />
+                 </div>
+                 <div>
+                   <h3 className="font-black text-amber-800 dark:text-amber-300 text-sm">Sell with 0% platform commission & get Gold Badges!</h3>
+                   <p className="text-xs text-slate-500 mt-0.5">Free farmers are limited to 2 active crop listings and pay a standard fee.</p>
+                 </div>
+               </div>
+               <button 
+                 onClick={() => setShowPaywall(true)} 
+                 className="px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 text-xs font-black rounded-xl shadow-md hover:scale-102 transition-transform"
+               >
+                 Upgrade to Kisan Gold 👑
+               </button>
+             </div>
+           )}
+           <div className="grid lg:grid-cols-12 gap-8">
+              <div className="lg:col-span-8 card border-none shadow-premium p-8 sm:p-10">
               <h2 className="text-2xl font-black mb-8 flex items-center gap-3">
                 <ShoppingBag className="text-sky-600" /> {t('buyer_portal.post_title', 'List Your Crop Yield for Sale')}
               </h2>
@@ -622,7 +672,13 @@ export default function BuyerPortal() {
                  <div className="grid sm:grid-cols-3 gap-6 mb-8">
                     <div className="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-2xl border border-slate-200/50 dark:border-slate-700/50">
                        <label className="text-[10px] font-black uppercase text-slate-400 block mb-1 tracking-widest">Farmer Name</label>
-                       <p className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5"><User size={16} className="text-sky-600" /> {selectedListing.farmerName}</p>
+                       <p className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                         <User size={16} className="text-sky-600" /> 
+                         {selectedListing.farmerName}
+                         {selectedListing.farmerIsPremium && (
+                           <Crown size={16} className="text-amber-500 fill-amber-500 animate-pulse ml-1" weight="fill" title="Kisan Gold Farmer" />
+                         )}
+                       </p>
                     </div>
                     <div className="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-2xl border border-slate-200/50 dark:border-slate-700/50">
                        <label className="text-[10px] font-black uppercase text-slate-400 block mb-1 tracking-widest">Stock Available</label>
@@ -658,10 +714,50 @@ export default function BuyerPortal() {
                    </div>
                  )}
 
+                 {/* Priority Contact Banner */}
+                 <div className="mb-6 p-4 bg-slate-50 dark:bg-slate-950/30 rounded-2xl border border-slate-100 dark:border-slate-800/60 flex items-center justify-between">
+                   <div>
+                     <span className="text-xs font-bold block text-slate-700 dark:text-slate-300">Farmer Contact Details</span>
+                     <span className="text-sm font-black text-slate-900 dark:text-white font-mono">
+                       {user?.isPremium ? `+91 98765 43210 (Priority Direct)` : '••••• •••••'}
+                     </span>
+                   </div>
+                   {!user?.isPremium && (
+                     <button 
+                       onClick={() => setShowPaywall(true)}
+                       className="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 text-[10px] font-black rounded-xl uppercase tracking-wider hover:scale-102 transition-transform shadow-md"
+                     >
+                       Unlock Direct Line 👑
+                     </button>
+                   )}
+                 </div>
+
+                 {/* Premium Booking Banner */}
+                 {user?.isPremium ? (
+                   <div className="mb-6 flex items-center gap-2.5 p-4 bg-amber-500/10 rounded-2xl border border-amber-500/20 text-xs font-bold text-amber-700 dark:text-amber-400">
+                     <Crown size={18} weight="fill" className="animate-pulse shrink-0" />
+                     <span>Kisan Gold Benefit: 5% Security Booking Deposit active (10% standard).</span>
+                   </div>
+                 ) : (
+                   <div className="mb-6 flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl text-xs font-semibold text-slate-500 dark:text-slate-400 border border-slate-200/30">
+                     <span>Standard 10% deposit applies. Upgrade to Kisan Gold to pay only 5%!</span>
+                     <button 
+                       onClick={() => setShowPaywall(true)}
+                       className="text-[10px] font-extrabold text-amber-600 dark:text-amber-400 uppercase tracking-wider hover:underline"
+                     >
+                       Upgrade 👑
+                     </button>
+                   </div>
+                 )}
+
                  <div className="p-6 bg-gradient-to-br from-sky-50 to-indigo-50 dark:from-sky-950/20 dark:to-indigo-950/10 rounded-2xl border border-sky-100 dark:border-sky-900/30 flex flex-col sm:flex-row items-center justify-between gap-6">
                    <div>
-                     <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider">Safety Booking Deposit (10%)</span>
-                     <p className="text-3xl font-black text-sky-600 font-outfit">₹{Math.round(selectedListing.price * selectedListing.quantity * 0.1).toLocaleString()}</p>
+                     <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider">
+                       Safety Booking Deposit ({user?.isPremium ? '5%' : '10%'})
+                     </span>
+                     <p className="text-3xl font-black text-sky-600 font-outfit">
+                       ₹{Math.round(selectedListing.price * selectedListing.quantity * (user?.isPremium ? 0.05 : 0.1)).toLocaleString()}
+                     </p>
                      <span className="text-[10px] text-slate-400">Total Price: ₹{(selectedListing.price * selectedListing.quantity).toLocaleString()}</span>
                    </div>
                    
@@ -670,13 +766,25 @@ export default function BuyerPortal() {
                      disabled={processingPayment}
                      className="w-full sm:w-auto px-8 py-4 bg-sky-600 hover:bg-sky-700 text-white rounded-xl font-black uppercase tracking-wider text-xs shadow-lg shadow-sky-600/30 hover:scale-105 active:scale-95 transition-all disabled:opacity-50"
                    >
-                     {processingPayment ? 'Processing...' : 'Pay 10% & Book Now'}
+                     {processingPayment ? 'Processing...' : `Pay ${user?.isPremium ? '5%' : '10%'} & Book Now`}
                    </button>
                  </div>
               </div>
            </div>
         </div>
       )}
+
+      <GoldPaywall 
+        isOpen={showPaywall} 
+        onClose={() => setShowPaywall(false)} 
+        onUnlock={async () => {
+          try {
+            await updateUser({ isPremium: true });
+          } catch (err) {
+            toast.error('Failed to sync premium status with backend');
+          }
+        }} 
+      />
       </div>
     </div>
   );
