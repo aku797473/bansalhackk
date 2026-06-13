@@ -8,7 +8,7 @@ import {
 } from 'recharts';
 import { 
   Crown, Plus, Trash, ShieldCheck, Heartbeat, VideoCamera, FileText, ArrowUpRight, 
-  UserCircle, ShoppingBag, PlusCircle, CheckCircle, Warning, Activity, Calendar
+  UserCircle, ShoppingBag, PlusCircle, CheckCircle, Warning, SpinnerGap, Calendar
 } from '@phosphor-icons/react';
 
 export default function DairyHub() {
@@ -684,7 +684,7 @@ export default function DairyHub() {
                     <div className="space-y-1">
                       <h4 className="text-xl font-bold text-slate-800 dark:text-slate-100">Dr. Rajesh Patel (Vet Surgeon)</h4>
                       <p className="text-xs text-emerald-500 font-semibold flex items-center justify-center gap-1">
-                        <Activity size={14} className="animate-spin" />
+                        <SpinnerGap size={14} className="animate-spin" />
                         Connected • {formatTime(callTimer)}
                       </p>
                     </div>
