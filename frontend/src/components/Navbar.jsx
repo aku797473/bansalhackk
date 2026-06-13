@@ -99,8 +99,6 @@ export default function Navbar() {
       { to: '/labour',           label: t('nav.labour', 'Labour Marketplace'), icon: Briefcase },
       { to: '/seller',           label: t('nav.seller', 'Seller Portal'), icon: Handshake },
       { to: '/buyer',            label: t('nav.buyer', 'Buyer Portal'), icon: ShoppingBag },
-      { to: '/dairy',            label: t('nav.dairy', 'Dairy Hub'), icon: ChartLineUp },
-      { to: '/automobile',       label: t('nav.automobile', 'Tractor Rental'), icon: Gear },
       { to: '/profit-predictor', label: t('nav.profit_predictor', 'Profit Predictor'), icon: ChartLineUp },
       { to: '/map',              label: t('nav.map', 'Map View'), icon: MapPin },
       { to: '/news',             label: t('nav.news', 'News'), icon: Newspaper },

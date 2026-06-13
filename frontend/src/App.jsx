@@ -45,8 +45,6 @@ const Buyer       = lazy(() => import('./pages/BuyerPortal'));
 const ProfitPredictor = lazy(() => import('./pages/ProfitPredictor'));
 const SOS         = lazy(() => import('./pages/SOS'));
 const Community   = lazy(() => import('./pages/Community'));
-const DairyHub     = lazy(() => import('./pages/DairyHub'));
-const AutomobileRental = lazy(() => import('./pages/AutomobileRental'));
 
 function ProtectedRoute({ children }) {
   const { isAuth, loading } = useAuth();
@@ -108,8 +106,7 @@ function DesktopHeader() {
       case '/news': return t('nav.news', 'News');
       case '/schemes': return t('nav.schemes', 'Schemes');
       case '/profile': return t('nav.profile', 'Profile Settings');
-      case '/dairy': return t('nav.dairy', 'Dairy Hub');
-      case '/automobile': return t('nav.automobile', 'Tractor Rental');
+
       default: return 'Smart Kisan';
     }
   };
@@ -330,8 +327,7 @@ export default function App() {
                   <Route path="/sos"        element={<ProtectedRoute><SOS /></ProtectedRoute>} />
                   <Route path="/community"  element={<ProtectedRoute><Community /></ProtectedRoute>} />
                   <Route path="/profile"    element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                  <Route path="/dairy"      element={<ProtectedRoute><DairyHub /></ProtectedRoute>} />
-                  <Route path="/automobile" element={<ProtectedRoute><AutomobileRental /></ProtectedRoute>} />
+
                   <Route path="*"           element={<Navigate to="/" replace />} />
                 </Routes>
               </AppLayout>
