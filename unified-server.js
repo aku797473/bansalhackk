@@ -102,7 +102,7 @@ if (labourRoutes) app.use('/api/labour', (req, res, next) => (req.method === 'GE
 if (chatRoutes) app.use('/api/chatbot', verifyToken, chatRoutes);
 if (paymentRoutes) app.use('/api/payment', verifyToken, paymentRoutes);
 if (schemesRoutes) app.use('/api/schemes', verifyToken, schemesRoutes);
-if (newsRoutes) app.use('/api/news', verifyToken, newsRoutes);
+if (newsRoutes) app.use('/api/news', newsRoutes);
 if (buyerRoutes) app.use('/api/buyer', (req, res, next) => (req.method === 'GET' ? next() : verifyToken(req, res, next)), buyerRoutes);
 if (communityRoutes) app.use('/api/community', verifyToken, communityRoutes);
 // Serve frontend static assets

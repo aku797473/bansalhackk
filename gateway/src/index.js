@@ -72,6 +72,7 @@ const services = {
   labour:     process.env.LABOUR_SERVICE_URL     || 'http://localhost:5007',
   chatbot:    process.env.CHATBOT_SERVICE_URL    || 'http://localhost:5008',
   news:       process.env.NEWS_SERVICE_URL       || 'http://localhost:5009',
+  community:  process.env.COMMUNITY_SERVICE_URL  || 'http://localhost:5000',
   payment:    process.env.PAYMENT_SERVICE_URL    || 'http://localhost:5010',
   schemes:    process.env.SCHEMES_SERVICE_URL    || 'http://localhost:5011',
   buyer:      process.env.BUYER_SERVICE_URL      || 'http://localhost:5012',
@@ -110,7 +111,8 @@ app.use('/api/crop',        verifyToken, createProxyMiddleware(proxyOptions(serv
 app.use('/api/fertilizer',  verifyToken, createProxyMiddleware(proxyOptions(services.fertilizer)));
 app.use('/api/labour',      (req, res, next) => (req.method === 'GET' ? next() : verifyToken(req, res, next)), createProxyMiddleware(proxyOptions(services.labour)));
 app.use('/api/chatbot',     verifyToken, strictLimiter, createProxyMiddleware(proxyOptions(services.chatbot)));
-app.use('/api/news',        verifyToken, createProxyMiddleware(proxyOptions(services.news)));
+app.use('/api/news',        createProxyMiddleware(proxyOptions(services.news)));
+app.use('/api/community',   verifyToken, createProxyMiddleware(proxyOptions(services.community || 'http://localhost:5013')));
 app.use('/api/payment',     verifyToken, createProxyMiddleware(proxyOptions(services.payment)));
 app.use('/api/schemes',     verifyToken, createProxyMiddleware(proxyOptions(services.schemes)));
 app.use('/api/buyer',       (req, res, next) => (req.method === 'GET' ? next() : verifyToken(req, res, next)), createProxyMiddleware(proxyOptions(services.buyer)));

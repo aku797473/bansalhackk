@@ -29,7 +29,7 @@ const getUserInfo = (req) => ({
 // GET /users/profile
 router.get('/profile', async (req, res) => {
   try {
-    const { userId, email, role } = getUserInfo(req);
+    const { userId, email, role, name } = getUserInfo(req);
     const cacheKey = `user:profile:${userId}`;
 
     // Try Cache

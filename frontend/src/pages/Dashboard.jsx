@@ -173,6 +173,17 @@ export default function Dashboard() {
     },
   ];
 
+  const filteredModules = modules.filter(m => {
+    const role = user?.role?.toLowerCase() || 'farmer';
+    if (role === 'labour') {
+      return ['weather', 'labour', 'news', 'profile'].includes(m.id);
+    }
+    if (role === 'buyer') {
+      return ['weather', 'market', 'buyer', 'news', 'schemes', 'map', 'profile'].includes(m.id);
+    }
+    return true; // Farmer sees everything
+  });
+
   return (
     <div className="min-h-screen transition-colors duration-500 font-sans selection:bg-indigo-100 selection:text-indigo-900 relative">
       <div className="fixed inset-0 z-0 pointer-events-none bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 overflow-hidden">
@@ -207,7 +218,7 @@ export default function Dashboard() {
 
         {/* Bento Grid - Professional Sizing */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 auto-rows-auto">
-          {modules.map((m) => (
+          {filteredModules.map((m) => (
             <div
               key={m.id}
               onClick={() => navigate(m.to)}

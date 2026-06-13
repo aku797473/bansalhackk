@@ -63,7 +63,14 @@ const newsData = {
   ]
 };
 
-app.get('/news/latest', (req, res) => {
+// Gateway pathRewrite: '^/api' -> '' means /api/news → / on this service
+// Frontend calls /api/news?lang=en which becomes /?lang=en here
+app.get('/', (req, res) => {
+  const lang = req.query.lang || 'en';
+  res.json({ success: true, data: newsData[lang] || newsData.en });
+});
+
+app.get('/latest', (req, res) => {
   const lang = req.query.lang || 'en';
   res.json({ success: true, data: newsData[lang] || newsData.en });
 });

@@ -22,6 +22,7 @@ const userSchema = new mongoose.Schema({
   },
   profilePic: { type: String, default: '' },
   isVerified: { type: Boolean, default: false },
+  isPremium:  { type: Boolean, default: false },
 }, { timestamps: true });
 
 module.exports = mongoose.model('UserProfile', userSchema);

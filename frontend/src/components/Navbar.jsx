@@ -74,25 +74,50 @@ export default function Navbar() {
     if (user) checkNews();
   }, [i18n.language, user]);
 
-  const primaryLinks = [
-    { to: '/dashboard',  label: t('nav.home', 'Home'), icon: House },
-    { to: '/weather',    label: t('nav.weather', 'Weather'), icon: CloudSun },
-    { to: '/crop',       label: t('nav.crop', 'Crop Advisor'), icon: Plant },
-    { to: '/market',     label: t('nav.market', 'Market Trends'), icon: Storefront },
-    { to: '/fertilizer', label: t('nav.fertilizer', 'Fertilizer'), icon: Flask },
-    { to: '/community',  label: t('nav.community', 'Kisan Community'), icon: ChatCircleText },
-    { to: '/profile',    label: t('nav.profile', 'Profile Settings'), icon: User },
-  ];
+  const getFilteredPrimaryLinks = () => {
+    const all = [
+      { to: '/dashboard',  label: t('nav.home', 'Home'), icon: House },
+      { to: '/weather',    label: t('nav.weather', 'Weather'), icon: CloudSun },
+      { to: '/crop',       label: t('nav.crop', 'Crop Advisor'), icon: Plant },
+      { to: '/market',     label: t('nav.market', 'Market Trends'), icon: Storefront },
+      { to: '/fertilizer', label: t('nav.fertilizer', 'Fertilizer'), icon: Flask },
+      { to: '/community',  label: t('nav.community', 'Kisan Community'), icon: ChatCircleText },
+      { to: '/profile',    label: t('nav.profile', 'Profile Settings'), icon: User },
+    ];
+    const role = user?.role?.toLowerCase() || 'farmer';
+    if (role === 'labour') {
+      return all.filter(l => ['/dashboard', '/weather', '/community', '/profile'].includes(l.to));
+    }
+    if (role === 'buyer') {
+      return all.filter(l => ['/dashboard', '/market', '/community', '/profile'].includes(l.to));
+    }
+    return all;
+  };
 
-  const moreLinks = [
-    { to: '/labour',           label: t('nav.labour', 'Labour Marketplace'), icon: Briefcase },
-    { to: '/seller',           label: t('nav.seller', 'Seller Portal'), icon: Handshake },
-    { to: '/buyer',            label: t('nav.buyer', 'Buyer Portal'), icon: ShoppingBag },
-    { to: '/profit-predictor', label: t('nav.profit_predictor', 'Profit Predictor'), icon: ChartLineUp },
-    { to: '/map',              label: t('nav.map', 'Map View'), icon: MapPin },
-    { to: '/news',             label: t('nav.news', 'News'), icon: Newspaper },
-    { to: '/schemes',          label: t('nav.schemes', 'Government Schemes'), icon: Sparkle },
-  ];
+  const getFilteredMoreLinks = () => {
+    const all = [
+      { to: '/labour',           label: t('nav.labour', 'Labour Marketplace'), icon: Briefcase },
+      { to: '/seller',           label: t('nav.seller', 'Seller Portal'), icon: Handshake },
+      { to: '/buyer',            label: t('nav.buyer', 'Buyer Portal'), icon: ShoppingBag },
+      { to: '/dairy',            label: t('nav.dairy', 'Dairy Hub'), icon: ChartLineUp },
+      { to: '/automobile',       label: t('nav.automobile', 'Tractor Rental'), icon: Gear },
+      { to: '/profit-predictor', label: t('nav.profit_predictor', 'Profit Predictor'), icon: ChartLineUp },
+      { to: '/map',              label: t('nav.map', 'Map View'), icon: MapPin },
+      { to: '/news',             label: t('nav.news', 'News'), icon: Newspaper },
+      { to: '/schemes',          label: t('nav.schemes', 'Government Schemes'), icon: Sparkle },
+    ];
+    const role = user?.role?.toLowerCase() || 'farmer';
+    if (role === 'labour') {
+      return all.filter(l => ['/labour'].includes(l.to));
+    }
+    if (role === 'buyer') {
+      return all.filter(l => ['/buyer', '/map', '/news', '/schemes'].includes(l.to));
+    }
+    return all;
+  };
+
+  const primaryLinks = getFilteredPrimaryLinks();
+  const moreLinks = getFilteredMoreLinks();
 
   useEffect(() => {
     if (open) document.body.style.overflow = 'hidden';
