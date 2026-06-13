@@ -411,16 +411,7 @@ export default function CropAdvisor() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="relative">
-                    <NumberInput label={t('crop.temperature')} value={form.temperature} onChange={v => set('temperature', v)} min={5} max={50} unit="°C" icon={ThermometerHot} />
-                    {liveWeather && <span className="absolute -top-1 -right-1 px-1.5 py-0.5 bg-emerald-500 text-white text-[8px] font-black rounded-full">LIVE</span>}
-                  </div>
-                  <div className="relative">
-                    <NumberInput label={t('weather.humidity')} value={form.humidity} onChange={v => set('humidity', v)} min={0} max={100} unit="%" icon={Drop} />
-                    {liveWeather && <span className="absolute -top-1 -right-1 px-1.5 py-0.5 bg-emerald-500 text-white text-[8px] font-black rounded-full">LIVE</span>}
-                  </div>
-                </div>
+
 
                 <div className="relative">
                   <NumberInput label={t('crop.rainfall')} value={form.rainfall} onChange={v => set('rainfall', v)} min={0} max={3000} unit="mm" icon={Wind} />
