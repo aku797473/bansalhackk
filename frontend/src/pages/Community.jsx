@@ -18,7 +18,8 @@ import {
   ShieldCheck,
   Translate,
   ArrowClockwise,
-  ArrowLeft
+  ArrowLeft,
+  MapPin
 } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
