@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { buyerAPI, paymentAPI } from '../services/api';
 import {
   X, MagnifyingGlass, MapPin, ShoppingCart, Crown, ShieldCheck,
   ArrowLeft, Camera, MapTrifold, User, Plus, Trash, Phone,
-  Package, Tag, Star, Storefront, HandCoins, Bell, ChatCircleText
+  Package, Tag, Star, Storefront, HandCoins, Bell, ChatCircleText,
+  SortAscending, NavigationArrow, Clock, CurrencyInr, ArrowUp, ArrowDown
 } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
@@ -68,6 +69,16 @@ const CAT_IMAGES = {
   other: 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?q=80&w=500&auto=format&fit=crop'
 };
 
+// Haversine distance in km
+const getDistance = (lat1, lon1, lat2, lon2) => {
+  if (!lat1 || !lat2) return null;
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+};
+
 // Local buyer requirements (stored in localStorage)
 const loadBuyerRequirements = () => {
   try { return JSON.parse(localStorage.getItem('sk_buyer_reqs') || '[]'); } catch { return []; }
@@ -81,12 +92,14 @@ export default function BuyerPortal() {
   const ref = usePageAnimation();
   const { user, updateUser } = useAuth();
 
-  const [tab, setTab] = useState('browse'); // 'browse' = see sellers, 'post' = post buying requirement
+  const [tab, setTab] = useState('browse');
   const [sellers, setSellers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSeller, setSelectedSeller] = useState(null);
+  const [sortBy, setSortBy] = useState('latest'); // 'latest' | 'nearest' | 'price_asc' | 'price_desc'
+  const [userGPS, setUserGPS] = useState(null);
   const [processingPayment, setProcessingPayment] = useState(false);
   const [showPaywall, setShowPaywall] = useState(false);
   const [myRequirements, setMyRequirements] = useState(loadBuyerRequirements);
@@ -100,6 +113,16 @@ export default function BuyerPortal() {
   });
 
   useEffect(() => { fetchSellers(); }, [selectedCategory]);
+
+  // Auto-get user GPS for distance sorting
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        p => setUserGPS({ lat: p.coords.latitude, lon: p.coords.longitude }),
+        () => {}, { timeout: 8000 }
+      );
+    }
+  }, []);
 
   const fetchSellers = async () => {
     setLoading(true);
@@ -187,13 +210,30 @@ export default function BuyerPortal() {
     } catch { toast.error('Payment failed'); } finally { setProcessingPayment(false); }
   };
 
-  const filteredSellers = sellers.filter(l => {
-    const s = searchTerm.toLowerCase();
-    return (l.produceName || '').toLowerCase().includes(s) ||
-      (l.farmerName || '').toLowerCase().includes(s) ||
-      (l.location?.district || '').toLowerCase().includes(s) ||
-      (l.location?.state || '').toLowerCase().includes(s);
-  });
+  const filteredSellers = sellers
+    .filter(l => {
+      const s = searchTerm.toLowerCase();
+      const catOk = selectedCategory === 'all' || l.category === selectedCategory;
+      const searchOk = !s || (l.produceName || '').toLowerCase().includes(s) ||
+        (l.farmerName || '').toLowerCase().includes(s) ||
+        (l.location?.district || '').toLowerCase().includes(s) ||
+        (l.location?.state || '').toLowerCase().includes(s);
+      return catOk && searchOk;
+    })
+    .map(l => ({
+      ...l,
+      _dist: getDistance(userGPS?.lat, userGPS?.lon, l.location?.lat, l.location?.lng)
+    }))
+    .sort((a, b) => {
+      if (sortBy === 'nearest') {
+        if (a._dist === null) return 1; if (b._dist === null) return -1;
+        return a._dist - b._dist;
+      }
+      if (sortBy === 'price_asc') return (a.price || 0) - (b.price || 0);
+      if (sortBy === 'price_desc') return (b.price || 0) - (a.price || 0);
+      // latest: by _id descending (newest first)
+      return (b._id || '').localeCompare(a._id || '');
+    });
 
   return (
     <div ref={ref} className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] transition-colors duration-500 font-sans pt-24 sm:pt-28 pb-16">
@@ -231,14 +271,33 @@ export default function BuyerPortal() {
         {/* ── BROWSE — Seller Listings ── */}
         {tab === 'browse' && (
           <>
-            {/* Search + Category filter */}
-            <div className="flex flex-col lg:flex-row gap-4 mb-10">
-              <div className="flex-1 relative">
-                <MagnifyingGlass className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" size={20} weight="bold" />
-                <input
-                  type="text" placeholder="फसल, किसान, जिला खोजें..."
-                  className="w-full pl-14 pr-5 h-14 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/10 transition-all font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 shadow-sm"
-                  value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+            {/* Search + Sort + Category filter */}
+            <div className="flex flex-col gap-4 mb-10">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex-1 relative">
+                  <MagnifyingGlass className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" size={20} weight="bold" />
+                  <input
+                    type="text" placeholder="फसल, किसान, जिला खोजें..."
+                    className="w-full pl-14 pr-5 h-12 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/10 transition-all font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 shadow-sm"
+                    value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+                </div>
+                {/* Sort buttons */}
+                <div className="flex gap-2 shrink-0">
+                  {[
+                    { id: 'latest', label: 'नया पहले', icon: <Clock size={13} weight="bold" /> },
+                    { id: 'nearest', label: 'नजदीक', icon: <NavigationArrow size={13} weight="fill" /> },
+                    { id: 'price_asc', label: 'कम कीमत', icon: <ArrowUp size={13} weight="bold" /> },
+                    { id: 'price_desc', label: 'ज्यादा कीमत', icon: <ArrowDown size={13} weight="bold" /> },
+                  ].map(opt => (
+                    <button key={opt.id} onClick={() => setSortBy(opt.id)}
+                      className={clsx('flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wide border transition-all whitespace-nowrap',
+                        sortBy === opt.id
+                          ? 'bg-sky-600 text-white border-sky-500 shadow-lg shadow-sky-500/20'
+                          : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-500 hover:border-sky-400')}>
+                      {opt.icon} {opt.label}
+                    </button>
+                  ))}
+                </div>
               </div>
               <div className="flex gap-2 overflow-x-auto pb-1">
                 {CROP_CATEGORIES.map(cat => (
@@ -318,7 +377,9 @@ export default function BuyerPortal() {
                             </div>
                             <div>
                               <p className="text-xs font-black text-slate-700 dark:text-slate-300">{listing.farmerName}</p>
-                              <p className="text-[10px] font-semibold text-emerald-600">किसान ✓</p>
+                              {listing._dist != null
+                                ? <p className="text-[10px] font-bold text-sky-500 flex items-center gap-0.5"><NavigationArrow size={9} weight="fill" /> {listing._dist < 1 ? '<1' : Math.round(listing._dist)} km दूर</p>
+                                : <p className="text-[10px] font-semibold text-emerald-600">किसान ✓</p>}
                             </div>
                           </div>
                           <div className="text-right">

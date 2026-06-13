@@ -6,7 +6,8 @@ import {
   X, MagnifyingGlass, MapPin, Crown, ShieldCheck,
   ArrowLeft, Camera, MapTrifold, User, Plus, Trash,
   Package, Tag, Star, Storefront, HandCoins, Bell,
-  ChatCircleText, ShoppingBag, Phone
+  ChatCircleText, ShoppingBag, Phone,
+  NavigationArrow, Clock, ArrowUp, ArrowDown
 } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
@@ -70,6 +71,16 @@ const CAT_IMAGES = {
   other: 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?q=80&w=500&auto=format&fit=crop'
 };
 
+// Haversine distance in km
+const getDistance = (lat1, lon1, lat2, lon2) => {
+  if (!lat1 || !lat2) return null;
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+};
+
 // Merge localStorage buyer reqs with fallback
 const loadAllBuyerRequirements = () => {
   try {
@@ -91,6 +102,8 @@ export default function SellerPortal() {
   const [selectedReq, setSelectedReq] = useState(null);
   const [showPaywall, setShowPaywall] = useState(false);
   const [myListings, setMyListings] = useState([]);
+  const [sortBy, setSortBy] = useState('latest');
+  const [userGPS, setUserGPS] = useState(null);
 
   // Seller listing form
   const [listForm, setListForm] = useState({
@@ -107,6 +120,13 @@ export default function SellerPortal() {
       setLoading(false);
     }, 600);
     fetchMyListings();
+    // Auto-get GPS for distance sorting
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        p => setUserGPS({ lat: p.coords.latitude, lon: p.coords.longitude }),
+        () => {}, { timeout: 8000 }
+      );
+    }
   }, []);
 
   const fetchMyListings = async () => {
@@ -158,14 +178,30 @@ export default function SellerPortal() {
     );
   };
 
-  const filteredReqs = buyerReqs.filter(r => {
-    const s = searchTerm.toLowerCase();
-    const catOk = selectedCategory === 'all' || r.category === selectedCategory;
-    const searchOk = !s || (r.produceName || '').toLowerCase().includes(s) ||
-      (r.district || '').toLowerCase().includes(s) || (r.state || '').toLowerCase().includes(s) ||
-      (r.contactName || '').toLowerCase().includes(s);
-    return catOk && searchOk;
-  });
+  const filteredReqs = buyerReqs
+    .filter(r => {
+      const s = searchTerm.toLowerCase();
+      const catOk = selectedCategory === 'all' || r.category === selectedCategory;
+      const searchOk = !s || (r.produceName || '').toLowerCase().includes(s) ||
+        (r.district || '').toLowerCase().includes(s) || (r.state || '').toLowerCase().includes(s) ||
+        (r.contactName || '').toLowerCase().includes(s);
+      return catOk && searchOk;
+    })
+    .map(r => ({
+      ...r,
+      _dist: getDistance(userGPS?.lat, userGPS?.lon,
+        r.lat || null, r.lng || null) // buyer reqs may not have GPS but try
+    }))
+    .sort((a, b) => {
+      if (sortBy === 'nearest') {
+        if (a._dist === null) return 1; if (b._dist === null) return -1;
+        return a._dist - b._dist;
+      }
+      if (sortBy === 'price_asc') return (a.maxPrice || 0) - (b.maxPrice || 0);
+      if (sortBy === 'price_desc') return (b.maxPrice || 0) - (a.maxPrice || 0);
+      // latest: by id desc
+      return (String(b.id) || '').localeCompare(String(a.id) || '');
+    });
 
   const CAT_COLORS = {
     grains: 'amber', vegetables: 'emerald', fruits: 'orange',
@@ -218,13 +254,32 @@ export default function SellerPortal() {
               </div>
             </div>
 
-            {/* Search + Filter */}
-            <div className="flex flex-col lg:flex-row gap-4 mb-10">
-              <div className="flex-1 relative">
-                <MagnifyingGlass className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" size={20} weight="bold" />
-                <input type="text" placeholder="फसल, खरीदार, जिला खोजें..."
-                  className="w-full pl-14 pr-5 h-14 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 transition-all font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 shadow-sm"
-                  value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+            {/* Search + Sort + Filter */}
+            <div className="flex flex-col gap-4 mb-10">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex-1 relative">
+                  <MagnifyingGlass className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" size={20} weight="bold" />
+                  <input type="text" placeholder="फसल, खरीदार, जिला खोजें..."
+                    className="w-full pl-14 pr-5 h-12 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 transition-all font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 shadow-sm"
+                    value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+                </div>
+                {/* Sort buttons */}
+                <div className="flex gap-2 shrink-0">
+                  {[
+                    { id: 'latest', label: 'नया पहले', icon: <Clock size={13} weight="bold" /> },
+                    { id: 'nearest', label: 'नजदीक', icon: <NavigationArrow size={13} weight="fill" /> },
+                    { id: 'price_asc', label: 'कम दाम', icon: <ArrowUp size={13} weight="bold" /> },
+                    { id: 'price_desc', label: 'ज्यादा दाम', icon: <ArrowDown size={13} weight="bold" /> },
+                  ].map(opt => (
+                    <button key={opt.id} onClick={() => setSortBy(opt.id)}
+                      className={clsx('flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wide border transition-all whitespace-nowrap',
+                        sortBy === opt.id
+                          ? 'bg-emerald-600 text-white border-emerald-500 shadow-lg shadow-emerald-500/20'
+                          : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-500 hover:border-emerald-400')}>
+                      {opt.icon} {opt.label}
+                    </button>
+                  ))}
+                </div>
               </div>
               <div className="flex gap-2 overflow-x-auto pb-1">
                 {CROP_CATEGORIES.map(cat => (
