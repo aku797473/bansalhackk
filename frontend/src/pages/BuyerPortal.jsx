@@ -639,10 +639,11 @@ export default function BuyerPortal() {
                  <div className="flex items-center gap-2 text-xs text-emerald-400 font-bold">
                    <ShieldCheck size={18} /> Verified Trader Network Active
                  </div>
-              </div>
-           </div>
+                </div>
+             </div>
+          </div>
         </div>
-      )}
+    )}
 
       {/* Detail Modal */}
       {selectedListing && (

@@ -402,7 +402,8 @@ export default function SellerPortal() {
                     </div>
                   </div>
                 </div>
-              ))}
+              );
+            })}
             </div>
           )}
         </>
@@ -621,13 +622,14 @@ export default function SellerPortal() {
                     <h3 className="font-black text-lg">Location Search</h3>
                  </div>
                  <p className="text-sm text-slate-400 mb-6">Farmers will see your shop on the map for direct navigation.</p>
-                 <button className="w-full py-4 bg-slate-800 rounded-xl border border-slate-700 text-xs font-black flex items-center justify-center gap-2">
-                    <MapTrifold size={16} /> Mark on Google Maps
-                 </button>
-              </div>
-           </div>
-        </div>
-      )}
+                  <button className="w-full py-4 bg-slate-800 rounded-xl border border-slate-700 text-xs font-black flex items-center justify-center gap-2">
+                     <MapTrifold size={16} /> Mark on Google Maps
+                  </button>
+               </div>
+            </div>
+         </div>
+       </div>
+   )}
 
       {/* Detail Modal */}
       {selectedBuyer && (
