@@ -59,7 +59,7 @@ self.addEventListener('fetch', (event) => {
         // Return cached version but fetch update in background (Stale-While-Revalidate)
         if (navigator.onLine) {
           fetch(request).then((networkResponse) => {
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, networkResponse));
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, networkResponse).catch(() => {}));
           }).catch(() => {});
         }
         return cachedResponse;
@@ -69,7 +69,7 @@ self.addEventListener('fetch', (event) => {
         // Cache dynamic assets (JS chunks, CSS, etc.)
         if (networkResponse.status === 200) {
           const responseClone = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, responseClone));
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, responseClone).catch(() => {}));
         }
         return networkResponse;
       }).catch(() => {
