@@ -26,6 +26,7 @@ const buyerSchema = new mongoose.Schema({
   image: { type: String },
   rating: { type: Number, default: 4.5 },
   isVerified: { type: Boolean, default: false },
+  ownerIsPremium: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now }
 });
 

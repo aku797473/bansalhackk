@@ -7,12 +7,13 @@ import {
   Trash, ArrowRight, CheckCircle, Package, 
   MapPin, Phone, Truck, Calendar, ShoppingCart,
   ShoppingBag, MagnifyingGlass, Tag, CaretRight, 
-  Star, Clock, ShieldCheck, ArrowLeft, Camera, Briefcase, MapTrifold, User
+  Star, Clock, ShieldCheck, ArrowLeft, Camera, Briefcase, MapTrifold, User, Crown
 } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { usePageAnimation } from '../hooks/usePageAnimation';
 import { STATES_DATA } from '../data/regions';
+import GoldPaywall from '../components/GoldPaywall';
 
 const getCategories = (t) => [
   { id: 'all', name: t('buyer.categories.all'), icon: '🏪' },
@@ -44,10 +45,10 @@ const FALLBACK_BUYERS = [
   }
 ];
 
-export default function BuyerPortal() {
+export default function SellerPortal() {
   const { t } = useTranslation();
   const ref = usePageAnimation();
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   
   const [tab, setTab] = useState('browse');
   const [buyers, setBuyers] = useState([]);
@@ -57,6 +58,7 @@ export default function BuyerPortal() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBuyer, setSelectedBuyer] = useState(null);
   const [processingPayment, setProcessingPayment] = useState(false);
+  const [showPaywall, setShowPaywall] = useState(false);
 
   // Form State for Registration
   const [form, setForm] = useState({
@@ -72,6 +74,14 @@ export default function BuyerPortal() {
       toast.error('Item name and price are required');
       return;
     }
+
+    // Check Kisan Gold limits: limit free tier shops to 2 inventory items
+    if (form.inventory.length >= 2 && !user?.isPremium) {
+      setShowPaywall(true);
+      toast.error('Free tier shops are limited to 2 inventory items. Upgrade to Kisan Gold to list unlimited items!');
+      return;
+    }
+
     setForm(prev => ({
       ...prev,
       inventory: [...prev.inventory, { ...newItem, price: Number(newItem.price) }]
@@ -118,6 +128,7 @@ export default function BuyerPortal() {
       const payload = {
         ...form,
         phone: user?.phone || '9999999999',
+        ownerIsPremium: user?.isPremium || false,
         location: { 
           district: form.district, 
           state: form.state, 
@@ -317,11 +328,29 @@ export default function BuyerPortal() {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">{[...Array(6)].map((_, i) => <div key={i} className="skeleton h-80 rounded-[2.5rem]" />)}</div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredBuyers.map(buyer => (
-                <div key={buyer._id} className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl group p-0 overflow-hidden border border-slate-200/50 dark:border-slate-800/50 hover:border-green-500/50 shadow-sm hover:shadow-premium transition-all duration-500 rounded-[2.5rem] cursor-pointer" onClick={() => setSelectedBuyer(buyer)}>
-                  <div className="h-56 relative overflow-hidden">
-                    <img src={buyer.image || 'https://images.unsplash.com/photo-1590682680695-43b964a3ae17?q=80&w=500&auto=format&fit=crop'} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Shop" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              {filteredBuyers.map(buyer => {
+                const isShopPremium = buyer.ownerIsPremium === true;
+                return (
+                  <div 
+                    key={buyer._id} 
+                    className={clsx(
+                      "backdrop-blur-2xl group p-0 overflow-hidden shadow-sm transition-all duration-500 rounded-[2.5rem] cursor-pointer relative",
+                      isShopPremium 
+                        ? "bg-gradient-to-b from-amber-500/5 to-yellow-500/5 dark:from-amber-500/10 dark:to-yellow-500/5 border-2 border-amber-400 dark:border-amber-500/60 hover:border-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.1)] hover:shadow-[0_0_25px_rgba(245,158,11,0.2)]"
+                        : "bg-white/60 dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:border-green-500/50 hover:shadow-premium"
+                    )}
+                    onClick={() => setSelectedBuyer(buyer)}
+                  >
+                    <div className="h-56 relative overflow-hidden">
+                      <img src={buyer.image || 'https://images.unsplash.com/photo-1590682680695-43b964a3ae17?q=80&w=500&auto=format&fit=crop'} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Shop" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      
+                      {isShopPremium && (
+                        <div className="absolute top-5 left-5 px-3.5 py-1.5 bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-1 shadow-xl border border-amber-300/30 z-10">
+                          <Crown weight="fill" size={12} className="text-slate-950 animate-pulse" />
+                          Gold Dealer
+                        </div>
+                      )}
                     <div className="absolute top-5 right-5 px-4 py-1.5 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md rounded-full text-[10px] font-black uppercase tracking-widest text-green-600 shadow-xl border border-white/20">
                       {buyer.category}
                     </div>
@@ -381,8 +410,29 @@ export default function BuyerPortal() {
 
       {/* Register View */}
       {tab === 'register' && (
-        <div className="grid lg:grid-cols-12 gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-           <div className="lg:col-span-8 card border-none shadow-premium p-8 sm:p-10">
+        <div className="space-y-6 w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
+           {/* Kisan Gold Upgrade Promo */}
+           {!user?.isPremium && (
+             <div className="bg-gradient-to-r from-amber-500/10 via-yellow-500/5 to-transparent border border-amber-500/30 rounded-[2rem] p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+               <div className="flex items-center gap-3">
+                 <div className="p-3 bg-amber-500/20 rounded-2xl text-amber-600 dark:text-amber-400">
+                   <Crown size={28} weight="fill" />
+                 </div>
+                 <div>
+                   <h3 className="font-black text-amber-800 dark:text-amber-300 text-sm">Register as a Gold Dealer with 0% platform fee!</h3>
+                   <p className="text-xs text-slate-500 mt-0.5">Free shops are limited to 2 inventory items and pay a standard 3% transaction fee.</p>
+                 </div>
+               </div>
+               <button 
+                 onClick={() => setShowPaywall(true)} 
+                 className="px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 text-xs font-black rounded-xl shadow-md hover:scale-102 transition-transform"
+               >
+                 Upgrade to Kisan Gold 👑
+               </button>
+             </div>
+           )}
+           <div className="grid lg:grid-cols-12 gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="lg:col-span-8 card border-none shadow-premium p-8 sm:p-10">
               <h2 className="text-2xl font-black mb-8 flex items-center gap-3">
                 <Storefront className="text-green-600" /> {t('buyer.tabs.register')}
               </h2>
@@ -587,10 +637,15 @@ export default function BuyerPortal() {
                  <img src={selectedBuyer.image || 'https://images.unsplash.com/photo-1590682680695-43b964a3ae17?q=80&w=500&auto=format&fit=crop'} className="w-full h-full object-cover" />
                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                  <button onClick={() => setSelectedBuyer(null)} className="absolute top-6 left-6 p-3 bg-white/20 backdrop-blur-md text-white rounded-2xl md:hidden hover:bg-white/30 transition-colors"><ArrowLeft weight="bold" /></button>
-                 <div className="absolute bottom-10 left-10 right-10 text-white">
-                    <h2 className="text-3xl font-black mb-2 font-outfit leading-tight">{selectedBuyer.shopName}</h2>
-                    <p className="text-white/80 font-bold flex items-center gap-2 text-sm"><MapPin size={18} weight="fill" className="text-green-400" /> {selectedBuyer.address}</p>
-                 </div>
+                  <div className="absolute bottom-10 left-10 right-10 text-white">
+                     <div className="flex items-center gap-2 mb-2">
+                        <h2 className="text-3xl font-black font-outfit leading-tight">{selectedBuyer.shopName}</h2>
+                        {selectedBuyer.ownerIsPremium && (
+                          <Crown size={24} className="text-amber-400 drop-shadow-[0_0_8px_rgba(245,158,11,0.6)] animate-pulse" weight="fill" title="Kisan Gold Dealer" />
+                        )}
+                     </div>
+                     <p className="text-white/80 font-bold flex items-center gap-2 text-sm"><MapPin size={18} weight="fill" className="text-green-400" /> {selectedBuyer.address}</p>
+                  </div>
               </div>
 
               <div className="flex-1 p-8 sm:p-12 overflow-y-auto">
@@ -605,9 +660,24 @@ export default function BuyerPortal() {
                     </div>
                     <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-[2rem] border border-slate-200/50 dark:border-slate-700/50 shadow-inner">
                        <label className="text-[10px] font-black uppercase text-slate-400 block mb-2 tracking-widest">Shop Status</label>
-                       <p className="font-black text-xl flex items-center gap-3 text-emerald-600 dark:text-emerald-400"><ShieldCheck size={24} weight="duotone" className="text-emerald-600" /> Verified Merchant</p>
+                       <p className="font-black text-xl flex items-center gap-3 text-emerald-600 dark:text-emerald-400">
+                          <ShieldCheck size={24} weight="duotone" className="text-emerald-600" /> 
+                          {selectedBuyer.ownerIsPremium ? 'Gold Verified Merchant' : 'Verified Merchant'}
+                       </p>
                     </div>
                  </div>
+
+                 {/* Commission Info / Gold Promos */}
+                 {selectedBuyer.ownerIsPremium ? (
+                    <div className="mb-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-[1.5rem] flex items-center gap-3 text-xs font-bold text-amber-700 dark:text-amber-400">
+                      <Crown size={20} weight="fill" className="animate-pulse shrink-0" />
+                      <span>0% commission active for this Gold Dealer. Shop with full buyer protection!</span>
+                    </div>
+                  ) : (
+                    <div className="mb-6 p-4 bg-slate-50 dark:bg-slate-950/20 border border-slate-200/30 rounded-[1.5rem] text-xs font-semibold text-slate-500 dark:text-slate-400">
+                      <span>Standard dealer terms apply. Standard 3% transaction commission is charged on checkout.</span>
+                    </div>
+                  )}
 
                  <h3 className="text-2xl font-black mb-6 flex items-center gap-3 font-outfit text-slate-900 dark:text-white">
                    <Package size={28} weight="duotone" className="text-green-600" /> Shop Inventory / Items
@@ -646,6 +716,18 @@ export default function BuyerPortal() {
            </div>
         </div>
       )}
+
+      <GoldPaywall 
+        isOpen={showPaywall} 
+        onClose={() => setShowPaywall(false)} 
+        onUnlock={async () => {
+          try {
+            await updateUser({ isPremium: true });
+          } catch (err) {
+            toast.error('Failed to sync premium status with backend');
+          }
+        }} 
+      />
       </div>
     </div>
   );
