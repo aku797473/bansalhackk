@@ -32,6 +32,13 @@ const ROOMS = [
   { id: 'weather', key: 'weather', titleEn: 'Weather & Alerts', titleHi: 'मौसम और आपातकाल', descEn: 'Rain updates, storm alerts and safety', descHi: 'बारिश के अपडेट, तूफान की चेतावनी और सुरक्षा', icon: CloudSun, color: 'text-sky-500 bg-sky-50 dark:bg-sky-950/30' }
 ];
 
+const LOCATION_ROOMS = [
+  { id: 'punjab', key: 'punjab', titleEn: 'Punjab Wheat Zone', titleHi: 'पंजाब गेहूं क्षेत्र', descEn: 'Wheat and crop rotation chats in Punjab', descHi: 'पंजाब में गेहूं और फसल चक्र चर्चा', icon: Plant, color: 'text-emerald-500 bg-emerald-50 dark:bg-emerald-950/30', state: 'Punjab' },
+  { id: 'up', key: 'up', titleEn: 'UP Cane & Paddy Belt', titleHi: 'यूपी गन्ना और धान बेल्ट', descEn: 'Sugarcane and paddy discussions in UP', descHi: 'यूपी में गन्ना और धान की चर्चा', icon: Plant, color: 'text-amber-500 bg-amber-50 dark:bg-amber-950/30', state: 'Uttar Pradesh' },
+  { id: 'maharashtra', key: 'maharashtra', titleEn: 'Maharashtra Grape & Cotton', titleHi: 'महाराष्ट्र अंगूर और कपास', descEn: 'Horticulture & cash crops in MH', descHi: 'महाराष्ट्र में बागवानी और नकदी फसलें', icon: Plant, color: 'text-purple-500 bg-purple-50 dark:bg-purple-950/30', state: 'Maharashtra' },
+  { id: 'mp', key: 'mp', titleEn: 'MP Soy & Pulse Growers', titleHi: 'एमपी सोया और दाल उत्पादक', descEn: 'Soybean and pulses cultivation in MP', descHi: 'एमपी में सोयाबीन और दलहन की खेती', icon: Plant, color: 'text-indigo-500 bg-indigo-50 dark:bg-indigo-950/30', state: 'Madhya Pradesh' }
+];
+
 // Quick Replies for farmers
 const QUICK_REPLIES = {
   hi: [
@@ -59,6 +66,7 @@ export default function Community() {
   const messagesEndRef = useRef(null);
   
   const [currentRoom, setCurrentRoom] = useState('general');
+  const [roomFilter, setRoomFilter] = useState('global'); // 'global' | 'regional'
   const [messages, setMessages] = useState([]);
   const [activeUsersList, setActiveUsersList] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
@@ -66,6 +74,31 @@ export default function Community() {
   const [connected, setConnected] = useState(false);
   const [loadingHistory, setLoadingHistory] = useState(false);
   const [mobileView, setMobileView] = useState('channels'); // 'channels' or 'chat'
+
+  const getRegionalRooms = () => {
+    const userState = user?.location?.state || 'Madhya Pradesh';
+    const userDistrict = user?.location?.district || 'Satna';
+    const userLocal = {
+      id: `local_${userDistrict.toLowerCase()}`,
+      key: `local_${userDistrict.toLowerCase()}`,
+      titleEn: `${userDistrict} District Forum`,
+      titleHi: `${userDistrict} जिला मंच`,
+      descEn: `Local updates in ${userDistrict}, ${userState}`,
+      descHi: `${userDistrict}, ${userState} के स्थानीय अपडेट`,
+      icon: MapPin,
+      color: 'text-rose-500 bg-rose-50 dark:bg-rose-950/30',
+      state: userState
+    };
+    return [userLocal, ...LOCATION_ROOMS];
+  };
+
+  const getFilteredRooms = () => {
+    if (roomFilter === 'global') {
+      return ROOMS;
+    } else {
+      return getRegionalRooms();
+    }
+  };
 
   // Construct Socket Server URL
   useEffect(() => {
@@ -194,7 +227,11 @@ export default function Community() {
     return QUICK_REPLIES[lang];
   };
 
-  const currentRoomInfo = ROOMS.find(r => r.id === currentRoom);
+  const getRoomInfo = () => {
+    const allRooms = [...ROOMS, ...getRegionalRooms()];
+    return allRooms.find(r => r.id === currentRoom) || ROOMS[0];
+  };
+  const currentRoomInfo = getRoomInfo();
 
   return (
     <div ref={ref} className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] transition-colors duration-500 font-sans selection:bg-purple-100 selection:text-purple-900 pt-20 sm:pt-28 pb-4 lg:pb-10">
@@ -224,11 +261,41 @@ export default function Community() {
 
             {/* Room List */}
             <div className="flex-1 overflow-y-auto space-y-2.5 pr-1 scrollbar-none mb-6">
-              <div className="text-[10px] font-bold tracking-widest text-slate-400 dark:text-slate-500 uppercase px-2 mb-2">
-                {i18n.language === 'hi' ? 'चर्चा कक्ष' : 'CHANNELS'}
+              {/* Filter Tabs */}
+              <div className="flex bg-slate-100 dark:bg-slate-800/40 p-1 rounded-2xl mb-4 text-xs font-bold border border-slate-200/10 dark:border-slate-850">
+                <button 
+                  onClick={() => setRoomFilter('global')}
+                  className={clsx(
+                    "flex-1 py-2 rounded-xl transition-all text-center",
+                    roomFilter === 'global' 
+                      ? "bg-white dark:bg-slate-900 text-indigo-650 dark:text-indigo-400 shadow-sm border border-slate-200/20 dark:border-slate-800/30" 
+                      : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                  )}
+                >
+                  {i18n.language === 'hi' ? 'वैश्विक' : 'Global'}
+                </button>
+                <button 
+                  onClick={() => setRoomFilter('regional')}
+                  className={clsx(
+                    "flex-1 py-2 rounded-xl transition-all text-center flex items-center justify-center gap-1",
+                    roomFilter === 'regional' 
+                      ? "bg-white dark:bg-slate-900 text-indigo-650 dark:text-indigo-400 shadow-sm border border-slate-200/20 dark:border-slate-800/30" 
+                      : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                  )}
+                >
+                  <MapPin size={12} weight="fill" />
+                  {i18n.language === 'hi' ? 'क्षेत्रीय' : 'Regional'}
+                </button>
+              </div>
+
+              <div className="text-[10px] font-bold tracking-widest text-slate-400 dark:text-slate-500 uppercase px-2 mb-2 flex items-center justify-between">
+                <span>{roomFilter === 'global' ? (i18n.language === 'hi' ? 'चर्चा कक्ष' : 'CHANNELS') : (i18n.language === 'hi' ? 'स्थानीय धागे' : 'LOCAL THREADS')}</span>
+                {roomFilter === 'regional' && (
+                  <span className="text-[9px] text-indigo-500 font-extrabold lowercase">({user?.location?.state || 'MP'})</span>
+                )}
               </div>
               
-              {ROOMS.map((room) => {
+              {getFilteredRooms().map((room) => {
                 const isSelected = currentRoom === room.id;
                 const Icon = room.icon;
                 return (
