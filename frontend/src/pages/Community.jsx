@@ -19,11 +19,14 @@ import {
   Translate,
   ArrowClockwise,
   ArrowLeft,
-  MapPin
+  MapPin,
+  X,
+  NavigationArrow
 } from '@phosphor-icons/react';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { usePageAnimation } from '../hooks/usePageAnimation';
+import { STATES_DATA } from '../data/regions';
 
 // Rooms list
 const ROOMS = [
@@ -60,6 +63,10 @@ const QUICK_REPLIES = {
   ]
 };
 
+const LOAD_LOCATION = () => {
+  try { return JSON.parse(localStorage.getItem('sk_community_location') || 'null'); } catch { return null; }
+};
+
 export default function Community() {
   const { t, i18n } = useTranslation();
   const ref = usePageAnimation();
@@ -67,14 +74,35 @@ export default function Community() {
   const messagesEndRef = useRef(null);
   
   const [currentRoom, setCurrentRoom] = useState('general');
-  const [roomFilter, setRoomFilter] = useState('global'); // 'global' | 'regional'
+  const [roomFilter, setRoomFilter] = useState('global');
   const [messages, setMessages] = useState([]);
   const [activeUsersList, setActiveUsersList] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   const [socket, setSocket] = useState(null);
   const [connected, setConnected] = useState(false);
   const [loadingHistory, setLoadingHistory] = useState(false);
-  const [mobileView, setMobileView] = useState('channels'); // 'channels' or 'chat'
+  const [mobileView, setMobileView] = useState('channels');
+
+  // Location state
+  const [userLocation, setUserLocation] = useState(LOAD_LOCATION);
+  const [showLocationModal, setShowLocationModal] = useState(false);
+  const [pendingMessage, setPendingMessage] = useState('');
+  const [locForm, setLocForm] = useState({
+    state: userLocation?.state || user?.location?.state || 'Madhya Pradesh',
+    district: userLocation?.district || user?.location?.district || '',
+    from: userLocation?.from || ''
+  });
+
+  // Sync locForm when modal opens
+  useEffect(() => {
+    if (showLocationModal) {
+      setLocForm({
+        state: userLocation?.state || user?.location?.state || 'Madhya Pradesh',
+        district: userLocation?.district || user?.location?.district || '',
+        from: userLocation?.from || ''
+      });
+    }
+  }, [showLocationModal, userLocation, user]);
 
   const getRegionalRooms = () => {
     const userState = user?.location?.state || 'Madhya Pradesh';
@@ -208,18 +236,53 @@ export default function Community() {
     const msgText = textToSend || inputMessage;
     if (!msgText.trim() || !socket || !user) return;
 
+    // If no location saved, show location modal first
+    if (!userLocation || !userLocation.from) {
+      setPendingMessage(msgText);
+      setShowLocationModal(true);
+      return;
+    }
+
+    // Append location tag to message
+    const locationTag = `📍 ${userLocation.from}, ${userLocation.district}, ${userLocation.state}`;
+    const finalMsg = msgText.includes('📍') ? msgText : `${msgText}\n${locationTag}`;
+
     const messageData = {
       room: currentRoom,
       senderId: user.id || user._id,
       senderName: user.name,
       senderRole: user.role || 'Farmer',
       senderImage: user.image || user.profilePic || null,
-      message: msgText
+      message: finalMsg
     };
 
     socket.emit('send-message', messageData);
-    if (!textToSend) {
+    if (!textToSend) setInputMessage('');
+  };
+
+  const handleSaveLocation = () => {
+    if (!locForm.from?.trim()) { toast.error('कृपया गाँव/शहर (आप कहाँ से हैं) दर्ज करें'); return; }
+    if (!locForm.district) { toast.error('जिला चुनें'); return; }
+    const loc = { state: locForm.state, district: locForm.district, from: locForm.from.trim() };
+    localStorage.setItem('sk_community_location', JSON.stringify(loc));
+    setUserLocation(loc);
+    setShowLocationModal(false);
+    toast.success(`📍 ${loc.from}, ${loc.district}, ${loc.state} सेट हो गया!`);
+    // Now send the pending message with location
+    if (pendingMessage) {
+      const locationTag = `📍 ${loc.from}, ${loc.district}, ${loc.state}`;
+      const finalMsg = `${pendingMessage}\n${locationTag}`;
+      const messageData = {
+        room: currentRoom,
+        senderId: user.id || user._id,
+        senderName: user.name,
+        senderRole: user.role || 'Farmer',
+        senderImage: user.image || user.profilePic || null,
+        message: finalMsg
+      };
+      socket.emit('send-message', messageData);
       setInputMessage('');
+      setPendingMessage('');
     }
   };
 
@@ -236,6 +299,76 @@ export default function Community() {
 
   return (
     <div ref={ref} className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] transition-colors duration-500 font-sans selection:bg-purple-100 selection:text-purple-900 pt-20 sm:pt-28 pb-4 lg:pb-10">
+
+      {/* ── Location Modal ── */}
+      {showLocationModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-xl z-[3000] flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-[2rem] w-full max-w-sm shadow-2xl border border-slate-200 dark:border-slate-800 animate-in fade-in zoom-in-95 duration-300">
+            <div className="p-7">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-11 h-11 bg-indigo-50 dark:bg-indigo-500/10 rounded-2xl flex items-center justify-center">
+                    <NavigationArrow size={22} weight="fill" className="text-indigo-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-black text-slate-900 dark:text-white text-base">आप कहाँ से हैं?</h3>
+                    <p className="text-xs text-slate-500 mt-0.5">पोस्ट में आपकी location दिखेगी</p>
+                  </div>
+                </div>
+                <button onClick={() => setShowLocationModal(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"><X size={16} weight="bold" className="text-slate-400" /></button>
+              </div>
+
+              {/* State */}
+              <div className="mb-4">
+                <label className="text-xs font-black text-slate-500 uppercase tracking-wide mb-1.5 block">राज्य *</label>
+                <select
+                  className="w-full h-12 px-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-semibold focus:outline-none focus:border-indigo-500 text-slate-900 dark:text-white"
+                  value={locForm.state}
+                  onChange={e => setLocForm({ ...locForm, state: e.target.value, district: STATES_DATA[e.target.value]?.[0] || '' })}>
+                  {Object.keys(STATES_DATA).map(s => <option key={s} value={s}>{s}</option>)}
+                </select>
+              </div>
+
+              {/* District */}
+              <div className="mb-4">
+                <label className="text-xs font-black text-slate-500 uppercase tracking-wide mb-1.5 block">जिला *</label>
+                <select
+                  className="w-full h-12 px-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-semibold focus:outline-none focus:border-indigo-500 text-slate-900 dark:text-white"
+                  value={locForm.district}
+                  onChange={e => setLocForm({ ...locForm, district: e.target.value })}>
+                  {(STATES_DATA[locForm.state] || []).map(d => <option key={d} value={d}>{d}</option>)}
+                </select>
+              </div>
+
+              {/* From / Village/City */}
+              <div className="mb-6">
+                <label className="text-xs font-black text-slate-500 uppercase tracking-wide mb-1.5 block">आप कहाँ से हैं (गाँव / शहर) *</label>
+                <input
+                  type="text"
+                  placeholder="गाँव या शहर का नाम लिखें"
+                  className="w-full h-12 px-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-semibold focus:outline-none focus:border-indigo-500 text-slate-900 dark:text-white"
+                  value={locForm.from || ''}
+                  onChange={e => setLocForm({ ...locForm, from: e.target.value })}
+                />
+              </div>
+
+              <button onClick={handleSaveLocation}
+                className="w-full h-12 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-black text-sm uppercase tracking-wide shadow-lg shadow-indigo-500/25 transition-all active:scale-95 flex items-center justify-center gap-2">
+                <MapPin size={16} weight="fill" /> Location सेट करें & पोस्ट करें
+              </button>
+
+              {userLocation && (
+                <p className="text-center text-xs text-slate-400 mt-3">
+                  मौजूदा: 📍 {userLocation.from ? `${userLocation.from}, ` : ''}{userLocation.district}, {userLocation.state}
+                  <button onClick={() => { setUserLocation(null); localStorage.removeItem('sk_community_location'); setShowLocationModal(false); }}
+                    className="ml-2 text-red-400 underline">हटाएं</button>
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         
         {/* Main Grid Layout */}
@@ -531,12 +664,29 @@ export default function Community() {
 
             {/* Chat Input Footer */}
             <div className="p-4 lg:p-6 border-t border-slate-100 dark:border-slate-800 shrink-0 bg-white dark:bg-slate-900 flex flex-col gap-2">
+              {/* Location indicator */}
+              <div className="flex items-center justify-between mb-1">
+                {userLocation ? (
+                  <button onClick={() => setShowLocationModal(true)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-800/50 rounded-xl text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 transition-all">
+                    <MapPin size={11} weight="fill" /> {userLocation.from ? `${userLocation.from}, ` : ''}{userLocation.district}, {userLocation.state}
+                    <span className="text-[9px] text-slate-400 ml-1">बदलें</span>
+                  </button>
+                ) : (
+                  <button onClick={() => setShowLocationModal(true)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-800/50 rounded-xl text-xs font-bold text-amber-600 dark:text-amber-400 animate-pulse hover:animate-none hover:bg-amber-100 transition-all">
+                    <MapPin size={11} weight="fill" /> 📍 Location सेट करें (जरूरी)
+                  </button>
+                )}
+                <span className="text-[9px] text-slate-400 font-semibold">आपकी location message में दिखेगी</span>
+              </div>
+
               <div className="flex gap-4">
                 <input
                   type="text"
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === 'enter' || e.key === 'Enter') handleSendMessage(); }}
+                  onKeyDown={(e) => { if (e.key === 'Enter') handleSendMessage(); }}
                   placeholder={i18n.language === 'hi' ? "अपने विचार लिखें, या प्रश्न पूछने के लिए @kisan का प्रयोग करें..." : "Write your thoughts, or type @kisan to ask farming questions..."}
                   className="flex-1 h-14 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl px-6 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500/20 transition-all outline-none"
                 />
